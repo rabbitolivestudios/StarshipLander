@@ -1,0 +1,218 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                     STARSHIP LANDER - COMPLETE SETUP GUIDE                     ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+This guide will help you publish your Starship Lander game to the App Store.
+Total time: ~1-2 hours (mostly waiting for Apple)
+
+════════════════════════════════════════════════════════════════════════════════
+ STEP 1: APPLE DEVELOPER ACCOUNT (Required - ~15 minutes)
+════════════════════════════════════════════════════════════════════════════════
+
+You MUST have an Apple Developer account to publish apps. This costs $99/year.
+
+1. Go to: https://developer.apple.com/programs/enroll/
+2. Click "Start Your Enrollment"
+3. Sign in with your Apple ID (or create one)
+4. Choose "Individual" account type
+5. Pay the $99 annual fee
+6. Wait for Apple to verify your identity (can take 24-48 hours)
+
+After enrollment, you'll receive a TEAM ID (10 characters like "ABC123DEFG").
+Write it down - you'll need it later!
+
+
+════════════════════════════════════════════════════════════════════════════════
+ STEP 2: ADMOB ACCOUNT (Required for Ad Revenue - ~10 minutes)
+════════════════════════════════════════════════════════════════════════════════
+
+To earn money from ads, you need a Google AdMob account.
+
+1. Go to: https://admob.google.com/
+2. Sign in with your Google account
+3. Click "Apps" → "Add App"
+4. Choose "iOS" and "No" (app not on store yet)
+5. Enter app name: "Starship Lander"
+6. Click "Add App"
+
+You'll receive:
+- AdMob App ID (looks like: ca-app-pub-1234567890123456~1234567890)
+- Create a Banner Ad Unit → get Banner Ad Unit ID
+- Create an Interstitial Ad Unit → get Interstitial Ad Unit ID
+
+Write these down!
+
+
+════════════════════════════════════════════════════════════════════════════════
+ STEP 3: RUN THE SETUP SCRIPT (The Easy Part! - ~5 minutes)
+════════════════════════════════════════════════════════════════════════════════
+
+Open Terminal and run:
+
+    cd /Users/tboliveira/Projetos/StarshipLander
+    ./setup_and_submit.sh
+
+The script will:
+✓ Check that you have Xcode, CocoaPods, etc.
+✓ Generate your app icon automatically
+✓ Ask for your configuration info (Team ID, AdMob IDs, etc.)
+✓ Install the Google Ads SDK
+✓ Build your app
+✓ Prepare everything for submission
+
+Just follow the prompts!
+
+
+════════════════════════════════════════════════════════════════════════════════
+ STEP 4: CREATE APP IN APP STORE CONNECT (~10 minutes)
+════════════════════════════════════════════════════════════════════════════════
+
+Before you can upload, you need to create the app listing:
+
+1. Go to: https://appstoreconnect.apple.com/
+2. Click "My Apps"
+3. Click the "+" button → "New App"
+4. Fill in:
+   - Platform: iOS
+   - Name: Starship Lander
+   - Primary Language: English (U.S.)
+   - Bundle ID: (select from dropdown - it should appear after step 3)
+   - SKU: starshiplander001
+5. Click "Create"
+
+
+════════════════════════════════════════════════════════════════════════════════
+ STEP 5: UPLOAD YOUR APP (~5 minutes)
+════════════════════════════════════════════════════════════════════════════════
+
+From the StarshipLander folder, run:
+
+    fastlane release
+
+This will:
+- Build the final version of your app
+- Sign it with your certificates
+- Upload it to App Store Connect
+
+You'll be prompted for your Apple ID password. Enter it when asked.
+
+
+════════════════════════════════════════════════════════════════════════════════
+ STEP 6: COMPLETE APP STORE LISTING (~30 minutes)
+════════════════════════════════════════════════════════════════════════════════
+
+Go back to App Store Connect and complete these sections:
+
+1. APP INFORMATION (already done by fastlane)
+   - Name, description, keywords ✓
+
+2. SCREENSHOTS (Required)
+   - Open Xcode: RocketLander.xcworkspace
+   - Run on iPhone 15 Pro simulator
+   - Take screenshots (Cmd + S in simulator)
+   - Upload 3-5 screenshots showing gameplay
+
+3. PRIVACY POLICY
+   - Host privacy_policy.html somewhere (GitHub Pages works!)
+   - Add the URL to App Store Connect
+
+4. APP REVIEW INFORMATION
+   - Contact info for Apple reviewers
+   - Demo account (not needed for this app)
+
+5. VERSION RELEASE
+   - Choose "Manually release" or "Automatically release"
+
+6. CLICK "SUBMIT FOR REVIEW"
+
+
+════════════════════════════════════════════════════════════════════════════════
+ STEP 7: WAIT FOR APPLE REVIEW (~1-3 days)
+════════════════════════════════════════════════════════════════════════════════
+
+Apple reviews every app. For a simple game like this, expect:
+- Review time: 1-3 days (usually faster)
+- Possible rejection reasons: Screenshots missing, privacy policy issues
+
+If rejected:
+- Read Apple's feedback carefully
+- Fix the issue
+- Resubmit
+
+Once approved, your app goes live!
+
+
+════════════════════════════════════════════════════════════════════════════════
+ TROUBLESHOOTING
+════════════════════════════════════════════════════════════════════════════════
+
+ERROR: "No signing certificate found"
+→ Open Xcode, go to Preferences → Accounts → Add your Apple ID
+→ Click "Manage Certificates" → Create iOS Distribution certificate
+
+ERROR: "Bundle ID already exists"
+→ Change the bundle ID to something unique (e.g., com.yourname.rocketlander2)
+
+ERROR: "CocoaPods not found"
+→ Run: sudo gem install cocoapods
+
+ERROR: "Fastlane not found"
+→ Run: sudo gem install fastlane
+
+NEED HELP?
+→ Apple Developer Forums: https://developer.apple.com/forums/
+→ Stack Overflow: Search for your error message
+
+
+════════════════════════════════════════════════════════════════════════════════
+ EARNING MONEY
+════════════════════════════════════════════════════════════════════════════════
+
+With AdMob ads, you can expect:
+- Banner ads: $0.10 - $1.00 per 1,000 views (eCPM)
+- Interstitial ads: $1.00 - $5.00 per 1,000 views
+
+To maximize revenue:
+1. Get more downloads (ASO - App Store Optimization)
+2. Keep users playing longer
+3. Add more ad placements (carefully - don't annoy users)
+
+Typical indie game earnings:
+- 100 downloads/day → $5-20/month
+- 1,000 downloads/day → $50-200/month
+- 10,000 downloads/day → $500-2,000/month
+
+
+════════════════════════════════════════════════════════════════════════════════
+ FILES IN THIS PROJECT
+════════════════════════════════════════════════════════════════════════════════
+
+StarshipLander/
+├── RocketLander.xcodeproj/    # Xcode project (before CocoaPods)
+├── RocketLander.xcworkspace/  # Xcode workspace (after CocoaPods)
+├── RocketLander/
+│   ├── RocketLanderApp.swift  # App entry point
+│   ├── ContentView.swift      # Main UI and menu
+│   ├── GameScene.swift        # Game logic (SpriteKit)
+│   ├── BannerAdView.swift     # AdMob integration
+│   ├── Info.plist             # App configuration
+│   ├── Assets.xcassets/       # App icon and colors
+│   └── Sounds/                # 16-bit sound effects
+│       ├── thrust.wav         # Engine loop
+│       ├── rotate.wav         # Rotation blip
+│       ├── land_success.wav   # Victory fanfare
+│       └── explosion.wav      # Crash sound
+├── Podfile                    # CocoaPods dependencies
+├── Scripts/
+│   ├── generate_icon.py       # Creates app icon
+│   ├── generate_sounds.py     # Creates 16-bit sound effects
+│   └── app_store_metadata.json
+├── fastlane/                  # Fastlane configuration
+├── setup_and_submit.sh        # Main setup script
+├── privacy_policy.html        # Privacy policy for App Store
+├── README.md                  # Project overview
+├── CHANGELOG.md               # Version history
+└── SETUP.txt                  # This file
+
+
+Good luck with your app!

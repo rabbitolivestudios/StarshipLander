@@ -1,0 +1,18 @@
+{
+  "appName": "Starship Lander",
+  "subtitle": "Land the Starship safely!",
+  "description": "Experience the thrill of landing a Starship rocket on a platform in this addictive physics-based game!\n\nInspired by real SpaceX Starship landings, test your piloting skills as you guide your rocket through a controlled descent. Manage your thrust carefully, control your rotation, and stick the landing on the platform!\n\nFEATURES:\n\u2022 Authentic Starship-inspired rocket design with flaps and landing legs\n\u2022 Realistic physics-based controls\n\u2022 Retro 16-bit sound effects\n\u2022 Skill-based scoring system rewarding fuel efficiency and precision\n\u2022 High score leaderboard to track your best landings\n\u2022 Simple touch controls - master the thrust!\n\nSCORING:\nYour score depends on multiple factors:\n\u2022 Fuel efficiency - Save fuel for bigger bonuses!\n\u2022 Soft landing - Touch down gently\n\u2022 Precision - Land in the center of the platform\n\u2022 Control - Keep your Starship upright\n\nCan you achieve the perfect landing? Every attempt is different with randomized platform positions. Download now and see if you have what it takes to land a Starship!\n\nMax score: ~1450 points. Can you beat it?",
+  "keywords": "starship,rocket,lander,space,game,physics,landing,spacex,simulation,arcade,casual,retro",
+  "supportURL": "https://github.com/YOUR_USERNAME/starship-lander-support",
+  "privacyPolicyURL": "https://github.com/YOUR_USERNAME/starship-lander-privacy",
+  "categories": {
+    "primary": "Games",
+    "secondary": "Simulation"
+  },
+  "ageRating": "4+",
+  "pricing": "Free",
+  "availableInAllCountries": true,
+  "whatIsNew": "Initial release of Starship Lander!\n\n\u2022 Starship-inspired rocket design\n\u2022 16-bit retro sound effects\n\u2022 Skill-based scoring system\n\u2022 High score leaderboard",
+  "version": "1.0.0",
+  "buildNumber": "1"
+}

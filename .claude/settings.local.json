@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:starship-lander--thiagoolivei120.replit.app)",
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(python3:*)",
+      "Bash(open:*)",
+      "Bash(pod install)",
+      "Bash(xcodebuild:*)",
+      "Bash(xcrun simctl:*)",
+      "Bash(cat:*)",
+      "Bash(wc:*)",
+      "Bash(ls:*)",
+      "Bash(./setup_and_submit.sh)",
+      "Bash(pod --version:*)",
+      "Bash(brew --version:*)",
+      "Bash(gem install:*)",
+      "Bash(ruby:*)"
+    ]
+  }
+}
