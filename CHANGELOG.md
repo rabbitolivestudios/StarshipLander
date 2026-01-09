@@ -5,6 +5,22 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-01-08
+
+### Added
+- **AdMob Integration**: Real Google Mobile Ads support for ad revenue
+  - Banner ads on menu screen
+  - Banner ads during gameplay
+  - Google Mobile Ads SDK via Swift Package Manager
+  - SKAdNetwork configuration for ad attribution
+
+### Technical Details
+- GADMobileAds SDK initialized at app launch
+- UIViewRepresentable wrapper for GADBannerView integration with SwiftUI
+- Test ad unit IDs for development, configurable for production
+
+---
+
 ## [1.0.0] - 2026-01-08
 
 ### Added
@@ -76,5 +92,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Highlights                                    |
 |---------|------------|-----------------------------------------------|
+| 1.1.0   | 2026-01-08 | AdMob integration for ad revenue              |
 | 1.0.0   | 2026-01-08 | Starship design, sounds, improved scoring     |
 | 0.1.0   | 2026-01-07 | Initial development, core gameplay            |

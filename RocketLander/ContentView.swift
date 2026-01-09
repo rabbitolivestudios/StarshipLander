@@ -187,6 +187,9 @@ struct MenuView: View {
             .background(Color.white.opacity(0.05))
             .cornerRadius(10)
 
+            // Banner Ad
+            BannerAdContainer()
+                .padding(.top, 10)
         }
         .padding()
     }
@@ -339,6 +342,10 @@ struct GameContainerView: View {
 
                 // Bottom controls and velocity display
                 BottomControlsView(gameState: gameState)
+
+                // Banner Ad at bottom of game screen
+                BannerAdContainer()
+                    .padding(.bottom, 5)
             }
         }
         .environmentObject(gameState)
