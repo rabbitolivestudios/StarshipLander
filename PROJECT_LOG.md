@@ -21,8 +21,14 @@ This file documents the development history and decisions for the Starship Lande
 |---------|-------|--------|
 | 1.0 | 2 | Under review by Apple |
 | 1.1 | 3 | Uploaded, waiting to submit (after 1.0 approval) |
+| 1.2 | 4 | **PLANNING** - Solar System Campaign + Haptics |
 
 **IMPORTANT:** Do NOT submit v1.1 until v1.0 is approved. Submitting a new version cancels the current review.
+
+**NEXT STEPS:**
+1. Wait for v1.0 Apple approval
+2. Submit v1.1 (AdMob integration)
+3. Implement v1.2 (see plan below)
 
 ---
 
@@ -100,6 +106,48 @@ This file documents the development history and decisions for the Starship Lande
 - Successfully archived and uploaded to App Store Connect
 - **Waiting for v1.0 approval before submitting v1.1**
 
+### Session 5 (2026-01-08) - v1.2 Planning
+- Discussed v1.2 feature options
+- Selected: **Haptic Feedback** + **Campaign Mode**
+- Refined campaign concept to **Solar System Theme**
+- Each level = a celestial body with unique physics and visuals
+- Created detailed implementation plan
+
+**v1.2 Features Planned:**
+
+1. **Haptic Feedback**
+   - Thrust: Light continuous vibration
+   - Rotation: Medium pulse
+   - Landing: Success notification pattern
+   - Crash: Heavy impact
+
+2. **Solar System Campaign (10 Levels)**
+   | # | Location | Gravity | Special |
+   |---|----------|---------|---------|
+   | 1 | Moon | -1.6 | Tutorial, Earth visible |
+   | 2 | Mars | -3.7 | Dust storms |
+   | 3 | Titan | -1.4 | Dense atmosphere |
+   | 4 | Europa | -1.3 | Ice surface |
+   | 5 | Earth | -9.8 | Moving barge (SpaceX style) |
+   | 6 | Venus | -8.9 | Heavy turbulence |
+   | 7 | Mercury | -3.7 | Close sun visual |
+   | 8 | Ganymede | -1.4 | Crater terrain |
+   | 9 | Io | -1.8 | Volcanic terrain |
+   | 10 | Jupiter | -24.8 | Crushing gravity, extreme winds |
+
+3. **Star-Based Unlock System**
+   - 1 Star: Complete level
+   - 2 Stars: Score > 500
+   - 3 Stars: Score > 900
+   - Earn stars to unlock next levels
+
+4. **Unique Visuals Per Level**
+   - Different sky colors
+   - Celestial bodies in background
+   - Terrain color variations
+
+**Full plan saved to:** `/Users/tboliveira/.claude/plans/frolicking-drifting-thimble.md`
+
 ---
 
 ## Key Files
@@ -137,12 +185,18 @@ e8e9656 Initial Commit
 
 1. **dSYM Warnings:** Upload shows warnings about missing dSYM for GoogleMobileAds.framework - harmless, only affects crash symbolication for Google's code
 
-2. **Future Features to Consider:**
+2. **v1.2 Planned (Solar System Campaign):**
+   - Haptic feedback
+   - 10 planetary levels with unique physics
+   - Star-based progression system
+   - Unique visuals per planet
+
+3. **Future Features (v1.3+):**
    - Interstitial ads between games
-   - More levels/difficulty settings
    - Game Center integration
    - iPad support
    - Landscape mode
+   - More celestial bodies (Pluto, asteroids)
 
 ---
 
