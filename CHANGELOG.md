@@ -5,7 +5,7 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2026-01-08
+## [1.1.0] - 2026-01-10
 
 ### Added
 - **AdMob Integration**: Real Google Mobile Ads support for ad revenue
@@ -14,10 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Google Mobile Ads SDK via Swift Package Manager
   - SKAdNetwork configuration for ad attribution
 
+- **App Tracking Transparency**: Privacy-compliant ad tracking
+  - ATT permission prompt on first launch
+  - User can allow or deny tracking
+  - Ads work either way (personalized if allowed)
+
 ### Technical Details
 - GADMobileAds SDK initialized at app launch
 - UIViewRepresentable wrapper for GADBannerView integration with SwiftUI
 - Test ad unit IDs for development, configurable for production
+- ATTrackingManager for iOS 14+ tracking permission
 
 ---
 
