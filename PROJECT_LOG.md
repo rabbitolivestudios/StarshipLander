@@ -148,6 +148,17 @@ This file documents the development history and decisions for the Starship Lande
 
 **Full plan saved to:** `/Users/tboliveira/.claude/plans/frolicking-drifting-thimble.md`
 
+### Session 6 (2026-01-10) - App Store Rejection Fix
+- v1.0 rejected for Guideline 5.1.2 (tracking without ATT permission)
+- Root cause: App Privacy indicated Device ID tracking, but no ATT prompt
+- Solution: Implement App Tracking Transparency for v1.1
+- Added `AppTrackingTransparency` framework
+- ATT permission prompt on app launch
+- Added `NSUserTrackingUsageDescription` to Info.plist
+- Updated build to 4
+- Uploaded v1.1 (build 4) to App Store Connect
+- Strategy: Submit v1.1 instead of fixing v1.0 (ads + ATT from day 1)
+
 ---
 
 ## Key Files
