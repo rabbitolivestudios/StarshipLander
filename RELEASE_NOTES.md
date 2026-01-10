@@ -1,7 +1,7 @@
 # Release Notes
 
-## Version 1.1 (Build 3)
-**Status:** Uploaded to App Store Connect - Ready to submit after v1.0 approval
+## Version 1.1 (Build 4)
+**Status:** SUBMITTED FOR REVIEW (2026-01-10)
 
 ### What's New
 - Added support for advertisements to help keep the game free
