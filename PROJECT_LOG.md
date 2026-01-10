@@ -15,20 +15,17 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-01-08)
+## Current Status (2026-01-10)
 
 | Version | Build | Status |
 |---------|-------|--------|
-| 1.0 | 2 | Under review by Apple |
-| 1.1 | 3 | Uploaded, waiting to submit (after 1.0 approval) |
-| 1.2 | 4 | **PLANNING** - Solar System Campaign + Haptics |
-
-**IMPORTANT:** Do NOT submit v1.1 until v1.0 is approved. Submitting a new version cancels the current review.
+| 1.0 | 2 | Rejected (Guideline 5.1.2 - tracking without ATT) |
+| 1.1 | 4 | **SUBMITTED FOR REVIEW** - AdMob + ATT |
+| 1.2 | - | Planning - Solar System Campaign + Haptics |
 
 **NEXT STEPS:**
-1. Wait for v1.0 Apple approval
-2. Submit v1.1 (AdMob integration)
-3. Implement v1.2 (see plan below)
+1. Wait for v1.1 Apple approval
+2. Once approved, implement v1.2 (see plan below)
 
 ---
 
@@ -158,6 +155,8 @@ This file documents the development history and decisions for the Starship Lande
 - Updated build to 4
 - Uploaded v1.1 (build 4) to App Store Connect
 - Strategy: Submit v1.1 instead of fixing v1.0 (ads + ATT from day 1)
+- Replied to App Review team explaining the fix
+- **v1.1 (build 4) SUBMITTED FOR REVIEW**
 
 ---
 
@@ -245,4 +244,4 @@ if let url = Bundle.main.url(forResource: "thrust", withExtension: "wav") {
 
 ---
 
-*Last updated: 2026-01-08*
+*Last updated: 2026-01-10*
