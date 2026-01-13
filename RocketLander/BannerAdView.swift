@@ -19,23 +19,48 @@ struct BannerAdView: UIViewRepresentable {
         self.adUnitID = adUnitID
     }
 
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
     func makeUIView(context: Context) -> BannerView {
         let bannerView = BannerView(adSize: AdSizeBanner)
         bannerView.adUnitID = adUnitID
         bannerView.backgroundColor = UIColor.clear
+        bannerView.delegate = context.coordinator
 
         // Get the root view controller
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootViewController = windowScene.windows.first?.rootViewController {
-            bannerView.rootViewController = rootViewController
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootViewController = windowScene.windows.first?.rootViewController {
+                bannerView.rootViewController = rootViewController
+                bannerView.load(Request())
+            }
         }
 
-        bannerView.load(Request())
         return bannerView
     }
 
     func updateUIView(_ uiView: BannerView, context: Context) {
         // No updates needed
+    }
+
+    class Coordinator: NSObject, BannerViewDelegate {
+        func bannerViewDidReceiveAd(_ bannerView: BannerView) {
+            print("✅ Ad loaded successfully")
+        }
+
+        func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
+            print("❌ Ad failed to load: \(error.localizedDescription)")
+        }
+
+        func bannerViewDidRecordImpression(_ bannerView: BannerView) {
+            print("📊 Ad impression recorded")
+        }
+
+        func bannerViewDidRecordClick(_ bannerView: BannerView) {
+            print("👆 Ad clicked")
+        }
     }
 }
 

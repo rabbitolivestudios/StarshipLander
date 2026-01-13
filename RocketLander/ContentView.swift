@@ -340,8 +340,10 @@ struct GameContainerView: View {
 
                 Spacer()
 
-                // Bottom controls and velocity display
-                BottomControlsView(gameState: gameState)
+                // Bottom controls and velocity display (hidden when game over)
+                if !gameState.gameOver {
+                    BottomControlsView(gameState: gameState)
+                }
 
                 // Banner Ad at bottom of game screen
                 BannerAdContainer()
