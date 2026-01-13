@@ -5,6 +5,19 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-01-12
+
+### Fixed
+- **High Score Input Bug**: Fixed issue where tapping the name input field would restart the game instead of allowing text entry
+- **Ad Loading**: Improved ad loading reliability with proper delegate handling
+
+### Technical Details
+- Hide game controls when game over screen is displayed
+- Added BannerViewDelegate for ad loading diagnostics
+- Moved ad loading to main thread with proper timing
+
+---
+
 ## [1.1.0] - 2026-01-10
 
 ### Added
