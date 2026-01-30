@@ -452,8 +452,17 @@ RocketLander/
    - **Platform B** (Precision Target): Horizontal sway, ±80px at 40px/s (main barge)
    - **Platform C** (Elite Landing): Horizontal ±50px at 55px/s + sine-wave vertical bob — hardest to land on
 
+#### Revision (same session):
+Reverted thrust scaling (not needed). Instead rebalanced all gravity values to game-friendly range:
+- Moon: -1.6, Mars: -3.7, Titan: -1.4, Europa: -1.3
+- **Earth: -9.8 → -4.5**, **Venus: -8.9 → -4.2**, Mercury: -3.7
+- Ganymede: -1.4, Io: -1.8, **Jupiter: -24.8 → -6.0**
+
+Fixed platform movement bounds — each platform now stays within its own zone (left/center/right) with smaller, controlled displacements (±15-50px) instead of wandering across the screen.
+
 #### Files Modified:
-- `RocketLander/GameScene.swift` — Thrust scaling, per-platform movement state, updated `applyCampaignMechanics()`
+- `RocketLander/GameScene.swift` — Reverted thrust scaling, per-platform movement with zone bounds
+- `RocketLander/Models/LevelDefinition.swift` — Rebalanced gravity values for Earth, Venus, Jupiter
 
 ---
 

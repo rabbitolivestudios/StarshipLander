@@ -115,7 +115,7 @@ struct LevelDefinition {
         // Level 5: Earth
         LevelDefinition(
             id: 5, name: "Earth",
-            gravity: -9.8,
+            gravity: -4.5,
             skyColorTop: SKColor(red: 0.1, green: 0.15, blue: 0.3, alpha: 1.0),
             skyColorBottom: SKColor(red: 0.2, green: 0.3, blue: 0.5, alpha: 1.0),
             terrainColor: SKColor(red: 0.2, green: 0.35, blue: 0.5, alpha: 1.0),
@@ -127,7 +127,7 @@ struct LevelDefinition {
         // Level 6: Venus
         LevelDefinition(
             id: 6, name: "Venus",
-            gravity: -8.9,
+            gravity: -4.2,
             skyColorTop: SKColor(red: 0.4, green: 0.25, blue: 0.1, alpha: 1.0),
             skyColorBottom: SKColor(red: 0.7, green: 0.5, blue: 0.2, alpha: 1.0),
             terrainColor: SKColor(red: 0.5, green: 0.4, blue: 0.25, alpha: 1.0),
@@ -175,7 +175,7 @@ struct LevelDefinition {
         // Level 10: Jupiter
         LevelDefinition(
             id: 10, name: "Jupiter",
-            gravity: -24.8,
+            gravity: -6.0,
             skyColorTop: SKColor(red: 0.2, green: 0.15, blue: 0.05, alpha: 1.0),
             skyColorBottom: SKColor(red: 0.6, green: 0.45, blue: 0.2, alpha: 1.0),
             terrainColor: SKColor(red: 0.5, green: 0.4, blue: 0.25, alpha: 1.0),
