@@ -26,12 +26,12 @@ This file documents the development history and decisions for the Starship Lande
 | 1.1.3 | 7 | Published - Partial bug fix + URL update |
 | 1.1.4 | 10 | Published - Bug fix + new icon |
 | 1.1.5 | 11 | Submitted for review - New scoring system + HUD fixes |
-| 2.0.0 | 12 | **IN DEVELOPMENT** - Campaign mode, per-planet physics, visual effects |
+| 2.0.0 | 12 | **SUBMITTED FOR REVIEW** - Campaign mode, per-planet physics, visual effects |
 
 **NEXT STEPS:**
-1. Playtest all 10 campaign levels on device
-2. Fine-tune thrust/gravity values based on playtesting
-3. Submit v2.0.0 to App Store
+1. Wait for App Store review response
+2. If rejected, address feedback and resubmit
+3. If approved, verify live listing screenshots and description
 
 ---
 
@@ -651,6 +651,46 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - [x] All 10 levels playtested on simulator
 - [x] All docs updated (DECISIONS.md, CHANGELOG.md, session summary, PROJECT_LOG.md)
 
+### Session 19 (2026-01-30) - App Store Screenshots, Release Notes, Submission
+
+**Final session for v2.0.0: screenshots, documentation, and App Store submission.**
+
+#### App Store Screenshots:
+- Captured 10 screenshots from iPhone 16 Pro simulator using `xcrun simctl io screenshot`
+- Clean status bar override (9:41, full battery/signal)
+- Covers: main menu, classic gameplay, campaign level select, 5 campaign levels (Titan, Ganymede, Venus crash, Earth, Jupiter, Io), and successful landing with high score entry
+- Initially captured at 1206×2622 (iPhone 16 Pro native) — rejected by App Store Connect
+- Resized to 1284×2778 (iPhone 6.7" Pro Max) using `sips -z 2778 1284`
+- **Location:** `Screenshots/v2.0.0/`
+
+#### Detailed Release Notes:
+- Expanded RELEASE_NOTES.md v2.0.0 from ~30 lines to ~170 lines
+- Added comprehensive sections: campaign table, platform table, visual effects, scoring formula, astronaut easter eggs table, architecture
+- Updated status from "IN DEVELOPMENT" to "SUBMITTED TO APP STORE CONNECT"
+
+#### App Store Copy:
+- Promotional text (166 chars) for anytime updates
+- Description (897 chars) — structured with Campaign Mode, Three Platforms, Features sections
+- "What's New" text with bullet points for all new features
+
+#### App Store Submission:
+- v2.0.0 (Build 12) submitted for App Store review
+- Screenshots uploaded at correct 1284×2778 dimensions
+- All text fields populated (promotional, description, what's new)
+
+#### Technical Issues Resolved:
+- Git HTTP/2 broken pipe on large pushes — fixed with `git config http.version HTTP/1.1`
+- AppleScript clicks don't translate to SpriteKit UITouch hold events — used manual navigation + timed capture
+- App Store Connect rejected 1206×2622 screenshots — requires exactly 1284×2778 for iPhone 6.7"
+
+#### Definition of Done:
+- [x] 10 screenshots captured and resized
+- [x] Screenshots uploaded to App Store Connect
+- [x] Release notes expanded with full feature documentation
+- [x] App Store description and "What's New" drafted
+- [x] v2.0.0 submitted for review
+- [x] All documentation updated and committed
+
 ---
 
 ## Contact / Accounts
@@ -661,4 +701,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-01-30 (Session 18)*
+*Last updated: 2026-01-30 (Session 19)*
