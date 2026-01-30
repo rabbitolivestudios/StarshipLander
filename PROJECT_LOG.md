@@ -387,6 +387,28 @@ RocketLander/
 
 ---
 
+### Session 12 (2026-01-30) - Campaign UX Improvements
+
+**Per-level high scores, level name HUD, and level details on menu.**
+
+#### Changes Made:
+1. **Per-level high scores in campaign mode**: High scores are now separate per level/planet in campaign mode. Classic mode retains its own global leaderboard. `CampaignState.isHighScore()` checks against per-level top-3 scores. `GameOverView.saveScore()` routes to the correct storage based on game mode.
+
+2. **Level name on HUD during campaign**: When playing in campaign mode, the planet/level name (e.g., "MOON", "MARS") is displayed at top center of the screen in `TopHUDView`.
+
+3. **Gravity and mechanics on level select**: Each level card in `LevelSelectView` now shows gravity value (e.g., "1.6 m/s²") and special mechanic name (e.g., "Light Wind") for unlocked levels. Added `displayName` computed property to `SpecialMechanic` enum.
+
+4. **Button wrapping fix**: Fixed game over action buttons (Menu/Next/Retry) wrapping text in campaign mode by reducing padding and adding `lineLimit(1)`.
+
+#### Files Modified:
+- `RocketLander/Models/LevelDefinition.swift` — Added `SpecialMechanic.displayName`
+- `RocketLander/Models/CampaignState.swift` — Added `isHighScore(for:score:)`
+- `RocketLander/Views/HUDViews.swift` — Added level name display in campaign
+- `RocketLander/Views/LevelSelectView.swift` — Added gravity + mechanic to level cards
+- `RocketLander/Views/GameOverView.swift` — Per-mode high score check and save, button fix
+
+---
+
 ## Contact / Accounts
 
 - **Apple Developer Account:** Thiago Borges de Oliveira
@@ -395,4 +417,4 @@ RocketLander/
 
 ---
 
-*Last updated: 2026-01-30 (Session 11)*
+*Last updated: 2026-01-30 (Session 12)*

@@ -12,6 +12,21 @@ enum SpecialMechanic: String, Codable {
     case deepCraters         // Ganymede: deep terrain
     case volcanicEruptions   // Io: volcanic particles
     case extremeWind         // Jupiter: extreme wind gusts
+
+    var displayName: String {
+        switch self {
+        case .none: return "None"
+        case .lightWind: return "Light Wind"
+        case .denseAtmosphere: return "Dense Atmosphere"
+        case .iceSurface: return "Ice Surface"
+        case .movingPlatform: return "Moving Platform"
+        case .heavyTurbulence: return "Heavy Turbulence"
+        case .heatShimmer: return "Heat Shimmer"
+        case .deepCraters: return "Deep Craters"
+        case .volcanicEruptions: return "Volcanic Eruptions"
+        case .extremeWind: return "Extreme Wind"
+        }
+    }
 }
 
 // MARK: - Celestial Body

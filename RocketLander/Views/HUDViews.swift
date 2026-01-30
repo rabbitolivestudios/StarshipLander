@@ -21,6 +21,17 @@ struct TopHUDView: View {
 
                 Spacer()
 
+                // Level name (campaign mode only)
+                if gameState.currentMode == .campaign,
+                   let level = LevelDefinition.level(for: gameState.currentLevelId) {
+                    Text(level.name.uppercased())
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .shadow(color: .black, radius: 2)
+                }
+
+                Spacer()
+
                 // Fuel gauge
                 VStack(alignment: .trailing, spacing: 4) {
                     HStack(spacing: 4) {

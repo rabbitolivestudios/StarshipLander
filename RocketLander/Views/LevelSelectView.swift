@@ -117,6 +117,31 @@ struct LevelCardView: View {
                     .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .lineLimit(2)
+
+                // Level details (gravity + mechanic)
+                if isUnlocked {
+                    HStack(spacing: 8) {
+                        HStack(spacing: 2) {
+                            Image(systemName: "arrow.down.circle")
+                                .font(.system(size: 8))
+                            Text(String(format: "%.1f m/s²", abs(level.gravity)))
+                                .font(.system(size: 8, weight: .medium, design: .monospaced))
+                        }
+                        .foregroundColor(.cyan.opacity(0.8))
+
+                        if level.specialMechanic != .none {
+                            HStack(spacing: 2) {
+                                Image(systemName: "exclamationmark.triangle")
+                                    .font(.system(size: 8))
+                                Text(level.specialMechanic.displayName)
+                                    .font(.system(size: 8, weight: .medium))
+                            }
+                            .foregroundColor(.red.opacity(0.7))
+                        }
+
+                        Spacer()
+                    }
+                }
             }
             .padding(12)
             .background(isUnlocked ? Color.white.opacity(0.08) : Color.white.opacity(0.03))
