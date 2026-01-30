@@ -2,6 +2,13 @@ import SwiftUI
 
 // MARK: - Rocket Illustration (Menu)
 struct RocketIllustration: View {
+    let bodyGray = Color(red: 0.82, green: 0.83, blue: 0.85)
+    let highlightGray = Color(red: 0.88, green: 0.89, blue: 0.91)
+    let strokeGray = Color(red: 0.6, green: 0.6, blue: 0.63)
+    let flapDark = Color(red: 0.18, green: 0.18, blue: 0.2)
+    let metalDark = Color(red: 0.15, green: 0.15, blue: 0.17)
+    let legGray = Color(red: 0.45, green: 0.45, blue: 0.48)
+
     var body: some View {
         ZStack {
             // Flame
@@ -13,57 +20,126 @@ struct RocketIllustration: View {
                         endPoint: .bottom
                     )
                 )
-                .frame(width: 22, height: 45)
-                .offset(y: 60)
-
-            // Main cylindrical body with dome top
-            StarshipBody()
-                .fill(Color(red: 0.91, green: 0.91, blue: 0.93))
-                .frame(width: 28, height: 75)
-
-            // Forward flaps (left)
-            Parallelogram(angle: 25)
-                .fill(Color(red: 0.23, green: 0.23, blue: 0.24))
-                .frame(width: 16, height: 12)
-                .offset(x: -18, y: -22)
-
-            // Forward flaps (right)
-            Parallelogram(angle: -25)
-                .fill(Color(red: 0.23, green: 0.23, blue: 0.24))
-                .frame(width: 16, height: 12)
-                .offset(x: 18, y: -22)
-
-            // Aft flaps (left)
-            Parallelogram(angle: -20)
-                .fill(Color(red: 0.23, green: 0.23, blue: 0.24))
-                .frame(width: 18, height: 14)
-                .offset(x: -19, y: 22)
-
-            // Aft flaps (right)
-            Parallelogram(angle: 20)
-                .fill(Color(red: 0.23, green: 0.23, blue: 0.24))
-                .frame(width: 18, height: 14)
-                .offset(x: 19, y: 22)
-
-            // Engine section
-            Rectangle()
-                .fill(Color(red: 0.2, green: 0.2, blue: 0.22))
-                .frame(width: 30, height: 8)
-                .offset(y: 40)
+                .frame(width: 24, height: 50)
+                .offset(y: 65)
 
             // Landing legs
             Rectangle()
-                .fill(Color(red: 0.4, green: 0.4, blue: 0.42))
-                .frame(width: 4, height: 18)
+                .fill(legGray)
+                .frame(width: 4, height: 22)
                 .rotationEffect(.degrees(-25))
-                .offset(x: -18, y: 45)
-
+                .offset(x: -20, y: 50)
             Rectangle()
-                .fill(Color(red: 0.4, green: 0.4, blue: 0.42))
-                .frame(width: 4, height: 18)
+                .fill(legGray)
+                .frame(width: 4, height: 22)
                 .rotationEffect(.degrees(25))
-                .offset(x: 18, y: 45)
+                .offset(x: 20, y: 50)
+
+            // Foot pads
+            RoundedRectangle(cornerRadius: 1)
+                .fill(Color(red: 0.35, green: 0.35, blue: 0.38))
+                .frame(width: 8, height: 3)
+                .offset(x: -26, y: 58)
+            RoundedRectangle(cornerRadius: 1)
+                .fill(Color(red: 0.35, green: 0.35, blue: 0.38))
+                .frame(width: 8, height: 3)
+                .offset(x: 26, y: 58)
+
+            // Aft flaps (left)
+            Parallelogram(angle: -20)
+                .fill(flapDark)
+                .frame(width: 20, height: 16)
+                .offset(x: -21, y: 24)
+            // Aft flaps (right)
+            Parallelogram(angle: 20)
+                .fill(flapDark)
+                .frame(width: 20, height: 16)
+                .offset(x: 21, y: 24)
+
+            // Aft hinge lines
+            Rectangle()
+                .fill(strokeGray)
+                .frame(width: 2, height: 14)
+                .offset(x: -14, y: 24)
+            Rectangle()
+                .fill(strokeGray)
+                .frame(width: 2, height: 14)
+                .offset(x: 14, y: 24)
+
+            // Main cylindrical body with dome top
+            StarshipBody()
+                .fill(bodyGray)
+                .frame(width: 30, height: 80)
+
+            // Body highlight strip (left reflection)
+            Rectangle()
+                .fill(highlightGray)
+                .frame(width: 4, height: 55)
+                .offset(x: -10, y: 2)
+
+            // Panel seam lines (horizontal)
+            ForEach([-16, 0, 16], id: \.self) { yPos in
+                Rectangle()
+                    .fill(strokeGray.opacity(0.5))
+                    .frame(width: 24, height: 0.5)
+                    .offset(y: CGFloat(yPos))
+            }
+
+            // Vertical panel seam
+            Rectangle()
+                .fill(strokeGray.opacity(0.3))
+                .frame(width: 0.5, height: 48)
+                .offset(y: 2)
+
+            // Forward flaps (left)
+            Parallelogram(angle: 25)
+                .fill(flapDark)
+                .frame(width: 18, height: 14)
+                .offset(x: -20, y: -22)
+            // Forward flaps (right)
+            Parallelogram(angle: -25)
+                .fill(flapDark)
+                .frame(width: 18, height: 14)
+                .offset(x: 20, y: -22)
+
+            // Forward hinge lines
+            Rectangle()
+                .fill(strokeGray)
+                .frame(width: 2, height: 12)
+                .offset(x: -14, y: -22)
+            Rectangle()
+                .fill(strokeGray)
+                .frame(width: 2, height: 12)
+                .offset(x: 14, y: -22)
+
+            // Engine skirt
+            Trapezoid()
+                .fill(metalDark)
+                .frame(width: 34, height: 10)
+                .offset(y: 42)
+
+            // Engine nozzles (3)
+            ForEach([-8, 0, 8], id: \.self) { xPos in
+                Trapezoid()
+                    .fill(Color(red: 0.1, green: 0.1, blue: 0.12))
+                    .frame(width: 7, height: 6)
+                    .offset(x: CGFloat(xPos), y: 48)
+            }
         }
+    }
+}
+
+// MARK: - Trapezoid Shape
+struct Trapezoid: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let inset: CGFloat = rect.width * 0.08
+        path.move(to: CGPoint(x: inset, y: 0))
+        path.addLine(to: CGPoint(x: rect.maxX - inset, y: 0))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: 0, y: rect.maxY))
+        path.closeSubpath()
+        return path
     }
 }
 

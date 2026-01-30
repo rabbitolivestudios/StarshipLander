@@ -407,6 +407,39 @@ RocketLander/
 - `RocketLander/Views/LevelSelectView.swift` — Added gravity + mechanic to level cards
 - `RocketLander/Views/GameOverView.swift` — Per-mode high score check and save, button fix
 
+### Session 13 (2026-01-30) - Visual Polish
+
+**Planet name centering, celestial body detail, and Starship redesign.**
+
+#### Changes Made:
+1. **Planet name truly centered**: Switched TopHUDView from HStack with Spacers to ZStack overlay so the level name is always screen-centered regardless of back button/fuel gauge widths.
+
+2. **Detailed celestial bodies**: All background planets now have surface features:
+   - **Earth**: Green continents (5 blobs), white polar ice caps, cloud wisps
+   - **Mars**: Dark maria regions, polar cap, Olympus Mons hint
+   - **Jupiter**: Horizontal cloud bands (5 layers), Great Red Spot
+   - **Venus**: Thick cloud bands
+   - **Saturn**: Subtle bands, multi-layer rings (back + front + inner)
+   - **Europa**: Ice crack lines (8 random fractures)
+   - **Io**: Volcanic spots (yellow/orange/red)
+   - **All planets**: Terminator shadow (dark crescent for 3D), atmospheric glow for planets with atmosphere, improved crater depth with inner shadows
+
+3. **Improved Starship design** (SpriteKit + SwiftUI menu):
+   - Wider body (24→26pt), taller (65→70pt)
+   - Darker metallic color palette with visible body highlight strip
+   - Panel seam lines (3 horizontal + 1 vertical) for industrial look
+   - Larger forward flaps (14→16pt outer) and aft flaps (16→18pt outer)
+   - Hinge detail lines at flap attachment points
+   - Wider engine skirt with tapered nozzles (bell shape)
+   - Inner nozzle glow details
+   - Sturdier landing legs with foot pads
+   - Menu illustration updated to match with Trapezoid shape
+
+#### Files Modified:
+- `RocketLander/Views/HUDViews.swift` — ZStack centering for level name
+- `RocketLander/GameScene+Setup.swift` — Celestial body features, improved rocket
+- `RocketLander/Views/ShapeViews.swift` — Updated menu rocket, added Trapezoid shape
+
 ---
 
 ## Contact / Accounts
@@ -417,4 +450,4 @@ RocketLander/
 
 ---
 
-*Last updated: 2026-01-30 (Session 12)*
+*Last updated: 2026-01-30 (Session 13)*
