@@ -17,6 +17,23 @@
 		A1000007 /* rotate.wav in Resources */ = {isa = PBXBuildFile; fileRef = A2000008 /* rotate.wav */; };
 		A1000008 /* land_success.wav in Resources */ = {isa = PBXBuildFile; fileRef = A2000009 /* land_success.wav */; };
 		A1000009 /* explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = A2000010 /* explosion.wav */; };
+		C2000001 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000001 /* GameState.swift */; };
+		C2000002 /* HighScoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000002 /* HighScoreManager.swift */; };
+		C2000003 /* LandingPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000003 /* LandingPlatform.swift */; };
+		C2000004 /* LandingMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000004 /* LandingMessages.swift */; };
+		C2000005 /* LevelDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000005 /* LevelDefinition.swift */; };
+		C2000006 /* CampaignState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000006 /* CampaignState.swift */; };
+		C2000007 /* ShapeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000007 /* ShapeViews.swift */; };
+		C2000008 /* HUDViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000008 /* HUDViews.swift */; };
+		C2000009 /* ControlViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000009 /* ControlViews.swift */; };
+		C2000010 /* GameContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000010 /* GameContainerView.swift */; };
+		C2000011 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000011 /* GameOverView.swift */; };
+		C2000012 /* LevelSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000012 /* LevelSelectView.swift */; };
+		C2000013 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000013 /* HapticManager.swift */; };
+		C2000014 /* GameScene+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000014 /* GameScene+Setup.swift */; };
+		C2000015 /* GameScene+Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000015 /* GameScene+Effects.swift */; };
+		C2000016 /* GameScene+Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000016 /* GameScene+Sound.swift */; };
+		C2000017 /* GameScene+Scoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000017 /* GameScene+Scoring.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +48,23 @@
 		A2000009 /* land_success.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = land_success.wav; sourceTree = "<group>"; };
 		A2000010 /* explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = explosion.wav; sourceTree = "<group>"; };
 		A3000001 /* RocketLander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RocketLander.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1000001 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		C1000002 /* HighScoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoreManager.swift; sourceTree = "<group>"; };
+		C1000003 /* LandingPlatform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPlatform.swift; sourceTree = "<group>"; };
+		C1000004 /* LandingMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingMessages.swift; sourceTree = "<group>"; };
+		C1000005 /* LevelDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDefinition.swift; sourceTree = "<group>"; };
+		C1000006 /* CampaignState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignState.swift; sourceTree = "<group>"; };
+		C1000007 /* ShapeViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeViews.swift; sourceTree = "<group>"; };
+		C1000008 /* HUDViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDViews.swift; sourceTree = "<group>"; };
+		C1000009 /* ControlViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlViews.swift; sourceTree = "<group>"; };
+		C1000010 /* GameContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContainerView.swift; sourceTree = "<group>"; };
+		C1000011 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
+		C1000012 /* LevelSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelectView.swift; sourceTree = "<group>"; };
+		C1000013 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		C1000014 /* GameScene+Setup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Setup.swift"; sourceTree = "<group>"; };
+		C1000015 /* GameScene+Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Effects.swift"; sourceTree = "<group>"; };
+		C1000016 /* GameScene+Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Sound.swift"; sourceTree = "<group>"; };
+		C1000017 /* GameScene+Scoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Scoring.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +93,14 @@
 				A2000001 /* RocketLanderApp.swift */,
 				A2000002 /* ContentView.swift */,
 				A2000003 /* GameScene.swift */,
+				C1000014 /* GameScene+Setup.swift */,
+				C1000015 /* GameScene+Effects.swift */,
+				C1000016 /* GameScene+Sound.swift */,
+				C1000017 /* GameScene+Scoring.swift */,
 				A2000004 /* BannerAdView.swift */,
+				C3000001 /* Models */,
+				C3000002 /* Views */,
+				C3000003 /* Haptics */,
 				A2000005 /* Assets.xcassets */,
 				A2000006 /* Info.plist */,
 				A5000004 /* Sounds */,
@@ -86,6 +127,40 @@
 			path = Sounds;
 			sourceTree = "<group>";
 		};
+		C3000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C1000001 /* GameState.swift */,
+				C1000002 /* HighScoreManager.swift */,
+				C1000003 /* LandingPlatform.swift */,
+				C1000004 /* LandingMessages.swift */,
+				C1000005 /* LevelDefinition.swift */,
+				C1000006 /* CampaignState.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C3000002 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C1000007 /* ShapeViews.swift */,
+				C1000008 /* HUDViews.swift */,
+				C1000009 /* ControlViews.swift */,
+				C1000010 /* GameContainerView.swift */,
+				C1000011 /* GameOverView.swift */,
+				C1000012 /* LevelSelectView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C3000003 /* Haptics */ = {
+			isa = PBXGroup;
+			children = (
+				C1000013 /* HapticManager.swift */,
+			);
+			path = Haptics;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -102,6 +177,9 @@
 			dependencies = (
 			);
 			name = RocketLander;
+			packageProductDependencies = (
+				74F1727F2F108FD000D82B94 /* GoogleMobileAds */,
+			);
 			productName = RocketLander;
 			productReference = A3000001 /* RocketLander.app */;
 			productType = "com.apple.product-type.application";
@@ -166,6 +244,23 @@
 				A1000002 /* ContentView.swift in Sources */,
 				A1000003 /* GameScene.swift in Sources */,
 				A1000004 /* BannerAdView.swift in Sources */,
+				C2000001 /* GameState.swift in Sources */,
+				C2000002 /* HighScoreManager.swift in Sources */,
+				C2000003 /* LandingPlatform.swift in Sources */,
+				C2000004 /* LandingMessages.swift in Sources */,
+				C2000005 /* LevelDefinition.swift in Sources */,
+				C2000006 /* CampaignState.swift in Sources */,
+				C2000007 /* ShapeViews.swift in Sources */,
+				C2000008 /* HUDViews.swift in Sources */,
+				C2000009 /* ControlViews.swift in Sources */,
+				C2000010 /* GameContainerView.swift in Sources */,
+				C2000011 /* GameOverView.swift in Sources */,
+				C2000012 /* LevelSelectView.swift in Sources */,
+				C2000013 /* HapticManager.swift in Sources */,
+				C2000014 /* GameScene+Setup.swift in Sources */,
+				C2000015 /* GameScene+Effects.swift in Sources */,
+				C2000016 /* GameScene+Sound.swift in Sources */,
+				C2000017 /* GameScene+Scoring.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

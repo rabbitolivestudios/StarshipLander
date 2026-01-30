@@ -2,23 +2,30 @@
 
 A physics-based rocket landing game for iOS, inspired by SpaceX Starship landings.
 
-**Version:** 1.0.0
+**Version:** 1.2.0
 **Platform:** iOS 15.0+
 **Language:** Swift 5.0
-**Frameworks:** SwiftUI, SpriteKit
+**Frameworks:** SwiftUI, SpriteKit, CoreMotion
+**Developer:** Rabbit Olive Studios
 
 ## Game Overview
 
-Guide your Starship through a controlled descent and land safely on the platform. Master thrust control, manage your fuel efficiently, and achieve the perfect landing!
+Guide your Starship through a controlled descent and land safely on one of three landing platforms. Master thrust control, manage your fuel efficiently, and achieve the perfect landing! Play Classic Mode for free-form practice or tackle Campaign Mode across 10 solar system destinations.
 
 ### Features
 
 - **Realistic Physics**: SpriteKit-powered physics simulation
 - **Starship Design**: Authentic SpaceX Starship-inspired rocket with flaps and landing legs
-- **16-Bit Sound Effects**: Retro chiptune audio for thrust, rotation, landing, and crashes
-- **Skill-Based Scoring**: Score based on fuel efficiency, landing precision, and approach control
+- **Three Landing Platforms**: Training Zone (1x), Precision Target (2x), Elite Landing (5x)
+- **Campaign Mode**: 10 levels across the solar system with unique gravity and mechanics
+- **Dual Control Modes**: Touch buttons or accelerometer (tilt to rotate)
+- **Haptic Feedback**: Tactile responses for thrust, rotation, landing, and crashes
+- **16-Bit Sound Effects**: Retro chiptune audio for all actions
+- **Star Rating System**: Earn 1-3 stars per landing based on platform difficulty
+- **Landing Messages**: Contextual feedback with teaching nudges on crashes
+- **Skill-Based Scoring**: Up to 25,000 points with platform and fuel multipliers
 - **High Score Leaderboard**: Track your top 3 landings
-- **AdMob Integration**: Monetization-ready with banner ads
+- **AdMob Integration**: Banner ads with App Tracking Transparency support
 
 ### Controls
 
@@ -27,46 +34,98 @@ Guide your Starship through a controlled descent and land safely on the platform
 | **THRUST** (center) | Fire main engines |
 | **L** (left) | Rotate counter-clockwise |
 | **R** (right) | Rotate clockwise |
+| **Tilt** (accelerometer mode) | Tilt phone left/right to rotate |
+
+Toggle between button and accelerometer controls in the main menu.
 
 ### Scoring System
 
-| Component | Max Points | Criteria |
-|-----------|------------|----------|
+**Continuous scoring with dual multipliers (Max ~25,000 points)**
+
+| Component | Max Points | Description |
+|-----------|------------|-------------|
 | Base | 100 | Successful landing |
-| Fuel Efficiency | 500 | More remaining fuel = higher score |
-| Soft Landing | 300 | Lower vertical speed at touchdown |
-| Horizontal Precision | 200 | Minimal horizontal drift |
-| Platform Center | 150 | Land closer to platform center |
-| Rotation | 100 | Land perfectly upright |
-| Approach Control | 100 | Controlled descent speed |
-| **Maximum** | **~1450** | Perfect landing |
+| Soft Landing | 700 | Lower vertical speed = more points |
+| Horizontal Precision | 400 | Less drift = more points |
+| Platform Center | 350 | Closer to center = more points |
+| Rotation | 250 | More upright = more points |
+| Approach Control | 200 | Controlled descent = more points |
+| **Subtotal** | **2000** | Before multipliers |
+| **Fuel Multiplier** | **1.0x - 2.5x** | More fuel = higher multiplier |
+| **Platform Multiplier** | **1x / 2x / 5x** | Harder platform = higher multiplier |
+| **Maximum** | **~25,000** | Perfect landing + 100% fuel + Platform C |
+
+**Formula:** `subtotal × fuelMultiplier × platformMultiplier`
+
+### Landing Platforms
+
+| Platform | Position | Width | Multiplier | Stars | Color |
+|----------|----------|-------|------------|-------|-------|
+| A — Training Zone | Left (18%) | 130pt | 1x | 1 | Green |
+| B — Precision Target | Center (50%) | 110pt | 2x | 2 | Yellow |
+| C — Elite Landing | Right (82%) | 80pt | 5x | 3 | Red |
+
+### Campaign Levels
+
+| # | Name | Gravity | Special Mechanic |
+|---|------|---------|------------------|
+| 1 | Moon | 1.6 m/s² | None (tutorial) |
+| 2 | Mars | 3.7 m/s² | Light dust wind |
+| 3 | Titan | 1.4 m/s² | Dense atmosphere |
+| 4 | Europa | 1.3 m/s² | Ice surface |
+| 5 | Earth | 9.8 m/s² | Moving platform |
+| 6 | Venus | 8.9 m/s² | Heavy turbulence |
+| 7 | Mercury | 3.7 m/s² | Heat shimmer |
+| 8 | Ganymede | 1.4 m/s² | Deep craters |
+| 9 | Io | 1.8 m/s² | Volcanic eruptions |
+| 10 | Jupiter | 24.8 m/s² | Extreme wind |
 
 ## Project Structure
 
 ```
 StarshipLander/
 ├── RocketLander/
-│   ├── RocketLanderApp.swift    # App entry point
-│   ├── ContentView.swift        # UI, menus, controls (868 lines)
-│   ├── GameScene.swift          # Game logic, physics (830 lines)
-│   ├── BannerAdView.swift       # AdMob integration
-│   ├── Info.plist               # App configuration
-│   ├── Assets.xcassets/         # App icons and colors
-│   └── Sounds/                  # Audio files
-│       ├── thrust.wav           # Engine loop
-│       ├── rotate.wav           # Rotation blip
-│       ├── land_success.wav     # Victory fanfare
-│       └── explosion.wav        # Crash sound
+│   ├── RocketLanderApp.swift        # App entry point, ATT & AdMob init
+│   ├── ContentView.swift            # ContentView + MenuView (navigation root)
+│   ├── GameScene.swift              # Core update loop, physics, collision
+│   ├── GameScene+Setup.swift        # Starfield, terrain, platforms, rocket creation
+│   ├── GameScene+Effects.swift      # Explosions, flames, visual effects
+│   ├── GameScene+Sound.swift        # All sound methods
+│   ├── GameScene+Scoring.swift      # Score calculation, platform detection
+│   ├── BannerAdView.swift           # AdMob banner integration
+│   ├── Info.plist                   # App configuration
+│   ├── Models/
+│   │   ├── GameState.swift          # ObservableObject game state
+│   │   ├── HighScoreManager.swift   # High score persistence
+│   │   ├── LandingPlatform.swift    # Platform A/B/C definitions
+│   │   ├── LandingMessages.swift    # Success/crash/rare messages
+│   │   ├── LevelDefinition.swift    # 10 campaign level definitions
+│   │   └── CampaignState.swift      # Campaign progress persistence
+│   ├── Views/
+│   │   ├── GameContainerView.swift  # Game container + SpriteKit bridge
+│   │   ├── GameOverView.swift       # Game over screen with stars
+│   │   ├── HUDViews.swift           # Top HUD + velocity display
+│   │   ├── ControlViews.swift       # Bottom controls + buttons
+│   │   ├── ShapeViews.swift         # Rocket illustration shapes
+│   │   └── LevelSelectView.swift    # Campaign level grid
+│   ├── Haptics/
+│   │   └── HapticManager.swift      # Haptic feedback manager
+│   ├── Assets.xcassets/             # App icons and colors
+│   └── Sounds/                      # Audio files
+│       ├── thrust.wav               # Engine loop
+│       ├── rotate.wav               # Rotation blip
+│       ├── land_success.wav         # Victory fanfare
+│       └── explosion.wav            # Crash sound
 ├── Scripts/
-│   ├── generate_sounds.py       # Sound effect generator
-│   ├── generate_icon.py         # App icon generator
-│   └── app_store_metadata.json  # App Store listing data
-├── RocketLander.xcodeproj/      # Xcode project
-├── Podfile                      # CocoaPods dependencies
-├── CHANGELOG.md                 # Version history
-├── SETUP.txt                    # App Store submission guide
-├── privacy_policy.html          # Privacy policy
-└── setup_and_submit.sh          # Automation script
+│   ├── generate_sounds.py           # Sound effect generator
+│   ├── generate_icon.py             # App icon generator
+│   ├── generate_screenshots.py      # Screenshot generator
+│   └── export_chat_transcripts.py   # Claude Code transcript exporter
+├── RocketLander.xcodeproj           # Xcode project
+├── CHANGELOG.md                     # Version history
+├── PROJECT_LOG.md                   # Development session logs
+├── RELEASE_NOTES.md                 # App Store release notes
+└── README.md                        # This file
 ```
 
 ## Development
@@ -75,8 +134,14 @@ StarshipLander/
 
 - macOS with Xcode 15.0+
 - iOS Simulator or physical device
-- CocoaPods (for AdMob SDK)
-- Python 3 (for sound/icon generation)
+- Apple Developer Account (for device testing & App Store)
+- Python 3 (optional, for sound/icon generation)
+
+### Dependencies
+
+Managed via **Swift Package Manager**:
+- Google Mobile Ads SDK (v12.14.0)
+- Google User Messaging Platform
 
 ### Building
 
@@ -84,9 +149,16 @@ StarshipLander/
 # Open project
 open RocketLander.xcodeproj
 
-# Or with CocoaPods (for AdMob)
-pod install
-open RocketLander.xcworkspace
+# Build for simulator
+xcodebuild -scheme RocketLander \
+  -destination 'platform=iOS Simulator,name=iPhone 17' \
+  build
+
+# Archive for App Store
+xcodebuild -scheme RocketLander \
+  -destination 'generic/platform=iOS' \
+  -archivePath ./build/RocketLander.xcarchive \
+  archive
 ```
 
 ### Regenerating Sound Effects
@@ -95,37 +167,15 @@ open RocketLander.xcworkspace
 python3 Scripts/generate_sounds.py
 ```
 
-### Running Tests
-
-Build and run on iOS Simulator via Xcode or:
-
-```bash
-xcodebuild -project RocketLander.xcodeproj \
-  -scheme RocketLander \
-  -destination 'platform=iOS Simulator,name=iPhone 17' \
-  build
-```
-
-## App Store Submission
-
-See `SETUP.txt` for complete App Store submission instructions.
-
-### Quick Checklist
-
-- [ ] Apple Developer Account ($99/year)
-- [ ] AdMob Account (for ad revenue)
-- [ ] Run `./setup_and_submit.sh`
-- [ ] Create app in App Store Connect
-- [ ] Upload screenshots
-- [ ] Host privacy policy
-- [ ] Submit for review
-
 ## Technical Specifications
 
-### Game Physics
+### Game Physics (Classic Mode)
 - Gravity: 2.0 units/frame²
 - Thrust power: 12.0 velocity/frame
-- Rotation power: 0.05 angular velocity/frame
+- Rotation power: 0.04 angular velocity/frame (buttons)
+- Angular damping: 0.7
+- Lateral assist: horizontal nudge when tilted >5°
+- Accelerometer sensitivity: 0.06 with 0.1 dead zone
 
 ### Landing Thresholds
 - Max vertical speed: 40 units/frame
@@ -135,11 +185,19 @@ See `SETUP.txt` for complete App Store submission instructions.
 
 ### Fuel Consumption
 - Thrust: 0.3% per frame
-- Rotation: 0.08% per frame
+- Rotation (buttons): 0.08% per frame
+- Rotation (accelerometer): scales with tilt intensity
+
+## App Store
+
+**Available on the App Store**: [Starship Lander](https://apps.apple.com/app/starship-lander/id6740857083)
+
+**Developer Website**: https://rabbitolivestudios.github.io
 
 ## License
 
 Proprietary - All rights reserved.
+© 2026 Rabbit Olive Studios
 
 ## Version History
 
@@ -147,4 +205,10 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 1.2.0 | 2026-01-30 | 3 platforms, campaign mode, haptics, messages |
+| 1.1.5 | 2026-01-16 | New scoring system, HUD fixes, version display |
+| 1.1.4 | 2026-01-15 | Complete fix for high score input bug, new icon |
+| 1.1.3 | 2026-01-14 | Developer website URLs |
+| 1.1.2 | 2026-01-12 | Accelerometer controls, reduced rotation sensitivity |
+| 1.1.0 | 2026-01-10 | AdMob integration, App Tracking Transparency |
 | 1.0.0 | 2026-01-08 | Initial App Store release |
