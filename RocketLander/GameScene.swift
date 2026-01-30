@@ -230,17 +230,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if gameState.isThrusting && gameState.fuel > 0 {
             guard var velocity = rocket.physicsBody?.velocity else { return }
 
-            // Scale thrust to gravity so gameplay feels consistent across levels
-            // Classic: gravity=-2.0, thrust=12.0 (6x ratio)
-            // Campaign: maintain ~4.5x ratio (harder but playable)
-            let baseThrust: CGFloat = 12.0
-            let thrustPower: CGFloat
-            if gameState.currentMode == .campaign,
-               let level = LevelDefinition.level(for: gameState.currentLevelId) {
-                thrustPower = abs(level.gravity) * 4.5
-            } else {
-                thrustPower = baseThrust
-            }
+            let thrustPower: CGFloat = 12.0
             let angle = rocket.zRotation + .pi / 2
             let dx = cos(angle) * thrustPower
             let dy = sin(angle) * thrustPower
@@ -357,37 +347,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             rocket.physicsBody?.applyForce(CGVector(dx: windForce, dy: 0))
 
         case .movingPlatform:
-            // All platforms move — less on A (easy), moderate on B, more on C (hard)
-            // Platform A: slow vertical bob
-            // Platform B: horizontal sway (main moving barge)
-            // Platform C: faster horizontal + slight vertical
-            let speeds: [CGFloat] = [15, 40, 55]        // pixels/sec
-            let ranges: [CGFloat] = [20, 80, 50]        // max displacement from origin
+            // All platforms move within their own zone (left/center/right)
+            // Platform A (left):   slow vertical bob
+            // Platform B (center): horizontal sway within center zone
+            // Platform C (right):  horizontal + vertical, stays in right zone
+            let speeds: [CGFloat] = [12, 30, 40]
+            let hRanges: [CGFloat] = [15, 50, 30]   // horizontal displacement limit
+            let vRange: CGFloat = 15                  // vertical displacement limit
 
             for (i, plat) in platforms.enumerated() {
-                guard i < platformOriginalPositions.count else { continue }
+                guard i < platformOriginalPositions.count && i < platformDirections.count else { continue }
                 let origin = platformOriginalPositions[i]
                 let speed = speeds[min(i, speeds.count - 1)]
-                let range = ranges[min(i, ranges.count - 1)]
+                let hRange = hRanges[min(i, hRanges.count - 1)]
 
                 if i == 0 {
-                    // Platform A: vertical bob only
+                    // Platform A: gentle vertical bob only, stays in left zone
                     plat.position.y += platformDirections[i] * speed * CGFloat(dt)
-                    if abs(plat.position.y - origin.y) > range {
+                    if abs(plat.position.y - origin.y) > vRange {
+                        platformDirections[i] *= -1
+                    }
+                } else if i == 1 {
+                    // Platform B: horizontal sway within center zone
+                    plat.position.x += platformDirections[i] * speed * CGFloat(dt)
+                    if abs(plat.position.x - origin.x) > hRange {
                         platformDirections[i] *= -1
                     }
                 } else {
-                    // Platforms B & C: horizontal movement
+                    // Platform C: horizontal within right zone + vertical bob
                     plat.position.x += platformDirections[i] * speed * CGFloat(dt)
-                    if abs(plat.position.x - origin.x) > range {
+                    if abs(plat.position.x - origin.x) > hRange {
                         platformDirections[i] *= -1
                     }
-                    // Platform C also bobs vertically
-                    if i == 2 {
-                        let bobSpeed: CGFloat = 20
-                        let time = currentTime
-                        plat.position.y = origin.y + CGFloat(sin(time * 1.5)) * bobSpeed
-                    }
+                    plat.position.y = origin.y + CGFloat(sin(currentTime * 1.2)) * vRange
                 }
             }
 
