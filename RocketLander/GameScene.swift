@@ -35,9 +35,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var windForce: CGFloat = 0
     private var windTime: TimeInterval = 0
 
-    // Campaign: moving platform
-    private var movingPlatformDirection: CGFloat = 1
-    private var movingPlatformSpeed: CGFloat = 40
+    // Campaign: moving platforms (per-platform state)
+    private var platformDirections: [CGFloat] = [1, 1, 1]
+    private var platformOriginalPositions: [CGPoint] = []
 
     // Physics categories
     let rocketCategory: UInt32 = 0x1 << 0
@@ -116,6 +116,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createTerrain()
         createGround()
         createPlatforms()
+        platformOriginalPositions = platforms.map { $0.position }
         createRocket()
 
         hasStarted = false
@@ -229,7 +230,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if gameState.isThrusting && gameState.fuel > 0 {
             guard var velocity = rocket.physicsBody?.velocity else { return }
 
-            let thrustPower: CGFloat = 12.0
+            // Scale thrust to gravity so gameplay feels consistent across levels
+            // Classic: gravity=-2.0, thrust=12.0 (6x ratio)
+            // Campaign: maintain ~4.5x ratio (harder but playable)
+            let baseThrust: CGFloat = 12.0
+            let thrustPower: CGFloat
+            if gameState.currentMode == .campaign,
+               let level = LevelDefinition.level(for: gameState.currentLevelId) {
+                thrustPower = abs(level.gravity) * 4.5
+            } else {
+                thrustPower = baseThrust
+            }
             let angle = rocket.zRotation + .pi / 2
             let dx = cos(angle) * thrustPower
             let dy = sin(angle) * thrustPower
@@ -346,20 +357,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             rocket.physicsBody?.applyForce(CGVector(dx: windForce, dy: 0))
 
         case .movingPlatform:
-            // Move platform B (center, index 1)
-            if platforms.count > 1 {
-                let platB = platforms[1]
-                let minX = size.width * 0.3
-                let maxX = size.width * 0.7
+            // All platforms move — less on A (easy), moderate on B, more on C (hard)
+            // Platform A: slow vertical bob
+            // Platform B: horizontal sway (main moving barge)
+            // Platform C: faster horizontal + slight vertical
+            let speeds: [CGFloat] = [15, 40, 55]        // pixels/sec
+            let ranges: [CGFloat] = [20, 80, 50]        // max displacement from origin
 
-                platB.position.x += movingPlatformDirection * movingPlatformSpeed * CGFloat(dt)
+            for (i, plat) in platforms.enumerated() {
+                guard i < platformOriginalPositions.count else { continue }
+                let origin = platformOriginalPositions[i]
+                let speed = speeds[min(i, speeds.count - 1)]
+                let range = ranges[min(i, ranges.count - 1)]
 
-                if platB.position.x > maxX {
-                    platB.position.x = maxX
-                    movingPlatformDirection = -1
-                } else if platB.position.x < minX {
-                    platB.position.x = minX
-                    movingPlatformDirection = 1
+                if i == 0 {
+                    // Platform A: vertical bob only
+                    plat.position.y += platformDirections[i] * speed * CGFloat(dt)
+                    if abs(plat.position.y - origin.y) > range {
+                        platformDirections[i] *= -1
+                    }
+                } else {
+                    // Platforms B & C: horizontal movement
+                    plat.position.x += platformDirections[i] * speed * CGFloat(dt)
+                    if abs(plat.position.x - origin.x) > range {
+                        platformDirections[i] *= -1
+                    }
+                    // Platform C also bobs vertically
+                    if i == 2 {
+                        let bobSpeed: CGFloat = 20
+                        let time = currentTime
+                        plat.position.y = origin.y + CGFloat(sin(time * 1.5)) * bobSpeed
+                    }
                 }
             }
 

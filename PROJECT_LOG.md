@@ -440,6 +440,21 @@ RocketLander/
 - `RocketLander/GameScene+Setup.swift` — Celestial body features, improved rocket
 - `RocketLander/Views/ShapeViews.swift` — Updated menu rocket, added Trapezoid shape
 
+### Session 14 (2026-01-30) - Gameplay Balance & Platform Movement
+
+**Fixed unplayable Earth gravity and added per-platform movement.**
+
+#### Changes Made:
+1. **Scaled thrust to gravity**: Campaign levels now scale thrust power to `abs(gravity) × 4.5`. This ensures consistent difficulty feel across all levels (classic mode keeps thrust=12.0 with gravity=-2.0, giving 6x ratio; campaign gives 4.5x ratio — harder but playable). Earth at -9.8 now has thrust=44.1 instead of 12.0.
+
+2. **Per-platform movement on Earth**: All three platforms now move on the Earth (moving platform) level:
+   - **Platform A** (Training Zone): Slow vertical bob, ±20px at 15px/s
+   - **Platform B** (Precision Target): Horizontal sway, ±80px at 40px/s (main barge)
+   - **Platform C** (Elite Landing): Horizontal ±50px at 55px/s + sine-wave vertical bob — hardest to land on
+
+#### Files Modified:
+- `RocketLander/GameScene.swift` — Thrust scaling, per-platform movement state, updated `applyCampaignMechanics()`
+
 ---
 
 ## Contact / Accounts
@@ -450,4 +465,4 @@ RocketLander/
 
 ---
 
-*Last updated: 2026-01-30 (Session 13)*
+*Last updated: 2026-01-30 (Session 14)*
