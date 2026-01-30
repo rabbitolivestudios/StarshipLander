@@ -29,6 +29,13 @@ class CampaignState: ObservableObject {
         return scoresByLevel[levelId]?.first?.score ?? 0
     }
 
+    func isHighScore(for levelId: Int, score: Int) -> Bool {
+        guard score > 0 else { return false }
+        let levelScores = scoresByLevel[levelId] ?? []
+        if levelScores.count < 3 { return true }
+        return score > (levelScores.last?.score ?? 0)
+    }
+
     func completedLevel(_ levelId: Int, stars: Int, score: Int, name: String) {
         // Update stars (keep best)
         let currentBest = starsByLevel[levelId] ?? 0

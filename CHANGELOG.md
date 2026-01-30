@@ -38,6 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Lateral Assist (RCS Thrusters)**: When tilted >5°, small horizontal nudge in tilt direction
 
+- **Per-Level High Scores (Campaign)**: Campaign mode tracks top-3 scores per level/planet separately from classic mode's global leaderboard
+
+- **Level Name HUD**: Planet/level name displayed at top center during campaign gameplay
+
+- **Level Details on Menu**: Level select cards show gravity (m/s²) and special mechanic for unlocked levels
+
 ### Changed
 - **Scoring System**: Platform multiplier stacks with fuel multiplier
   - Formula: `subtotal × fuelMultiplier × platformMultiplier`

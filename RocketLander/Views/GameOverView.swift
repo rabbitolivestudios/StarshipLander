@@ -10,7 +10,12 @@ struct GameOverView: View {
     @State private var scoreSaved = false
 
     var isNewHighScore: Bool {
-        gameState.landed && highScoreManager.isHighScore(gameState.score) && !scoreSaved
+        guard gameState.landed && !scoreSaved else { return false }
+        if gameState.currentMode == .campaign {
+            return campaignState.isHighScore(for: gameState.currentLevelId, score: gameState.score)
+        } else {
+            return highScoreManager.isHighScore(gameState.score)
+        }
     }
 
     var body: some View {
@@ -129,17 +134,18 @@ struct GameOverView: View {
 
     // MARK: - Action Buttons
     private var actionButtons: some View {
-        HStack(spacing: 15) {
+        HStack(spacing: 10) {
             Button(action: {
                 showingGame = false
             }) {
-                HStack {
+                HStack(spacing: 6) {
                     Image(systemName: "house.fill")
                     Text("Menu")
+                        .lineLimit(1)
                 }
                 .font(.headline)
                 .foregroundColor(.white)
-                .padding(.horizontal, 25)
+                .padding(.horizontal, 16)
                 .padding(.vertical, 12)
                 .background(Color.gray.opacity(0.5))
                 .cornerRadius(10)
@@ -156,13 +162,14 @@ struct GameOverView: View {
                             gameState.reset()
                         }
                     }) {
-                        HStack {
+                        HStack(spacing: 6) {
                             Image(systemName: "arrow.right")
                             Text("Next")
+                                .lineLimit(1)
                         }
                         .font(.headline)
                         .foregroundColor(.white)
-                        .padding(.horizontal, 25)
+                        .padding(.horizontal, 16)
                         .padding(.vertical, 12)
                         .background(
                             LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
@@ -179,13 +186,14 @@ struct GameOverView: View {
                     gameState.reset()
                 }
             }) {
-                HStack {
+                HStack(spacing: 6) {
                     Image(systemName: "arrow.counterclockwise")
                     Text("Retry")
+                        .lineLimit(1)
                 }
                 .font(.headline)
                 .foregroundColor(.white)
-                .padding(.horizontal, 25)
+                .padding(.horizontal, 16)
                 .padding(.vertical, 12)
                 .background(
                     LinearGradient(colors: [.orange, .red], startPoint: .leading, endPoint: .trailing)
@@ -200,9 +208,6 @@ struct GameOverView: View {
         let name = playerName.trimmingCharacters(in: .whitespaces)
         guard !name.isEmpty else { return }
 
-        highScoreManager.addScore(name: name, score: gameState.score)
-
-        // Save to campaign if in campaign mode
         if gameState.currentMode == .campaign {
             campaignState.completedLevel(
                 gameState.currentLevelId,
@@ -210,6 +215,8 @@ struct GameOverView: View {
                 score: gameState.score,
                 name: name
             )
+        } else {
+            highScoreManager.addScore(name: name, score: gameState.score)
         }
 
         scoreSaved = true
