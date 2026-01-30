@@ -1,5 +1,9 @@
 import SpriteKit
 
+enum WindIntensity {
+    case light, heavy, extreme
+}
+
 // MARK: - Visual Effects
 extension GameScene {
 
@@ -156,6 +160,116 @@ extension GameScene {
             SKAction.moveBy(x: 8, y: 0, duration: 0.05)
         ])
         self.run(shake)
+    }
+
+    // MARK: - Wind Particles (Mars, Venus, Jupiter)
+    func createWindParticles(intensity: WindIntensity) {
+        let key = "windParticles"
+        removeAction(forKey: key)
+
+        let (count, speed, alpha, color): (Int, CGFloat, CGFloat, SKColor) = {
+            switch intensity {
+            case .light:  return (1, 120, 0.3, SKColor(red: 0.8, green: 0.6, blue: 0.4, alpha: 1.0))  // Mars dust
+            case .heavy:  return (2, 200, 0.4, SKColor(red: 0.9, green: 0.7, blue: 0.3, alpha: 1.0))  // Venus haze
+            case .extreme: return (3, 350, 0.5, SKColor.white)                                          // Jupiter streaks
+            }
+        }()
+
+        let spawn = SKAction.sequence([
+            SKAction.run { [weak self] in
+                guard let self = self else { return }
+                for _ in 0..<count {
+                    let streak = SKShapeNode(rectOf: CGSize(
+                        width: CGFloat.random(in: 15...40),
+                        height: CGFloat.random(in: 1...2)
+                    ))
+                    streak.fillColor = color.withAlphaComponent(alpha)
+                    streak.strokeColor = .clear
+                    streak.position = CGPoint(
+                        x: self.size.width + 20,
+                        y: CGFloat.random(in: 100...self.size.height - 50)
+                    )
+                    streak.zPosition = 5
+                    self.addChild(streak)
+
+                    let moveAcross = SKAction.moveBy(
+                        x: -(self.size.width + 60),
+                        y: CGFloat.random(in: -30...30),
+                        duration: Double(self.size.width / speed)
+                    )
+                    streak.run(SKAction.sequence([moveAcross, SKAction.removeFromParent()]))
+                }
+            },
+            SKAction.wait(forDuration: Double.random(in: 0.15...0.4))
+        ])
+        run(SKAction.repeatForever(spawn), withKey: key)
+    }
+
+    // MARK: - Atmosphere Haze (Titan)
+    func createAtmosphereHaze() {
+        // Semi-transparent orange gradient overlay at top of screen
+        let haze = SKShapeNode(rectOf: CGSize(width: size.width, height: size.height * 0.4))
+        haze.position = CGPoint(x: size.width / 2, y: size.height * 0.8)
+        haze.fillColor = SKColor(red: 0.5, green: 0.4, blue: 0.2, alpha: 0.15)
+        haze.strokeColor = .clear
+        haze.zPosition = 4
+        haze.name = "atmosphereHaze"
+        addChild(haze)
+
+        // Drifting haze particles
+        let spawn = SKAction.sequence([
+            SKAction.run { [weak self] in
+                guard let self = self else { return }
+                let cloud = SKShapeNode(ellipseOf: CGSize(
+                    width: CGFloat.random(in: 60...120),
+                    height: CGFloat.random(in: 15...30)
+                ))
+                cloud.fillColor = SKColor(red: 0.5, green: 0.4, blue: 0.2, alpha: 0.08)
+                cloud.strokeColor = .clear
+                cloud.position = CGPoint(
+                    x: self.size.width + 60,
+                    y: CGFloat.random(in: self.size.height * 0.4...self.size.height)
+                )
+                cloud.zPosition = 4
+                self.addChild(cloud)
+
+                let drift = SKAction.moveBy(x: -(self.size.width + 150), y: 0, duration: Double.random(in: 8...14))
+                cloud.run(SKAction.sequence([drift, SKAction.removeFromParent()]))
+            },
+            SKAction.wait(forDuration: Double.random(in: 1.5...3.0))
+        ])
+        run(SKAction.repeatForever(spawn), withKey: "atmosphereHaze")
+    }
+
+    // MARK: - Ice Surface Shimmer (Europa)
+    func createIceShimmer() {
+        // Periodic sparkle particles on the lower portion of screen (near platforms)
+        let sparkle = SKAction.sequence([
+            SKAction.run { [weak self] in
+                guard let self = self else { return }
+                for _ in 0..<3 {
+                    let spark = SKShapeNode(circleOfRadius: CGFloat.random(in: 1...3))
+                    spark.fillColor = SKColor(red: 0.8, green: 0.9, blue: 1.0, alpha: 0.8)
+                    spark.strokeColor = .clear
+                    spark.position = CGPoint(
+                        x: CGFloat.random(in: 20...self.size.width - 20),
+                        y: CGFloat.random(in: 160...240)
+                    )
+                    spark.zPosition = 6
+                    self.addChild(spark)
+
+                    let twinkle = SKAction.sequence([
+                        SKAction.fadeIn(withDuration: 0.2),
+                        SKAction.wait(forDuration: Double.random(in: 0.1...0.3)),
+                        SKAction.fadeOut(withDuration: 0.3),
+                        SKAction.removeFromParent()
+                    ])
+                    spark.run(twinkle)
+                }
+            },
+            SKAction.wait(forDuration: Double.random(in: 0.3...0.8))
+        ])
+        run(SKAction.repeatForever(sparkle), withKey: "iceShimmer")
     }
 
     // MARK: - Heat Shimmer Effect (Mercury)

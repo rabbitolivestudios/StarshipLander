@@ -384,11 +384,22 @@ extension GameScene {
                 }
             }
 
-            // Deep craters for Ganymede level
+            // Deep craters for Ganymede: raise terrain at screen edges
+            // (Rock pillars between platforms are added separately in addGanymedeRocks)
             if gameState.currentMode == .campaign && gameState.currentLevelId == 8 {
-                let isNearPlatform = platformPositions.contains { abs(x - $0) < 80 }
-                if !isNearPlatform && Int.random(in: 0...3) == 0 {
-                    baseHeight += CGFloat.random(in: 30...60)
+                let leftWallEnd: CGFloat = 40
+                let rightWallStart: CGFloat = size.width - 50
+                let wallHeight: CGFloat = 350
+                let valleyHeight: CGFloat = 150
+
+                if x < leftWallEnd {
+                    let ramp = 1.0 - (x / leftWallEnd)
+                    baseHeight = valleyHeight + (wallHeight - valleyHeight) * ramp + CGFloat.random(in: -5...5)
+                } else if x > rightWallStart {
+                    let ramp = (x - rightWallStart) / (size.width - rightWallStart)
+                    baseHeight = valleyHeight + (wallHeight - valleyHeight) * ramp + CGFloat.random(in: -5...5)
+                } else {
+                    baseHeight = valleyHeight + CGFloat.random(in: -8...8)
                 }
             }
 
@@ -443,6 +454,98 @@ extension GameScene {
         }
 
         addChild(terrain)
+
+        // For Ganymede (deep craters), add terrain physics + rock pillars
+        if gameState.currentMode == .campaign && gameState.currentLevelId == 8 {
+            addTerrainPhysics(heights: heights, segmentWidth: segmentWidth)
+            addGanymedeRocks()
+        }
+    }
+
+    private func addTerrainPhysics(heights: [CGFloat], segmentWidth: CGFloat) {
+        // Build an edge-chain physics body along the terrain surface
+        var points: [CGPoint] = []
+        for (i, h) in heights.enumerated() {
+            points.append(CGPoint(x: CGFloat(i) * segmentWidth, y: h))
+        }
+        // Close along the bottom
+        points.append(CGPoint(x: CGFloat(heights.count - 1) * segmentWidth, y: 0))
+        points.append(CGPoint(x: 0, y: 0))
+
+        let terrainBody = SKPhysicsBody(edgeChainFrom: {
+            let path = CGMutablePath()
+            path.move(to: points[0])
+            for i in 1..<points.count {
+                path.addLine(to: points[i])
+            }
+            path.closeSubpath()
+            return path
+        }())
+        terrainBody.categoryBitMask = groundCategory
+        terrainBody.contactTestBitMask = rocketCategory
+        terrainBody.friction = 0.5
+        terrain.physicsBody = terrainBody
+    }
+
+    private func addGanymedeRocks() {
+        // Place rock pillars between platforms to create crater hazards
+        // Platform edges: A right ~135, B left ~141, B right ~251, C left ~282
+        // Gap between B and C: ~251 to ~282 (30pt) — place a pillar here
+        // Also place pillars at screen edges for visual crater walls
+
+        let rockColor = SKColor(red: 0.3, green: 0.25, blue: 0.2, alpha: 1.0)
+        let rockStroke = SKColor(red: 0.45, green: 0.4, blue: 0.35, alpha: 1.0)
+
+        struct RockDef {
+            let x: CGFloat
+            let width: CGFloat
+            let height: CGFloat
+        }
+
+        let platB_right = LandingPlatform.allCases[1].xFraction * size.width + LandingPlatform.allCases[1].width / 2
+        let platC_left = LandingPlatform.allCases[2].xFraction * size.width - LandingPlatform.allCases[2].width / 2
+        let midBC = (platB_right + platC_left) / 2
+
+        let rocks: [RockDef] = [
+            // Central pillar between B and C
+            RockDef(x: midBC, width: 18, height: 180),
+            // Left screen edge pillar
+            RockDef(x: 15, width: 25, height: 200),
+            // Right screen edge pillar
+            RockDef(x: size.width - 18, width: 22, height: 190),
+        ]
+
+        for rock in rocks {
+            // Jagged rock shape
+            let path = CGMutablePath()
+            let hw = rock.width / 2
+            path.move(to: CGPoint(x: -hw, y: 0))
+            path.addLine(to: CGPoint(x: -hw * 0.8, y: rock.height * 0.4))
+            path.addLine(to: CGPoint(x: -hw * 1.1, y: rock.height * 0.6))
+            path.addLine(to: CGPoint(x: -hw * 0.5, y: rock.height * 0.8))
+            path.addLine(to: CGPoint(x: 0, y: rock.height))
+            path.addLine(to: CGPoint(x: hw * 0.6, y: rock.height * 0.85))
+            path.addLine(to: CGPoint(x: hw * 1.1, y: rock.height * 0.55))
+            path.addLine(to: CGPoint(x: hw * 0.7, y: rock.height * 0.3))
+            path.addLine(to: CGPoint(x: hw, y: 0))
+            path.closeSubpath()
+
+            let rockNode = SKShapeNode(path: path)
+            rockNode.fillColor = rockColor
+            rockNode.strokeColor = rockStroke
+            rockNode.lineWidth = 1.5
+            rockNode.position = CGPoint(x: rock.x, y: 150)  // sits on terrain
+            rockNode.zPosition = 3
+
+            // Physics body — hitting the rock = crash
+            rockNode.physicsBody = SKPhysicsBody(polygonFrom: path)
+            rockNode.physicsBody?.isDynamic = false
+            rockNode.physicsBody?.categoryBitMask = groundCategory
+            rockNode.physicsBody?.contactTestBitMask = rocketCategory
+            rockNode.physicsBody?.friction = 0.5
+
+            addChild(rockNode)
+        }
     }
 
     func createGround() {

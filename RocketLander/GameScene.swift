@@ -165,15 +165,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switch level.specialMechanic {
         case .lightWind:
             windForce = CGFloat.random(in: -1.5...1.5)
+            createWindParticles(intensity: .light)
         case .heavyTurbulence:
             windForce = 0  // Will oscillate in update
+            createWindParticles(intensity: .heavy)
+        case .extremeWind:
+            windForce = 0  // Will oscillate in update
+            createWindParticles(intensity: .extreme)
         case .heatShimmer:
             createHeatShimmer()
         case .volcanicEruptions:
             createVolcanicEruption()
         case .denseAtmosphere:
-            // Increase damping on rocket when it's created
             rocket.physicsBody?.linearDamping = 0.5
+            createAtmosphereHaze()
+        case .iceSurface:
+            rocket.physicsBody?.friction = 0.01
+            createIceShimmer()
         default:
             break
         }
@@ -201,6 +209,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             removeAllChildren()
             removeAction(forKey: "heatShimmer")
             removeAction(forKey: "volcanicEruption")
+            removeAction(forKey: "windParticles")
+            removeAction(forKey: "atmosphereHaze")
+            removeAction(forKey: "iceShimmer")
             lastUpdateTime = 0
             setupScene()
             return
@@ -230,7 +241,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if gameState.isThrusting && gameState.fuel > 0 {
             guard var velocity = rocket.physicsBody?.velocity else { return }
 
-            let thrustPower: CGFloat = 12.0
+            // Per-level thrust in campaign, fixed 12.0 in classic
+            let thrustPower: CGFloat
+            if gameState.currentMode == .campaign,
+               let level = LevelDefinition.level(for: gameState.currentLevelId) {
+                thrustPower = level.thrustPower
+            } else {
+                thrustPower = 12.0
+            }
             let angle = rocket.zRotation + .pi / 2
             let dx = cos(angle) * thrustPower
             let dy = sin(angle) * thrustPower
@@ -347,13 +365,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             rocket.physicsBody?.applyForce(CGVector(dx: windForce, dy: 0))
 
         case .movingPlatform:
-            // All platforms move within their own zone (left/center/right)
-            // Platform A (left):   slow vertical bob
-            // Platform B (center): horizontal sway within center zone
-            // Platform C (right):  horizontal + vertical, stays in right zone
-            let speeds: [CGFloat] = [12, 30, 40]
-            let hRanges: [CGFloat] = [15, 50, 30]   // horizontal displacement limit
+            // Platform A (left):   slow vertical bob only
+            // Platform B (center): horizontal sway, constrained to center zone
+            // Platform C (right):  horizontal + vertical bob, constrained to right zone
+            let speeds: [CGFloat] = [12, 25, 30]
+            let hRanges: [CGFloat] = [0, 30, 20]    // horizontal displacement limit
             let vRange: CGFloat = 15                  // vertical displacement limit
+
+            // Compute safe horizontal bounds to prevent overlap
+            let widths: [CGFloat] = platforms.enumerated().map { (i, _) in
+                LandingPlatform.allCases[i].width
+            }
 
             for (i, plat) in platforms.enumerated() {
                 guard i < platformOriginalPositions.count && i < platformDirections.count else { continue }
@@ -362,7 +384,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let hRange = hRanges[min(i, hRanges.count - 1)]
 
                 if i == 0 {
-                    // Platform A: gentle vertical bob only, stays in left zone
+                    // Platform A: gentle vertical bob only
                     plat.position.y += platformDirections[i] * speed * CGFloat(dt)
                     if abs(plat.position.y - origin.y) > vRange {
                         platformDirections[i] *= -1
@@ -373,13 +395,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     if abs(plat.position.x - origin.x) > hRange {
                         platformDirections[i] *= -1
                     }
+                    // Clamp to avoid overlapping neighbors
+                    let leftEdge = platforms[0].position.x + widths[0] / 2 + widths[1] / 2 + 10
+                    let rightEdge = platforms[2].position.x - widths[2] / 2 - widths[1] / 2 - 10
+                    plat.position.x = max(leftEdge, min(rightEdge, plat.position.x))
                 } else {
-                    // Platform C: horizontal within right zone + vertical bob
+                    // Platform C: horizontal + vertical bob
                     plat.position.x += platformDirections[i] * speed * CGFloat(dt)
                     if abs(plat.position.x - origin.x) > hRange {
                         platformDirections[i] *= -1
                     }
                     plat.position.y = origin.y + CGFloat(sin(currentTime * 1.2)) * vRange
+                    // Clamp to avoid overlapping center platform
+                    let leftEdge = platforms[1].position.x + widths[1] / 2 + widths[2] / 2 + 10
+                    plat.position.x = max(leftEdge, plat.position.x)
                 }
             }
 

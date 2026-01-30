@@ -55,9 +55,8 @@ struct MenuView: View {
     @AppStorage("useAccelerometer") private var useAccelerometer = false
 
     var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
-
+        ScrollView {
+        VStack(spacing: 16) {
             // Title
             VStack(spacing: 5) {
                 Text("STARSHIP")
@@ -71,7 +70,7 @@ struct MenuView: View {
 
             // Rocket illustration
             RocketIllustration()
-                .frame(width: 70, height: 100)
+                .frame(width: 60, height: 85)
 
             // Leaderboard
             if !highScoreManager.scores.isEmpty {
@@ -125,8 +124,6 @@ struct MenuView: View {
                 }
             }
 
-            Spacer()
-
             // Play buttons
             VStack(spacing: 12) {
                 // Classic Mode
@@ -143,7 +140,7 @@ struct MenuView: View {
                     }
                     .font(.title2.bold())
                     .foregroundColor(.black)
-                    .frame(width: 200, height: 55)
+                    .frame(width: 200, height: 50)
                     .background(
                         LinearGradient(
                             colors: [.orange, .red],
@@ -179,8 +176,6 @@ struct MenuView: View {
                     .shadow(color: .blue.opacity(0.4), radius: 8, y: 4)
                 }
             }
-
-            Spacer()
 
             // Controls Setting
             VStack(spacing: 8) {
@@ -234,15 +229,14 @@ struct MenuView: View {
 
             // Banner Ad
             BannerAdContainer()
-                .padding(.top, 10)
 
             // Version number
             Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                 .font(.system(size: 10))
                 .foregroundColor(.gray.opacity(0.5))
-                .padding(.top, 5)
         }
-        .padding()
+        .padding(.horizontal)
+        }
     }
 }
 

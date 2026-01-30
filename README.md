@@ -2,7 +2,7 @@
 
 A physics-based rocket landing game for iOS, inspired by SpaceX Starship landings.
 
-**Version:** 1.2.0
+**Version:** 2.0.0
 **Platform:** iOS 15.0+
 **Language:** Swift 5.0
 **Frameworks:** SwiftUI, SpriteKit, CoreMotion
@@ -67,18 +67,20 @@ Toggle between button and accelerometer controls in the main menu.
 
 ### Campaign Levels
 
-| # | Name | Gravity | Special Mechanic |
-|---|------|---------|------------------|
-| 1 | Moon | 1.6 m/s² | None (tutorial) |
-| 2 | Mars | 3.7 m/s² | Light dust wind |
-| 3 | Titan | 1.4 m/s² | Dense atmosphere |
-| 4 | Europa | 1.3 m/s² | Ice surface |
-| 5 | Earth | 9.8 m/s² | Moving platform |
-| 6 | Venus | 8.9 m/s² | Heavy turbulence |
-| 7 | Mercury | 3.7 m/s² | Heat shimmer |
-| 8 | Ganymede | 1.4 m/s² | Deep craters |
-| 9 | Io | 1.8 m/s² | Volcanic eruptions |
-| 10 | Jupiter | 24.8 m/s² | Extreme wind |
+| # | Name | Gravity | Thrust | Special Mechanic |
+|---|------|---------|--------|------------------|
+| 1 | Moon | 1.6 | 8.0 | None (tutorial) |
+| 2 | Mars | 2.0 | 9.5 | Light dust wind |
+| 3 | Titan | 2.2 | 10.0 | Dense atmosphere |
+| 4 | Europa | 2.5 | 11.0 | Ice surface |
+| 5 | Earth | 2.8 | 12.0 | Moving platforms |
+| 6 | Venus | 3.2 | 13.0 | Heavy turbulence |
+| 7 | Mercury | 3.5 | 14.0 | Heat shimmer |
+| 8 | Ganymede | 3.8 | 15.0 | Deep craters |
+| 9 | Io | 4.2 | 16.5 | Volcanic eruptions |
+| 10 | Jupiter | 4.8 | 18.5 | Extreme wind |
+
+*Gravity and thrust increase progressively by level. Each planet has a unique thrust feel — higher gravity levels have more powerful but tighter-margin engines. Values are game-balanced for playability, not real-world accurate.*
 
 ## Project Structure
 
@@ -205,7 +207,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 | Version | Date | Description |
 |---------|------|-------------|
-| 1.2.0 | 2026-01-30 | 3 platforms, campaign mode, haptics, messages |
+| 2.0.0 | 2026-01-30 | Campaign mode, per-planet physics, visual effects |
 | 1.1.5 | 2026-01-16 | New scoring system, HUD fixes, version display |
 | 1.1.4 | 2026-01-15 | Complete fix for high score input bug, new icon |
 | 1.1.3 | 2026-01-14 | Developer website URLs |

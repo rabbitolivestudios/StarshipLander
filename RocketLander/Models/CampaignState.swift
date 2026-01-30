@@ -11,8 +11,34 @@ class CampaignState: ObservableObject {
         starsByLevel.values.reduce(0, +)
     }
 
+    // Easter egg: astronaut/scientist names relevant to each celestial body
+    private static let defaultScoreNames: [Int: String] = [
+        1: "Armstrong",   // Moon — Neil Armstrong, first moonwalker
+        2: "Aldrin",      // Mars — Buzz Aldrin, Mars mission advocate
+        3: "Huygens",     // Titan — Christiaan Huygens, discovered Titan
+        4: "Galileo",     // Europa — Galileo Galilei, discovered Europa
+        5: "Gagarin",     // Earth — Yuri Gagarin, first human in space
+        6: "Shepard",     // Venus — Alan Shepard, first American in space
+        7: "Glenn",       // Mercury — John Glenn, Project Mercury astronaut
+        8: "Marius",      // Ganymede — Simon Marius, named Galilean moons
+        9: "Collins",     // Io — Michael Collins, Apollo 11 pilot
+        10: "Shoemaker",  // Jupiter — Eugene Shoemaker, Shoemaker-Levy 9
+    ]
+
     init() {
         load()
+        seedDefaultScoresIfNeeded()
+    }
+
+    private func seedDefaultScoresIfNeeded() {
+        var changed = false
+        for (levelId, name) in CampaignState.defaultScoreNames {
+            if (scoresByLevel[levelId] ?? []).isEmpty {
+                scoresByLevel[levelId] = [HighScoreEntry(name: name, score: 1000)]
+                changed = true
+            }
+        }
+        if changed { save() }
     }
 
     // MARK: - Level Management
