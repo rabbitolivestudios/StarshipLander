@@ -15,6 +15,11 @@ class HighScoreManager: ObservableObject {
 
     init() {
         loadScores()
+        if scores.isEmpty {
+            // Easter egg: Elon Musk as default high score holder
+            scores = [HighScoreEntry(name: "Elon", score: 1000)]
+            saveScores()
+        }
     }
 
     func loadScores() {

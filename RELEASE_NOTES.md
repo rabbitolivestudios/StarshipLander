@@ -1,26 +1,39 @@
 # Release Notes
 
-## Version 1.2.0 (Build 12)
+## Version 2.0.0 (Build 12)
 **Status:** IN DEVELOPMENT (2026-01-30)
 
 ### What's New
-- **Three Landing Platforms**: Choose your challenge — Training Zone (1x), Precision Target (2x), or Elite Landing (5x score multiplier)
 - **Campaign Mode**: 10 levels across the solar system — Moon, Mars, Titan, Europa, Earth, Venus, Mercury, Ganymede, Io, and Jupiter
-- **Unique Level Mechanics**: Wind, dense atmosphere, ice surfaces, moving platforms, turbulence, volcanic eruptions, and more
+- **Per-Planet Physics**: Each planet has unique gravity and thrust — adapt your piloting to each world's engine feel
+- **Three Landing Platforms**: Choose your challenge — Training Zone (1x), Precision Target (2x), or Elite Landing (5x score multiplier)
+- **Visual Effects**: Wind streaks, atmospheric haze, ice shimmer, heat distortion, and volcanic eruptions
+- **Unique Level Mechanics**: Wind, dense atmosphere, ice surfaces, moving platforms, turbulence, deep craters, and more
 - **Star Rating**: Earn 1-3 stars per landing based on platform difficulty
 - **Haptic Feedback**: Feel the thrust, rotation, landings, and crashes
 - **Landing Messages**: Contextual feedback with teaching tips on crashes
 - **Improved Controls**: More responsive lateral control with RCS thruster assist
 - **Score up to 25,000 points**: Platform multiplier stacks with fuel bonus
 
+### Bug Fixes
+- **Fixed**: Game title no longer hidden behind Dynamic Island on iPhone 16 and later
+- **Fixed**: "HOW TO PLAY" section no longer cut off at bottom of menu
+- **Fixed**: Earth level platforms no longer overlap during movement
+- **Fixed**: Campaign gravity fully rebalanced with per-level thrust scaling — all levels landable
+- **Fixed**: Ganymede terrain now features rock pillar obstacles and crater terrain walls
+
 ### App Store Release Notes (Copy this)
 ```
+MAJOR UPDATE — Campaign Mode is here!
+
 NEW: Campaign Mode — Land across 10 solar system destinations!
+NEW: Per-planet physics — each world has unique gravity and engine thrust
+NEW: Visual effects — wind, haze, ice, heat shimmer, volcanic eruptions
 NEW: Three landing platforms with score multipliers (1x, 2x, 5x)
 NEW: Star rating system — earn up to 3 stars per landing
 NEW: Haptic feedback for thrust, landings, and crashes
-- Improved lateral control responsiveness
 - Contextual landing feedback and crash tips
+- Fixed layout for iPhone 16 Dynamic Island
 - Maximum score now 25,000 points!
 ```
 

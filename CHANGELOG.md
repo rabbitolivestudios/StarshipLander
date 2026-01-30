@@ -5,7 +5,7 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.0] - 2026-01-30
+## [2.0.0] - 2026-01-30
 
 ### Added
 - **Three Landing Platforms (A/B/C)**: Each with different sizes, positions, and score multipliers
@@ -16,11 +16,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Terrain generates valleys around each platform position
 
 - **Campaign Mode**: 10 solar system levels with unique physics and visuals
-  - Moon (1.6g), Mars (3.7g), Titan (1.4g), Europa (1.3g), Earth (9.8g)
-  - Venus (8.9g), Mercury (3.7g), Ganymede (1.4g), Io (1.8g), Jupiter (24.8g)
+  - Moon (1.6g), Mars (2.0g), Titan (2.2g), Europa (2.5g), Earth (2.8g)
+  - Venus (3.2g), Mercury (3.5g), Ganymede (3.8g), Io (4.2g), Jupiter (4.8g)
+  - Gravity increases monotonically by level for progressive difficulty
   - Special mechanics per level: wind, dense atmosphere, ice surface, moving platform, turbulence, heat shimmer, deep craters, volcanic eruptions, extreme wind
   - Campaign state persistence via UserDefaults (unlocked levels, stars, scores)
   - Level select grid UI with lock/unlock, star count, best scores
+
+- **Per-Level Thrust Scaling**: Each planet has a unique engine thrust feel
+  - Thrust ranges from 8.0 (Moon, floaty) to 18.5 (Jupiter, powerful but tight margin)
+  - Thrust-to-gravity ratio decreases progressively: 5.0x (Moon) → 3.8x (Jupiter)
+  - Classic mode unchanged at 12.0
+
+- **Visual Effects for All Mechanics**:
+  - Wind streak particles (Mars light dust, Venus heavy haze, Jupiter extreme streaks)
+  - Atmosphere haze with drifting clouds (Titan)
+  - Ice shimmer sparkles near platforms (Europa)
+  - Heat shimmer rocket jitter (Mercury)
+  - Volcanic eruption particles from terrain (Io)
 
 - **Landing Result Messages**: Contextual feedback on landing/crash outcomes
   - Success messages rotate: "Landing confirmed.", "Precision achieved.", etc.
@@ -43,6 +56,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Level Name HUD**: Planet/level name displayed at top center during campaign gameplay
 
 - **Level Details on Menu**: Level select cards show gravity (m/s²) and special mechanic for unlocked levels
+
+- **Ganymede Deep Craters**: Rock pillar obstacles and raised terrain edges create crater hazards
+  - Three jagged rock pillars with physics bodies (left edge, between B-C, right edge)
+  - Terrain walls ramp up to 350px at screen edges for crater bowl effect
+  - Terrain edge-chain physics body — hitting terrain or rocks crashes the rocket
+  - Makes Ganymede visually and mechanically distinct from other levels
+
+- **Astronaut Easter Egg High Scores**: Default leaderboard entries on first launch
+  - Classic mode: "Elon" at 1000 points (SpaceX reference)
+  - Campaign: astronaut/scientist names relevant to each planet (Armstrong, Aldrin, Huygens, etc.)
+  - Seeded only when no scores exist — won't overwrite player scores
+
+### Fixed
+- **Dynamic Island Cutoff**: Game title "STARSHIP" no longer hidden behind Dynamic Island on iPhone 16+
+  - Menu wrapped in ScrollView to respect safe area insets
+  - Reduced spacing, rocket illustration size (70×100 → 60×85), and button height for compact layout
+- **Menu Content Cutoff**: "HOW TO PLAY" section and banner ad now fully visible on all screen sizes
+- **Campaign Gravity Rebalanced**: All 10 levels now have progressively increasing gravity (1.6 → 4.8) for smooth difficulty curve
+- **Earth Platform Overlap**: Moving platforms no longer overlap during movement
+  - Platform A: vertical bob only (no horizontal movement)
+  - Platform B: horizontal sway reduced from ±50px to ±30px
+  - Platform C: horizontal movement reduced from ±30px to ±20px
+  - Added edge clamping to enforce minimum 10pt gaps between platforms
 
 ### Changed
 - **Scoring System**: Platform multiplier stacks with fuel multiplier
@@ -247,7 +283,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Highlights                                    |
 |---------|------------|-----------------------------------------------|
-| 1.2.0   | 2026-01-30 | 3 platforms, campaign mode, haptics, messages |
+| 2.0.0   | 2026-01-30 | Campaign mode, per-planet physics, visual effects |
 | 1.1.5   | 2026-01-16 | New scoring system, HUD fixes, version display|
 | 1.1.4   | 2026-01-15 | New Starship icon, high score bug fix         |
 | 1.1.3   | 2026-01-14 | Developer website, partial bug fix            |
