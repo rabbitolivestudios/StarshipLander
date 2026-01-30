@@ -7,53 +7,54 @@ struct TopHUDView: View {
 
     var body: some View {
         VStack(spacing: 10) {
-            HStack(alignment: .top) {
-                // Back button
-                Button(action: {
-                    withAnimation {
-                        showingGame = false
-                    }
-                }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title)
-                        .foregroundColor(.white.opacity(0.7))
-                }
-
-                Spacer()
-
-                // Level name (campaign mode only)
+            ZStack(alignment: .top) {
+                // Level name centered (campaign mode only)
                 if gameState.currentMode == .campaign,
                    let level = LevelDefinition.level(for: gameState.currentLevelId) {
                     Text(level.name.uppercased())
                         .font(.headline)
                         .foregroundColor(.white)
                         .shadow(color: .black, radius: 2)
+                        .frame(maxWidth: .infinity)
                 }
 
-                Spacer()
-
-                // Fuel gauge
-                VStack(alignment: .trailing, spacing: 4) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "fuelpump.fill")
-                            .font(.caption)
-                        Text("\(Int(gameState.fuel))%")
-                            .font(.system(.headline, design: .monospaced))
-                    }
-                    .foregroundColor(fuelColor)
-
-                    // Fuel bar
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            RoundedRectangle(cornerRadius: 3)
-                                .fill(Color.gray.opacity(0.3))
-
-                            RoundedRectangle(cornerRadius: 3)
-                                .fill(fuelColor)
-                                .frame(width: geo.size.width * gameState.fuel / 100)
+                HStack(alignment: .top) {
+                    // Back button
+                    Button(action: {
+                        withAnimation {
+                            showingGame = false
                         }
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title)
+                            .foregroundColor(.white.opacity(0.7))
                     }
-                    .frame(width: 80, height: 6)
+
+                    Spacer()
+
+                    // Fuel gauge
+                    VStack(alignment: .trailing, spacing: 4) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "fuelpump.fill")
+                                .font(.caption)
+                            Text("\(Int(gameState.fuel))%")
+                                .font(.system(.headline, design: .monospaced))
+                        }
+                        .foregroundColor(fuelColor)
+
+                        // Fuel bar
+                        GeometryReader { geo in
+                            ZStack(alignment: .leading) {
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(Color.gray.opacity(0.3))
+
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(fuelColor)
+                                    .frame(width: geo.size.width * gameState.fuel / 100)
+                            }
+                        }
+                        .frame(width: 80, height: 6)
+                    }
                 }
             }
 
