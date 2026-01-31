@@ -127,6 +127,15 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
+## [2026-01-31] Phase Split — v2.1 (Community) and v2.2 (Monetization)
+**Context:** Original plan bundled Game Center, achievements, share card, and Remove Ads IAP into a single v2.1.0. Per CLAUDE.md phase discipline, unrelated phases should not be mixed in one commit or version.
+**Options considered:** (1) Keep everything in v2.1.0 with separate commits, (2) Split into two versions by phase.
+**Decision:** Option 2 — v2.1.0 is Community phase (Game Center leaderboards, achievements, share score card). v2.2.0 is Monetization phase (Remove Ads IAP via StoreKit 2).
+**Why:** Strict adherence to phase discipline. Each version has a single theme, reducing review risk and keeping App Store submissions focused. If one feature has issues during review, it doesn't block the other.
+**Consequences:** Two separate App Store submissions instead of one. v2.2.0 depends on v2.1.0 being shipped first (no hard dependency, but logical ordering). IAP capability added in v2.2.0, not v2.1.0.
+
+---
+
 ## [2026-01-31] Game Center Integration Strategy
 **Context:** v2.1 adds Game Center leaderboards and achievements. Need to decide authentication approach, leaderboard structure, and achievement philosophy.
 **Options considered:** (1) Force Game Center sign-in, (2) Opt-in with manual button, (3) Automatic authentication with graceful fallback.

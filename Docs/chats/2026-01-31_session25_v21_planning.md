@@ -84,16 +84,19 @@
 ### Implementation Order (for future sessions)
 1. Game Center authentication + leaderboards (requires Xcode capability + App Store Connect setup)
 2. Game Center achievements (hooks into existing landing logic)
-3. Remove Ads IAP (StoreKit Configuration + purchase flow + ad hiding)
-4. Share Score Card (SwiftUI image render + share sheet)
-5. Pre-release testing + documentation finalization
+3. Share Score Card (SwiftUI image render + share sheet)
+4. Pre-release testing + documentation finalization for v2.1.0
+5. (v2.2.0) Remove Ads IAP (StoreKit Configuration + purchase flow + ad hiding)
 
-### New Files Expected in v2.1.0
+### New Files Expected in v2.1.0 (Community)
 - `RocketLander/GameCenterManager.swift` — GC auth, score submission, achievement reporting
-- `RocketLander/StoreManager.swift` — StoreKit 2 purchase flow, entitlement checking
 - `RocketLander/Views/ShareScoreCard.swift` — Score card renderer + share button
+- Updates to: `ContentView.swift`, `GameOverView.swift`, `LeaderboardView.swift`, `RocketLanderApp.swift`
+
+### New Files Expected in v2.2.0 (Monetization)
+- `RocketLander/StoreManager.swift` — StoreKit 2 purchase flow, entitlement checking
 - `RocketLander/RemoveAds.storekit` — StoreKit Configuration for testing
-- Updates to: `ContentView.swift`, `GameOverView.swift`, `BannerAdView.swift`, `LeaderboardView.swift`, `RocketLanderApp.swift`
+- Updates to: `ContentView.swift`, `BannerAdView.swift`, `GameContainerView.swift`
 
 ## Technical Notes
 - GameKit's built-in offline queue means we don't need to build our own score submission retry logic
@@ -106,7 +109,8 @@
 2. 10 achievements, all binary (100% when triggered), no incremental/grind-based
 3. StoreKit 2 with on-device JWS, UserDefaults cache for sync access
 4. Privacy: add "Gameplay Content" declaration, no ATT changes
-5. v2.1.0 scope locked — no gameplay, physics, or campaign balance changes
+5. **Phase split**: v2.1.0 = Community (Game Center + achievements + share card), v2.2.0 = Monetization (Remove Ads IAP). Per CLAUDE.md phase discipline, unrelated phases must not be mixed in one version.
+6. No gameplay, physics, or campaign balance changes in either version
 
 ## Definition of Done
 - [x] GameKit API requirements researched and documented
@@ -129,10 +133,16 @@
 - [x] No secrets or credentials in tracked files
 
 ## Next Actions
+
+### v2.1.0 (Community)
 - [ ] Implement Game Center authentication + leaderboards
 - [ ] Implement Game Center achievements
-- [ ] Implement Remove Ads IAP with StoreKit 2
 - [ ] Implement Share Score Card
-- [ ] Configure App Store Connect: leaderboard IDs, achievement IDs, IAP product
+- [ ] Configure App Store Connect: leaderboard IDs, achievement IDs
 - [ ] Update App Privacy declarations (add "Gameplay Content")
-- [ ] Device testing: Game Center, IAP, share functionality
+- [ ] Device testing: Game Center, share functionality
+
+### v2.2.0 (Monetization)
+- [ ] Implement Remove Ads IAP with StoreKit 2
+- [ ] Configure App Store Connect: IAP product
+- [ ] Device testing: IAP purchase, restore, ad hiding
