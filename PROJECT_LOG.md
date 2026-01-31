@@ -713,6 +713,36 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
+### Session 20 (2026-01-31) — STATUS.md Reconciliation
+
+**Goal:** Create `STATUS.md` as the authoritative project snapshot and update `CLAUDE.md` to reference it as the single source of truth.
+
+**Context:** User requested a compressed, reconciled project snapshot that takes precedence over chat logs and other documentation. This ensures new sessions can quickly understand the project state without reading all historical chat summaries.
+
+**Sources consulted for reconciliation:**
+- `CLAUDE.md` — project guidelines, file structure, build commands
+- `PROJECT_LOG.md` — version history table, session entries, backlog
+- `DECISIONS.md` — all 12 architectural/design decisions
+- `CHANGELOG.md` — version-level change tracking
+- `RELEASE_NOTES.md` — v2.0.0 feature list, App Store copy
+- `README.md` — high-level project description
+- `Info.plist` — current version/build numbers
+- `Docs/chats/` — 5 session summaries (sessions 15-19)
+- `.github/pull_request_template.md` — PR checklist
+
+**Discrepancies found:** None — all documentation was consistent regarding v2.0.0 Build 12 submitted for review, feature set, and current status.
+
+**Assumptions documented in STATUS.md:**
+- v1.1.5 (Build 11) status is unclear — PROJECT_LOG says "Submitted for review" but no confirmation of publication. May have been superseded by v2.0.0.
+- v2.0.0 not yet approved — Apple may reject for ad compliance, screenshot accuracy, or privacy declarations.
+- No device testing performed for v2.0.0 — haptics, accelerometer, and ads are simulator-only verified.
+
+**Files changed:**
+- `STATUS.md` (new) — authoritative project snapshot with 9 sections: Project Snapshot, What Is Done, What Is NOT Done, Current Phase, Immediate Next Tasks, Non-Negotiable Principles, How to Resume Work, Known Risks, Ownership
+- `CLAUDE.md` (updated) — added STATUS.md as authoritative truth in intro, session checklist (step 2), session continuity table (first entry with precedence rule), and documentation requirements (section G)
+
+---
+
 ## Contact / Accounts
 
 - **Apple Developer Account:** Thiago Borges de Oliveira
@@ -721,4 +751,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-01-31 (Session 19)*
+*Last updated: 2026-01-31 (Session 20)*
