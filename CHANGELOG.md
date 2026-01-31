@@ -5,7 +5,21 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.1.0] - Unreleased
+## [2.2.0] - Unreleased (Phase: Monetization)
+
+### Added
+- **Remove Ads IAP**: One-time non-consumable purchase ("Support Development")
+  - StoreKit 2 with async/await
+  - Hides all banner ads when purchased
+  - Restore Purchases support
+  - Local StoreKit Configuration for testing
+
+### Changed
+- **Xcode capabilities**: Added In-App Purchase entitlement
+
+---
+
+## [2.1.0] - Unreleased (Phase: Community)
 
 ### Added
 - **Game Center Leaderboards**: 11 leaderboards (1 classic + 10 campaign levels)
@@ -17,18 +31,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - First Star, Precision Landing, Elite Landing, Fuel Master, Precision Pilot
   - Triple Elite, Planet Conquered, First Try Perfection, Solar System Elite, Master Lander
   - Idempotent unlocking — safe to report multiple times
-- **Remove Ads IAP**: One-time non-consumable purchase ("Support Development")
-  - StoreKit 2 with async/await
-  - Hides all banner ads when purchased
-  - Restore Purchases support
-  - Local StoreKit Configuration for testing
 - **Share Score Card**: Generate and share landing results
   - SwiftUI-rendered score card (mode, stars, platform, score)
   - Native iOS share sheet (UIActivityViewController)
   - Compatible with Messages, WhatsApp, Instagram, Save to Photos
 
 ### Changed
-- **Xcode capabilities**: Added Game Center and In-App Purchase entitlements
+- **Xcode capabilities**: Added Game Center entitlement
 - **App Privacy**: Added "Gameplay Content" declaration for Game Center
 
 ---

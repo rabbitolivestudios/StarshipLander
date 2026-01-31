@@ -54,8 +54,8 @@ These features are fully implemented, build-verified, and included in v2.0.1:
 
 These are **not implemented**. Do not assume otherwise:
 
-- **Game Center integration** — planned for v2.1.0 (technical research complete, decisions documented)
-- **In-App Purchases (IAP)** — planned for v2.1.0 (StoreKit 2 approach decided, decisions documented)
+- **Game Center integration** — planned for v2.1.0 (Community phase; research complete, decisions documented)
+- **In-App Purchases (IAP)** — planned for v2.2.0 (Monetization phase; StoreKit 2 approach decided, decisions documented)
 - ~~**Campaign per-level leaderboard viewing**~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
 - **iPad support** — iPhone only
 - **Landscape orientation** — portrait only
@@ -69,9 +69,9 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Planning — v2.1.0 (Community + Progression)**
+**Phase: Planning — v2.1.0 (Community) then v2.2.0 (Monetization)**
 
-v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.1 (Build 13) ready to ship. v2.1.0 planned: Game Center leaderboards + achievements, Remove Ads IAP, Share Score Card.
+v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.1 (Build 13) ready to ship. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
@@ -80,9 +80,10 @@ v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.1 (Build 13
 1. Wait for App Store review response for v2.0.0
 2. If rejected: address feedback, fix, resubmit
 3. If approved: verify live listing, then submit v2.0.1 update
-4. Implement v2.1.0: Game Center leaderboards (11), achievements (10), Remove Ads IAP, Share Score Card
-5. Device playtesting: haptics, accelerometer, ads, Game Center, IAP on physical iPhone
-6. Configure App Store Connect: leaderboard IDs, achievement IDs, IAP product, privacy declarations
+4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
+5. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+6. Device playtesting: haptics, accelerometer, ads, Game Center, IAP on physical iPhone
+7. Configure App Store Connect: leaderboard IDs, achievement IDs, IAP product, privacy declarations
 
 ---
 

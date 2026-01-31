@@ -34,13 +34,15 @@ This file documents the development history and decisions for the Starship Lande
 2. If rejected, address feedback and resubmit
 3. If approved, verify live listing screenshots and description
 
-**v2.1.0 PLANNED (scope locked):**
+**v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
 - [planned] 10 Game Center achievements
-- [planned] "Support Development" IAP (remove ads, StoreKit 2)
 - [planned] Share Score Card (SwiftUI render + native share sheet)
 
-**BACKLOG (v2.2+):**
+**v2.2.0 PLANNED — Phase: Monetization (scope locked):**
+- [planned] "Support Development" IAP (remove ads, StoreKit 2)
+
+**BACKLOG (v2.3+):**
 - ~~Campaign per-level high scores display~~ — **DONE in v2.0.1**
 - iPad support
 - Localization
@@ -788,11 +790,14 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - StoreKit 2 with on-device JWS verification, no server needed
 - Privacy: "Gameplay Content" declaration for Game Center, no other changes
 
-#### v2.1.0 Scope (locked):
+#### v2.1.0 Scope — Community (locked):
 - 11 Game Center leaderboards (classic + 10 campaign)
 - 10 achievements
-- 1 non-consumable IAP ("Support Development" — remove ads)
 - Share Score Card with native share sheet
+- No gameplay, physics, or campaign balance changes
+
+#### v2.2.0 Scope — Monetization (locked):
+- 1 non-consumable IAP ("Support Development" — remove ads)
 - No gameplay, physics, or campaign balance changes
 
 #### Files Changed:
