@@ -127,6 +127,41 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
+## [2026-01-31] Game Center Integration Strategy
+**Context:** v2.1 adds Game Center leaderboards and achievements. Need to decide authentication approach, leaderboard structure, and achievement philosophy.
+**Options considered:** (1) Force Game Center sign-in, (2) Opt-in with manual button, (3) Automatic authentication with graceful fallback.
+**Decision:** Option 3 — set `GKLocalPlayer.local.authenticateHandler` at launch. If signed in, enable Game Center features. If not, hide GC UI elements and continue with local-only scores.
+**Why:** Non-intrusive. Players who don't use Game Center are unaffected. No forced popups. Score submission is fire-and-forget with GameKit's built-in offline queue.
+**Consequences:** Must maintain dual paths (local leaderboard always works; Game Center is additive). LeaderboardView gets a Local/Game Center toggle. Achievements are Game Center-only (no local fallback needed). 11 leaderboards must be configured in App Store Connect before submission.
+
+---
+
+## [2026-01-31] Achievement Design Philosophy
+**Context:** Need to define which achievements to include and how they unlock. Risk of too many trivial achievements or too few meaningful ones.
+**Options considered:** (1) Many granular achievements (land 10 times, land 50 times, etc.), (2) Milestone-only achievements, (3) Mix of skill-based and progression achievements.
+**Decision:** Option 3 — 10 achievements covering first experiences, skill milestones, and mastery goals. No grind-based achievements (no "land 100 times"). All are one-shot (100% complete when triggered), no incremental progress.
+**Why:** Keeps achievement list clean and meaningful. Each achievement represents a distinct skill or milestone. Players can see them all in the Game Center dashboard without clutter.
+**Consequences:** All achievements are binary (0% or 100%). Hook points: `saveScore()` in GameOverView for landing-based achievements, `CampaignState` for progression achievements. `GKAchievement.report()` is idempotent so safe to call repeatedly.
+
+---
+
+## [2026-01-31] Remove Ads IAP — StoreKit 2 Approach
+**Context:** Adding a one-time "Support Development" IAP to remove all banner ads. Need to choose between StoreKit 1 (legacy) and StoreKit 2 (modern).
+**Options considered:** (1) StoreKit 1 with receipt validation, (2) StoreKit 2 with on-device JWS verification, (3) Third-party SDK (RevenueCat).
+**Decision:** Option 2 — StoreKit 2 with async/await. On-device JWS verification (no server needed). UserDefaults cache for synchronous ad-hiding checks, `Transaction.currentEntitlements` as source of truth on launch.
+**Why:** StoreKit 2 is simpler, modern Swift, no receipt parsing. No server infrastructure needed for a single non-consumable. UserDefaults cache ensures `BannerAdContainer` can synchronously decide whether to show ads.
+**Consequences:** Requires iOS 15+ (already our minimum). Must add "In-App Purchase" capability in Xcode. Need StoreKit Configuration file for local testing. Must provide "Restore Purchases" button per App Review guidelines. Product ID: `com.tboliveira.StarshipLander.removeAds`.
+
+---
+
+## [2026-01-31] Privacy Impact — Game Center + StoreKit
+**Context:** Adding Game Center and StoreKit to v2.1. Must assess privacy declarations per CLAUDE.md guardrails.
+**Decision:** Game Center requires adding "Gameplay Content" under "Usage Data" in App Privacy declarations (purpose: App Functionality). StoreKit requires no additional declarations. Neither involves tracking. No ATT changes needed.
+**Why:** Game Center sends gameplay data (scores, achievements) to Apple's servers — this is first-party data handled by Apple, not tracking. StoreKit transaction data stays within Apple's infrastructure.
+**Consequences:** Update App Store Connect privacy declarations to add "Gameplay Content" when submitting v2.1. No code changes for ATT. Existing AdMob ATT prompt unchanged.
+
+---
+
 ## [2026-01-31] CLAUDE.md for Session Continuity and Project Guidelines
 **Context:** Claude Code sessions can expire or lose context at any time. Without persistent instructions, each new session starts from scratch with no understanding of project conventions, documentation requirements, or development workflow. Previous sessions sometimes missed documentation updates or introduced inconsistent practices.
 **Options considered:** (1) Verbal reminders each session, (2) A README section with guidelines, (3) A dedicated `CLAUDE.md` file (automatically read by Claude Code at session start), (4) `.codex/AGENTS.md` (Codex CLI format, per jessfraz reference).
