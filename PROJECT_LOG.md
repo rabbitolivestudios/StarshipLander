@@ -27,14 +27,19 @@ This file documents the development history and decisions for the Starship Lande
 | 1.1.4 | 10 | Published - Bug fix + new icon |
 | 1.1.5 | 11 | Published on App Store - New scoring system + HUD fixes |
 | 2.0.0 | 12 | **SUBMITTED FOR REVIEW** - Campaign mode, per-planet physics, visual effects |
+| 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 
 **NEXT STEPS:**
 1. Wait for App Store review response
 2. If rejected, address feedback and resubmit
 3. If approved, verify live listing screenshots and description
 
-**BACKLOG (v2.0.1+):**
-- Campaign per-level high scores display — top-3 scores per level are stored in `CampaignState.scoresByLevel` but users can only see the #1 best score on level cards. Options: (a) show top-3 on level cards, (b) tap card to expand leaderboard, (c) dedicated leaderboard screen. Simplest: expand `LevelCardView` in `LevelSelectView.swift` to show all 3 entries.
+**BACKLOG (v2.1+):**
+- ~~Campaign per-level high scores display~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
+- Game Center leaderboards (1 classic + 10 level)
+- "Support Development" IAP (remove ads)
+- Share Score card
+- Achievements ("Fuel Master", "Zero Drift", "Elite Pilot")
 
 ---
 
@@ -741,6 +746,50 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - `STATUS.md` (new) — authoritative project snapshot with 9 sections: Project Snapshot, What Is Done, What Is NOT Done, Current Phase, Immediate Next Tasks, Non-Negotiable Principles, How to Resume Work, Known Risks, Ownership
 - `CLAUDE.md` (updated) — added STATUS.md as authoritative truth in intro, session checklist (step 2), session continuity table (first entry with precedence rule), and documentation requirements (section G)
 
+### Session 24 (2026-01-31) - Dedicated Leaderboard Screen (v2.0.1)
+
+**Added a dedicated leaderboard screen and fixed version label visibility.**
+
+#### Changes Made:
+
+1. **Dedicated Leaderboard Screen (`LeaderboardView.swift` — new file)**:
+   - Accessible by tapping "TOP PILOTS" section on main menu
+   - Classic Mode section with top-3 scores
+   - Campaign section with all 10 levels, each showing per-level top-3 scores
+   - Locked levels shown grayed out with lock icon, no scores
+   - Gold/silver/bronze rank colors for positions 1-3
+   - Header with back navigation and trophy icon
+   - Scrollable layout matching existing app design patterns
+
+2. **Menu "TOP PILOTS" made tappable (`ContentView.swift`)**:
+   - Wrapped existing leaderboard VStack in a Button with `.buttonStyle(.plain)`
+   - Added "View All >" hint text at bottom of section
+   - Added `showingLeaderboard` state for navigation
+
+3. **Version label relocated (`ContentView.swift`)**:
+   - Moved from bottom of ScrollView content to fixed `.overlay(alignment: .topTrailing)`
+   - Always visible regardless of scroll position
+
+4. **Version bump to 2.0.1 (Build 13)**:
+   - Updated `Info.plist` CFBundleShortVersionString and CFBundleVersion
+
+#### Files Created:
+- `RocketLander/Views/LeaderboardView.swift`
+
+#### Files Modified:
+- `RocketLander/ContentView.swift` — navigation state, conditional branch, tappable TOP PILOTS, version label overlay
+- `RocketLander.xcodeproj/project.pbxproj` — added LeaderboardView.swift to project
+- `RocketLander/Info.plist` — version 2.0.1, build 13
+
+#### Definition of Done:
+- [x] Leaderboard screen opens from menu TOP PILOTS tap
+- [x] Classic top-3 and campaign per-level top-3 displayed
+- [x] Locked levels grayed out with lock icon
+- [x] Back button returns to menu
+- [x] Version label visible on menu at all times
+- [x] Build succeeds
+- [x] Docs updated
+
 ---
 
 ## Contact / Accounts
@@ -751,4 +800,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-01-31 (Session 20)*
+*Last updated: 2026-01-31 (Session 24)*

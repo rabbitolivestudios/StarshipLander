@@ -4,6 +4,7 @@ import SpriteKit
 struct ContentView: View {
     @State private var showingGame = false
     @State private var showingLevelSelect = false
+    @State private var showingLeaderboard = false
     @StateObject private var highScoreManager = HighScoreManager()
     @StateObject private var campaignState = CampaignState()
     @StateObject private var gameState = GameState()
@@ -25,6 +26,12 @@ struct ContentView: View {
                     campaignState: campaignState
                 )
                 .environmentObject(gameState)
+            } else if showingLeaderboard {
+                LeaderboardView(
+                    showingLeaderboard: $showingLeaderboard,
+                    highScoreManager: highScoreManager,
+                    campaignState: campaignState
+                )
             } else if showingLevelSelect {
                 LevelSelectView(
                     showingGame: $showingGame,
@@ -36,6 +43,7 @@ struct ContentView: View {
                 MenuView(
                     showingGame: $showingGame,
                     showingLevelSelect: $showingLevelSelect,
+                    showingLeaderboard: $showingLeaderboard,
                     highScoreManager: highScoreManager,
                     campaignState: campaignState,
                     gameState: gameState
@@ -49,6 +57,7 @@ struct ContentView: View {
 struct MenuView: View {
     @Binding var showingGame: Bool
     @Binding var showingLevelSelect: Bool
+    @Binding var showingLeaderboard: Bool
     @ObservedObject var highScoreManager: HighScoreManager
     @ObservedObject var campaignState: CampaignState
     @ObservedObject var gameState: GameState
@@ -74,38 +83,49 @@ struct MenuView: View {
 
             // Leaderboard
             if !highScoreManager.scores.isEmpty {
-                VStack(spacing: 8) {
-                    HStack {
-                        Image(systemName: "trophy.fill")
-                            .foregroundColor(.yellow)
-                        Text("TOP PILOTS")
-                            .font(.caption.bold())
-                            .foregroundColor(.yellow)
-                        Image(systemName: "trophy.fill")
-                            .foregroundColor(.yellow)
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showingLeaderboard = true
                     }
-
-                    ForEach(Array(highScoreManager.scores.enumerated()), id: \.element.id) { index, entry in
+                }) {
+                    VStack(spacing: 8) {
                         HStack {
-                            Text("\(index + 1).")
-                                .font(.system(.subheadline, design: .monospaced))
-                                .foregroundColor(index == 0 ? .yellow : .gray)
-                                .frame(width: 25, alignment: .leading)
-
-                            Text(entry.name)
-                                .font(.subheadline.bold())
-                                .foregroundColor(index == 0 ? .yellow : .white)
-                                .lineLimit(1)
-
-                            Spacer()
-
-                            Text("\(entry.score)")
-                                .font(.system(.subheadline, design: .monospaced).bold())
-                                .foregroundColor(index == 0 ? .yellow : .orange)
+                            Image(systemName: "trophy.fill")
+                                .foregroundColor(.yellow)
+                            Text("TOP PILOTS")
+                                .font(.caption.bold())
+                                .foregroundColor(.yellow)
+                            Image(systemName: "trophy.fill")
+                                .foregroundColor(.yellow)
                         }
-                        .padding(.horizontal, 12)
+
+                        ForEach(Array(highScoreManager.scores.enumerated()), id: \.element.id) { index, entry in
+                            HStack {
+                                Text("\(index + 1).")
+                                    .font(.system(.subheadline, design: .monospaced))
+                                    .foregroundColor(index == 0 ? .yellow : .gray)
+                                    .frame(width: 25, alignment: .leading)
+
+                                Text(entry.name)
+                                    .font(.subheadline.bold())
+                                    .foregroundColor(index == 0 ? .yellow : .white)
+                                    .lineLimit(1)
+
+                                Spacer()
+
+                                Text("\(entry.score)")
+                                    .font(.system(.subheadline, design: .monospaced).bold())
+                                    .foregroundColor(index == 0 ? .yellow : .orange)
+                            }
+                            .padding(.horizontal, 12)
+                        }
+
+                        Text("View All >")
+                            .font(.caption2)
+                            .foregroundColor(.orange.opacity(0.7))
                     }
                 }
+                .buttonStyle(.plain)
                 .padding(.vertical, 12)
                 .padding(.horizontal, 8)
                 .background(Color.white.opacity(0.05))
@@ -229,13 +249,15 @@ struct MenuView: View {
 
             // Banner Ad
             BannerAdContainer()
-
-            // Version number
+        }
+        .padding(.horizontal)
+        }
+        .overlay(alignment: .topTrailing) {
             Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                 .font(.system(size: 10))
                 .foregroundColor(.gray.opacity(0.5))
-        }
-        .padding(.horizontal)
+                .padding(.trailing, 16)
+                .padding(.top, 8)
         }
     }
 }

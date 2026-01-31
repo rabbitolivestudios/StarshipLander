@@ -34,6 +34,7 @@
 		C2000015 /* GameScene+Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000015 /* GameScene+Effects.swift */; };
 		C2000016 /* GameScene+Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000016 /* GameScene+Sound.swift */; };
 		C2000017 /* GameScene+Scoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000017 /* GameScene+Scoring.swift */; };
+		C2000018 /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000018 /* LeaderboardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,7 @@
 		C1000015 /* GameScene+Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Effects.swift"; sourceTree = "<group>"; };
 		C1000016 /* GameScene+Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Sound.swift"; sourceTree = "<group>"; };
 		C1000017 /* GameScene+Scoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Scoring.swift"; sourceTree = "<group>"; };
+		C1000018 /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 				C1000010 /* GameContainerView.swift */,
 				C1000011 /* GameOverView.swift */,
 				C1000012 /* LevelSelectView.swift */,
+				C1000018 /* LeaderboardView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 				C2000015 /* GameScene+Effects.swift in Sources */,
 				C2000016 /* GameScene+Sound.swift in Sources */,
 				C2000017 /* GameScene+Scoring.swift in Sources */,
+				C2000018 /* LeaderboardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
