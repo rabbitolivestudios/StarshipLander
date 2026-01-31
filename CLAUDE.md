@@ -4,6 +4,8 @@
 
 **Default behavior**: Prefer small, reviewable changes and strong documentation over large refactors.
 
+**Critical**: Chat logs (`Docs/chats/`) may be consulted as historical input, but `STATUS.md` defines current truth. When chat logs conflict with `STATUS.md` or repo documentation, prefer `STATUS.md` first, then repo docs, then chat logs.
+
 ---
 
 ## Start of Session Checklist (mandatory)
@@ -11,15 +13,16 @@
 Every session must begin with these steps:
 
 1. Read this file (`CLAUDE.md`) end-to-end
-2. Read `PROJECT_LOG.md` — check Current Status table, next steps, and latest session entry
-3. Read `CHANGELOG.md` — understand what version is current and what's been done
-4. Read `RELEASE_NOTES.md` — understand release status
-5. Read `DECISIONS.md` — understand standing decisions and policies
-6. Read the latest file in `Docs/chats/` — restore detailed context from last session
-7. Summarize the current project state in 5-10 bullets before proceeding
-8. Ask the user what they want to work on
-9. Confirm target phase and scope
-10. Define a "done checklist" before writing any code
+2. Read `STATUS.md` — this is the **authoritative snapshot** of what is done, not done, and next
+3. Read `PROJECT_LOG.md` — check Current Status table, next steps, and latest session entry
+4. Read `CHANGELOG.md` — understand what version is current and what's been done
+5. Read `RELEASE_NOTES.md` — understand release status
+6. Read `DECISIONS.md` — understand standing decisions and policies
+7. Read the latest file in `Docs/chats/` — restore detailed context from last session (historical input, not authoritative)
+8. Summarize the current project state in 5-10 bullets before proceeding
+9. Ask the user what they want to work on
+10. Confirm target phase and scope
+11. Define a "done checklist" before writing any code
 
 If any of these documentation files are missing, create them before implementing major new features.
 
@@ -83,12 +86,15 @@ Sessions may expire or lose context at any time. These files ensure the project 
 
 | File | Purpose | Source of truth for |
 |------|---------|---------------------|
+| `STATUS.md` | **Authoritative project snapshot** | What is done, not done, current phase, next tasks. Overrides chat logs. |
 | `PROJECT_LOG.md` | Project state, session history | Current status, what happened, next steps |
-| `Docs/chats/YYYY-MM-DD_sessionNN_*.md` | Detailed session summaries | Technical details, decisions, file changes |
+| `Docs/chats/YYYY-MM-DD_sessionNN_*.md` | Historical session summaries | Technical details, decisions, file changes (input, not authoritative) |
 | `CHANGELOG.md` | Version-level change tracking | What changed in each version (Keep a Changelog) |
 | `RELEASE_NOTES.md` | User-facing release descriptions | App Store copy, marketing text |
 | `DECISIONS.md` | Architectural/design decisions | Why things are the way they are |
 | `README.md` | High-level project truth | Features, structure, how to build |
+
+**Precedence when sources conflict:** STATUS.md > repo documentation > chat logs.
 
 ---
 
@@ -197,6 +203,14 @@ Format:
 
 ### F) README.md
 - Update when user-facing behavior changes (version, features, controls, campaign content)
+
+### G) STATUS.md
+- **Update every session** — this is the authoritative project snapshot
+- Keep "What Is Done" and "What Is NOT Done" sections accurate
+- Update "Current Phase / Focus" when project status changes
+- Update "Immediate Next Tasks" as tasks are completed or reprioritized
+- Update "Known Risks / Watchouts" as risks are resolved or new ones emerge
+- Reconcile with other docs if discrepancies are found — STATUS.md wins
 
 ### Cross-cutting rule
 If you change any of the following, you MUST update README + CHANGELOG + any affected docs:
