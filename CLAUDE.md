@@ -415,7 +415,7 @@ After completing any work, output a change summary:
 ```
 RocketLander/
   Models/        — GameState, HighScoreManager, LandingPlatform, LandingMessages, LevelDefinition, CampaignState
-  Views/         — GameContainerView, GameOverView, HUDViews, ControlViews, ShapeViews, LevelSelectView
+  Views/         — GameContainerView, GameOverView, HUDViews, ControlViews, ShapeViews, LeaderboardView, LevelSelectView
   Haptics/       — HapticManager
   GameScene.swift           — Core update loop, physics, collision
   GameScene+Setup.swift     — Scene setup, terrain, platforms

@@ -5,6 +5,22 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-01-31
+
+### Added
+- **Dedicated Leaderboard Screen**: Tap "TOP PILOTS" on main menu to view all high scores
+  - Classic Mode top-3 scores section
+  - Campaign per-level top-3 scores for all 10 levels
+  - Locked levels shown grayed out with lock icon
+  - Gold/silver/bronze rank colors for top-3 positions
+  - Scrollable layout with back navigation
+
+### Changed
+- **Version number relocated**: Moved from bottom of scroll content to fixed top-right overlay on menu screen, ensuring it's always visible regardless of scroll position
+- **TOP PILOTS section is now tappable**: Acts as entry point to the full leaderboard with "View All >" hint text
+
+---
+
 ## [2.0.0] - 2026-01-30
 
 ### Added
@@ -283,6 +299,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Highlights                                    |
 |---------|------------|-----------------------------------------------|
+| 2.0.1   | 2026-01-31 | Dedicated leaderboard screen, version label fix |
 | 2.0.0   | 2026-01-30 | Campaign mode, per-planet physics, visual effects |
 | 1.1.5   | 2026-01-16 | New scoring system, HUD fixes, version display|
 | 1.1.4   | 2026-01-15 | New Starship icon, high score bug fix         |

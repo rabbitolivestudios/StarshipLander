@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-01-31
+> Last reconciled: 2026-01-31 (Session 24)
 
 ---
 
@@ -14,7 +14,7 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.0 (Build 12) |
+| Current Version | 2.0.1 (Build 13) |
 | Version Status | **SUBMITTED FOR APP STORE REVIEW** (2026-01-30) |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
@@ -25,7 +25,7 @@
 
 ## What Is Done
 
-These features are fully implemented, build-verified, and included in the v2.0.0 submission:
+These features are fully implemented, build-verified, and included in v2.0.1:
 
 - **Classic Mode**: Single-level arcade gameplay with gravity 2.0, thrust 12.0
 - **Campaign Mode**: 10 levels (Moon, Mars, Titan, Europa, Earth, Venus, Mercury, Ganymede, Io, Jupiter) with progressive difficulty
@@ -39,6 +39,7 @@ These features are fully implemented, build-verified, and included in the v2.0.0
 - **Dual Controls**: Button and accelerometer (tilt) modes
 - **Landing Messages**: Contextual success/crash feedback with teaching tips
 - **Per-Level High Scores**: Top-3 stored per campaign level, top-3 global for classic
+- **Dedicated Leaderboard Screen**: Tap "TOP PILOTS" to view classic + all campaign level scores
 - **Astronaut Easter Eggs**: Default leaderboard entries (Armstrong, Aldrin, etc.)
 - **Ganymede Craters**: Rock pillar obstacles with collision physics
 - **AdMob**: Banner ads on menu and gameplay, ATT prompt on first launch
@@ -55,7 +56,7 @@ These are **not implemented**. Do not assume otherwise:
 
 - **Game Center integration** — not started
 - **In-App Purchases (IAP)** — not started
-- **Campaign per-level leaderboard viewing** — top-3 scores stored but only #1 visible on level cards (backlog)
+- ~~**Campaign per-level leaderboard viewing**~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
 - **iPad support** — iPhone only
 - **Landscape orientation** — portrait only
 - **Localization** — English only
@@ -68,9 +69,9 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Release — Awaiting App Store Review**
+**Phase: Development — v2.0.1 Feature Work**
 
-v2.0.0 (Build 12) was submitted to App Store Connect on 2026-01-30. No code changes are in progress. The project is in a holding state pending Apple's review response.
+v2.0.0 (Build 12) was submitted to App Store Connect on 2026-01-30, pending review. v2.0.1 (Build 13) adds a dedicated leaderboard screen and version label fix.
 
 ---
 
@@ -78,9 +79,9 @@ v2.0.0 (Build 12) was submitted to App Store Connect on 2026-01-30. No code chan
 
 1. Wait for App Store review response for v2.0.0
 2. If rejected: address feedback, fix, resubmit
-3. If approved: verify live listing (screenshots, description, metadata)
-4. Plan v2.0.1: campaign per-level high scores display (backlog item)
-5. Device playtesting: haptics, accelerometer, ads on physical iPhone
+3. If approved: verify live listing, then submit v2.0.1 update
+4. Device playtesting: haptics, accelerometer, ads on physical iPhone
+5. Plan v2.1: Game Center, IAP, share score
 
 ---
 
