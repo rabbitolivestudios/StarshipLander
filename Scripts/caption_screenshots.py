@@ -26,22 +26,28 @@ FONT_CANDIDATES = [
 ]
 
 FONT_SIZE = 100
-LINE_SPACING = 14  # pixels between lines
+LINE_SPACING = 12  # pixels between lines
 
-# Background pill styling
+# Background pill styling (default)
 PILL_COLOR = (20, 20, 30, 190)    # dark blue-black at ~75% opacity
-PILL_PADDING_H = 60               # horizontal padding inside pill
-PILL_PADDING_V = 22               # vertical padding inside pill
-PILL_RADIUS = 28                   # corner radius
+PILL_PADDING_H = 50               # horizontal padding inside pill
+PILL_PADDING_V = 14               # vertical padding inside pill
+PILL_RADIUS = 24                   # corner radius
 
-# Caption definitions: (filename, line1, line2, y_top)
-# y_top is the top edge of the pill (caption block anchored from top)
+# Caption definitions: (filename, line1, line2, y_top, pill_color_override)
+# y_top: top edge of pill, tuned per screenshot to sit as header with gap before HUD
+# pill_color_override: None = use default, or (r,g,b,a) tuple for this screenshot
 CAPTIONS = [
-    ('02_classic_gameplay.png',       'PRECISION PILOTING.',    'NO MARGIN FOR ERROR.',   160),
-    ('01_main_menu.png',             'CONTROL THRUST.',        'MASTER THE DESCENT.',    160),
-    ('06_campaign_venus_crash.png',   'Crash. Learn.',          'Try again.',             160),
-    ('10_landing_success.png',        'PRECISION',              'IS SCORED.',             160),
-    ('03_campaign_level_select.png',  'A 10-WORLD',            'SKILL CAMPAIGN',         160),
+    # 1. Gameplay — HUD box starts ~260px. Pill at 140 ends ~320, gap before HUD at ~370
+    ('02_classic_gameplay.png',       'PRECISION PILOTING.',    'NO MARGIN FOR ERROR.',   140, None),
+    # 2. Main menu — "LANDER" title at ~360. Reduced opacity to prevent visual overload
+    ('01_main_menu.png',             'CONTROL THRUST.',        'MASTER THE DESCENT.',    140, (20, 20, 30, 155)),
+    # 3. Crash — HUD starts ~260. Similar to gameplay
+    ('06_campaign_venus_crash.png',   'Crash. Learn.',          'Try again.',             140, None),
+    # 4. Landing success — HUD starts ~260
+    ('10_landing_success.png',        'PRECISION',              'IS SCORED.',             140, None),
+    # 5. Campaign select — "CAMPAIGN" header at ~266, cards at ~350
+    ('03_campaign_level_select.png',  'A 10-WORLD',            'SKILL CAMPAIGN',         140, None),
 ]
 
 
@@ -62,7 +68,7 @@ def measure_text(font, text):
     return bbox[2] - bbox[0], bbox[3] - bbox[1], bbox[1]
 
 
-def add_caption(input_path, output_path, line1, line2, y_top):
+def add_caption(input_path, output_path, line1, line2, y_top, pill_color=None):
     """Open a screenshot, draw a 2-line caption with background pill, save."""
     img = Image.open(input_path).convert('RGBA')
     width, height = img.size
@@ -72,6 +78,7 @@ def add_caption(input_path, output_path, line1, line2, y_top):
     draw = ImageDraw.Draw(overlay)
 
     font = find_font(FONT_SIZE)
+    color = pill_color or PILL_COLOR
 
     # Measure both lines
     w1, h1, yoff1 = measure_text(font, line1)
@@ -96,7 +103,7 @@ def add_caption(input_path, output_path, line1, line2, y_top):
     draw.rounded_rectangle(
         (pill_x0, pill_y0, pill_x1, pill_y1),
         radius=PILL_RADIUS,
-        fill=PILL_COLOR
+        fill=color
     )
 
     # Text positioning: centered in pill
@@ -119,17 +126,19 @@ def add_caption(input_path, output_path, line1, line2, y_top):
     # Save as PNG (lossless)
     result.save(output_path, 'PNG', optimize=False)
 
-    print(f"  Pill: ({pill_x0},{pill_y0}) to ({pill_x1},{pill_y1})")
+    opacity_pct = round(color[3] / 255 * 100)
+    print(f"  Pill: ({pill_x0},{pill_y0}) to ({pill_x1},{pill_y1}), h={pill_h}px, opacity={opacity_pct}%")
     return result.size
 
 
 def main():
     screenshots_dir = os.path.abspath(SCREENSHOTS_DIR)
     print(f"Screenshots directory: {screenshots_dir}")
-    print(f"Font size: {FONT_SIZE}px, Pill color: {PILL_COLOR}")
+    print(f"Font size: {FONT_SIZE}px, Default pill: {PILL_COLOR}")
     print()
 
-    for filename, line1, line2, y_top in CAPTIONS:
+    for entry in CAPTIONS:
+        filename, line1, line2, y_top, pill_override = entry
         input_path = os.path.join(screenshots_dir, filename)
         base, ext = os.path.splitext(filename)
         output_name = f"{base}_captioned{ext}"
@@ -139,7 +148,7 @@ def main():
             print(f"SKIP: {filename} not found")
             continue
 
-        size = add_caption(input_path, output_path, line1, line2, y_top)
+        size = add_caption(input_path, output_path, line1, line2, y_top, pill_override)
         print(f"OK: {output_name} ({size[0]}x{size[1]})")
 
     print("\nDone.")
