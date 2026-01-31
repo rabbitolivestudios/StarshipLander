@@ -33,7 +33,8 @@ If any of these documentation files are missing, create them before implementing
 | Before writing code | Read the files you plan to modify. Never propose changes to code you haven't read. |
 | After completing a feature or fix | Update all documentation in the same commit (see Documentation section). |
 | Before committing | Run `xcodebuild` to verify the build succeeds. Do not commit broken code. |
-| Ending a session | Create a session summary in `Docs/chats/`, update `PROJECT_LOG.md`, commit and push. |
+| Ending a session | Create a chat session summary in `Docs/chats/` (mandatory, no exceptions), update `PROJECT_LOG.md`, commit and push. |
+| Ideas or features discussed but not implemented | Log them in the session summary under "Research / Ideas Discussed" and add to PROJECT_LOG backlog. |
 | Context lost or new session | Run the full Start of Session Checklist. |
 | Adding any SDK or data flow | Document privacy impact before implementation (see Privacy section). |
 
@@ -91,27 +92,91 @@ Sessions may expire or lose context at any time. These files ensure the project 
 
 ---
 
+## Chat Session Logging (mandatory)
+
+Every session MUST produce a chat session summary file. This is the most critical documentation artifact — it is the primary mechanism for restoring context when sessions expire or are lost. Skipping this is never acceptable.
+
+### Rules
+
+1. **One summary file per session.** Created at end of session, committed and pushed before session ends.
+2. **Location:** `Docs/chats/YYYY-MM-DD_sessionNN_short_description.md`
+3. **Session numbering:** Increment from the last session number found in `Docs/chats/`. Check before creating.
+4. **Scope:** Capture everything that happened in the session — even research, discussions, ideas logged, and decisions made without code changes.
+5. **No raw chat logs.** Summarize. The summary must be useful to a future session that has zero prior context.
+6. **Include all ideas and suggestions** discussed during the session, even if not implemented. These are valuable for future planning.
+7. **Include all commits** made during the session with their hashes and descriptions.
+
+### When to Create
+
+- At the end of every session, regardless of whether code was written
+- Before the final commit of the session (include it in that commit)
+- If the session is getting long, create an intermediate summary to protect against context loss
+
+### Template
+
+```markdown
+# YYYY-MM-DD — Session NN: Short Title
+
+## Goals
+- What was planned for this session
+
+## Changes Made
+
+### 1. Feature/Fix Name
+**What:** Description of the change
+**Why:** Reason for the change
+**Files:** List of modified files
+
+(repeat for each change)
+
+## Research / Ideas Discussed
+- Any ideas explored, features discussed, or options considered but not yet implemented
+- Include enough detail that a future session can pick up the thread
+
+## Technical Notes
+- Any technical details worth recording (workarounds, gotchas, environment issues)
+
+## Decisions
+1. Decision made and why
+
+## Definition of Done
+- [x] Item completed
+- [ ] Item remaining
+
+## Commits
+- `abc1234` — Commit message summary
+- `def5678` — Commit message summary
+
+## Next Actions
+- [ ] What remains to be done
+```
+
+---
+
 ## Documentation Requirements
 
 Change logging is mandatory. Every meaningful change must update documentation **in the same commit**. This is non-negotiable.
 
-### A) CHANGELOG.md
+### A) Chat Session Summary (Docs/chats/)
+- **Every session, no exceptions.** See "Chat Session Logging" section above.
+
+### B) CHANGELOG.md
 - Add or update the relevant version entry
 - Use Keep a Changelog style (Added / Changed / Fixed)
 - Be factual and specific
 - Do not claim features are shipped if they are not
 
-### B) PROJECT_LOG.md
+### C) PROJECT_LOG.md
 - Append a session entry with: date, goal, what changed (files touched), key decisions, risks/follow-ups
 - Update the Current Status table
-- Update Next Steps
+- Update Next Steps and Backlog if applicable
 
-### C) RELEASE_NOTES.md
+### D) RELEASE_NOTES.md
 - Update only when a version is release-candidate or submitted
 - Keep it marketing-friendly but honest
 - Include App Store copy block
 
-### D) DECISIONS.md
+### E) DECISIONS.md
 - Add an entry when any tradeoff, threshold, or policy changes:
   - Scoring formula changes
   - Control feel adjustments
@@ -130,7 +195,7 @@ Format:
 **Consequences:** ...
 ```
 
-### E) README.md
+### F) README.md
 - Update when user-facing behavior changes (version, features, controls, campaign content)
 
 ### Cross-cutting rule
@@ -143,39 +208,6 @@ If you change any of the following, you MUST update README + CHANGELOG + any aff
 - Privacy-related behavior
 
 No stale docs. Ever.
-
-### Session Summary Format
-
-File: `Docs/chats/YYYY-MM-DD_sessionNN_short_description.md`
-
-```markdown
-# YYYY-MM-DD — Session NN: Short Title
-
-## Goals
-- What was planned for this session
-
-## Changes Made
-
-### 1. Feature/Fix Name
-**What:** Description of the change
-**Why:** Reason for the change
-**Files:** List of modified files
-
-## Technical Notes
-- Any technical details worth recording
-
-## Decisions
-1. Decision made and why
-
-## Definition of Done
-- [x] Item completed
-- [ ] Item remaining
-
-## Next Actions
-- [ ] What remains to be done
-```
-
-Do not paste raw chat logs. Summarize.
 
 ---
 
@@ -325,6 +357,7 @@ After completing any work, output a change summary:
 - Do not commit code that doesn't compile.
 - Do not bump versions without explicit user approval.
 - Do not skip documentation updates.
+- Do not end a session without creating a chat session summary in `Docs/chats/`.
 
 ---
 
