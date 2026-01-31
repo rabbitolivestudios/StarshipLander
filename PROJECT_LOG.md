@@ -33,6 +33,9 @@ This file documents the development history and decisions for the Starship Lande
 2. If rejected, address feedback and resubmit
 3. If approved, verify live listing screenshots and description
 
+**BACKLOG (v2.0.1+):**
+- Campaign per-level high scores display — top-3 scores per level are stored in `CampaignState.scoresByLevel` but users can only see the #1 best score on level cards. Options: (a) show top-3 on level cards, (b) tap card to expand leaderboard, (c) dedicated leaderboard screen. Simplest: expand `LevelCardView` in `LevelSelectView.swift` to show all 3 entries.
+
 ---
 
 ## AdMob Configuration
