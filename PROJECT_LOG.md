@@ -25,7 +25,7 @@ This file documents the development history and decisions for the Starship Lande
 | 1.1.2 | 6 | Published - Accelerometer controls |
 | 1.1.3 | 7 | Published - Partial bug fix + URL update |
 | 1.1.4 | 10 | Published - Bug fix + new icon |
-| 1.1.5 | 11 | Submitted for review - New scoring system + HUD fixes |
+| 1.1.5 | 11 | Published on App Store - New scoring system + HUD fixes |
 | 2.0.0 | 12 | **SUBMITTED FOR REVIEW** - Campaign mode, per-planet physics, visual effects |
 
 **NEXT STEPS:**
