@@ -687,13 +687,17 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - App Store Connect rejected 1206×2622 screenshots — requires exactly 1284×2778 for iPhone 6.7"
 
 #### Project Management Guidelines:
-- Created `CLAUDE.md` (357 lines) — persistent instructions for Claude Code session continuity
+- Created `CLAUDE.md` — persistent instructions for Claude Code session continuity
   - Start of session checklist, phase discipline, definition of done
   - Mandatory documentation updates, code standards, testing expectations
   - Privacy guardrails, change summary format, hard "do not" list
 - Created `.github/pull_request_template.md` — PR checklist (scope, build, regression, docs, privacy, testing, risk)
+- Added dedicated "Chat Session Logging (mandatory)" section to CLAUDE.md with 7 enforcement rules
 - Inspired by jessfraz/dotfiles AGENTS.md, adapted for iOS project and session continuity
-- **Files:** `CLAUDE.md`, `.github/pull_request_template.md`
+- **Files:** `CLAUDE.md`, `.github/pull_request_template.md`, `DECISIONS.md`
+
+#### Research / Ideas Logged:
+- Campaign per-level high scores display — top-3 stored but only #1 visible on level cards. Options: expand cards, tap-to-expand, or dedicated screen. Added to backlog.
 
 #### Definition of Done:
 - [x] 10 screenshots captured and resized
@@ -703,7 +707,9 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - [x] v2.0.0 submitted for review
 - [x] CLAUDE.md created with full project guidelines
 - [x] PR template created
-- [x] All documentation updated and committed
+- [x] Chat session logging enforced in CLAUDE.md
+- [x] Campaign high scores display idea logged in backlog
+- [x] Session summary finalized and committed
 
 ---
 

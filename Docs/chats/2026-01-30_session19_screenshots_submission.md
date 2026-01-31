@@ -130,12 +130,41 @@ Inspired by: [jessfraz/dotfiles AGENTS.md](https://github.com/jessfraz/dotfiles/
 
 Checklist sections: Scope & Intent, Build & Run, Gameplay Regression Safety, Feature Acceptance Criteria, Documentation, Privacy/Compliance, Testing Notes, Risk Management, PR Summary.
 
+### 8. Chat Session Logging Enforcement
+**What:** Added dedicated "Chat Session Logging (mandatory)" top-level section to CLAUDE.md with 7 explicit rules. Also added to Quick Obligations table and Hard "Do Not" list.
+**Why:** Chat session summaries are the primary context restoration mechanism when sessions expire. They were referenced in documentation requirements but not enforced as a distinct, prominent mandatory step.
+**Files:** `CLAUDE.md`
+
+Key rules added:
+- One summary per session, no exceptions
+- Include all ideas/suggestions discussed even if not implemented
+- Include all commits made during the session
+- Create intermediate summaries during long sessions to protect against context loss
+- Expanded template with "Research / Ideas Discussed" and "Commits" sections
+
+### 9. Backlog and High Scores Research
+**What:** Researched campaign per-level high scores display gap. Added backlog section to PROJECT_LOG.
+**Why:** User noticed during simulator testing that per-level top-3 scores are stored but not visible to the player. Logged as v2.0.1+ backlog item.
+**Files:** `PROJECT_LOG.md`
+
+## Research / Ideas Discussed
+
+### Campaign Per-Level High Scores Display (v2.0.1+)
+- **Problem:** `CampaignState.scoresByLevel` stores top-3 per level, but users can only see the #1 best score on level select cards. Ranks 2 and 3 are invisible.
+- **Current visibility:** Main menu shows classic top-3. Level cards show best score only. Game over shows current score only.
+- **Option A:** Show top-3 directly on level cards in `LevelSelectView.swift` (simplest, cards get taller)
+- **Option B:** Tap card to expand/show top-3 (changes tap behavior, needs UX thought)
+- **Option C:** Dedicated leaderboard screen from main menu or level select (most work, cleanest separation)
+- **Recommended:** Option A — data already accessible via `campaignState.scoresByLevel[level.id]`, minimal code change to `LevelCardView`
+- **Status:** Logged in PROJECT_LOG backlog. Not implemented yet.
+
 ## Decisions
 1. **Manual screenshot capture over automated:** Simulator touch-hold events can't be reliably scripted via AppleScript/CGEvent for SpriteKit games. User navigated the app manually while Claude captured via `xcrun simctl io` with 3-second countdown.
 2. **1284x2778 over 1242x2688:** Both are accepted by App Store Connect. Used 1284x2778 (iPhone 6.7") as it's the newer standard.
 3. **HTTP/1.1 for git push:** HTTP/2 fails with broken pipe on large payloads. Set `git config http.version HTTP/1.1` as workaround.
 4. **CLAUDE.md over AGENTS.md:** Claude Code natively reads `CLAUDE.md` from project root at session start. No extra configuration needed. More portable than `.codex/AGENTS.md` which is specific to Codex CLI.
 5. **PR template in .github/:** GitHub auto-fills PR descriptions from `.github/pull_request_template.md`. Even as a solo developer, PRs serve as change records with attached discussions.
+6. **Chat session logging as top-level enforcement:** Elevated from a subsection to a mandatory section with explicit rules, because it's the single most important artifact for session continuity.
 
 ## Definition of Done
 - [x] 10 screenshots captured and resized to 1284x2778
@@ -145,17 +174,24 @@ Checklist sections: Scope & Intent, Build & Run, Gameplay Regression Safety, Fea
 - [x] v2.0.0 submitted for App Store review
 - [x] CLAUDE.md created with full project guidelines
 - [x] PR template created at .github/pull_request_template.md
+- [x] Chat session logging enforced in CLAUDE.md
+- [x] Campaign high scores display idea logged in backlog
 - [x] All documentation updated and committed
+- [x] Session summary finalized
 
 ## Commits
 - `098d2e4` — Add v2.0.0 App Store screenshots (iPhone 16 Pro)
 - `3c385c8` — Expand v2.0.0 release notes with detailed feature documentation
 - `878b148` — Resize screenshots to 1284x2778 for App Store Connect
+- `3c2a0fb` — Document session 19: screenshots, release notes, App Store submission
 - `14190f3` — Add session 19 chat summary
 - `0cc2daf` — Add CLAUDE.md project guidelines and GitHub PR template
+- `dbf0da9` — Document CLAUDE.md and PR template in session 19 summary, project log, decisions
+- `b6d8121` — Enforce chat session logging in CLAUDE.md, add backlog to PROJECT_LOG
 
 ## Next Actions
 - [ ] Wait for App Store review response
 - [ ] If rejected, address feedback and resubmit
 - [ ] If approved, verify live listing screenshots and description
+- [ ] Implement campaign per-level high scores display (v2.0.1)
 - [ ] Follow CLAUDE.md guidelines in all future sessions
