@@ -34,12 +34,17 @@ This file documents the development history and decisions for the Starship Lande
 2. If rejected, address feedback and resubmit
 3. If approved, verify live listing screenshots and description
 
-**BACKLOG (v2.1+):**
-- ~~Campaign per-level high scores display~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
-- Game Center leaderboards (1 classic + 10 level)
-- "Support Development" IAP (remove ads)
-- Share Score card
-- Achievements ("Fuel Master", "Zero Drift", "Elite Pilot")
+**v2.1.0 PLANNED (scope locked):**
+- [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
+- [planned] 10 Game Center achievements
+- [planned] "Support Development" IAP (remove ads, StoreKit 2)
+- [planned] Share Score Card (SwiftUI render + native share sheet)
+
+**BACKLOG (v2.2+):**
+- ~~Campaign per-level high scores display~~ — **DONE in v2.0.1**
+- iPad support
+- Localization
+- Automated tests (XCTest)
 
 ---
 
@@ -746,6 +751,59 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - `STATUS.md` (new) — authoritative project snapshot with 9 sections: Project Snapshot, What Is Done, What Is NOT Done, Current Phase, Immediate Next Tasks, Non-Negotiable Principles, How to Resume Work, Known Risks, Ownership
 - `CLAUDE.md` (updated) — added STATUS.md as authoritative truth in intro, session checklist (step 2), session continuity table (first entry with precedence rule), and documentation requirements (section G)
 
+### Session 25 (2026-01-31) - v2.1.0 Planning Session
+
+**Planned v2.1.0 scope: Game Center, Achievements, Remove Ads IAP, Share Score Card.**
+
+#### Research Completed:
+
+1. **GameKit / Game Center (iOS 15+)**:
+   - Authentication: `GKLocalPlayer.local.authenticateHandler` — automatic, graceful fallback
+   - Score submission: `GKLeaderboard.submitScore()` — built-in offline queue, best-score-only
+   - Achievements: `GKAchievement.report()` — idempotent, percentComplete 0-100
+   - Access Point: `GKAccessPoint.shared` — 3 lines for native dashboard overlay
+   - Leaderboard IDs: reverse-domain, must register in App Store Connect first
+   - Privacy: No ATT needed; add "Gameplay Content" to App Privacy declarations
+   - Entitlement: "Game Center" capability in Xcode
+
+2. **StoreKit 2 (iOS 15+)**:
+   - Purchase: `Product.purchase()` async/await with JWS on-device verification
+   - Restore: `AppStore.sync()` + `Transaction.currentEntitlements`
+   - Persistence: `currentEntitlements` as truth, UserDefaults as fast cache
+   - Testing: Local StoreKit Configuration file (no App Store Connect needed)
+   - Privacy: No additional declarations
+   - Entitlement: "In-App Purchase" capability in Xcode
+
+3. **Achievement hook points identified**:
+   - `saveScore()` in GameOverView for landing-based achievements
+   - `CampaignState.completedLevel()` for progression achievements
+   - `GameState` properties for condition checks (fuel, rotation, stars, platform)
+
+4. **Ad removal integration point**:
+   - `BannerAdContainer` in ContentView + GameContainerView — conditionally hide based on UserDefaults flag
+
+#### Decisions Made:
+- Game Center auth: automatic with graceful fallback (no forced popups)
+- 10 achievements, all binary (0% or 100%), no grind-based
+- StoreKit 2 with on-device JWS verification, no server needed
+- Privacy: "Gameplay Content" declaration for Game Center, no other changes
+
+#### v2.1.0 Scope (locked):
+- 11 Game Center leaderboards (classic + 10 campaign)
+- 10 achievements
+- 1 non-consumable IAP ("Support Development" — remove ads)
+- Share Score Card with native share sheet
+- No gameplay, physics, or campaign balance changes
+
+#### Files Changed:
+- `CHANGELOG.md` — added v2.1.0 Unreleased section
+- `DECISIONS.md` — 4 new decision entries (Game Center, achievements, IAP, privacy)
+- `STATUS.md` — updated phase, next tasks, not-done status
+- `PROJECT_LOG.md` — this entry
+- `Docs/chats/2026-01-31_session25_v21_planning.md` — session summary
+
+---
+
 ### Session 24 (2026-01-31) - Dedicated Leaderboard Screen (v2.0.1)
 
 **Added a dedicated leaderboard screen and fixed version label visibility.**
@@ -800,4 +858,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-01-31 (Session 24)*
+*Last updated: 2026-01-31 (Session 25)*

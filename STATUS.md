@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-01-31 (Session 24)
+> Last reconciled: 2026-01-31 (Session 25)
 
 ---
 
@@ -54,8 +54,8 @@ These features are fully implemented, build-verified, and included in v2.0.1:
 
 These are **not implemented**. Do not assume otherwise:
 
-- **Game Center integration** — not started
-- **In-App Purchases (IAP)** — not started
+- **Game Center integration** — planned for v2.1.0 (technical research complete, decisions documented)
+- **In-App Purchases (IAP)** — planned for v2.1.0 (StoreKit 2 approach decided, decisions documented)
 - ~~**Campaign per-level leaderboard viewing**~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
 - **iPad support** — iPhone only
 - **Landscape orientation** — portrait only
@@ -69,9 +69,9 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Development — v2.0.1 Feature Work**
+**Phase: Planning — v2.1.0 (Community + Progression)**
 
-v2.0.0 (Build 12) was submitted to App Store Connect on 2026-01-30, pending review. v2.0.1 (Build 13) adds a dedicated leaderboard screen and version label fix.
+v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.1 (Build 13) ready to ship. v2.1.0 planned: Game Center leaderboards + achievements, Remove Ads IAP, Share Score Card.
 
 ---
 
@@ -80,8 +80,9 @@ v2.0.0 (Build 12) was submitted to App Store Connect on 2026-01-30, pending revi
 1. Wait for App Store review response for v2.0.0
 2. If rejected: address feedback, fix, resubmit
 3. If approved: verify live listing, then submit v2.0.1 update
-4. Device playtesting: haptics, accelerometer, ads on physical iPhone
-5. Plan v2.1: Game Center, IAP, share score
+4. Implement v2.1.0: Game Center leaderboards (11), achievements (10), Remove Ads IAP, Share Score Card
+5. Device playtesting: haptics, accelerometer, ads, Game Center, IAP on physical iPhone
+6. Configure App Store Connect: leaderboard IDs, achievement IDs, IAP product, privacy declarations
 
 ---
 
