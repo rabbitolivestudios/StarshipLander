@@ -43,3 +43,11 @@ fastlane/test_output/
 *.mobileprovision
 *.cer
 Secrets/
+
+# Video recordings
+*.MP4
+*.mp4
+*.mov
+
+# Claude Code local settings
+.claude/settings.local.json

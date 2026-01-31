@@ -118,15 +118,24 @@ StarshipLander/
 │       ├── rotate.wav               # Rotation blip
 │       ├── land_success.wav         # Victory fanfare
 │       └── explosion.wav            # Crash sound
+├── Docs/
+│   └── chats/                       # Session summaries (context restoration)
+├── Screenshots/
+│   └── v2.0.0/                      # App Store screenshots (1284x2778)
 ├── Scripts/
 │   ├── generate_sounds.py           # Sound effect generator
 │   ├── generate_icon.py             # App icon generator
 │   ├── generate_screenshots.py      # Screenshot generator
 │   └── export_chat_transcripts.py   # Claude Code transcript exporter
+├── .github/
+│   └── pull_request_template.md     # PR checklist template
 ├── RocketLander.xcodeproj           # Xcode project
+├── CLAUDE.md                        # Claude Code session guidelines
+├── STATUS.md                        # Authoritative project snapshot
 ├── CHANGELOG.md                     # Version history
 ├── PROJECT_LOG.md                   # Development session logs
 ├── RELEASE_NOTES.md                 # App Store release notes
+├── DECISIONS.md                     # Architectural/design decision records
 └── README.md                        # This file
 ```
 
@@ -153,7 +162,7 @@ open RocketLander.xcodeproj
 
 # Build for simulator
 xcodebuild -scheme RocketLander \
-  -destination 'platform=iOS Simulator,name=iPhone 17' \
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
   build
 
 # Archive for App Store
