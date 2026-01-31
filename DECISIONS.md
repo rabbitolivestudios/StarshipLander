@@ -124,3 +124,12 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Option 3 — each campaign level gets a 1000-point default score under the last name of a space figure connected to that celestial body. Classic mode gets "Elon" (SpaceX reference).
 **Why:** Creates a discovery moment when players notice the names. Each name teaches a bit of space history. The 1000-point score is beatable but not trivial.
 **Consequences:** Seeded on first launch only (if no scores exist for a level). Names: Armstrong (Moon), Aldrin (Mars), Huygens (Titan), Galileo (Europa), Gagarin (Earth), Shepard (Venus), Glenn (Mercury), Marius (Ganymede), Collins (Io), Shoemaker (Jupiter), Elon (Classic).
+
+---
+
+## [2026-01-31] CLAUDE.md for Session Continuity and Project Guidelines
+**Context:** Claude Code sessions can expire or lose context at any time. Without persistent instructions, each new session starts from scratch with no understanding of project conventions, documentation requirements, or development workflow. Previous sessions sometimes missed documentation updates or introduced inconsistent practices.
+**Options considered:** (1) Verbal reminders each session, (2) A README section with guidelines, (3) A dedicated `CLAUDE.md` file (automatically read by Claude Code at session start), (4) `.codex/AGENTS.md` (Codex CLI format, per jessfraz reference).
+**Decision:** Option 3 — `CLAUDE.md` in project root. Also added `.github/pull_request_template.md` for PR checks.
+**Why:** `CLAUDE.md` is natively supported by Claude Code — it's read automatically at the start of every session without any manual steps. It's the most reliable way to enforce guidelines across sessions. The PR template adds a structured safety net for code changes even as a solo developer.
+**Consequences:** Every session now has a mandatory 10-step startup checklist, phase discipline, definition of done, documentation requirements, code standards, testing expectations, privacy guardrails, and a hard "do not" list. Documentation updates are non-negotiable. Change summaries are mandatory output. PRs auto-fill with regression safety, scope, and compliance checks.
