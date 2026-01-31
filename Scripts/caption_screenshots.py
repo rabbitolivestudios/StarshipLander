@@ -26,22 +26,22 @@ FONT_CANDIDATES = [
 ]
 
 FONT_SIZE = 100
-LINE_SPACING = 18  # pixels between lines
+LINE_SPACING = 14  # pixels between lines
 
 # Background pill styling
 PILL_COLOR = (20, 20, 30, 190)    # dark blue-black at ~75% opacity
 PILL_PADDING_H = 60               # horizontal padding inside pill
-PILL_PADDING_V = 32               # vertical padding inside pill
-PILL_RADIUS = 32                   # corner radius
+PILL_PADDING_V = 22               # vertical padding inside pill
+PILL_RADIUS = 28                   # corner radius
 
 # Caption definitions: (filename, line1, line2, y_top)
 # y_top is the top edge of the pill (caption block anchored from top)
 CAPTIONS = [
-    ('01_main_menu.png',              'PRECISION PILOTING.',    'NO MARGIN FOR ERROR.',   130),
-    ('02_classic_gameplay.png',       'CONTROL THRUST.',        'MASTER THE DESCENT.',    130),
-    ('10_landing_success.png',        'PRECISION',              'IS SCORED.',             130),
-    ('03_campaign_level_select.png',  'A 10-WORLD',            'SKILL CAMPAIGN',         130),
-    ('06_campaign_venus_crash.png',   'FAILURE',               'TEACHES CONTROL.',       130),
+    ('02_classic_gameplay.png',       'PRECISION PILOTING.',    'NO MARGIN FOR ERROR.',   160),
+    ('01_main_menu.png',             'CONTROL THRUST.',        'MASTER THE DESCENT.',    160),
+    ('06_campaign_venus_crash.png',   'Crash. Learn.',          'Try again.',             160),
+    ('10_landing_success.png',        'PRECISION',              'IS SCORED.',             160),
+    ('03_campaign_level_select.png',  'A 10-WORLD',            'SKILL CAMPAIGN',         160),
 ]
 
 
@@ -77,7 +77,10 @@ def add_caption(input_path, output_path, line1, line2, y_top):
     w1, h1, yoff1 = measure_text(font, line1)
     w2, h2, yoff2 = measure_text(font, line2)
 
-    line_height = max(h1, h2)
+    # Use fixed line height based on cap height for consistent pill sizing
+    # across ALL CAPS and mixed-case text (descenders extend below)
+    cap_height = font.getbbox('ABCDEFG')[3] - font.getbbox('ABCDEFG')[1]
+    line_height = cap_height
     text_block_h = line_height * 2 + LINE_SPACING
     text_block_w = max(w1, w2)
 
