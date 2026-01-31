@@ -16,7 +16,7 @@
 | Tech | SwiftUI + SpriteKit + CoreMotion |
 | Current Version | 2.0.0 (Build 12) |
 | Version Status | **SUBMITTED FOR APP STORE REVIEW** (2026-01-30) |
-| Last Published | v1.1.4 (Build 10) — on App Store |
+| Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
 | Repo | github.com/rabbitolivestudios/StarshipLander |
@@ -111,7 +111,7 @@ v2.0.0 (Build 12) was submitted to App Store Connect on 2026-01-30. No code chan
 ## Known Risks / Watchouts
 
 - **v2.0.0 not yet approved** — Apple may reject. Common risks: ad compliance, screenshot accuracy, privacy declarations
-- **v1.1.5 status unclear** — PROJECT_LOG says "Submitted for review" but does not confirm published. May have been superseded by v2.0.0
+- **v1.1.5 is the current live version** — published on App Store (Build 11)
 - **No device testing for v2.0.0** — haptics, accelerometer controls, and ad loading are unverified on physical hardware
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
