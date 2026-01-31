@@ -36,7 +36,7 @@ If any of these documentation files are missing, create them before implementing
 | Before writing code | Read the files you plan to modify. Never propose changes to code you haven't read. |
 | After completing a feature or fix | Update all documentation in the same commit (see Documentation section). |
 | Before committing | Run `xcodebuild` to verify the build succeeds. Do not commit broken code. |
-| Ending a session | Create a chat session summary in `Docs/chats/` (mandatory, no exceptions), update `PROJECT_LOG.md`, commit and push. |
+| Ending a session | Create a chat session summary in `Docs/chats/` (mandatory, no exceptions), update `PROJECT_LOG.md`, run repo housekeeping (see section below), commit and push. |
 | Ideas or features discussed but not implemented | Log them in the session summary under "Research / Ideas Discussed" and add to PROJECT_LOG backlog. |
 | Context lost or new session | Run the full Start of Session Checklist. |
 | Adding any SDK or data flow | Document privacy impact before implementation (see Privacy section). |
@@ -153,9 +153,43 @@ Every session MUST produce a chat session summary file. This is the most critica
 - `abc1234` — Commit message summary
 - `def5678` — Commit message summary
 
+## Repo Housekeeping
+- [ ] Working tree clean (no stale untracked files)
+- [ ] .gitignore up to date
+- [ ] README.md project structure matches actual files
+- [ ] No secrets or credentials in tracked files
+
 ## Next Actions
 - [ ] What remains to be done
 ```
+
+---
+
+## Repo Housekeeping (mandatory, every session)
+
+Before the final commit of every session, run through this checklist. This keeps the repository clean and the GitHub page accurate.
+
+### Checklist
+
+1. **Working tree clean** — no untracked files that should be ignored or deleted
+   - Run `git status`. If there are untracked files, either `.gitignore` them or delete them.
+   - Videos (`*.mp4`, `*.mov`), local IDE settings, and build artifacts should never be committed.
+2. **`.gitignore` up to date** — any new file types that shouldn't be tracked are covered
+3. **README.md project structure** — matches the actual file tree
+   - If files or directories were added/removed/renamed during the session, update the project structure section.
+4. **README.md accuracy** — version, features, build commands, and links are correct
+5. **Stale files removed** — no orphaned screenshots, old exports, or leftover artifacts
+6. **No secrets or credentials** — no `.env`, API keys, provisioning profiles, or certificates in tracked files
+7. **GitHub repo metadata** (when `gh` CLI is available or via web UI):
+   - Description is set and accurate
+   - Topics/tags reflect the project (e.g., `ios`, `swift`, `spritekit`, `game`)
+   - Releases are created for published App Store versions
+
+### When to do more than the checklist
+
+- **After file restructuring** — verify README structure, `.gitignore`, and imports
+- **After adding dependencies** — verify `.gitignore` covers new build artifacts
+- **After version releases** — create a GitHub Release with tag and release notes
 
 ---
 
@@ -372,6 +406,7 @@ After completing any work, output a change summary:
 - Do not bump versions without explicit user approval.
 - Do not skip documentation updates.
 - Do not end a session without creating a chat session summary in `Docs/chats/`.
+- Do not end a session without running the repo housekeeping checklist.
 
 ---
 
