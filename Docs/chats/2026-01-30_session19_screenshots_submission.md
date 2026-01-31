@@ -1,4 +1,4 @@
-# 2026-01-30 — Session 19: App Store Screenshots, Release Notes, Submission
+# 2026-01-30 — Session 19: App Store Screenshots, Submission, Project Guidelines
 
 ## Goals
 - Capture App Store screenshots for v2.0.0 (iPhone 16 Pro)
@@ -6,6 +6,7 @@
 - Resize screenshots to App Store Connect required dimensions
 - Draft App Store description and "What's New" text
 - Submit v2.0.0 for App Store review
+- Establish project management guidelines for Claude Code session continuity
 
 ## Changes Made
 
@@ -103,12 +104,58 @@ Can you land on Jupiter?
 2. **1284×2778 over 1242×2688:** Both are accepted by App Store Connect. Used 1284×2778 (iPhone 6.7") as it's the newer standard.
 3. **HTTP/1.1 for git push:** HTTP/2 fails with broken pipe on large payloads. Set `git config http.version HTTP/1.1` as workaround.
 
+### 6. Project Management Guidelines (CLAUDE.md)
+**What:** Created `CLAUDE.md` — persistent instructions automatically read by Claude Code at the start of every session.
+**Why:** Sessions can expire or lose context. Need strict guidelines to ensure project continuity, consistent documentation, and clean development practices across sessions.
+**Files:** `CLAUDE.md` (new, 357 lines)
+
+Key sections:
+- **Start of Session Checklist** — 10-step mandatory context restoration
+- **Phase Discipline** — no mixing unrelated work phases in one commit
+- **Definition of Done** — checklist before and after every task
+- **Documentation Requirements** — mandatory updates per commit (CHANGELOG, PROJECT_LOG, RELEASE_NOTES, DECISIONS, README)
+- **Cross-cutting rule** — version/ads/controls/privacy changes must update all related docs
+- **Code Standards** — think-first process, no dead code, no breadcrumbs, monolith prevention
+- **Testing Expectations** — simulator + device + edge cases, manual steps for ads/ATT
+- **Privacy Guardrails** — must document data collection before adding SDKs
+- **Change Summary** — mandatory output format after every task
+- **Hard "Do Not" List** — 8 non-negotiable rules
+
+Inspired by: [jessfraz/dotfiles AGENTS.md](https://github.com/jessfraz/dotfiles/blob/main/.codex/AGENTS.md) (quick obligations table, think-first process, no breadcrumbs, fix from first principles, search before pivoting) — adapted for iOS/Swift project context and session continuity needs.
+
+### 7. GitHub PR Template
+**What:** Created `.github/pull_request_template.md` — auto-fills every PR with a structured checklist.
+**Why:** Enforces scope, build verification, regression safety, documentation, privacy, and testing checks on every pull request. Acts as a safety net for future contributions.
+**Files:** `.github/pull_request_template.md` (new)
+
+Checklist sections: Scope & Intent, Build & Run, Gameplay Regression Safety, Feature Acceptance Criteria, Documentation, Privacy/Compliance, Testing Notes, Risk Management, PR Summary.
+
+## Decisions
+1. **Manual screenshot capture over automated:** Simulator touch-hold events can't be reliably scripted via AppleScript/CGEvent for SpriteKit games. User navigated the app manually while Claude captured via `xcrun simctl io` with 3-second countdown.
+2. **1284x2778 over 1242x2688:** Both are accepted by App Store Connect. Used 1284x2778 (iPhone 6.7") as it's the newer standard.
+3. **HTTP/1.1 for git push:** HTTP/2 fails with broken pipe on large payloads. Set `git config http.version HTTP/1.1` as workaround.
+4. **CLAUDE.md over AGENTS.md:** Claude Code natively reads `CLAUDE.md` from project root at session start. No extra configuration needed. More portable than `.codex/AGENTS.md` which is specific to Codex CLI.
+5. **PR template in .github/:** GitHub auto-fills PR descriptions from `.github/pull_request_template.md`. Even as a solo developer, PRs serve as change records with attached discussions.
+
+## Definition of Done
+- [x] 10 screenshots captured and resized to 1284x2778
+- [x] Screenshots uploaded to App Store Connect
+- [x] Release notes expanded with full feature documentation
+- [x] App Store description and "What's New" drafted
+- [x] v2.0.0 submitted for App Store review
+- [x] CLAUDE.md created with full project guidelines
+- [x] PR template created at .github/pull_request_template.md
+- [x] All documentation updated and committed
+
 ## Commits
 - `098d2e4` — Add v2.0.0 App Store screenshots (iPhone 16 Pro)
 - `3c385c8` — Expand v2.0.0 release notes with detailed feature documentation
 - `878b148` — Resize screenshots to 1284x2778 for App Store Connect
+- `14190f3` — Add session 19 chat summary
+- `0cc2daf` — Add CLAUDE.md project guidelines and GitHub PR template
 
 ## Next Actions
 - [ ] Wait for App Store review response
 - [ ] If rejected, address feedback and resubmit
 - [ ] If approved, verify live listing screenshots and description
+- [ ] Follow CLAUDE.md guidelines in all future sessions

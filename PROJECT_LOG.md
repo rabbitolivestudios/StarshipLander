@@ -651,9 +651,9 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - [x] All 10 levels playtested on simulator
 - [x] All docs updated (DECISIONS.md, CHANGELOG.md, session summary, PROJECT_LOG.md)
 
-### Session 19 (2026-01-30) - App Store Screenshots, Release Notes, Submission
+### Session 19 (2026-01-30) - App Store Screenshots, Submission, Project Guidelines
 
-**Final session for v2.0.0: screenshots, documentation, and App Store submission.**
+**Phase: Release + Project Management. Screenshots, App Store submission, and CLAUDE.md guidelines.**
 
 #### App Store Screenshots:
 - Captured 10 screenshots from iPhone 16 Pro simulator using `xcrun simctl io screenshot`
@@ -683,12 +683,23 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - AppleScript clicks don't translate to SpriteKit UITouch hold events — used manual navigation + timed capture
 - App Store Connect rejected 1206×2622 screenshots — requires exactly 1284×2778 for iPhone 6.7"
 
+#### Project Management Guidelines:
+- Created `CLAUDE.md` (357 lines) — persistent instructions for Claude Code session continuity
+  - Start of session checklist, phase discipline, definition of done
+  - Mandatory documentation updates, code standards, testing expectations
+  - Privacy guardrails, change summary format, hard "do not" list
+- Created `.github/pull_request_template.md` — PR checklist (scope, build, regression, docs, privacy, testing, risk)
+- Inspired by jessfraz/dotfiles AGENTS.md, adapted for iOS project and session continuity
+- **Files:** `CLAUDE.md`, `.github/pull_request_template.md`
+
 #### Definition of Done:
 - [x] 10 screenshots captured and resized
 - [x] Screenshots uploaded to App Store Connect
 - [x] Release notes expanded with full feature documentation
 - [x] App Store description and "What's New" drafted
 - [x] v2.0.0 submitted for review
+- [x] CLAUDE.md created with full project guidelines
+- [x] PR template created
 - [x] All documentation updated and committed
 
 ---
@@ -701,4 +712,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-01-30 (Session 19)*
+*Last updated: 2026-01-31 (Session 19)*
