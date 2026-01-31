@@ -124,13 +124,18 @@
 - [x] Session summary created
 
 ## Commits
-- (pending — will be committed with this session summary)
+- `3303113` — Plan v2.1.0: Game Center, achievements, IAP, share card
+- `67c5802` — Split v2.1 plan by phase: Community (v2.1.0) and Monetization (v2.2.0)
+- (final commit with this updated session summary + GitHub releases)
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
 - [x] .gitignore up to date
 - [x] README.md project structure matches actual files
 - [x] No secrets or credentials in tracked files
+- [x] GitHub repo description, topics, and homepage URL verified
+- [x] GitHub releases created for all published versions (v1.0.0 through v1.1.5)
+- [x] Installed Homebrew and `gh` CLI for GitHub repo management
 
 ## Next Actions
 
