@@ -119,9 +119,10 @@
 - [x] STATUS.md updated (scoring, mechanics, device testing status, version)
 - [x] PROJECT_LOG.md session 28 entry added
 - [x] Session summary created
-- [x] Version bumped to 2.0.2 (Build 14→15)
-- [x] Archived and uploaded to App Store Connect / TestFlight (twice: Build 14 then Build 15)
-- [x] Classic mode star rating bug fixed
+- [x] Version bumped to 2.0.2 (Build 14→15→16)
+- [x] Archived and uploaded to App Store Connect / TestFlight (three times: Build 14, 15, 16)
+- [x] Classic mode star rating save bug fixed (Build 15)
+- [x] Classic mode star rating display bug fixed (Build 16)
 
 ## Commits
 - `35de6a9` — Campaign polish: scoring rebalance, thrust vectoring, planet differentiation
@@ -129,6 +130,7 @@
 - `4216f7e` — Update session 28 summary: commits, version bump, TestFlight upload
 - `cf1afd8` — End session 28: update PROJECT_LOG with commits and status
 - `e3ccdce` — Fix classic mode star rating not saved in high scores (Build 15)
+- (pending) — Fix classic mode star display in leaderboard and menu (Build 16)
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
@@ -146,7 +148,8 @@
 ## Bug Fix: Classic Mode Star Rating
 - **Bug:** Classic mode `saveScore()` in GameOverView didn't pass `stars` to `highScoreManager.addScore()` — always saved 0
 - **Root cause:** When implementing leaderboard star metadata (Change 7), campaign path was updated but classic path was missed
-- **Fix:** `GameOverView.swift:219` — added `stars: gameState.starsEarned` to the classic mode `addScore()` call
+- **Fix 1 (Build 15):** `GameOverView.swift:219` — added `stars: gameState.starsEarned` to the classic mode `addScore()` call
+- **Fix 2 (Build 16):** Two display-side issues remained — `LeaderboardView` classic section and `ContentView` menu TOP PILOTS section both called `scoreRow` without passing `entry.stars`. Added `stars: entry.stars` to both call sites.
 - **Found by:** Device testing on TestFlight (user landed 3-star in classic, stars not shown in leaderboard)
 
 ## Next Actions

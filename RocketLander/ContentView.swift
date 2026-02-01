@@ -110,6 +110,16 @@ struct MenuView: View {
                                     .foregroundColor(index == 0 ? .yellow : .white)
                                     .lineLimit(1)
 
+                                if entry.stars > 0 {
+                                    HStack(spacing: 1) {
+                                        ForEach(0..<entry.stars, id: \.self) { _ in
+                                            Image(systemName: "star.fill")
+                                                .font(.system(size: 8))
+                                                .foregroundColor(.yellow)
+                                        }
+                                    }
+                                }
+
                                 Spacer()
 
                                 Text("\(entry.score)")

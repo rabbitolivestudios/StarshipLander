@@ -27,7 +27,7 @@ This file documents the development history and decisions for the Starship Lande
 | 1.1.4 | 10 | Published - Bug fix + new icon |
 | 1.1.5 | 11 | Published on App Store - New scoring system + HUD fixes |
 | 2.0.0 | 12 | **SUBMITTED FOR REVIEW** - Campaign mode, per-planet physics, visual effects |
-| 2.0.2 | 15 | Campaign polish: scoring, thrust vectoring, planet differentiation, star fix |
+| 2.0.2 | 16 | Campaign polish: scoring, thrust vectoring, planet differentiation, star fixes |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 
 **NEXT STEPS:**
@@ -985,6 +985,7 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - [x] Version bumped to 2.0.2 (Build 14→15)
 - [x] Archived and uploaded to App Store Connect / TestFlight
 - [x] Fixed classic mode star rating not saved in high scores
+- [x] Fixed classic mode star rating not displayed in leaderboard and menu
 
 #### Commits:
 - `35de6a9` — Campaign polish: scoring rebalance, thrust vectoring, planet differentiation
@@ -992,6 +993,7 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - `4216f7e` — Update session 28 summary: commits, version bump, TestFlight upload
 - `cf1afd8` — End session 28: update PROJECT_LOG with commits and status
 - `e3ccdce` — Fix classic mode star rating not saved in high scores (Build 15)
+- (pending) — Fix classic mode star display in leaderboard and menu (Build 16)
 
 ---
 
