@@ -77,7 +77,7 @@
 - `scoreRow()` in LeaderboardView gains optional `stars` parameter
 - Small yellow star icons displayed between name and score when stars > 0
 - Campaign card call sites pass `stars: levelScores[index].stars`
-- Classic mode unaffected (default 0 = no stars shown)
+- Classic mode: **initially missed** — `saveScore()` didn't pass stars. Fixed: now passes `gameState.starsEarned` for both modes
 
 ### 8. Level Description Updates
 **What:** Updated descriptions and display name for changed mechanics
@@ -119,12 +119,16 @@
 - [x] STATUS.md updated (scoring, mechanics, device testing status, version)
 - [x] PROJECT_LOG.md session 28 entry added
 - [x] Session summary created
-- [x] Version bumped to 2.0.2 (Build 14)
-- [x] Archived and uploaded to App Store Connect / TestFlight
+- [x] Version bumped to 2.0.2 (Build 14→15)
+- [x] Archived and uploaded to App Store Connect / TestFlight (twice: Build 14 then Build 15)
+- [x] Classic mode star rating bug fixed
 
 ## Commits
 - `35de6a9` — Campaign polish: scoring rebalance, thrust vectoring, planet differentiation
 - `1c754f8` — Bump version to 2.0.2 (Build 14), upload to TestFlight
+- `4216f7e` — Update session 28 summary: commits, version bump, TestFlight upload
+- `cf1afd8` — End session 28: update PROJECT_LOG with commits and status
+- (pending) — Fix classic mode star rating, Build 15, re-upload to TestFlight
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
@@ -134,11 +138,16 @@
 - [x] No secrets or credentials in tracked files
 
 ## Version Bump & TestFlight
-- Version bumped to 2.0.2 (Build 14) in Info.plist
+- Version bumped to 2.0.2 (Build 14) in Info.plist, later incremented to Build 15 for star fix
 - All docs updated with new version: CHANGELOG, README, PROJECT_LOG, STATUS
-- Archived and uploaded to App Store Connect via `xcodebuild -exportArchive`
+- Archived and uploaded to App Store Connect via `xcodebuild -exportArchive` (twice)
 - dSYM warnings for GoogleMobileAds and UserMessagingPlatform (harmless, known issue)
-- Build processing on App Store Connect — will appear in TestFlight shortly
+
+## Bug Fix: Classic Mode Star Rating
+- **Bug:** Classic mode `saveScore()` in GameOverView didn't pass `stars` to `highScoreManager.addScore()` — always saved 0
+- **Root cause:** When implementing leaderboard star metadata (Change 7), campaign path was updated but classic path was missed
+- **Fix:** `GameOverView.swift:219` — added `stars: gameState.starsEarned` to the classic mode `addScore()` call
+- **Found by:** Device testing on TestFlight (user landed 3-star in classic, stars not shown in leaderboard)
 
 ## Next Actions
 - [ ] Install v2.0.2 from TestFlight on device

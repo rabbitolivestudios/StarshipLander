@@ -216,7 +216,7 @@ struct GameOverView: View {
                 name: name
             )
         } else {
-            highScoreManager.addScore(name: name, score: gameState.score)
+            highScoreManager.addScore(name: name, score: gameState.score, stars: gameState.starsEarned)
         }
 
         scoreSaved = true
