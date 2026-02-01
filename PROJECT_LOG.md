@@ -27,6 +27,7 @@ This file documents the development history and decisions for the Starship Lande
 | 1.1.4 | 10 | Published - Bug fix + new icon |
 | 1.1.5 | 11 | Published on App Store - New scoring system + HUD fixes |
 | 2.0.0 | 12 | **SUBMITTED FOR REVIEW** - Campaign mode, per-planet physics, visual effects |
+| 2.0.2 | 14 | Campaign polish: scoring, thrust vectoring, planet differentiation |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 
 **NEXT STEPS:**

@@ -14,7 +14,7 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.1 (Build 13) |
+| Current Version | 2.0.2 (Build 14) |
 | Version Status | **SUBMITTED FOR APP STORE REVIEW** (2026-01-30) |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
@@ -25,7 +25,7 @@
 
 ## What Is Done
 
-These features are fully implemented, build-verified, and included in v2.0.1:
+These features are fully implemented, build-verified, and included in v2.0.2:
 
 - **Classic Mode**: Single-level arcade gameplay with gravity 2.0, thrust 12.0
 - **Campaign Mode**: 10 levels (Moon, Mars, Titan, Europa, Earth, Venus, Mercury, Ganymede, Io, Jupiter) with progressive difficulty
@@ -71,7 +71,7 @@ These are **not implemented**. Do not assume otherwise:
 
 **Phase: Planning — v2.1.0 (Community) then v2.2.0 (Monetization)**
 
-v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.1 (Build 13) ready to ship. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.2 (Build 14) ready for TestFlight testing. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
