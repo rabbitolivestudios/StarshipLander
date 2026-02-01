@@ -56,7 +56,7 @@
 - One test initially failed: `testBaseScoreOnly` expected 100 but got 700 because dead-center positioning still earned 600 center precision points. Fixed by positioning rocket at platform edge.
 
 ## Decisions
-1. **Static scoring function**: Extracted as a static method rather than testing through a full SpriteKit scene — simpler, faster, no dependencies on scene lifecycle
+1. **Static scoring function**: Extracted as a static method rather than testing through a full SpriteKit scene — simpler, faster, no dependencies on scene lifecycle. Documented in DECISIONS.md.
 2. **UserDefaults cleanup in tests**: Each test class that touches UserDefaults cleans its keys in setUp/tearDown to prevent cross-test pollution
 
 ## Definition of Done
@@ -73,7 +73,8 @@
 - [x] Session summary created
 
 ## Commits
-- (pending — will be committed after this summary)
+- `261d618` — Add unit tests: 51 XCTest cases across 7 test files
+- (follow-up commit) — Fix session gaps: DECISIONS.md entry, commit hash, housekeeping
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)

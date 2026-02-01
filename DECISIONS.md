@@ -214,3 +214,12 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Option 2 — cancel v2.0.0 submission, submit v2.0.2 (Build 16) with updated App Store copy. Resets the review clock but ensures the first version users experience has the polished gameplay.
 **Why:** v2.0.0 had outdated gameplay (binary RCS, 25k max score, cosmetic-only planet mechanics, no star metadata in leaderboards). Shipping it would mean users get an inferior version, requiring an immediate follow-up update. Better to wait slightly longer and ship the right version first.
 **Consequences:** Review clock reset. App Store description, What's New, review notes, promotional text, and keywords all updated to match v2.0.2 behavior. Version number on App Store listing is 2.0.2 (skipping 2.0.0 and 2.0.1 publicly).
+
+---
+
+## [2026-02-01] Static Scoring Function for Unit Testability
+**Context:** Adding unit tests for the scoring formula. The `calculateScore()` method on GameScene reads instance properties (`gameState.fuel`, `rocket.position.x`, `size.width`), requiring a full SpriteKit scene to test. Instantiating GameScene in XCTest is fragile and slow.
+**Options considered:** (1) Instantiate a real GameScene in tests, (2) Extract scoring math to a separate utility class, (3) Add a static method on GameScene that takes all inputs as parameters and have the instance method wrap it.
+**Decision:** Option 3 — static `GameScene.calculateScore(verticalSpeed:horizontalSpeed:rotation:approachSpeed:fuel:rocketX:sceneWidth:platform:)` with the instance method as a thin wrapper.
+**Why:** Keeps scoring logic co-located with GameScene (no new files). The static method is a pure function — easy to test with exact inputs and verify exact outputs. The instance method wrapper preserves the existing call sites unchanged. No behavior change.
+**Consequences:** Duplicated method signature (static + instance). Instance method is trivial (one-liner forwarding call). All scoring tests run without SpriteKit scene instantiation. Future scoring formula changes only need to update the static method.
