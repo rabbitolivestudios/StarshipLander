@@ -69,6 +69,7 @@
 
 ## Commits
 - `fede844` — Campaign engagement upgrade v2.0.3: reentry state, tilt HUD, final stats, crash diagnostics
+- `8aa9c00` — Update session 32 summary with commit hash
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)

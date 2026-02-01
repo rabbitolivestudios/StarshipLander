@@ -103,13 +103,13 @@ StarshipLander/
 │   │   ├── GameState.swift          # ObservableObject game state
 │   │   ├── HighScoreManager.swift   # High score persistence
 │   │   ├── LandingPlatform.swift    # Platform A/B/C definitions
-│   │   ├── LandingMessages.swift    # Success/crash/rare messages
+│   │   ├── LandingMessages.swift    # Success messages + deterministic crash diagnostics
 │   │   ├── LevelDefinition.swift    # 10 campaign level definitions
 │   │   └── CampaignState.swift      # Campaign progress persistence
 │   ├── Views/
 │   │   ├── GameContainerView.swift  # Game container + SpriteKit bridge
-│   │   ├── GameOverView.swift       # Game over screen with stars
-│   │   ├── HUDViews.swift           # Top HUD + velocity display
+│   │   ├── GameOverView.swift       # Game over screen with stars + final stats panel
+│   │   ├── HUDViews.swift           # Top HUD + velocity + tilt display
 │   │   ├── ControlViews.swift       # Bottom controls + buttons
 │   │   ├── ShapeViews.swift         # Rocket illustration shapes
 │   │   ├── LeaderboardView.swift     # Dedicated leaderboard screen
@@ -130,6 +130,7 @@ StarshipLander/
 │   ├── LandingMessagesTests.swift     # Message selection logic (5 tests)
 │   ├── GameStateTests.swift           # Game state management (3 tests)
 │   ├── LandingPlatformTests.swift     # Platform data verification (5 tests)
+│   ├── CrashDiagnosticTests.swift     # Crash classification + determinism (14 tests)
 │   └── ScoringHelper.swift            # Test-only scoring formula replica
 ├── Docs/
 │   └── chats/                       # Session summaries (context restoration)
