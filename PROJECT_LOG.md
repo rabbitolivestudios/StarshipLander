@@ -993,7 +993,7 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - `4216f7e` — Update session 28 summary: commits, version bump, TestFlight upload
 - `cf1afd8` — End session 28: update PROJECT_LOG with commits and status
 - `e3ccdce` — Fix classic mode star rating not saved in high scores (Build 15)
-- (pending) — Fix classic mode star display in leaderboard and menu (Build 16)
+- `2a4ecb8` — Fix classic mode star display in leaderboard and menu (Build 16)
 
 ---
 
