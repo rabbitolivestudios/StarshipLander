@@ -14,7 +14,7 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.2 (Build 15) |
+| Current Version | 2.0.2 (Build 16) |
 | Version Status | **SUBMITTED FOR APP STORE REVIEW** (2026-01-30) |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |

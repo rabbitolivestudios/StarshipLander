@@ -67,7 +67,7 @@ struct LeaderboardView: View {
             ForEach(0..<3, id: \.self) { index in
                 if index < highScoreManager.scores.count {
                     let entry = highScoreManager.scores[index]
-                    scoreRow(rank: index + 1, name: entry.name, score: entry.score)
+                    scoreRow(rank: index + 1, name: entry.name, score: entry.score, stars: entry.stars)
                 } else {
                     scoreRow(rank: index + 1, name: "---", score: nil)
                 }

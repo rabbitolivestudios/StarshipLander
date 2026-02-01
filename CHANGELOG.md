@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Classic mode star rating not saved**: Classic mode high scores now correctly store the star rating (platform A=1, B=2, C=3) — previously always saved as 0
+- **Classic mode star rating not displayed**: Classic section in leaderboard view and menu TOP PILOTS now pass stars to scoreRow — previously only campaign rows showed stars
 
 ---
 
