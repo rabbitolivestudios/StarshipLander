@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-01-31 (Session 25)
+> Last reconciled: 2026-01-31 (Session 26)
 
 ---
 
@@ -62,7 +62,7 @@ These are **not implemented**. Do not assume otherwise:
 - **Localization** — English only
 - **Automated testing** — no unit or UI tests
 - **CI/CD pipeline** — no GitHub Actions or automated builds
-- **Device playtesting of v2.0.0** — tested on simulator only; haptics, accelerometer, and ads unverified on device
+- **Device playtesting partially done** — haptics + ads verified on device via TestFlight. Accelerometer bug found and fixed locally. Campaign testing in progress.
 - **v2.0.0 App Store approval** — submitted, not yet approved
 
 ---
@@ -115,7 +115,7 @@ v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.1 (Build 13
 
 - **v2.0.0 not yet approved** — Apple may reject. Common risks: ad compliance, screenshot accuracy, privacy declarations
 - **v1.1.5 is the current live version** — published on App Store (Build 11)
-- **No device testing for v2.0.0** — haptics, accelerometer controls, and ad loading are unverified on physical hardware
+- **Device testing in progress** — TestFlight v2.0.1 (Build 13) installed. Haptics and ads verified working. Accelerometer bug found and fixed (not yet in TestFlight build). Campaign testing ongoing.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
 

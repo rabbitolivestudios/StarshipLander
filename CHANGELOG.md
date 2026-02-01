@@ -52,6 +52,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Gold/silver/bronze rank colors for top-3 positions
   - Scrollable layout with back navigation
 
+### Fixed
+- **Accelerometer toggle not affecting gameplay**: MenuView used a separate `@AppStorage` binding that didn't sync with `GameState`. Toggle now binds directly to `gameState.useAccelerometer` so controls and game scene react immediately.
+
 ### Changed
 - **Version number relocated**: Moved from bottom of scroll content to fixed top-right overlay on menu screen, ensuring it's always visible regardless of scroll position
 - **TOP PILOTS section is now tappable**: Acts as entry point to the full leaderboard with "View All >" hint text

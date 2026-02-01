@@ -753,6 +753,45 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - `STATUS.md` (new) — authoritative project snapshot with 9 sections: Project Snapshot, What Is Done, What Is NOT Done, Current Phase, Immediate Next Tasks, Non-Negotiable Principles, How to Resume Work, Known Risks, Ownership
 - `CLAUDE.md` (updated) — added STATUS.md as authoritative truth in intro, session checklist (step 2), session continuity table (first entry with precedence rule), and documentation requirements (section G)
 
+### Session 26 (2026-01-31) - TestFlight Setup + Device Testing + Accelerometer Fix
+
+**Set up TestFlight for device testing. Found and fixed accelerometer toggle bug.**
+
+#### Changes Made:
+
+1. **TestFlight setup**:
+   - Archived and uploaded v2.0.1 (Build 13) to App Store Connect
+   - Created internal testing group "Developer Testing"
+   - Added personal Apple ID as team member (Developer role) for TestFlight access
+   - Successfully installed and tested on physical iPhone
+
+2. **Device testing results**:
+   - Haptics: all 4 types working (thrust, rotation, landing, crash)
+   - Ads: banner ads loading correctly, ATT prompt appearing
+   - Sound effects: working
+   - Layout: no issues, version number visible top-right
+   - Accelerometer: **BUG FOUND** — toggle had no effect on gameplay
+   - Campaign: testing in progress (deferred to next session)
+
+3. **Accelerometer bug fix (`ContentView.swift`)**:
+   - Root cause: MenuView used `@AppStorage("useAccelerometer")` which updated UserDefaults but not `GameState.useAccelerometer` (read once at init)
+   - Fix: removed `@AppStorage`, bound toggle directly to `gameState.useAccelerometer`
+   - Fix committed locally, needs new TestFlight build to verify on device
+
+4. **Environment setup**:
+   - Installed Homebrew and `gh` CLI (session 25)
+   - Fixed `xcode-select` path after Homebrew install switched it to Command Line Tools
+
+#### Files Modified:
+- `RocketLander/ContentView.swift` — removed `@AppStorage`, bound to `gameState.useAccelerometer`
+
+#### Pending:
+- Campaign mode device testing (user testing async)
+- New TestFlight build with accelerometer fix
+- Accelerometer verification on device
+
+---
+
 ### Session 25 (2026-01-31) - v2.1.0 Planning Session
 
 **Planned v2.1.0 scope: Game Center, Achievements, Remove Ads IAP, Share Score Card.**
@@ -863,4 +902,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-01-31 (Session 25)*
+*Last updated: 2026-01-31 (Session 26)*
