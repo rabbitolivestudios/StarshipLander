@@ -68,7 +68,7 @@
 - [x] All docs updated (CHANGELOG, DECISIONS, STATUS, PROJECT_LOG, README, session summary)
 
 ## Commits
-- (pending — to be filled after commit)
+- `fede844` — Campaign engagement upgrade v2.0.3: reentry state, tilt HUD, final stats, crash diagnostics
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
