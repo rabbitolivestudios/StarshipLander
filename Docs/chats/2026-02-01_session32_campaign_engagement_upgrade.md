@@ -38,7 +38,12 @@
 **What:** Version 2.0.3, Build 17.
 **Files:** `RocketLander/Info.plist`
 
-### 7. Perfect Score Simulation Update
+### 7. TestFlight Upload
+**What:** Archived and uploaded Build 17 (v2.0.3) to App Store Connect for TestFlight testing.
+**Why:** Device testing needed for reentry state, tilt HUD, final stats, and crash diagnostics.
+**Result:** Upload succeeded. Build processing on App Store Connect. dSYM warnings for GoogleMobileAds are harmless (known issue).
+
+### 8. Perfect Score Simulation Update
 **What:** Updated `Scripts/calculate_perfect_scores.py` to model campaign reentry state (initial tilt + drift). Campaign levels now simulate 3-frame tilt correction phase costing ~0.24% fuel plus initial rightward drift of 15 pts/s. Classic mode unchanged.
 **Why:** The simulation must reflect actual game physics. Campaign initial conditions affect optimal fuel usage and trajectories.
 **Files:** `Scripts/calculate_perfect_scores.py`
@@ -72,7 +77,11 @@
 - [x] All 65 tests pass
 - [x] Build succeeds
 - [x] Version bumped to 2.0.3 (Build 17)
+- [x] Build 17 archived and uploaded to TestFlight
+- [x] Perfect score simulation updated for campaign reentry state (33/33 landings, <1% impact)
 - [x] All docs updated (CHANGELOG, DECISIONS, STATUS, PROJECT_LOG, README, session summary)
+- [x] Repo housekeeping complete
+- [x] Session summary includes all commits
 
 ## Commits
 - `fede844` — Campaign engagement upgrade v2.0.3: reentry state, tilt HUD, final stats, crash diagnostics
@@ -80,6 +89,7 @@
 - `31b8070` — Repo housekeeping: update README structure, complete session 32 commits
 - `afc6883` — Add housekeeping commit to session 32 summary
 - `9cb1ffe` — Update perfect score simulation for campaign reentry state
+- `fbdccbf` — Update session 32 summary with simulation commit
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)

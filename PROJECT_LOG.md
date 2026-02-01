@@ -1174,6 +1174,16 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 7. **Version Bump**: 2.0.3 (Build 17)
 
+8. **TestFlight Upload**: Archived and uploaded Build 17 to App Store Connect for device testing.
+
+9. **Perfect Score Simulation Update (`Scripts/calculate_perfect_scores.py`)**:
+   - Updated to model campaign reentry state (initial tilt + drift)
+   - Adds tilt correction phase: 3 rotation frames costing ~0.24% fuel
+   - Initial rightward drift of 15 pts/s affects trajectory optimization
+   - Impact: <1% score change on all 30 campaign level/platform combinations
+   - Classic mode unchanged. Best: Classic C = 12,132. All 33/33 landings computed.
+   - Center landing still always optimal (0/33 off-center)
+
 #### Files Created:
 - `RocketLanderTests/CrashDiagnosticTests.swift`
 
@@ -1184,6 +1194,15 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - `RocketLander/Views/HUDViews.swift` — tilt angle row, tilt color/direction properties
 - `RocketLander/Views/GameOverView.swift` — FinalStatsView, crash diagnostic display
 - `RocketLander/Info.plist` — version 2.0.3, build 17
+- `Scripts/calculate_perfect_scores.py` — campaign reentry state modeling
+
+#### Commits:
+- `fede844` — Campaign engagement upgrade v2.0.3
+- `8aa9c00` — Update session 32 summary with commit hash
+- `31b8070` — Repo housekeeping: update README structure
+- `afc6883` — Add housekeeping commit to session 32 summary
+- `9cb1ffe` — Update perfect score simulation for campaign reentry state
+- `fbdccbf` — Update session 32 summary with simulation commit
 
 #### Definition of Done:
 - [x] Campaign ships spawn with tilt + drift
@@ -1195,7 +1214,10 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - [x] All 65 tests pass
 - [x] Build succeeds
 - [x] Version bumped to 2.0.3 (Build 17)
+- [x] Build 17 uploaded to TestFlight
+- [x] Perfect score simulation updated for campaign reentry (33/33, <1% impact)
 - [x] All docs updated
+- [x] Repo housekeeping complete
 
 ---
 
