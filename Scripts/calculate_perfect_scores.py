@@ -47,6 +47,10 @@ WRAP_WIDTH = SCREEN_W + 40         # 433 (from -20 to screenW+20)
 FUEL_THRUST = 0.3
 FUEL_ROTATE = 0.08
 
+# Campaign reentry state (applied to all non-Classic levels)
+CAMPAIGN_INITIAL_TILT = 0.12       # ~6.9° left tilt (radians)
+CAMPAIGN_INITIAL_HSPEED = 15.0     # rightward drift (pts/s)
+
 MAX_SAFE_VERT = 40.0
 MAX_SAFE_HORIZ = 25.0
 MAX_SAFE_ROT = 0.05
@@ -144,7 +148,7 @@ def compute_dx_rem(x, tx, go_left, plat_w):
 
 
 def simulate(level, plat, target_desc=35.0, max_tilt=0.40,
-             go_left=False, x_offset=0.0, debug=False):
+             go_left=False, x_offset=0.0, is_campaign=False, debug=False):
     """
     Frame-by-frame simulation with reactive controller.
 
@@ -153,6 +157,7 @@ def simulate(level, plat, target_desc=35.0, max_tilt=0.40,
       max_tilt: maximum tilt angle in radians
       go_left: if True, go left (and potentially wrap) to reach platform
       x_offset: landing offset from center (-1.0 to 1.0, fraction of half-width)
+      is_campaign: if True, apply campaign reentry state (initial tilt + drift)
 
     Optimization: "perfect landing" = maximum score, which is a trade-off
     between center precision (up to 600 subtotal pts), fuel remaining
@@ -173,8 +178,41 @@ def simulate(level, plat, target_desc=35.0, max_tilt=0.40,
 
     x, y, vx, vy = START_X, START_Y, 0.0, 0.0
     fuel = 100.0
+    ship_tilt = 0.0  # current ship tilt (radians, positive = left)
+
+    # Apply campaign reentry state
+    if is_campaign:
+        vx = CAMPAIGN_INITIAL_HSPEED
+        ship_tilt = CAMPAIGN_INITIAL_TILT
     vel_ring = []
     hover_acc = 0.0
+
+    # Campaign tilt correction phase: the ship starts tilted and must rotate
+    # to upright before effective thrust is possible. Each rotation frame costs
+    # FUEL_ROTATE and corrects ~rotationPower (0.04 rad) of tilt.
+    # During correction, thrust is less effective (cos(ship_tilt) vertical component).
+    rotation_power = 0.04  # rad per frame (matching GameScene rotationPower)
+    if is_campaign and ship_tilt != 0:
+        while abs(ship_tilt) > 0.005 and fuel > 1.0:
+            # Rotate toward upright
+            correction = min(abs(ship_tilt), rotation_power)
+            ship_tilt -= math.copysign(correction, ship_tilt)
+            fuel -= FUEL_ROTATE
+
+            # Gravity still applies during correction (freefall)
+            vy -= gv
+            x += vx / FPS
+            y += vy / FPS
+
+            # Screen wrapping
+            if x < -20:
+                x = SCREEN_W + 20
+            elif x > SCREEN_W + 20:
+                x = -20
+
+            vel_ring.append(max(0.0, -vy))
+            if len(vel_ring) > APPROACH_WINDOW:
+                vel_ring.pop(0)
 
     for frame in range(8000):
         height = y - PLATFORM_Y
@@ -337,13 +375,15 @@ def simulate(level, plat, target_desc=35.0, max_tilt=0.40,
     }
 
 
-def find_best(level, plat):
+def find_best(level, plat, is_campaign=False):
     """Search over all parameters for maximum score."""
     best = None
 
     # Compute distances in both directions
-    dx_right = plat["x"] - START_X
-    dx_left = START_X + 20 + (SCREEN_W + 20 - plat["x"])
+    # For campaign, initial rightward drift shifts effective start position
+    eff_start_x = START_X
+    dx_right = plat["x"] - eff_start_x
+    dx_left = eff_start_x + 20 + (SCREEN_W + 20 - plat["x"])
     directions = [False]  # always try right
     if dx_left < dx_right * 0.95:  # try left if it's notably shorter
         directions.append(True)
@@ -356,7 +396,8 @@ def find_best(level, plat):
                 for xo_10 in range(-8, 9, 2):  # -0.8 to 0.8, step 0.2
                     xo = xo_10 / 10.0
                     r = simulate(level, plat, target_desc=td,
-                                 max_tilt=mt, go_left=go_left, x_offset=xo)
+                                 max_tilt=mt, go_left=go_left, x_offset=xo,
+                                 is_campaign=is_campaign)
                     if r and (best is None or r["score"] > best["score"]):
                         best = r
                         best["td"] = td
@@ -378,7 +419,8 @@ def find_best(level, plat):
                                    min(11, int(xo0 * 10) + 4)):
                     xo = xo_10 / 10.0
                     r = simulate(level, plat, target_desc=td,
-                                 max_tilt=mt, go_left=gl0, x_offset=xo)
+                                 max_tilt=mt, go_left=gl0, x_offset=xo,
+                                 is_campaign=is_campaign)
                     if r and r["score"] > best["score"]:
                         best = r
                         best["td"] = td
@@ -415,6 +457,14 @@ def main():
         print(f"  {lv['name']:<10} {lv['g']:>4.1f} {lv['T']:>5.1f} | {g:>5.1f} {n:>+5.1f} {r:>5.2f}× {hv:>5.1f}%")
     print()
 
+    print("CAMPAIGN REENTRY STATE")
+    tilt_deg = CAMPAIGN_INITIAL_TILT * 180 / math.pi
+    print(f"  Initial tilt: {CAMPAIGN_INITIAL_TILT:.2f} rad ({tilt_deg:.1f}°) left")
+    print(f"  Initial H.speed: {CAMPAIGN_INITIAL_HSPEED:.1f} pts/s rightward")
+    print(f"  Correction cost: ~{math.ceil(CAMPAIGN_INITIAL_TILT / 0.04)} rotation frames × {FUEL_ROTATE}% = ~{math.ceil(CAMPAIGN_INITIAL_TILT / 0.04) * FUEL_ROTATE:.2f}% fuel")
+    print(f"  Applies to: all campaign levels (not Classic)")
+    print()
+
     print("PLATFORM LAYOUT (distances from start)")
     for p in PLATFORMS:
         d_right = p["x"] - START_X
@@ -439,10 +489,11 @@ def main():
 
     all_r = {}
     for lv in LEVELS:
+        is_campaign = lv["name"] != "Classic"
         row = f"  {lv['name']:<10} {lv['g']:>4.1f} {lv['T']:>5.1f} |"
         lr = {}
         for p in PLATFORMS:
-            r = find_best(lv, p)
+            r = find_best(lv, p, is_campaign=is_campaign)
             if r:
                 d = "←" if r.get("go_left") else "→"
                 row += f" {r['score']:>7,} {r['fuel']:>3.0f}% |"

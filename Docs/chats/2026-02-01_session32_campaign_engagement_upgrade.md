@@ -38,10 +38,17 @@
 **What:** Version 2.0.3, Build 17.
 **Files:** `RocketLander/Info.plist`
 
+### 7. Perfect Score Simulation Update
+**What:** Updated `Scripts/calculate_perfect_scores.py` to model campaign reentry state (initial tilt + drift). Campaign levels now simulate 3-frame tilt correction phase costing ~0.24% fuel plus initial rightward drift of 15 pts/s. Classic mode unchanged.
+**Why:** The simulation must reflect actual game physics. Campaign initial conditions affect optimal fuel usage and trajectories.
+**Files:** `Scripts/calculate_perfect_scores.py`
+**Results:** Impact is minimal (<1% score change for most levels). Best score unchanged: Classic C = 12,132. Worst dropped slightly: Europa A 2,635 → 2,605. Center landing still always optimal (0/33 off-center). All 33/33 landings computed.
+
 ## Research / Ideas Discussed
 - Reentry state tuning: 0.12 rad and 15 pts/s are initial values. May need adjustment after device testing. Both are single constants in CampaignReentryState, easy to tune.
 - No angular velocity applied at start (v1 of feature). Could add later for harder levels.
 - Per-level unique reentry states could be a future enhancement.
+- Perfect score simulation re-run confirmed <1% impact from reentry state on campaign scores. The tilt correction costs ~0.24% fuel (3 frames × 0.08%). Initial drift helps rightward approaches slightly but costs fuel for left-wrap Platform C approaches.
 
 ## Technical Notes
 - `snapshotFinalStats()` is called before `gameState.gameOver = true` to capture live physics values
@@ -71,6 +78,7 @@
 - `fede844` — Campaign engagement upgrade v2.0.3: reentry state, tilt HUD, final stats, crash diagnostics
 - `8aa9c00` — Update session 32 summary with commit hash
 - `31b8070` — Repo housekeeping: update README structure, complete session 32 commits
+- `afc6883` — Add housekeeping commit to session 32 summary
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)

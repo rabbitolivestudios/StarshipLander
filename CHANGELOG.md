@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - LandingPlatformTests: multipliers, stars, widths, positions (5 tests)
   - CrashDiagnosticTests: crash classification, precedence, determinism (14 tests)
 - **Test-Only Scoring Helper**: `ScoringHelper.calculateScore()` in test target replicates the scoring formula for unit testing without modifying app code
-- **Perfect Landing Score Analysis**: `Scripts/calculate_perfect_scores.py` — frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Models exact SpriteKit physics (gravity, thrust, fuel, approach speed crash gate, screen wrapping). Best: Classic C = 12,132 via left screen wrap.
+- **Perfect Landing Score Analysis**: `Scripts/calculate_perfect_scores.py` — frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Models exact SpriteKit physics (gravity, thrust, fuel, approach speed crash gate, screen wrapping, campaign reentry state). Best: Classic C = 12,132 via left screen wrap.
 
 ---
 
@@ -30,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Final Stats Panel**: Flight data (tilt, vertical speed, horizontal speed, fuel, center distance) frozen at moment of landing/crash and displayed on game over screen in both modes.
 - **Deterministic Crash Messages**: Cause-based crash feedback tied to actual failure values, replacing random crash messages. Priority order: tilt > vertical speed > horizontal speed > approach speed. Same crash always produces the same message.
 - **CrashDiagnostic Unit Tests**: 14 new tests verifying crash classification, precedence ordering, secondary hints, determinism (100x repeat), and edge cases.
+
+### Changed
+- **Perfect Score Simulation**: Updated `Scripts/calculate_perfect_scores.py` to model campaign reentry state (initial tilt + drift). Campaign scores drop <1% due to tilt correction fuel cost (~0.24%). Best unchanged: Classic C = 12,132.
 
 ---
 
