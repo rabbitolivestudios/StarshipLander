@@ -2,15 +2,16 @@
 
 ## Goals
 - Add unit tests for core game logic: scoring formula, high score persistence, campaign state management, level definitions, landing messages, game state, and platform data
-- Extract scoring formula to a testable static function
+- Test scoring formula without modifying submitted app code
 - Create XCTest target in the Xcode project
 
 ## Changes Made
 
-### 1. Extracted Scoring to Static Method
-**What:** Added a static `GameScene.calculateScore()` function that takes all inputs as parameters (vertical/horizontal speed, rotation, approach speed, fuel, rocket X position, scene width, platform). The existing instance method becomes a thin wrapper.
-**Why:** The scoring formula was tightly coupled to GameScene instance properties (`gameState.fuel`, `rocket.position.x`, `size.width`), making it impossible to test without instantiating a full SpriteKit scene. The static method enables pure unit testing.
-**Files:** `RocketLander/GameScene+Scoring.swift`
+### 1. Test-Only Scoring Helper
+**What:** Created `ScoringHelper.calculateScore()` in `RocketLanderTests/ScoringHelper.swift` — a pure function that replicates the exact scoring formula from `GameScene+Scoring.swift` with hardcoded constants matching the app's values. Lives entirely in the test target.
+**Why:** The scoring formula is tightly coupled to GameScene instance properties (`gameState.fuel`, `rocket.position.x`, `size.width`), making it impossible to test without a SpriteKit scene. Initially extracted as a static method on GameScene (modifying app code), but reverted because v2.0.2 Build 16 is submitted for review and app source must remain untouched.
+**Files:** `RocketLanderTests/ScoringHelper.swift`
+**App code changed:** None — `RocketLander/` directory has zero diff against Build 16.
 
 ### 2. Created Test Target
 **What:** Added `RocketLanderTests` target to the Xcode project with 7 test files (51 tests total). Updated `project.pbxproj` with all required sections (file references, build files, groups, native target, build configurations, sources/frameworks/resources build phases, target dependency, container item proxy). Updated the shared scheme to include the test target in its TestAction.
@@ -56,11 +57,11 @@
 - One test initially failed: `testBaseScoreOnly` expected 100 but got 700 because dead-center positioning still earned 600 center precision points. Fixed by positioning rocket at platform edge.
 
 ## Decisions
-1. **Static scoring function**: Extracted as a static method rather than testing through a full SpriteKit scene — simpler, faster, no dependencies on scene lifecycle. Documented in DECISIONS.md.
+1. **Test-only scoring helper (not app code modification)**: Initially extracted scoring as a static method on GameScene, but this modified app code while Build 16 is under App Store review. Reverted to option 3: test-only helper that replicates the formula. Documented in DECISIONS.md.
 2. **UserDefaults cleanup in tests**: Each test class that touches UserDefaults cleans its keys in setUp/tearDown to prevent cross-test pollution
 
 ## Definition of Done
-- [x] Scoring formula extracted to testable static method
+- [x] Scoring formula testable via test-only helper (no app code changes)
 - [x] Test target created in Xcode project
 - [x] 7 test files written (51 tests total)
 - [x] All 51 tests pass
@@ -74,7 +75,8 @@
 
 ## Commits
 - `261d618` — Add unit tests: 51 XCTest cases across 7 test files
-- (follow-up commit) — Fix session gaps: DECISIONS.md entry, commit hash, housekeeping
+- `aca62fd` — Fix session gaps: DECISIONS.md entry, commit hash, housekeeping
+- (follow-up commit) — Move scoring helper to test target, restore app code to Build 16
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)

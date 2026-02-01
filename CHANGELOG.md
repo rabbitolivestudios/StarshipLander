@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - LandingMessagesTests: message selection logic, pool verification (5 tests)
   - GameStateTests: initial values, reset, accelerometer persistence (3 tests)
   - LandingPlatformTests: multipliers, stars, widths, positions (5 tests)
-- **Testable Scoring Function**: Extracted scoring formula to static `GameScene.calculateScore()` for unit testing without SpriteKit scene instantiation
+- **Test-Only Scoring Helper**: `ScoringHelper.calculateScore()` in test target replicates the scoring formula for unit testing without modifying app code
 
 ---
 

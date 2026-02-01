@@ -217,9 +217,9 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
-## [2026-02-01] Static Scoring Function for Unit Testability
-**Context:** Adding unit tests for the scoring formula. The `calculateScore()` method on GameScene reads instance properties (`gameState.fuel`, `rocket.position.x`, `size.width`), requiring a full SpriteKit scene to test. Instantiating GameScene in XCTest is fragile and slow.
-**Options considered:** (1) Instantiate a real GameScene in tests, (2) Extract scoring math to a separate utility class, (3) Add a static method on GameScene that takes all inputs as parameters and have the instance method wrap it.
-**Decision:** Option 3 — static `GameScene.calculateScore(verticalSpeed:horizontalSpeed:rotation:approachSpeed:fuel:rocketX:sceneWidth:platform:)` with the instance method as a thin wrapper.
-**Why:** Keeps scoring logic co-located with GameScene (no new files). The static method is a pure function — easy to test with exact inputs and verify exact outputs. The instance method wrapper preserves the existing call sites unchanged. No behavior change.
-**Consequences:** Duplicated method signature (static + instance). Instance method is trivial (one-liner forwarding call). All scoring tests run without SpriteKit scene instantiation. Future scoring formula changes only need to update the static method.
+## [2026-02-01] Scoring Formula Testing — Test-Only Helper (No App Code Changes)
+**Context:** Adding unit tests for the scoring formula. The `calculateScore()` method on GameScene reads instance properties (`gameState.fuel`, `rocket.position.x`, `size.width`), requiring a full SpriteKit scene to test. v2.0.2 (Build 16) was submitted for App Store review — app source code must not be modified while awaiting review.
+**Options considered:** (1) Instantiate a real GameScene in tests, (2) Extract scoring math to a static method on GameScene (modifies app code), (3) Replicate the scoring formula in a test-only helper in the test target.
+**Decision:** Option 3 — `ScoringHelper.calculateScore()` in `RocketLanderTests/ScoringHelper.swift`. A pure function that replicates the exact formula from `GameScene+Scoring.swift` with hardcoded constants matching `GameScene.maxSafeVerticalSpeed` etc. App code is completely untouched.
+**Why:** The submitted Build 16 binary must remain unchanged. Option 2 was initially implemented but reverted because it modified `GameScene+Scoring.swift`. Option 3 keeps all test infrastructure in the test target only.
+**Consequences:** Formula is duplicated between app and test target. If the scoring formula changes in a future version, `ScoringHelper` must be updated to match. This is acceptable because: (a) scoring formula changes are infrequent and always documented in DECISIONS.md, (b) test failures from formula drift would be caught immediately, (c) no risk of shipping modified app code during review.

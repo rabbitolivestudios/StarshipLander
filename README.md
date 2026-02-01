@@ -126,7 +126,8 @@ StarshipLander/
 │   ├── LevelDefinitionTests.swift     # Level data integrity (8 tests)
 │   ├── LandingMessagesTests.swift     # Message selection logic (5 tests)
 │   ├── GameStateTests.swift           # Game state management (3 tests)
-│   └── LandingPlatformTests.swift     # Platform data verification (5 tests)
+│   ├── LandingPlatformTests.swift     # Platform data verification (5 tests)
+│   └── ScoringHelper.swift            # Test-only scoring formula replica
 ├── Docs/
 │   └── chats/                       # Session summaries (context restoration)
 ├── Screenshots/

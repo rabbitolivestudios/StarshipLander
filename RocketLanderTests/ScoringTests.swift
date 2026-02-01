@@ -18,7 +18,7 @@ final class ScoringTests: XCTestCase {
         rocketOffset: CGFloat = 0  // offset from platform center
     ) -> Int {
         let rocketX = platform.xFraction * sceneWidth + rocketOffset
-        return GameScene.calculateScore(
+        return ScoringHelper.calculateScore(
             verticalSpeed: verticalSpeed,
             horizontalSpeed: horizontalSpeed,
             rotation: rotation,
