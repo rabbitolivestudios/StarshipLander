@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-01-30)
+## Current Status (2026-01-31)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -981,7 +981,14 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - [x] Leaderboard star metadata: backward-compatible, displayed
 - [x] Level descriptions updated
 - [x] Build succeeds
-- [x] All docs updated (CHANGELOG, DECISIONS, STATUS, PROJECT_LOG)
+- [x] All docs updated (CHANGELOG, DECISIONS, STATUS, PROJECT_LOG, README)
+- [x] Version bumped to 2.0.2 (Build 14)
+- [x] Archived and uploaded to App Store Connect / TestFlight
+
+#### Commits:
+- `35de6a9` — Campaign polish: scoring rebalance, thrust vectoring, planet differentiation
+- `1c754f8` — Bump version to 2.0.2 (Build 14), upload to TestFlight
+- `4216f7e` — Update session 28 summary: commits, version bump, TestFlight upload
 
 ---
 
@@ -993,4 +1000,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-01-31 (Session 27)*
+*Last updated: 2026-01-31 (Session 28)*
