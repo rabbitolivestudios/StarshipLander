@@ -119,6 +119,14 @@ StarshipLander/
 │       ├── rotate.wav               # Rotation blip
 │       ├── land_success.wav         # Victory fanfare
 │       └── explosion.wav            # Crash sound
+├── RocketLanderTests/
+│   ├── ScoringTests.swift             # Scoring formula verification (11 tests)
+│   ├── HighScoreManagerTests.swift    # High score persistence (9 tests)
+│   ├── CampaignStateTests.swift       # Campaign state management (10 tests)
+│   ├── LevelDefinitionTests.swift     # Level data integrity (8 tests)
+│   ├── LandingMessagesTests.swift     # Message selection logic (5 tests)
+│   ├── GameStateTests.swift           # Game state management (3 tests)
+│   └── LandingPlatformTests.swift     # Platform data verification (5 tests)
 ├── Docs/
 │   └── chats/                       # Session summaries (context restoration)
 ├── Screenshots/
@@ -167,6 +175,10 @@ open RocketLander.xcodeproj
 xcodebuild -scheme RocketLander \
   -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
   build
+
+# Run unit tests
+xcodebuild test -scheme RocketLander \
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
 
 # Archive for App Store
 xcodebuild -scheme RocketLander \

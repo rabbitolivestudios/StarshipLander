@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-01 (Session 29)
+> Last reconciled: 2026-02-01 (Session 30)
 
 ---
 
@@ -45,6 +45,7 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **AdMob**: Banner ads on menu and gameplay, ATT prompt on first launch
 - **16-Bit Sound Effects**: Thrust, rotation, landing, crash audio
 - **App Store Screenshots**: 10 screenshots at 1284x2778, uploaded
+- **Unit Tests**: 51 XCTest cases across 7 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data)
 - **Codebase**: Split from 2 monolithic files into 21 organized files
 - **Project Management**: CLAUDE.md, PR template, DECISIONS.md, session logging workflow
 
@@ -60,7 +61,7 @@ These are **not implemented**. Do not assume otherwise:
 - **iPad support** — iPhone only
 - **Landscape orientation** — portrait only
 - **Localization** — English only
-- **Automated testing** — no unit or UI tests
+- **Automated testing** — unit tests added (51 XCTest cases across 7 test files covering scoring, models, game state); no UI tests (XCUITest) yet
 - **CI/CD pipeline** — no GitHub Actions or automated builds
 - **Device playtesting partially done** — haptics + ads verified on device via TestFlight. Accelerometer bug fixed in v2.0.2. Classic mode star rating verified on Build 16. Remaining: thrust vectoring feel, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
 - **v2.0.2 awaiting review** — submitted 2026-02-01, replacing v2.0.0 which was never reviewed

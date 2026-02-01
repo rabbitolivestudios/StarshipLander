@@ -3,7 +3,17 @@ import SpriteKit
 // MARK: - Scoring Logic
 extension GameScene {
 
-    func calculateScore(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform) -> Int {
+    /// Pure scoring calculation with all inputs as parameters — testable without a scene.
+    static func calculateScore(
+        verticalSpeed: CGFloat,
+        horizontalSpeed: CGFloat,
+        rotation: CGFloat,
+        approachSpeed: CGFloat,
+        fuel: Double,
+        rocketX: CGFloat,
+        sceneWidth: CGFloat,
+        platform: LandingPlatform
+    ) -> Int {
         // === CONTINUOUS SCORING SYSTEM WITH FUEL + PLATFORM MULTIPLIER ===
         // Max possible: ~20,000 points (2000 base x 2.0 fuel x 5.0 platform)
 
@@ -20,8 +30,8 @@ extension GameScene {
         subtotal += horizontalScore
 
         // 3. PLATFORM CENTER (0-600 points) — use the specific platform's position
-        let platformX = platform.xFraction * size.width
-        let distanceFromCenter = abs(rocket.position.x - platformX)
+        let platformX = platform.xFraction * sceneWidth
+        let distanceFromCenter = abs(rocketX - platformX)
         let platformHalfWidth = platform.width / 2
         let centerRatio = min(1.0, distanceFromCenter / platformHalfWidth)
         let centerScore = 600.0 * pow(1.0 - centerRatio, 2)
@@ -40,7 +50,7 @@ extension GameScene {
         // Subtotal max: 100 + 500 + 400 + 600 + 250 + 150 = 2000
 
         // 6. FUEL MULTIPLIER (1.0x to 2.0x)
-        let fuelMultiplier = 1.0 + (gameState.fuel / 100.0) * 1.0
+        let fuelMultiplier = 1.0 + (fuel / 100.0) * 1.0
 
         // 7. PLATFORM MULTIPLIER
         let platformMultiplier = platform.multiplier
@@ -51,6 +61,19 @@ extension GameScene {
         // Max possible: 2000 x 2.0 x 5.0 = 20,000
 
         return totalScore
+    }
+
+    func calculateScore(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform) -> Int {
+        return GameScene.calculateScore(
+            verticalSpeed: verticalSpeed,
+            horizontalSpeed: horizontalSpeed,
+            rotation: rotation,
+            approachSpeed: approachSpeed,
+            fuel: gameState.fuel,
+            rocketX: rocket.position.x,
+            sceneWidth: size.width,
+            platform: platform
+        )
     }
 
     /// Determines which platform was landed on based on rocket position

@@ -35,7 +35,24 @@
 		C2000016 /* GameScene+Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000016 /* GameScene+Sound.swift */; };
 		C2000017 /* GameScene+Scoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000017 /* GameScene+Scoring.swift */; };
 		C2000018 /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000018 /* LeaderboardView.swift */; };
+		T2000001 /* ScoringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000001 /* ScoringTests.swift */; };
+		T2000002 /* HighScoreManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000002 /* HighScoreManagerTests.swift */; };
+		T2000003 /* CampaignStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000003 /* CampaignStateTests.swift */; };
+		T2000004 /* LevelDefinitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000004 /* LevelDefinitionTests.swift */; };
+		T2000005 /* LandingMessagesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000005 /* LandingMessagesTests.swift */; };
+		T2000006 /* GameStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000006 /* GameStateTests.swift */; };
+		T2000007 /* LandingPlatformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000007 /* LandingPlatformTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		T9000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6000001;
+			remoteInfo = RocketLander;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A2000001 /* RocketLanderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RocketLanderApp.swift; sourceTree = "<group>"; };
@@ -67,6 +84,14 @@
 		C1000016 /* GameScene+Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Sound.swift"; sourceTree = "<group>"; };
 		C1000017 /* GameScene+Scoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Scoring.swift"; sourceTree = "<group>"; };
 		C1000018 /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
+		T1000001 /* ScoringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringTests.swift; sourceTree = "<group>"; };
+		T1000002 /* HighScoreManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoreManagerTests.swift; sourceTree = "<group>"; };
+		T1000003 /* CampaignStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignStateTests.swift; sourceTree = "<group>"; };
+		T1000004 /* LevelDefinitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDefinitionTests.swift; sourceTree = "<group>"; };
+		T1000005 /* LandingMessagesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingMessagesTests.swift; sourceTree = "<group>"; };
+		T1000006 /* GameStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStateTests.swift; sourceTree = "<group>"; };
+		T1000007 /* LandingPlatformTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPlatformTests.swift; sourceTree = "<group>"; };
+		T3000002 /* RocketLanderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RocketLanderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +103,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		T4000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -85,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				A5000002 /* RocketLander */,
+				T3000001 /* RocketLanderTests */,
 				A5000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -114,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				A3000001 /* RocketLander.app */,
+				T3000002 /* RocketLanderTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -164,6 +198,20 @@
 			path = Haptics;
 			sourceTree = "<group>";
 		};
+		T3000001 /* RocketLanderTests */ = {
+			isa = PBXGroup;
+			children = (
+				T1000001 /* ScoringTests.swift */,
+				T1000002 /* HighScoreManagerTests.swift */,
+				T1000003 /* CampaignStateTests.swift */,
+				T1000004 /* LevelDefinitionTests.swift */,
+				T1000005 /* LandingMessagesTests.swift */,
+				T1000006 /* GameStateTests.swift */,
+				T1000007 /* LandingPlatformTests.swift */,
+			);
+			path = RocketLanderTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -187,6 +235,24 @@
 			productReference = A3000001 /* RocketLander.app */;
 			productType = "com.apple.product-type.application";
 		};
+		T6000001 /* RocketLanderTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = T8000001 /* Build configuration list for PBXNativeTarget "RocketLanderTests" */;
+			buildPhases = (
+				T7000001 /* Sources */,
+				T4000002 /* Frameworks */,
+				T7000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				T9000002 /* PBXTargetDependency */,
+			);
+			name = RocketLanderTests;
+			productName = RocketLanderTests;
+			productReference = T3000002 /* RocketLanderTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -199,6 +265,10 @@
 				TargetAttributes = {
 					A6000001 = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					T6000001 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = A6000001;
 					};
 				};
 			};
@@ -219,6 +289,7 @@
 			projectRoot = "";
 			targets = (
 				A6000001 /* RocketLander */,
+				T6000001 /* RocketLanderTests */,
 			);
 		};
 /* End PBXProject section */
@@ -233,6 +304,13 @@
 				A1000007 /* rotate.wav in Resources */,
 				A1000008 /* land_success.wav in Resources */,
 				A1000009 /* explosion.wav in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		T7000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,7 +346,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		T7000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				T2000001 /* ScoringTests.swift in Sources */,
+				T2000002 /* HighScoreManagerTests.swift in Sources */,
+				T2000003 /* CampaignStateTests.swift in Sources */,
+				T2000004 /* LevelDefinitionTests.swift in Sources */,
+				T2000005 /* LandingMessagesTests.swift in Sources */,
+				T2000006 /* GameStateTests.swift in Sources */,
+				T2000007 /* LandingPlatformTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		T9000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6000001 /* RocketLander */;
+			targetProxy = T9000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B1000001 /* Debug */ = {
@@ -468,6 +568,48 @@
 			};
 			name = Release;
 		};
+		TB000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6XK6BNVURL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tboliveira.StarshipLanderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RocketLander.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RocketLander";
+			};
+			name = Debug;
+		};
+		TB000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6XK6BNVURL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tboliveira.StarshipLanderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RocketLander.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RocketLander";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -485,6 +627,15 @@
 			buildConfigurations = (
 				B1000001 /* Debug */,
 				B1000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		T8000001 /* Build configuration list for PBXNativeTarget "RocketLanderTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				TB000001 /* Debug */,
+				TB000002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

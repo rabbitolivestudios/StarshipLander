@@ -47,7 +47,7 @@ This file documents the development history and decisions for the Starship Lande
 - ~~Campaign per-level high scores display~~ — **DONE in v2.0.1**
 - iPad support
 - Localization
-- Automated tests (XCTest)
+- ~~Automated tests (XCTest)~~ — **Unit tests DONE (Session 30)**; UI tests (XCUITest) still planned
 
 ---
 
@@ -1055,6 +1055,51 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - `85689f9` — Add submission status to CHANGELOG v2.0.2 header
 - `7ce6bc4` — Update README project structure: add caption_screenshots.py and metadata
 - `786d081` — Fix stale references in docs: submission status, device testing, decisions
+
+---
+
+### Session 30 (2026-02-01) - Automated Unit Tests (XCTest)
+
+**Goal:** Add unit tests for core game logic to provide regression protection.
+
+#### Changes Made:
+
+1. **Extracted scoring to static method (`GameScene+Scoring.swift`)**:
+   - Added `GameScene.calculateScore()` static function with all inputs as parameters
+   - Instance method becomes a thin wrapper — zero behavior change
+
+2. **Created test target**:
+   - Added `RocketLanderTests` directory with 7 test files (51 tests total)
+   - Updated `project.pbxproj` with test target, build phases, configurations
+   - Updated scheme to include test target in TestAction
+
+3. **Test coverage**:
+   - ScoringTests (11): formula verification + realistic scenarios
+   - HighScoreManagerTests (9): persistence, sorting, backward-compat
+   - CampaignStateTests (10): unlock, stars, scores, persistence
+   - LevelDefinitionTests (8): data integrity, progression
+   - LandingMessagesTests (5): message selection logic
+   - GameStateTests (3): initial values, reset, settings persistence
+   - LandingPlatformTests (5): multipliers, stars, widths, positions
+
+#### Files Created:
+- `RocketLanderTests/ScoringTests.swift`
+- `RocketLanderTests/HighScoreManagerTests.swift`
+- `RocketLanderTests/CampaignStateTests.swift`
+- `RocketLanderTests/LevelDefinitionTests.swift`
+- `RocketLanderTests/LandingMessagesTests.swift`
+- `RocketLanderTests/GameStateTests.swift`
+- `RocketLanderTests/LandingPlatformTests.swift`
+
+#### Files Modified:
+- `RocketLander/GameScene+Scoring.swift` — static scoring method
+- `RocketLander.xcodeproj/project.pbxproj` — test target
+- `RocketLander.xcodeproj/xcshareddata/xcschemes/RocketLander.xcscheme` — test action
+
+#### Definition of Done:
+- [x] 51 tests pass, main app builds
+- [x] No behavior changes
+- [x] All docs updated
 
 ---
 

@@ -5,6 +5,21 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Unit Tests**: 51 XCTest cases across 7 test files covering core game logic
+  - ScoringTests: formula verification + realistic best-achievable scenarios (11 tests)
+  - HighScoreManagerTests: persistence, sorting, backward-compat decoding (9 tests)
+  - CampaignStateTests: level unlock, stars, score tracking, persistence (10 tests)
+  - LevelDefinitionTests: level data integrity, gravity/thrust progression (8 tests)
+  - LandingMessagesTests: message selection logic, pool verification (5 tests)
+  - GameStateTests: initial values, reset, accelerometer persistence (3 tests)
+  - LandingPlatformTests: multipliers, stars, widths, positions (5 tests)
+- **Testable Scoring Function**: Extracted scoring formula to static `GameScene.calculateScore()` for unit testing without SpriteKit scene instantiation
+
+---
+
 ## [2.0.2] - 2026-01-31 (Phase: Campaign Polish) — SUBMITTED FOR REVIEW 2026-02-01
 
 ### Changed
