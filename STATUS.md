@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-01 (Session 32)
+> Last reconciled: 2026-02-01 (Session 33)
 
 ---
 
@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 17) |
-| Version Status | In development (v2.0.2 Build 16 submitted for App Store review) |
+| Current Version | 2.0.3 (Build 18) |
+| Version Status | Bug fixes tested on device, uploading to TestFlight (v2.0.2 Build 16 submitted for App Store review) |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -38,9 +38,9 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **Haptic Feedback**: Thrust, rotation, landing, crash
 - **Dual Controls**: Button and accelerometer (tilt) modes
 - **Landing Messages**: Contextual success feedback; deterministic cause-based crash diagnostics with actual failure values
-- **HUD Tilt Display**: Real-time tilt angle in degrees with directional color coding (L/R)
-- **Final Stats Panel**: Frozen flight data (tilt, speeds, fuel, center distance) on game-over screen
-- **Campaign Reentry State**: Fixed 6.9° tilt + 15 pts/s drift on campaign start (prevents trivial thrust-only strategy)
+- **HUD Tilt Display**: Real-time tilt angle in degrees with directional color coding (L/R). HUD freezes to final snapshot values on game-over.
+- **Final Stats Panel**: Frozen flight data (tilt, speeds, fuel, center distance) on game-over screen. Uses pre-contact velocity tracking to capture touchdown speeds (not post-collision zeroed values).
+- **Campaign Reentry State**: Fixed 6.9° tilt + 15 pts/s drift on campaign start (prevents trivial thrust-only strategy). Ship visually tilted at spawn.
 - **Per-Level High Scores**: Top-3 stored per campaign level, top-3 global for classic
 - **Dedicated Leaderboard Screen**: Tap "TOP PILOTS" to view classic + all campaign level scores
 - **Astronaut Easter Eggs**: Default leaderboard entries (Armstrong, Aldrin, etc.)
@@ -76,18 +76,17 @@ These are **not implemented**. Do not assume otherwise:
 
 **Phase: Campaign Engagement — v2.0.3, then v2.1.0 (Community)**
 
-v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 17) adds campaign engagement features: fixed reentry start state (tilt + drift), HUD tilt angle display, final stats panel, and deterministic crash messages. These features improve the gameplay feedback loop without changing physics or scoring. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 18) adds campaign engagement features and bug fixes from device testing: fixed reentry start state (tilt + drift), HUD tilt angle display, final stats panel, deterministic crash messages, pre-contact velocity tracking for accurate flight data, and HUD/Flight Data consistency fixes. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. Test v2.0.3 on simulator (reentry state, tilt HUD, final stats, crash diagnostics)
+1. Upload v2.0.3 Build 18 to TestFlight for continued device testing
 2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 3. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
 4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
 5. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
-6. Device playtesting: v2.0.3 campaign reentry + feedback features on TestFlight
 
 ---
 
@@ -119,7 +118,7 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 17
 
 - **v2.0.0 never reviewed** — submitted 2026-01-30, still "Waiting for Review" on 2026-02-01. Decision: replace with v2.0.2 (Build 16) to avoid shipping outdated gameplay
 - **v1.1.5 is the current live version** — published on App Store (Build 11)
-- **Device testing in progress** — TestFlight Build 16 (v2.0.2) is latest. Haptics and ads verified working. Accelerometer fixed. Classic mode star rating verified on device. Remaining device tests: thrust vectoring feel (both control modes), Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris, scoring feel, backward-compat leaderboard stars.
+- **Device testing in progress** — TestFlight Build 18 (v2.0.3) is latest. Haptics and ads verified working. Accelerometer fixed. Classic mode star rating verified on device. v2.0.3 bug fixes (HUD truncation, velocity snapshot, visual start state, fuel rounding) verified on device with Build 17 and simulator. Remaining device tests: thrust vectoring feel (both control modes), Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris, scoring feel, backward-compat leaderboard stars.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
 

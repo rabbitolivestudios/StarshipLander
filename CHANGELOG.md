@@ -34,6 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **Perfect Score Simulation**: Updated `Scripts/calculate_perfect_scores.py` to model campaign reentry state (initial tilt + drift). Campaign scores drop <1% due to tilt correction fuel cost (~0.24%). Best unchanged: Classic C = 12,132.
 
+### Fixed
+- **HUD Tilt Truncation**: Tilt value was truncated with ellipsis ("12...L" instead of "12.8° L") due to `minimumScaleFactor` shrinking text. Fixed with `fixedSize()` and widened HUD from 150pt to 170pt.
+- **Post-Collision Zeroed Velocities**: Final stats showed V.Speed=0 on crash because SpriteKit zeroes velocities during collision resolution. Fixed with pre-contact velocity tracking in the update loop (`lastTrackedVerticalSpeed`, `lastTrackedHorizontalSpeed`, `lastTrackedTilt`).
+- **HUD vs Flight Data Mismatch**: HUD showed live values while Flight Data showed frozen snapshot, causing inconsistent displays on game-over screen. HUD now reads from `final*` values when `gameOver` is true.
+- **Visual Start State Mismatch**: Campaign ships appeared upright at spawn despite having a reentry tilt. Fixed by applying `rocket.zRotation` in `setupScene()` after rocket creation.
+- **Fuel Display Rounding**: HUD fuel used `Int()` (truncation) while Flight Data used `"%.0f"` (rounding), causing 99% vs 100% discrepancy for the same value. Both now use `"%.0f"` rounding.
+- **Signed Tilt Preservation**: `finalTiltAngle` changed from absolute to signed value to preserve L/R direction for HUD display on game-over. `abs()` applied where needed (Flight Data, crash diagnostics).
+
 ---
 
 ## [2.0.2] - 2026-01-31 (Phase: Campaign Polish) — SUBMITTED FOR REVIEW 2026-02-01

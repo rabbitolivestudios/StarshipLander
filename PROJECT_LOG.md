@@ -29,10 +29,10 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 17 | Campaign engagement: reentry state, tilt HUD, final stats, crash diagnostics |
+| 2.0.3 | 18 | Campaign engagement + bug fixes: reentry state, tilt HUD, final stats, crash diagnostics, telemetry fixes |
 
 **NEXT STEPS:**
-1. Test v2.0.3 on simulator (reentry state, tilt HUD, final stats, crash diagnostics)
+1. Upload v2.0.3 Build 18 to TestFlight for continued device testing
 2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 3. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
@@ -1229,4 +1229,60 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-02-01 (Session 32)*
+### Session 33 (2026-02-01) - v2.0.3 Device Testing Bug Fixes (Build 18)
+
+**Goal:** Fix 4 bugs found during on-device testing of v2.0.3 Build 17 on TestFlight, then upload Build 18 for continued testing.
+
+#### Bugs Found (from device screenshots):
+1. **HUD Tilt Truncation**: Tilt value showed "12...L" instead of "12.8° L" due to `minimumScaleFactor` shrinking text
+2. **Post-Collision Zeroed Velocities**: Crash diagnostics showed "approach too high (87)" but V.Speed=0 — SpriteKit zeroes velocities in collision resolution
+3. **HUD vs Flight Data Mismatch**: HUD showed live values, Flight Data showed frozen snapshot — different numbers for same metric on game-over screen
+4. **Visual Start State**: Campaign ships appeared upright at spawn despite having reentry tilt applied on first input
+
+#### Changes Made:
+
+1. **Pre-Contact Velocity Tracking (`GameScene.swift`)**:
+   - Added `lastTrackedVerticalSpeed`, `lastTrackedHorizontalSpeed`, `lastTrackedTilt` — updated synchronously in update loop
+   - `snapshotFinalStats()` uses tracked values instead of reading physics body at collision time
+   - Ensures accurate touchdown speeds and tilt in all end-of-run displays
+
+2. **HUD Display Consistency (`HUDViews.swift`)**:
+   - Added `displayVertical`, `displayHorizontal`, `displayTiltAngle` computed properties
+   - Switch between live values (gameplay) and `final*` values (game-over)
+   - Fixed tilt truncation: replaced `minimumScaleFactor(0.7)` with `fixedSize()`, widened HUD 150→170pt
+   - Fixed fuel rounding: `Int()` → `"%.0f"` for consistency with Flight Data
+
+3. **Visual Start State (`GameScene.swift` — `setupScene()`)**:
+   - Applied `rocket.zRotation = CampaignReentryState.initialTilt` after `createRocket()` for campaign mode
+   - Ship now visually tilted at spawn, matching the physics state applied on first input
+
+4. **Signed Tilt Preservation (`GameOverView.swift`)**:
+   - `finalTiltAngle` changed from absolute to signed (preserves L/R direction for HUD)
+   - Added `abs()` where needed for FinalStatsView display
+
+5. **Bug Evidence Screenshots**: Saved to `Screenshots/v2.0.3-bugs/` with descriptive names
+
+6. **Build Bump**: Build 17 → 18 for TestFlight upload
+
+#### Files Modified:
+- `RocketLander/GameScene.swift` — pre-contact tracking, visual start state, signed tilt
+- `RocketLander/Views/HUDViews.swift` — display properties, fixedSize, fuel rounding, widened HUD
+- `RocketLander/Views/GameOverView.swift` — abs() on finalTiltAngle for FinalStatsView
+- `RocketLander/Info.plist` — build 17 → 18
+
+#### Commits:
+- `e6db4b5` — Fix v2.0.3 telemetry bugs: HUD truncation, snapshot timing, visual start state
+
+#### Definition of Done:
+- [x] All 4 bugs fixed
+- [x] 65/65 tests pass
+- [x] Build succeeds
+- [x] Bug evidence screenshots saved
+- [x] User confirmed fixes work on device
+- [x] Build number bumped to 18
+- [x] All docs updated (CHANGELOG, STATUS, PROJECT_LOG, DECISIONS, session summary)
+- [ ] Build 18 archived and uploaded to TestFlight
+
+---
+
+*Last updated: 2026-02-01 (Session 33)*
