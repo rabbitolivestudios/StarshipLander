@@ -175,29 +175,57 @@ extension GameScene {
             }
         }()
 
+        // Venus (heavy): vertical particles; others: horizontal
+        let isVertical = (intensity == .heavy)
+
         let spawn = SKAction.sequence([
             SKAction.run { [weak self] in
                 guard let self = self else { return }
                 for _ in 0..<count {
-                    let streak = SKShapeNode(rectOf: CGSize(
-                        width: CGFloat.random(in: 15...40),
-                        height: CGFloat.random(in: 1...2)
-                    ))
+                    let streakSize: CGSize
+                    let startPos: CGPoint
+                    let moveAction: SKAction
+
+                    if isVertical {
+                        // Vertical streaks for Venus updrafts
+                        streakSize = CGSize(
+                            width: CGFloat.random(in: 1...2),
+                            height: CGFloat.random(in: 15...40)
+                        )
+                        startPos = CGPoint(
+                            x: CGFloat.random(in: 50...self.size.width - 50),
+                            y: -20
+                        )
+                        moveAction = SKAction.moveBy(
+                            x: CGFloat.random(in: -30...30),
+                            y: self.size.height + 60,
+                            duration: Double(self.size.height / speed)
+                        )
+                    } else {
+                        // Horizontal streaks for Mars/Jupiter
+                        streakSize = CGSize(
+                            width: CGFloat.random(in: 15...40),
+                            height: CGFloat.random(in: 1...2)
+                        )
+                        startPos = CGPoint(
+                            x: self.size.width + 20,
+                            y: CGFloat.random(in: 100...self.size.height - 50)
+                        )
+                        moveAction = SKAction.moveBy(
+                            x: -(self.size.width + 60),
+                            y: CGFloat.random(in: -30...30),
+                            duration: Double(self.size.width / speed)
+                        )
+                    }
+
+                    let streak = SKShapeNode(rectOf: streakSize)
                     streak.fillColor = color.withAlphaComponent(alpha)
                     streak.strokeColor = .clear
-                    streak.position = CGPoint(
-                        x: self.size.width + 20,
-                        y: CGFloat.random(in: 100...self.size.height - 50)
-                    )
+                    streak.position = startPos
                     streak.zPosition = 5
                     self.addChild(streak)
 
-                    let moveAcross = SKAction.moveBy(
-                        x: -(self.size.width + 60),
-                        y: CGFloat.random(in: -30...30),
-                        duration: Double(self.size.width / speed)
-                    )
-                    streak.run(SKAction.sequence([moveAcross, SKAction.removeFromParent()]))
+                    streak.run(SKAction.sequence([moveAction, SKAction.removeFromParent()]))
                 }
             },
             SKAction.wait(forDuration: Double.random(in: 0.15...0.4))
@@ -305,20 +333,29 @@ extension GameScene {
                 let eruptY: CGFloat = 180
 
                 for _ in 0..<8 {
-                    let particle = SKShapeNode(circleOfRadius: CGFloat.random(in: 3...7))
+                    let radius = CGFloat.random(in: 3...7)
+                    let particle = SKShapeNode(circleOfRadius: radius)
                     particle.fillColor = [SKColor.orange, SKColor.red, SKColor.yellow].randomElement()!
                     particle.strokeColor = .clear
                     particle.position = CGPoint(x: eruptX, y: eruptY)
                     particle.zPosition = 15
+
+                    // Deadly volcanic debris — collides with rocket
+                    particle.physicsBody = SKPhysicsBody(circleOfRadius: radius)
+                    particle.physicsBody?.isDynamic = false
+                    particle.physicsBody?.categoryBitMask = self.groundCategory
+                    particle.physicsBody?.contactTestBitMask = self.rocketCategory
+
                     self.addChild(particle)
 
                     let dx = CGFloat.random(in: -40...40)
                     let dy = CGFloat.random(in: 80...200)
 
                     let move = SKAction.moveBy(x: dx, y: dy, duration: Double.random(in: 0.6...1.2))
+                    let removePhysics = SKAction.run { particle.physicsBody = nil }
                     let fall = SKAction.moveBy(x: 0, y: -dy * 1.5, duration: 0.8)
                     let fade = SKAction.fadeOut(withDuration: 0.5)
-                    let seq = SKAction.sequence([move, SKAction.group([fall, fade]), SKAction.removeFromParent()])
+                    let seq = SKAction.sequence([move, removePhysics, SKAction.group([fall, fade]), SKAction.removeFromParent()])
                     particle.run(seq)
                 }
             }

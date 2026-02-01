@@ -5,6 +5,42 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - Unreleased (Phase: Campaign Polish)
+
+### Changed
+- **Scoring Rebalance**: Redistributed score components to reward center precision more
+  - Soft Landing: 700 → 500 points
+  - Platform Center: 350 → 600 points
+  - Approach Control: 200 → 150 points
+  - Fuel multiplier cap: 2.5x → 2.0x
+  - New max theoretical score: 20,000 (was 25,000)
+- **Proportional Thrust Vectoring**: Replaced binary RCS lateral assist with smooth proportional correction
+  - Lateral force scales with tilt angle via sin(rotation) × 0.15 factor
+  - Only active while thrusting (no free lateral assist)
+- **Venus (Level 6)**: Vertical updrafts replace horizontal turbulence
+  - Wind particles now move vertically instead of horizontally
+  - Description: "Vertical updrafts disrupt your descent."
+  - Mechanic display name: "Vertical Updrafts"
+- **Jupiter (Level 10)**: Sudden gusts with calm windows replace smooth sine-wave wind
+  - 2-4 second calm periods with light residual wind
+  - Followed by 1.5-2.5 second sharp directional gusts
+  - Description: "Sudden gusts between calm windows."
+- **Mercury (Level 7)**: Heat shimmer now disrupts thrust control
+  - Random velocity perturbation applied when thrusting
+  - Description: "Heat shimmer disrupts thrust control."
+- **Io (Level 9)**: Volcanic eruption particles are now deadly
+  - Eruption particles have physics bodies (groundCategory) — contact crashes the rocket
+  - Physics bodies removed before fade-out so fading particles are safe
+  - Description: "Volcanic debris is deadly — time it."
+
+### Added
+- **Leaderboard Star Metadata**: Campaign high score entries now store star rating
+  - HighScoreEntry gains backward-compatible `stars` field (defaults to 0 for old data)
+  - Small star icons displayed between name and score in campaign leaderboard rows
+  - Stars passed through from CampaignState.completedLevel
+
+---
+
 ## [2.2.0] - Unreleased (Phase: Monetization)
 
 ### Added

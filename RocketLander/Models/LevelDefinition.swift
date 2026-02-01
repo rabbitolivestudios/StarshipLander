@@ -20,7 +20,7 @@ enum SpecialMechanic: String, Codable {
         case .denseAtmosphere: return "Dense Atmosphere"
         case .iceSurface: return "Ice Surface"
         case .movingPlatform: return "Moving Platform"
-        case .heavyTurbulence: return "Heavy Turbulence"
+        case .heavyTurbulence: return "Vertical Updrafts"
         case .heatShimmer: return "Heat Shimmer"
         case .deepCraters: return "Deep Craters"
         case .volcanicEruptions: return "Volcanic Eruptions"
@@ -135,7 +135,7 @@ struct LevelDefinition {
             terrainStrokeColor: SKColor(red: 0.6, green: 0.5, blue: 0.35, alpha: 1.0),
             celestialBody: .venus,
             specialMechanic: .heavyTurbulence,
-            description: "Heavy turbulence — variable winds."
+            description: "Vertical updrafts disrupt your descent."
         ),
         // Level 7: Mercury — strong gravity, heat shimmer (ratio 4.0x)
         LevelDefinition(
@@ -147,7 +147,7 @@ struct LevelDefinition {
             terrainStrokeColor: SKColor(red: 0.55, green: 0.5, blue: 0.45, alpha: 1.0),
             celestialBody: .mercury,
             specialMechanic: .heatShimmer,
-            description: "Heat shimmer distorts your view."
+            description: "Heat shimmer disrupts thrust control."
         ),
         // Level 8: Ganymede — craters demand precision (ratio 3.9x)
         LevelDefinition(
@@ -171,7 +171,7 @@ struct LevelDefinition {
             terrainStrokeColor: SKColor(red: 0.8, green: 0.7, blue: 0.3, alpha: 1.0),
             celestialBody: .io,
             specialMechanic: .volcanicEruptions,
-            description: "Volcanic eruptions create hazards."
+            description: "Volcanic debris is deadly — time it."
         ),
         // Level 10: Jupiter — extreme gravity + wind (ratio 3.8x)
         LevelDefinition(
@@ -183,7 +183,7 @@ struct LevelDefinition {
             terrainStrokeColor: SKColor(red: 0.6, green: 0.5, blue: 0.3, alpha: 1.0),
             celestialBody: .jupiter,
             specialMechanic: .extremeWind,
-            description: "Extreme gravity and wind gusts."
+            description: "Sudden gusts between calm windows."
         ),
     ]
 

@@ -23,7 +23,7 @@ Guide your Starship through a controlled descent and land safely on one of three
 - **16-Bit Sound Effects**: Retro chiptune audio for all actions
 - **Star Rating System**: Earn 1-3 stars per landing based on platform difficulty
 - **Landing Messages**: Contextual feedback with teaching nudges on crashes
-- **Skill-Based Scoring**: Up to 25,000 points with platform and fuel multipliers
+- **Skill-Based Scoring**: Up to 20,000 points with platform and fuel multipliers
 - **High Score Leaderboard**: Track your top 3 landings
 - **AdMob Integration**: Banner ads with App Tracking Transparency support
 
@@ -40,20 +40,20 @@ Toggle between button and accelerometer controls in the main menu.
 
 ### Scoring System
 
-**Continuous scoring with dual multipliers (Max ~25,000 points)**
+**Continuous scoring with dual multipliers (Max ~20,000 points)**
 
 | Component | Max Points | Description |
 |-----------|------------|-------------|
 | Base | 100 | Successful landing |
-| Soft Landing | 700 | Lower vertical speed = more points |
+| Soft Landing | 500 | Lower vertical speed = more points |
 | Horizontal Precision | 400 | Less drift = more points |
-| Platform Center | 350 | Closer to center = more points |
+| Platform Center | 600 | Closer to center = more points |
 | Rotation | 250 | More upright = more points |
-| Approach Control | 200 | Controlled descent = more points |
+| Approach Control | 150 | Controlled descent = more points |
 | **Subtotal** | **2000** | Before multipliers |
-| **Fuel Multiplier** | **1.0x - 2.5x** | More fuel = higher multiplier |
+| **Fuel Multiplier** | **1.0x - 2.0x** | More fuel = higher multiplier |
 | **Platform Multiplier** | **1x / 2x / 5x** | Harder platform = higher multiplier |
-| **Maximum** | **~25,000** | Perfect landing + 100% fuel + Platform C |
+| **Maximum** | **~20,000** | Perfect landing + 100% fuel + Platform C |
 
 **Formula:** `subtotal × fuelMultiplier × platformMultiplier`
 
@@ -74,11 +74,11 @@ Toggle between button and accelerometer controls in the main menu.
 | 3 | Titan | 2.2 | 10.0 | Dense atmosphere |
 | 4 | Europa | 2.5 | 11.0 | Ice surface |
 | 5 | Earth | 2.8 | 12.0 | Moving platforms |
-| 6 | Venus | 3.2 | 13.0 | Heavy turbulence |
-| 7 | Mercury | 3.5 | 14.0 | Heat shimmer |
+| 6 | Venus | 3.2 | 13.0 | Vertical updrafts |
+| 7 | Mercury | 3.5 | 14.0 | Heat interference |
 | 8 | Ganymede | 3.8 | 15.0 | Deep craters |
-| 9 | Io | 4.2 | 16.5 | Volcanic eruptions |
-| 10 | Jupiter | 4.8 | 18.5 | Extreme wind |
+| 9 | Io | 4.2 | 16.5 | Deadly volcanic debris |
+| 10 | Jupiter | 4.8 | 18.5 | Sudden wind gusts |
 
 *Gravity and thrust increase progressively by level. Each planet has a unique thrust feel — higher gravity levels have more powerful but tighter-margin engines. Values are game-balanced for playability, not real-world accurate.*
 
@@ -186,7 +186,7 @@ python3 Scripts/generate_sounds.py
 - Thrust power: 12.0 velocity/frame
 - Rotation power: 0.04 angular velocity/frame (buttons)
 - Angular damping: 0.7
-- Lateral assist: horizontal nudge when tilted >5°
+- Thrust vectoring: proportional lateral force when tilted while thrusting (0.15 factor)
 - Accelerometer sensitivity: 0.06 with 0.1 dead zone
 
 ### Landing Thresholds

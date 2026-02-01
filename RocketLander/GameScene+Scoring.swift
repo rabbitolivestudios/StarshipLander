@@ -5,13 +5,13 @@ extension GameScene {
 
     func calculateScore(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform) -> Int {
         // === CONTINUOUS SCORING SYSTEM WITH FUEL + PLATFORM MULTIPLIER ===
-        // Max possible: ~25,000 points (2000 base x 2.5 fuel x 5.0 platform)
+        // Max possible: ~20,000 points (2000 base x 2.0 fuel x 5.0 platform)
 
         var subtotal: Double = 100
 
-        // 1. SOFT LANDING (0-700 points)
+        // 1. SOFT LANDING (0-500 points)
         let verticalRatio = min(1.0, verticalSpeed / GameScene.maxSafeVerticalSpeed)
-        let softLandingScore = 700.0 * pow(1.0 - verticalRatio, 2)
+        let softLandingScore = 500.0 * pow(1.0 - verticalRatio, 2)
         subtotal += softLandingScore
 
         // 2. HORIZONTAL PRECISION (0-400 points)
@@ -19,12 +19,12 @@ extension GameScene {
         let horizontalScore = 400.0 * pow(1.0 - horizontalRatio, 2)
         subtotal += horizontalScore
 
-        // 3. PLATFORM CENTER (0-350 points) — use the specific platform's position
+        // 3. PLATFORM CENTER (0-600 points) — use the specific platform's position
         let platformX = platform.xFraction * size.width
         let distanceFromCenter = abs(rocket.position.x - platformX)
         let platformHalfWidth = platform.width / 2
         let centerRatio = min(1.0, distanceFromCenter / platformHalfWidth)
-        let centerScore = 350.0 * pow(1.0 - centerRatio, 2)
+        let centerScore = 600.0 * pow(1.0 - centerRatio, 2)
         subtotal += centerScore
 
         // 4. ROTATION PRECISION (0-250 points)
@@ -32,15 +32,15 @@ extension GameScene {
         let rotationScore = 250.0 * pow(1.0 - rotationRatio, 2)
         subtotal += rotationScore
 
-        // 5. APPROACH CONTROL (0-200 points)
+        // 5. APPROACH CONTROL (0-150 points)
         let approachRatio = min(1.0, Double(approachSpeed) / GameScene.maxSafeApproachSpeed)
-        let approachScore = 200.0 * pow(1.0 - approachRatio, 2)
+        let approachScore = 150.0 * pow(1.0 - approachRatio, 2)
         subtotal += approachScore
 
-        // Subtotal max: 100 + 700 + 400 + 350 + 250 + 200 = 2000
+        // Subtotal max: 100 + 500 + 400 + 600 + 250 + 150 = 2000
 
-        // 6. FUEL MULTIPLIER (1.0x to 2.5x)
-        let fuelMultiplier = 1.0 + (gameState.fuel / 100.0) * 1.5
+        // 6. FUEL MULTIPLIER (1.0x to 2.0x)
+        let fuelMultiplier = 1.0 + (gameState.fuel / 100.0) * 1.0
 
         // 7. PLATFORM MULTIPLIER
         let platformMultiplier = platform.multiplier
@@ -48,7 +48,7 @@ extension GameScene {
         // Final score
         let totalScore = Int(subtotal * fuelMultiplier * platformMultiplier)
 
-        // Max possible: 2000 x 2.5 x 5.0 = 25,000
+        // Max possible: 2000 x 2.0 x 5.0 = 20,000
 
         return totalScore
     }

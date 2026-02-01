@@ -35,6 +35,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var windForce: CGFloat = 0
     private var windTime: TimeInterval = 0
 
+    // Campaign: Jupiter gust state
+    private var gustActive = false
+    private var gustTimer: TimeInterval = 0
+    private var gustDirection: CGFloat = 1
+    private var gustCalmDuration: TimeInterval = 3.0
+    private var gustActiveDuration: TimeInterval = 2.0
+
     // Campaign: moving platforms (per-platform state)
     private var platformDirections: [CGFloat] = [1, 1, 1]
     private var platformOriginalPositions: [CGPoint] = []
@@ -255,6 +262,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             velocity.dx += dx
             velocity.dy += dy
+
+            // Proportional thrust vectoring — lateral force scales with tilt angle
+            // sin(rotation) naturally gives 0 when upright, increases with tilt
+            // 0.15 factor: at 30° tilt, ~7.5% of thrust power goes lateral
+            let lateralFactor: CGFloat = 0.15
+            let lateralForce = sin(rocket.zRotation) * thrustPower * lateralFactor
+            velocity.dx += lateralForce
+
             rocket.physicsBody?.velocity = velocity
 
             if flame == nil && rocket.children.filter({ $0.position.y == -42 }).isEmpty {
@@ -314,14 +329,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
 
-        // Lateral assist: when tilted >5°, apply small horizontal nudge
-        let tiltThreshold: CGFloat = 0.087  // ~5 degrees in radians
-        if abs(rocket.zRotation) > tiltThreshold {
-            let lateralAssist: CGFloat = 2.0
-            let nudge = rocket.zRotation > 0 ? -lateralAssist : lateralAssist
-            rocket.physicsBody?.velocity.dx += nudge * CGFloat(dt)
-        }
-
         wasRotatingLeft = gameState.isRotatingLeft
         wasRotatingRight = gameState.isRotatingRight
 
@@ -353,16 +360,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             rocket.physicsBody?.applyForce(CGVector(dx: windForce, dy: 0))
 
         case .heavyTurbulence:
-            // Variable sine-wave wind
+            // Venus: vertical updrafts/downdrafts instead of horizontal wind
             windTime += dt
-            windForce = CGFloat(sin(windTime * 2.0)) * 5.0 + CGFloat.random(in: -1...1)
-            rocket.physicsBody?.applyForce(CGVector(dx: windForce, dy: 0))
+            let verticalForce = CGFloat(sin(windTime * 1.5)) * 4.0 + CGFloat.random(in: -0.5...0.5)
+            rocket.physicsBody?.applyForce(CGVector(dx: 0, dy: verticalForce))
 
         case .extremeWind:
-            // Extreme gusts
-            windTime += dt
-            windForce = CGFloat(sin(windTime * 1.5)) * 12.0 + CGFloat.random(in: -3...3)
-            rocket.physicsBody?.applyForce(CGVector(dx: windForce, dy: 0))
+            // Jupiter: sudden gusts with calm windows
+            gustTimer += dt
+            if gustActive {
+                let gustForce: CGFloat = 15.0 * gustDirection + CGFloat.random(in: -2...2)
+                rocket.physicsBody?.applyForce(CGVector(dx: gustForce, dy: 0))
+                if gustTimer >= gustActiveDuration {
+                    gustActive = false
+                    gustTimer = 0
+                    gustCalmDuration = Double.random(in: 2.5...4.0)
+                }
+            } else {
+                rocket.physicsBody?.applyForce(CGVector(dx: CGFloat.random(in: -1...1), dy: 0))
+                if gustTimer >= gustCalmDuration {
+                    gustActive = true
+                    gustTimer = 0
+                    gustDirection = Bool.random() ? 1.0 : -1.0
+                    gustActiveDuration = Double.random(in: 1.5...2.5)
+                }
+            }
+
+        case .heatShimmer:
+            // Mercury: heat interference — random thrust perturbation when thrusting
+            if gameState.isThrusting && gameState.fuel > 0 {
+                let dx = CGFloat.random(in: -1.5...1.5)
+                let dy = CGFloat.random(in: -0.8...0.8)
+                rocket.physicsBody?.velocity.dx += dx
+                rocket.physicsBody?.velocity.dy += dy
+            }
 
         case .movingPlatform:
             // Platform A (left):   slow vertical bob only
