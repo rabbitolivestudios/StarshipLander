@@ -69,8 +69,8 @@ class CampaignState: ObservableObject {
             starsByLevel[levelId] = stars
         }
 
-        // Add score entry
-        let entry = HighScoreEntry(name: name, score: score)
+        // Add score entry with star metadata
+        let entry = HighScoreEntry(name: name, score: score, stars: stars)
         var levelScores = scoresByLevel[levelId] ?? []
         levelScores.append(entry)
         levelScores.sort { $0.score > $1.score }

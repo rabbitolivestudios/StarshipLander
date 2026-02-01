@@ -32,9 +32,9 @@ These features are fully implemented, build-verified, and included in v2.0.1:
 - **Per-Planet Physics**: Unique gravity (1.6-4.8) and thrust (8.0-18.5) per level
 - **Three Landing Platforms**: Training Zone (1x), Precision Target (2x), Elite Landing (5x) per level
 - **Visual Effects**: Wind streaks, atmosphere haze, ice shimmer, heat distortion, volcanic eruptions
-- **Level Mechanics**: Wind, dense atmosphere, ice surfaces, moving platforms, turbulence, deep craters, extreme wind
+- **Level Mechanics**: Wind, dense atmosphere, ice surfaces, moving platforms, vertical updrafts (Venus), heat interference (Mercury), deep craters, deadly volcanic debris (Io), sudden gusts (Jupiter)
 - **Star Rating**: 1-3 stars per landing based on platform (30 total)
-- **Scoring**: Continuous scoring with fuel (1.0-2.5x) and platform (1x/2x/5x) multipliers, max 25,000
+- **Scoring**: Continuous scoring with fuel (1.0-2.0x) and platform (1x/2x/5x) multipliers, max 20,000. Center precision weighted highest (600pts).
 - **Haptic Feedback**: Thrust, rotation, landing, crash
 - **Dual Controls**: Button and accelerometer (tilt) modes
 - **Landing Messages**: Contextual success/crash feedback with teaching tips
@@ -115,7 +115,7 @@ v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.1 (Build 13
 
 - **v2.0.0 not yet approved** — Apple may reject. Common risks: ad compliance, screenshot accuracy, privacy declarations
 - **v1.1.5 is the current live version** — published on App Store (Build 11)
-- **Device testing in progress** — TestFlight v2.0.1 (Build 13) installed. Haptics and ads verified working. Accelerometer bug found and fixed (not yet in TestFlight build). Campaign mode tested — aspirational design feedback received (recoverability, scoring expressiveness, planet differentiation). No code changes yet; design discussion needed first.
+- **Device testing in progress** — TestFlight v2.0.1 (Build 13) installed. Haptics and ads verified working. Accelerometer bug found and fixed (not yet in TestFlight build). Campaign mode tested — design feedback addressed in v2.0.2: scoring rebalance, proportional thrust vectoring, planet mechanic differentiation (Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris), leaderboard star metadata. Needs new TestFlight build for device verification.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
 

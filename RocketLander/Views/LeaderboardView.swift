@@ -139,7 +139,7 @@ struct LeaderboardView: View {
             if isUnlocked {
                 ForEach(0..<3, id: \.self) { index in
                     if index < levelScores.count {
-                        scoreRow(rank: index + 1, name: levelScores[index].name, score: levelScores[index].score)
+                        scoreRow(rank: index + 1, name: levelScores[index].name, score: levelScores[index].score, stars: levelScores[index].stars)
                     } else {
                         scoreRow(rank: index + 1, name: "---", score: nil)
                     }
@@ -157,7 +157,7 @@ struct LeaderboardView: View {
 
     // MARK: - Score Row
 
-    private func scoreRow(rank: Int, name: String, score: Int?) -> some View {
+    private func scoreRow(rank: Int, name: String, score: Int?, stars: Int = 0) -> some View {
         let rankColor: Color = rank == 1 ? .yellow : rank == 2 ? .gray : .brown
 
         return HStack {
@@ -170,6 +170,16 @@ struct LeaderboardView: View {
                 .font(.subheadline.bold())
                 .foregroundColor(score != nil ? (rank == 1 ? .yellow : .white) : .gray.opacity(0.4))
                 .lineLimit(1)
+
+            if stars > 0 {
+                HStack(spacing: 1) {
+                    ForEach(0..<stars, id: \.self) { _ in
+                        Image(systemName: "star.fill")
+                            .font(.system(size: 8))
+                            .foregroundColor(.yellow)
+                    }
+                }
+            }
 
             Spacer()
 

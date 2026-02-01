@@ -177,3 +177,30 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Option 3 — `CLAUDE.md` in project root. Also added `.github/pull_request_template.md` for PR checks.
 **Why:** `CLAUDE.md` is natively supported by Claude Code — it's read automatically at the start of every session without any manual steps. It's the most reliable way to enforce guidelines across sessions. The PR template adds a structured safety net for code changes even as a solo developer.
 **Consequences:** Every session now has a mandatory 10-step startup checklist, phase discipline, definition of done, documentation requirements, code standards, testing expectations, privacy guardrails, and a hard "do not" list. Documentation updates are non-negotiable. Change summaries are mandatory output. PRs auto-fill with regression safety, scope, and compliance checks.
+
+---
+
+## [2026-01-31] Scoring Rebalance — Center Precision Over Fuel Hoarding
+**Context:** Device testing feedback: scoring didn't reward precision enough. Fuel multiplier (up to 2.5x) dominated scores, making fuel hoarding more important than skillful landing. Center-of-platform bonus was only 350 of 2000 base points.
+**Options considered:** (1) Increase center bonus only, (2) Redistribute across all components, (3) Remove fuel multiplier entirely.
+**Decision:** Option 2 — redistribute: soft landing 700→500, center 350→600, approach 200→150 (subtotal stays 2000). Fuel multiplier cap reduced from 2.5x to 2.0x. Max score: 20,000 (was 25,000).
+**Why:** Center precision is the core skill expression. Fuel efficiency should matter but not dominate. Approach control provides less differentiation than center accuracy, so reduced slightly.
+**Consequences:** Existing high scores may be higher than achievable under new formula. Score ceiling drops 20%. Leaderboard competition shifts toward precision landing.
+
+---
+
+## [2026-01-31] Proportional Thrust Vectoring (Replacing Binary RCS)
+**Context:** Device testing: lateral mistakes were unrecoverable. Binary RCS assist (2.0 units when tilted >5°) was either on or off — too coarse for fine corrections, and worked even without thrusting (free lateral movement).
+**Options considered:** (1) Increase binary assist magnitude, (2) Add separate lateral thrusters with fuel cost, (3) Proportional vectoring tied to main thrust.
+**Decision:** Option 3 — lateral force = sin(rotation) × thrustPower × 0.15. Only active while thrusting. Replaces binary assist entirely.
+**Why:** Physics-based (thrust vectoring is how real rockets work). Naturally proportional — small tilts give small corrections, large tilts give larger ones. Tying to thrust means players must spend fuel to correct, preventing free lateral drifting.
+**Consequences:** No lateral assist when not thrusting (intentional — makes coasting more committed). At 30° tilt, ~7.5% of thrust goes lateral. Classic mode also affected (uses same update loop).
+
+---
+
+## [2026-01-31] Planet Mechanic Differentiation
+**Context:** Campaign feedback: planets felt homogeneous, differing mainly by gravity/thrust scalars. Venus and Jupiter both applied sine-wave horizontal wind (different magnitudes). Mercury had visual-only shimmer. Io eruptions were cosmetic.
+**Options considered:** (1) Keep as-is and differentiate via gravity alone, (2) Make each planet's mechanic feel fundamentally different.
+**Decision:** Option 2 — Venus: vertical updrafts (not horizontal wind). Jupiter: sudden gusts with calm windows (not smooth sine). Mercury: thrust perturbation (not just visual). Io: deadly volcanic debris (not cosmetic particles).
+**Why:** Each planet should teach one clear mechanic that changes how you fly. Same-axis wind at different magnitudes is not differentiation.
+**Consequences:** Venus requires managing vertical forces (new axis of challenge). Jupiter requires timing descents during calm windows. Mercury penalizes imprecise thrust control. Io requires timing around eruption cycles. All descriptions updated to communicate the new mechanics.

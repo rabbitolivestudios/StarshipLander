@@ -916,6 +916,74 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
+### Session 28 (2026-01-31) - v2.0.2 Campaign Polish Patch
+
+**Goal:** Implement campaign gameplay tuning based on device testing feedback: scoring rebalance, proportional thrust vectoring, differentiated planet mechanics, leaderboard star metadata.
+
+#### Changes Made:
+
+1. **Scoring Rebalance (`GameScene+Scoring.swift`)**:
+   - Soft Landing: 700 → 500, Center: 350 → 600, Approach: 200 → 150 (subtotal stays 2000)
+   - Fuel multiplier cap: 2.5x → 2.0x. New max: 20,000 (was 25,000)
+   - Center precision now the highest-weighted component
+
+2. **Proportional Thrust Vectoring (`GameScene.swift`)**:
+   - Removed binary RCS lateral assist (2.0 units when tilted >5°)
+   - Added proportional: `sin(rotation) × thrustPower × 0.15` — only while thrusting
+   - Smooth, physics-based correction that scales with tilt angle
+
+3. **Venus — Vertical Updrafts (`GameScene.swift`, `GameScene+Effects.swift`)**:
+   - Wind force now vertical (dy) instead of horizontal (dx)
+   - Wind particles move bottom-to-top instead of right-to-left
+   - Description: "Vertical updrafts disrupt your descent."
+
+4. **Jupiter — Sudden Gusts (`GameScene.swift`)**:
+   - Replaced smooth sine-wave wind with calm/gust cycle
+   - 2.5-4s calm → 1.5-2.5s sharp gust with random direction
+   - Description: "Sudden gusts between calm windows."
+
+5. **Mercury — Heat Interference (`GameScene.swift`)**:
+   - Random velocity perturbation when thrusting (±1.5 dx, ±0.8 dy)
+   - Visual shimmer effect unchanged
+   - Description: "Heat shimmer disrupts thrust control."
+
+6. **Io — Deadly Volcanic Debris (`GameScene+Effects.swift`)**:
+   - Eruption particles get physics bodies (groundCategory → crash on contact)
+   - Physics removed before fade-out (safe to touch fading particles)
+   - Description: "Volcanic debris is deadly — time it."
+
+7. **Leaderboard Star Metadata (`HighScoreManager.swift`, `CampaignState.swift`, `LeaderboardView.swift`)**:
+   - HighScoreEntry gains `stars` field with backward-compatible Codable
+   - Stars passed through from CampaignState.completedLevel
+   - Small star icons shown in campaign leaderboard rows
+
+8. **Level Description Updates (`LevelDefinition.swift`)**:
+   - Venus, Mercury, Io, Jupiter descriptions updated to match new mechanics
+   - `.heavyTurbulence` display name: "Vertical Updrafts"
+
+#### Files Modified:
+- `RocketLander/GameScene+Scoring.swift`
+- `RocketLander/GameScene.swift`
+- `RocketLander/GameScene+Effects.swift`
+- `RocketLander/Models/HighScoreManager.swift`
+- `RocketLander/Models/CampaignState.swift`
+- `RocketLander/Views/LeaderboardView.swift`
+- `RocketLander/Models/LevelDefinition.swift`
+
+#### Definition of Done:
+- [x] Scoring rebalance: center 600pts, fuel cap 2.0x, max 20,000
+- [x] Thrust vectoring: proportional, thrust-only
+- [x] Venus: vertical updrafts + vertical particles
+- [x] Jupiter: calm/gust cycle
+- [x] Mercury: thrust perturbation
+- [x] Io: deadly volcanic particles
+- [x] Leaderboard star metadata: backward-compatible, displayed
+- [x] Level descriptions updated
+- [x] Build succeeds
+- [x] All docs updated (CHANGELOG, DECISIONS, STATUS, PROJECT_LOG)
+
+---
+
 ## Contact / Accounts
 
 - **Apple Developer Account:** Thiago Borges de Oliveira
