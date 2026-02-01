@@ -76,7 +76,7 @@
 ## Commits
 - `261d618` — Add unit tests: 51 XCTest cases across 7 test files
 - `aca62fd` — Fix session gaps: DECISIONS.md entry, commit hash, housekeeping
-- (follow-up commit) — Move scoring helper to test target, restore app code to Build 16
+- `03739e0` — Move scoring helper to test target, restore app code to Build 16
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
