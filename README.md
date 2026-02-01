@@ -127,6 +127,8 @@ StarshipLander/
 │   ├── generate_sounds.py           # Sound effect generator
 │   ├── generate_icon.py             # App icon generator
 │   ├── generate_screenshots.py      # Screenshot generator
+│   ├── caption_screenshots.py       # App Store screenshot captioning
+│   ├── app_store_metadata.json      # App Store metadata reference
 │   └── export_chat_transcripts.py   # Claude Code transcript exporter
 ├── .github/
 │   └── pull_request_template.md     # PR checklist template
