@@ -1051,6 +1051,10 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 #### Commits:
 - `4fe3a43` — Replace v2.0.0 submission with v2.0.2: update App Store copy and docs
+- `f7cf43a` — Update session 29 summary with commit hash and housekeeping
+- `85689f9` — Add submission status to CHANGELOG v2.0.2 header
+- `7ce6bc4` — Update README project structure: add caption_screenshots.py and metadata
+- `786d081` — Fix stale references in docs: submission status, device testing, decisions
 
 ---
 
