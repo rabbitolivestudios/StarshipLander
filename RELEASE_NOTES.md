@@ -1,10 +1,10 @@
 # Release Notes
 
-## Version 2.0.0 (Build 12)
-**Status:** SUBMITTED TO APP STORE CONNECT (2026-01-30)
+## Version 2.0.2 (Build 16)
+**Status:** REPLACING v2.0.0 SUBMISSION — SUBMITTING TO APP STORE REVIEW (2026-02-01)
 
 ### Overview
-Version 2.0.0 is a major update that transforms Starship Lander from a single-mode arcade game into a full campaign experience across the solar system. Land on 10 different worlds, each with unique gravity, engine thrust, and environmental hazards. Choose between three landing platforms per level with increasing difficulty and score multipliers.
+Version 2.0.2 is a major update that transforms Starship Lander from a single-mode arcade game into a full campaign experience across the solar system. Land on 10 different worlds, each with unique gravity, engine thrust, and environmental hazards. Choose between three landing platforms per level with increasing difficulty and score multipliers. Replaces the previously submitted v2.0.0 (Build 12) with gameplay tuning: rebalanced scoring, proportional thrust vectoring, differentiated planet mechanics, and leaderboard star metadata.
 
 ---
 
@@ -18,11 +18,11 @@ A brand new 10-level campaign spanning the solar system. Levels unlock progressi
 | 3 | Titan | 2.2 m/s² | 10.0 | Dense atmosphere (drag + haze) |
 | 4 | Europa | 2.5 m/s² | 11.0 | Ice surface (low friction landing) |
 | 5 | Earth | 2.8 m/s² | 12.0 | Moving platforms |
-| 6 | Venus | 3.2 m/s² | 13.0 | Heavy turbulence (wind gusts) |
-| 7 | Mercury | 3.5 m/s² | 14.0 | Heat shimmer (visual distortion) |
+| 6 | Venus | 3.2 m/s² | 13.0 | Vertical updrafts |
+| 7 | Mercury | 3.5 m/s² | 14.0 | Heat interference (thrust disruption) |
 | 8 | Ganymede | 3.8 m/s² | 15.0 | Deep craters (rock pillars + terrain walls) |
-| 9 | Io | 4.2 m/s² | 16.5 | Volcanic eruptions (terrain particles) |
-| 10 | Jupiter | 4.8 m/s² | 18.5 | Extreme wind (powerful gusts) |
+| 9 | Io | 4.2 m/s² | 16.5 | Deadly volcanic debris |
+| 10 | Jupiter | 4.8 m/s² | 18.5 | Sudden gusts with calm windows |
 
 - Gravity increases monotonically from 1.6 (Moon) to 4.8 (Jupiter) for a smooth difficulty curve
 - Thrust-to-gravity ratio decreases from 5.0x (Moon, floaty and forgiving) to 3.8x (Jupiter, powerful but tight margin)
@@ -47,11 +47,12 @@ Every level now features three landing platforms with different sizes and score 
 ### Visual Effects
 Each environmental mechanic now has a corresponding visual effect:
 
-- **Wind streaks** (Mars, Venus, Jupiter): Horizontal particle streaks at 3 intensity levels — light dust (Mars), heavy haze (Venus), extreme streaks (Jupiter)
+- **Wind streaks** (Mars, Jupiter): Horizontal particle streaks at varying intensity — light dust (Mars), extreme streaks (Jupiter)
+- **Vertical updraft particles** (Venus): Particles rising from below, matching the vertical wind force
 - **Atmosphere haze** (Titan): Semi-transparent overlay with drifting cloud particles simulating Titan's thick nitrogen atmosphere
 - **Ice shimmer** (Europa): Twinkling sparkle particles near the platform surface, plus low-friction physics on landing
-- **Heat shimmer** (Mercury): Subtle rocket position jitter simulating heat distortion from the scorching surface
-- **Volcanic eruptions** (Io): Particle bursts erupting from the terrain, referencing Io's extreme volcanic activity
+- **Heat shimmer** (Mercury): Visual distortion plus thrust control interference — random perturbation when thrusting
+- **Volcanic eruptions** (Io): Deadly particle bursts erupting from the terrain — active debris causes crash on contact
 - **Planetary bodies**: Each level displays its parent planet/moon in the sky (Earth shows the Moon, Titan shows Saturn, etc.)
 
 ### Star Rating System
@@ -63,10 +64,11 @@ Earn 1 to 3 stars per landing based on which platform you land on:
 Total: 30 stars possible across all 10 campaign levels. Star count displayed on the main menu and level select screen.
 
 ### Scoring System
-Platform multiplier stacks with the existing fuel multiplier:
+Platform multiplier stacks with the fuel multiplier:
 - Formula: `base subtotal × fuel multiplier × platform multiplier`
-- Max theoretical score: 2,000 × 2.5 × 5 = **25,000 points**
-- Score components: Soft landing (700), Horizontal precision (400), Platform center (350), Rotation (250), Approach control (200)
+- Max theoretical score: 2,000 × 2.0 × 5 = **20,000 points**
+- Score components: Soft landing (500), Horizontal precision (400), Platform center (600), Rotation (250), Approach control (150)
+- Center precision is the highest-weighted single component — rewarding accurate targeting
 
 ### Per-Level High Scores
 Campaign mode tracks top-3 scores **per level** separately from classic mode's global leaderboard. Each planet has its own leaderboard with its own high score entries.
@@ -86,7 +88,7 @@ Tactile feedback for all key game actions (iPhone only):
 - **Crash**: Heavy double-tap impact
 
 ### Improved Controls
-- **Lateral assist (RCS thrusters)**: When the rocket is tilted >5°, a small horizontal nudge is applied in the tilt direction for more responsive lateral movement
+- **Proportional thrust vectoring**: Lateral force scales smoothly with tilt angle via `sin(rotation) × 0.15` — only active while thrusting, requiring fuel to correct
 - **Increased rotation power**: `rotationPower` increased from 0.025 to 0.04
 - **Reduced angular damping**: From 1.0 to 0.7 for snappier rotation response
 
@@ -144,6 +146,9 @@ Ganymede features a unique hazard: deep crater terrain with rock pillar obstacle
 - **Fixed**: Earth level moving platforms no longer overlap during movement — Platform A now bobs vertically only, Platform B/C horizontal sway reduced, edge clamping enforces minimum 10pt gaps
 - **Fixed**: Campaign gravity fully rebalanced — all 10 levels use progressively increasing gravity (1.6 → 4.8) with per-level thrust scaling for a smooth difficulty curve
 - **Fixed**: Ganymede terrain now features rock pillar obstacles and raised crater walls instead of failed terrain ridge approach
+- **Fixed**: Classic mode star rating now saved correctly in high scores (was always 0)
+- **Fixed**: Classic mode star rating now displayed in leaderboard and menu TOP PILOTS section
+- **Fixed**: Accelerometer toggle not affecting gameplay (v2.0.1)
 
 ### Architecture
 - Codebase split from 2 monolithic files (~900 lines each) into 21 organized files:
@@ -156,28 +161,105 @@ Ganymede features a unique hazard: deep crater terrain with rock pillar obstacle
 
 ---
 
-### App Store Release Notes (Copy this)
+### App Store — What's New (Copy this)
 ```
-MAJOR UPDATE — Campaign Mode is here!
+MAJOR UPDATE — Campaign Mode!
 
-Explore the solar system in an all-new 10-level campaign! Land on the Moon, Mars, Titan, Europa, Earth, Venus, Mercury, Ganymede, Io, and Jupiter — each with unique gravity, engine thrust, and environmental hazards.
-
-NEW FEATURES:
-• Campaign Mode — 10 levels with progressive difficulty
-• Per-planet physics — adapt to each world's unique gravity and engine feel
-• Three landing platforms per level — Training Zone (1x), Precision Target (2x), Elite Landing (5x)
-• Visual effects — wind streaks, atmospheric haze, ice shimmer, heat distortion, volcanic eruptions
-• Star rating system — earn up to 3 stars per landing (30 total)
-• Haptic feedback — feel the thrust, landings, and crashes
-• Contextual landing messages with crash tips
+NEW:
+• Campaign Mode — 10 solar system levels from Moon to Jupiter
+• Per-planet physics — unique gravity and engine thrust per world
+• Three landing platforms with score multipliers (1x, 2x, 5x)
+• Visual effects — wind, haze, ice shimmer, heat distortion, volcanic eruptions
+• Star rating system — earn up to 30 stars
+• Haptic feedback for thrust, landings, and crashes
 • Per-level high score leaderboards
-• Astronaut easter egg high scores — can you beat Armstrong on the Moon?
-• Score up to 25,000 points with platform and fuel multipliers!
+• Score up to 20,000 points!
 
 IMPROVEMENTS:
-• More responsive controls with RCS thruster assist
+• Proportional thrust vectoring for smoother lateral control
 • Fixed layout for iPhone 16 Dynamic Island
-• Redesigned menu with Classic and Campaign modes
+```
+
+### App Store — Description (Copy this)
+```
+Landing is easy.
+Landing well is not.
+
+Starship Lander is a precision piloting game where every decision matters. Control thrust, rotation, and fuel as you descend onto increasingly demanding landing zones — across ten worlds with unique physics and hazards.
+
+This is a game about restraint, timing, and judgment under pressure.
+
+CAMPAIGN MODE — 10 WORLDS
+
+Travel across the solar system, from the forgiving Moon to brutal Jupiter. Each level introduces new gravity, engine behavior, and environmental challenges — requiring you to adapt your piloting style every time.
+
+No upgrades.
+No shortcuts.
+Only skill.
+
+CHOOSE YOUR RISK
+
+Every level offers three landing platforms:
+
+Training Zone (1×) — wide, forgiving
+
+Precision Target (2×) — tighter margins
+
+Elite Landing (5×) — small, unforgiving, high reward
+
+Higher scores demand higher risk. The choice is yours.
+
+DEEP, SKILL-BASED SCORING
+
+Your score reflects how well you fly — not just whether you survive.
+
+Vertical & horizontal control
+
+Rotation accuracy
+
+Landing precision
+
+Fuel efficiency
+
+Platform multipliers
+
+Perfect execution can score up to 20,000 points.
+
+FEEL THE PHYSICS
+
+Real-time physics simulation
+
+Distinct thrust behavior per planet
+
+Button or tilt controls
+
+Haptic feedback for thrust, landings, and crashes
+
+Every landing has weight. Every mistake is felt.
+
+PROVE YOUR MASTERY
+
+Earn up to 30 stars across the campaign
+
+Per-level high score leaderboards
+
+Hidden astronaut benchmark scores — can you beat them?
+
+This is not a casual experience.
+It's a test of control.
+```
+
+### App Store — Review Team Notes (Copy this)
+```
+This is a skill-based physics rocket landing game.
+Use on-screen buttons to control thrust and rotation and land safely on the platform.
+No account, login, or in-app purchases required.
+
+This build (v2.0.2, Build 16) replaces the previously submitted v2.0.0 (Build 12) with gameplay tuning improvements. No new features or SDKs were added — only balance and polish changes to the campaign mode mechanics.
+
+Campaign mode has 10 levels with unique environmental mechanics: dust storms (Mars), dense atmosphere drag (Titan), ice surfaces (Europa), moving platforms (Earth), vertical updrafts (Venus), heat-induced thrust interference (Mercury), rock pillar obstacles (Ganymede), deadly volcanic debris (Io), and sudden wind gusts (Jupiter).
+
+App Tracking Transparency prompt appears on first app launch to request permission before showing personalized ads. Users can toggle between traditional button controls and tilt-based accelerometer controls from the main menu.
 ```
 
 ---

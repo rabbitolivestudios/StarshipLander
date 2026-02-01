@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-01-31)
+## Current Status (2026-02-01)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -26,14 +26,14 @@ This file documents the development history and decisions for the Starship Lande
 | 1.1.3 | 7 | Published - Partial bug fix + URL update |
 | 1.1.4 | 10 | Published - Bug fix + new icon |
 | 1.1.5 | 11 | Published on App Store - New scoring system + HUD fixes |
-| 2.0.0 | 12 | **SUBMITTED FOR REVIEW** - Campaign mode, per-planet physics, visual effects |
-| 2.0.2 | 16 | Campaign polish: scoring, thrust vectoring, planet differentiation, star fixes |
+| 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
+| 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
 
 **NEXT STEPS:**
-1. Wait for App Store review response
+1. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 2. If rejected, address feedback and resubmit
-3. If approved, verify live listing screenshots and description
+3. If approved, verify live listing and plan v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -994,6 +994,63 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - `cf1afd8` — End session 28: update PROJECT_LOG with commits and status
 - `e3ccdce` — Fix classic mode star rating not saved in high scores (Build 15)
 - `2a4ecb8` — Fix classic mode star display in leaderboard and menu (Build 16)
+
+---
+
+### Session 29 (2026-02-01) - Replace v2.0.0 Submission with v2.0.2
+
+**Goal:** v2.0.0 (Build 12) had been "Waiting for Review" for 2 days with no response. Decision: replace with v2.0.2 (Build 16) to avoid shipping outdated gameplay. Update all App Store copy and submit.
+
+#### Changes Made:
+
+1. **Decision: Replace v2.0.0 with v2.0.2**
+   - v2.0.0 had binary RCS, 25k max score, cosmetic-only planet mechanics, no star metadata
+   - v2.0.2 has proportional thrust vectoring, 20k max, differentiated mechanics, star display
+   - Better to reset review clock than ship inferior version
+
+2. **App Store Copy Updated**
+   - Description: 25,000 → 20,000 points (only change needed)
+   - What's New: removed "V2.0.0", 25k→20k, "RCS thruster assist" → "Proportional thrust vectoring"
+   - Review Notes: explains v2.0.2 replaces v2.0.0, lists all campaign mechanics
+   - Promotional Text: new — "A skill-based landing game where precision beats luck..."
+   - Keywords: lander, physics, precision, skill, thrust, flight, descent, control, challenge, hardcore, starship, simulator
+
+3. **RELEASE_NOTES.md Overhauled**
+   - v2.0.0 section replaced with v2.0.2
+   - All outdated references fixed (RCS, 25k score, planet mechanics descriptions)
+   - Added App Store copy blocks (Description, What's New, Review Notes)
+   - Added v2.0.2 bug fixes section
+
+4. **Documentation Updated**
+   - STATUS.md: submission status, phase, next tasks, risks
+   - PROJECT_LOG.md: current status table, next steps
+   - DECISIONS.md: new entry documenting the replacement decision
+   - RELEASE_NOTES.md: full v2.0.2 overhaul
+
+#### Submission Details:
+- Version: 2.0.2 (Build 16)
+- Submitted: 2026-02-01 at 07:52
+- Submission ID: 7ff9c921-0349-49c2-98b9-bfe9d1ca092f
+- Status: Waiting for Review
+- Build already uploaded from session 28 — no new archive needed
+
+#### Definition of Done:
+- [x] Decision made: replace v2.0.0 with v2.0.2
+- [x] App Store description updated (20k score)
+- [x] What's New updated (thrust vectoring, 20k)
+- [x] Review Team Notes updated (explains replacement, lists mechanics)
+- [x] Promotional text set
+- [x] Keywords set
+- [x] RELEASE_NOTES.md overhauled for v2.0.2
+- [x] STATUS.md updated
+- [x] PROJECT_LOG.md updated
+- [x] DECISIONS.md entry added
+- [x] v2.0.2 (Build 16) submitted for App Store review
+- [x] Session summary created
+- [x] All docs committed and pushed
+
+#### Commits:
+- (pending — will be filled after commit)
 
 ---
 

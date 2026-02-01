@@ -204,3 +204,12 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Option 2 — Venus: vertical updrafts (not horizontal wind). Jupiter: sudden gusts with calm windows (not smooth sine). Mercury: thrust perturbation (not just visual). Io: deadly volcanic debris (not cosmetic particles).
 **Why:** Each planet should teach one clear mechanic that changes how you fly. Same-axis wind at different magnitudes is not differentiation.
 **Consequences:** Venus requires managing vertical forces (new axis of challenge). Jupiter requires timing descents during calm windows. Mercury penalizes imprecise thrust control. Io requires timing around eruption cycles. All descriptions updated to communicate the new mechanics.
+
+---
+
+## [2026-02-01] Replace v2.0.0 Submission with v2.0.2
+**Context:** v2.0.0 (Build 12) submitted for App Store review on 2026-01-30, still "Waiting for Review" after 2 days with no response. Meanwhile, v2.0.2 (Build 16) was developed with significant gameplay improvements: scoring rebalance, proportional thrust vectoring, differentiated planet mechanics, leaderboard star metadata, and bug fixes (classic mode star rating save/display).
+**Options considered:** (1) Keep waiting for v2.0.0 review, (2) Replace submission with v2.0.2, (3) Check status first then decide.
+**Decision:** Option 2 — cancel v2.0.0 submission, submit v2.0.2 (Build 16) with updated App Store copy. Resets the review clock but ensures the first version users experience has the polished gameplay.
+**Why:** v2.0.0 had outdated gameplay (binary RCS, 25k max score, cosmetic-only planet mechanics, no star metadata in leaderboards). Shipping it would mean users get an inferior version, requiring an immediate follow-up update. Better to wait slightly longer and ship the right version first.
+**Consequences:** Review clock reset. App Store description, What's New, review notes, promotional text, and keywords all updated to match v2.0.2 behavior. Version number on App Store listing is 2.0.2 (skipping 2.0.0 and 2.0.1 publicly).

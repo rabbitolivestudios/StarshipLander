@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-01-31 (Session 27)
+> Last reconciled: 2026-02-01 (Session 29)
 
 ---
 
@@ -15,7 +15,7 @@
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
 | Current Version | 2.0.2 (Build 16) |
-| Version Status | **SUBMITTED FOR APP STORE REVIEW** (2026-01-30) |
+| Version Status | **SUBMITTED FOR APP STORE REVIEW** (2026-02-01, 07:52) |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -63,27 +63,26 @@ These are **not implemented**. Do not assume otherwise:
 - **Automated testing** — no unit or UI tests
 - **CI/CD pipeline** — no GitHub Actions or automated builds
 - **Device playtesting partially done** — haptics + ads verified on device via TestFlight. Accelerometer bug found and fixed locally. Campaign testing in progress.
-- **v2.0.0 App Store approval** — submitted, not yet approved
+- **v2.0.2 awaiting review** — submitted 2026-02-01, replacing v2.0.0 which was never reviewed
 
 ---
 
 ## Current Phase / Focus
 
-**Phase: Planning — v2.1.0 (Community) then v2.2.0 (Monetization)**
+**Phase: Awaiting Review — v2.0.2, then v2.1.0 (Community)**
 
-v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.2 (Build 14) ready for TestFlight testing. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.0 (Build 12) was submitted 2026-01-30 but received no review response after 2 days. Decision: replaced with v2.0.2 (Build 16) which includes campaign polish (scoring rebalance, thrust vectoring, planet differentiation, star metadata). v2.0.2 submitted for App Store Review on 2026-02-01 at 07:52 (submission ID: 7ff9c921-0349-49c2-98b9-bfe9d1ca092f). App Store copy updated: description (20k score), What's New (thrust vectoring), review notes (explains v2.0.0 replacement), promotional text, keywords. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. Wait for App Store review response for v2.0.0
+1. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 2. If rejected: address feedback, fix, resubmit
-3. If approved: verify live listing, then submit v2.0.1 update
+3. If approved: verify live listing, then plan v2.1.0
 4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
 5. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
-6. Device playtesting: haptics, accelerometer, ads, Game Center, IAP on physical iPhone
-7. Configure App Store Connect: leaderboard IDs, achievement IDs, IAP product, privacy declarations
+6. Device playtesting: remaining campaign mechanics verification on TestFlight
 
 ---
 
@@ -113,7 +112,7 @@ v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.2 (Build 14
 
 ## Known Risks / Watchouts
 
-- **v2.0.0 not yet approved** — Apple may reject. Common risks: ad compliance, screenshot accuracy, privacy declarations
+- **v2.0.0 never reviewed** — submitted 2026-01-30, still "Waiting for Review" on 2026-02-01. Decision: replace with v2.0.2 (Build 16) to avoid shipping outdated gameplay
 - **v1.1.5 is the current live version** — published on App Store (Build 11)
 - **Device testing in progress** — TestFlight v2.0.1 (Build 13) installed. Haptics and ads verified working. Accelerometer bug found and fixed (not yet in TestFlight build). Campaign mode tested — design feedback addressed in v2.0.2: scoring rebalance, proportional thrust vectoring, planet mechanic differentiation (Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris), leaderboard star metadata. Classic mode star rating verified on device (Build 16). Campaign mechanics device testing in progress.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
