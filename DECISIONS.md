@@ -223,3 +223,21 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Option 3 — `ScoringHelper.calculateScore()` in `RocketLanderTests/ScoringHelper.swift`. A pure function that replicates the exact formula from `GameScene+Scoring.swift` with hardcoded constants matching `GameScene.maxSafeVerticalSpeed` etc. App code is completely untouched.
 **Why:** The submitted Build 16 binary must remain unchanged. Option 2 was initially implemented but reverted because it modified `GameScene+Scoring.swift`. Option 3 keeps all test infrastructure in the test target only.
 **Consequences:** Formula is duplicated between app and test target. If the scoring formula changes in a future version, `ScoringHelper` must be updated to match. This is acceptable because: (a) scoring formula changes are infrequent and always documented in DECISIONS.md, (b) test failures from formula drift would be caught immediately, (c) no risk of shipping modified app code during review.
+
+---
+
+## [2026-02-01] Perfect Landing Scores — Screen Wrapping is Optimal for Platform C
+**Context:** Computing maximum achievable scores for all 33 level/platform combinations required modeling the optimal horizontal trajectory. Platform C (x=322.3) is 263.3 pts to the right of the rocket start position (x=58.95). The game has screen wrapping (x < -20 → x = screenW+20).
+**Options considered:** (1) Go right to Platform C (263.3 pts), (2) Go left via screen wrap to Platform C (169.7 pts).
+**Decision:** Left screen wrap is optimal for all 11 Platform C landings. The 36% shorter horizontal distance saves significant fuel, boosting the fuel multiplier.
+**Why:** Going left: 58.95 pts to left edge (-20) + 90.7 pts from right edge (413) to platform center (322.3) = 169.7 pts total. Saves ~94 pts of horizontal travel. On Classic mode this increases the Platform C score from 11,261 (going right) to 12,132 (going left) — an 8% improvement.
+**Consequences:** Players who discover the wrap shortcut have a significant scoring advantage on Platform C. This is an intentional emergent strategy from the screen wrapping design decision. Achievement thresholds for Platform C should assume the wrap strategy is known.
+
+---
+
+## [2026-02-01] Perfect Landing Scores — Center Landing Always Maximizes Score
+**Context:** The scoring formula has a center precision component (0-600 pts in subtotal) and a fuel multiplier (1.0-2.0x on entire subtotal). Landing off-center could save fuel (less horizontal travel) at the cost of center points. Needed to determine whether off-center landing ever produces a higher total score.
+**Options considered:** (1) Always aim for center, (2) Search landing positions across platform width and let the optimizer decide.
+**Decision:** Center landing always wins. The optimizer searched positions from -0.8 to +0.8 across each platform; 0/33 optimal landings were off-center.
+**Why:** The center bonus (600 pts) is amplified by the platform multiplier (especially 5x for Platform C: 600 × 5 = 3,000 pts). Fuel savings from off-center landing (typically 5-10% → 500-1,000 pts via multiplier) cannot compensate. Even on the most fuel-starved landings (Moon C at 17% fuel), center remains optimal.
+**Consequences:** Achievement guidance and scoring tips can confidently recommend center landing as always optimal. No trade-off exists between precision and fuel efficiency for score maximization.

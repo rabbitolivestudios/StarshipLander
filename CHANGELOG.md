@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - GameStateTests: initial values, reset, accelerometer persistence (3 tests)
   - LandingPlatformTests: multipliers, stars, widths, positions (5 tests)
 - **Test-Only Scoring Helper**: `ScoringHelper.calculateScore()` in test target replicates the scoring formula for unit testing without modifying app code
+- **Perfect Landing Score Analysis**: `Scripts/calculate_perfect_scores.py` — frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Models exact SpriteKit physics (gravity, thrust, fuel, approach speed crash gate, screen wrapping). Best: Classic C = 12,132 via left screen wrap.
 
 ---
 
