@@ -209,13 +209,13 @@ lander,physics,precision,skill,thrust,flight,descent,control,challenge,hardcore,
 - [x] All docs committed and pushed
 
 ## Commits
-- (pending — will be filled after commit)
+- `4fe3a43` — Replace v2.0.0 submission with v2.0.2: update App Store copy and docs
 
 ## Repo Housekeeping
-- [ ] Working tree clean (no stale untracked files)
-- [ ] .gitignore up to date
-- [ ] README.md project structure matches actual files
-- [ ] No secrets or credentials in tracked files
+- [x] Working tree clean (no stale untracked files)
+- [x] .gitignore up to date
+- [x] README.md project structure matches actual files
+- [x] No secrets or credentials in tracked files
 
 ## Next Actions
 - [ ] Wait for App Store review response for v2.0.2

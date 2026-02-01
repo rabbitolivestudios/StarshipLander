@@ -1050,7 +1050,7 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - [x] All docs committed and pushed
 
 #### Commits:
-- (pending — will be filled after commit)
+- `4fe3a43` — Replace v2.0.0 submission with v2.0.2: update App Store copy and docs
 
 ---
 
