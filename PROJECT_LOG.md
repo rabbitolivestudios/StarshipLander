@@ -894,6 +894,28 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
+### Session 27 (2026-01-31) - Campaign Mode Device Testing Feedback
+
+**Goal:** Receive and document campaign mode device testing feedback from TestFlight playtesting.
+
+**Apple Review:** v2.0.0 still pending review (submitted 2026-01-30).
+
+**Campaign Feedback (aspirational direction, no code changes):**
+- Campaign feels balanced but homogeneous — planets differ by scalar tuning, not distinct mechanics
+- Platform difficulty ladder (A=easy, B=hard, C=elite) is correct and should be preserved
+- Core issue is recoverability, not difficulty — small lateral mistakes are unrecoverable
+- Recommended hybrid model: Classic stays strict, Campaign becomes "accessible mastery"
+- Planets should each teach one clear mechanic that changes how you fly
+- Scoring expressiveness gap — center-of-platform precision needs to matter more
+- Leaderboard should show star rating metadata for score context
+
+**Key decision:** No implementation yet. Design discussion must precede any campaign changes.
+
+#### Files Modified:
+- None (feedback-only session)
+
+---
+
 ## Contact / Accounts
 
 - **Apple Developer Account:** Thiago Borges de Oliveira
@@ -902,4 +924,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-01-31 (Session 26)*
+*Last updated: 2026-01-31 (Session 27)*
