@@ -2,7 +2,7 @@
 
 A physics-based rocket landing game for iOS, inspired by SpaceX Starship landings.
 
-**Version:** 2.0.2
+**Version:** 2.0.3
 **Platform:** iOS 15.0+
 **Language:** Swift 5.0
 **Frameworks:** SwiftUI, SpriteKit, CoreMotion
@@ -22,7 +22,10 @@ Guide your Starship through a controlled descent and land safely on one of three
 - **Haptic Feedback**: Tactile responses for thrust, rotation, landing, and crashes
 - **16-Bit Sound Effects**: Retro chiptune audio for all actions
 - **Star Rating System**: Earn 1-3 stars per landing based on platform difficulty
-- **Landing Messages**: Contextual feedback with teaching nudges on crashes
+- **Landing Messages**: Contextual feedback with deterministic cause-based crash diagnostics
+- **HUD Tilt Display**: Real-time tilt angle in degrees with directional color coding
+- **Final Stats Panel**: Frozen flight data displayed on landing and crash screens
+- **Campaign Reentry Challenge**: Ships spawn with tilt and drift in Campaign mode
 - **Skill-Based Scoring**: Up to 20,000 points with platform and fuel multipliers
 - **High Score Leaderboard**: Track your top 3 landings
 - **AdMob Integration**: Banner ads with App Tracking Transparency support

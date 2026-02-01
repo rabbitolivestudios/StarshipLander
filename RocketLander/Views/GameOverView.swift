@@ -1,5 +1,56 @@
 import SwiftUI
 
+// MARK: - Final Stats View
+struct FinalStatsView: View {
+    let tiltDegrees: Double
+    let verticalSpeed: CGFloat
+    let horizontalSpeed: CGFloat
+    let fuel: Double
+    let distanceFromCenter: CGFloat?
+
+    private let maxSafeRotationDeg: Double = 0.05 * 180 / .pi
+    private let maxSafeVertical: CGFloat = 40.0
+    private let maxSafeHorizontal: CGFloat = 25.0
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("FLIGHT DATA")
+                .font(.system(size: 10, weight: .bold))
+                .foregroundColor(.gray)
+
+            statRow(label: "Tilt", value: String(format: "%.1f°", tiltDegrees),
+                    safe: tiltDegrees <= maxSafeRotationDeg)
+            statRow(label: "V.Speed", value: String(format: "%.0f", verticalSpeed),
+                    safe: verticalSpeed <= maxSafeVertical)
+            statRow(label: "H.Speed", value: String(format: "%.0f", horizontalSpeed),
+                    safe: horizontalSpeed <= maxSafeHorizontal)
+            statRow(label: "Fuel", value: String(format: "%.0f%%", fuel),
+                    safe: fuel > 0)
+
+            if let dist = distanceFromCenter {
+                statRow(label: "Center", value: String(format: "%.1fpt", dist),
+                        safe: dist < 30)
+            }
+        }
+        .padding(10)
+        .background(Color.black.opacity(0.5))
+        .cornerRadius(8)
+    }
+
+    private func statRow(label: String, value: String, safe: Bool) -> some View {
+        HStack {
+            Text(label)
+                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                .foregroundColor(.gray)
+                .frame(width: 55, alignment: .leading)
+            Text(value)
+                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .foregroundColor(safe ? .green : .red)
+            Spacer()
+        }
+    }
+}
+
 struct GameOverView: View {
     @ObservedObject var gameState: GameState
     @Binding var showingGame: Bool
@@ -53,6 +104,15 @@ struct GameOverView: View {
                     .font(.title2)
                     .foregroundColor(.white)
 
+                // Final stats panel (landing)
+                FinalStatsView(
+                    tiltDegrees: Double(gameState.finalTiltAngle) * 180 / .pi,
+                    verticalSpeed: gameState.finalVerticalSpeed,
+                    horizontalSpeed: gameState.finalHorizontalSpeed,
+                    fuel: gameState.finalFuel,
+                    distanceFromCenter: gameState.finalDistanceFromCenter
+                )
+
                 // High score input
                 if isNewHighScore {
                     highScoreInputView
@@ -64,18 +124,35 @@ struct GameOverView: View {
                         .foregroundColor(.green)
                 }
             } else {
-                // Crash display
-                Text(gameState.landingMessage.isEmpty ? "CRASH!" : gameState.landingMessage.uppercased())
+                // Crash display with diagnostics
+                Text("CRASH!")
                     .font(.title.bold())
                     .foregroundColor(.red)
 
-                if !gameState.crashNudge.isEmpty {
-                    Text(gameState.crashNudge)
+                if !gameState.crashDiagnosticPrimary.isEmpty {
+                    Text(gameState.crashDiagnosticPrimary)
                         .font(.subheadline)
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
+
+                if !gameState.crashDiagnosticSecondary.isEmpty {
+                    Text(gameState.crashDiagnosticSecondary)
+                        .font(.caption)
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                 }
+
+                // Final stats panel (crash)
+                FinalStatsView(
+                    tiltDegrees: Double(gameState.finalTiltAngle) * 180 / .pi,
+                    verticalSpeed: gameState.finalVerticalSpeed,
+                    horizontalSpeed: gameState.finalHorizontalSpeed,
+                    fuel: gameState.finalFuel,
+                    distanceFromCenter: nil
+                )
             }
 
             // Action buttons

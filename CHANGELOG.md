@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Unit Tests**: 51 XCTest cases across 7 test files covering core game logic
+- **Unit Tests**: 65 XCTest cases across 8 test files covering core game logic
   - ScoringTests: formula verification + realistic best-achievable scenarios (11 tests)
   - HighScoreManagerTests: persistence, sorting, backward-compat decoding (9 tests)
   - CampaignStateTests: level unlock, stars, score tracking, persistence (10 tests)
@@ -16,8 +16,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - LandingMessagesTests: message selection logic, pool verification (5 tests)
   - GameStateTests: initial values, reset, accelerometer persistence (3 tests)
   - LandingPlatformTests: multipliers, stars, widths, positions (5 tests)
+  - CrashDiagnosticTests: crash classification, precedence, determinism (14 tests)
 - **Test-Only Scoring Helper**: `ScoringHelper.calculateScore()` in test target replicates the scoring formula for unit testing without modifying app code
 - **Perfect Landing Score Analysis**: `Scripts/calculate_perfect_scores.py` — frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Models exact SpriteKit physics (gravity, thrust, fuel, approach speed crash gate, screen wrapping). Best: Classic C = 12,132 via left screen wrap.
+
+---
+
+## [2.0.3] - 2026-02-01 (Phase: Campaign Engagement)
+
+### Added
+- **Fixed Reentry Start State (Campaign Only)**: Campaign ships spawn with a deterministic 6.9° left tilt and 15 pts/s rightward drift, preventing trivial "hold thrust" strategy. Classic mode unchanged.
+- **HUD Tilt Angle Display**: Real-time tilt indicator in degrees with directional color coding (cyan=left, orange=right, green=safe). Includes direction letter (L/R) when tilted beyond safe threshold.
+- **Final Stats Panel**: Flight data (tilt, vertical speed, horizontal speed, fuel, center distance) frozen at moment of landing/crash and displayed on game over screen in both modes.
+- **Deterministic Crash Messages**: Cause-based crash feedback tied to actual failure values, replacing random crash messages. Priority order: tilt > vertical speed > horizontal speed > approach speed. Same crash always produces the same message.
+- **CrashDiagnostic Unit Tests**: 14 new tests verifying crash classification, precedence ordering, secondary hints, determinism (100x repeat), and edge cases.
 
 ---
 
@@ -395,6 +407,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Highlights                                    |
 |---------|------------|-----------------------------------------------|
+| 2.0.3   | 2026-02-01 | Campaign engagement: reentry state, tilt HUD, flight stats, crash diagnostics |
 | 2.0.2   | 2026-01-31 | Campaign polish: scoring, thrust vectoring, planet differentiation |
 | 2.0.1   | 2026-01-31 | Dedicated leaderboard screen, version label fix |
 | 2.0.0   | 2026-01-30 | Campaign mode, per-planet physics, visual effects |

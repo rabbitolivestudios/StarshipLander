@@ -241,3 +241,12 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Center landing always wins. The optimizer searched positions from -0.8 to +0.8 across each platform; 0/33 optimal landings were off-center.
 **Why:** The center bonus (600 pts) is amplified by the platform multiplier (especially 5x for Platform C: 600 × 5 = 3,000 pts). Fuel savings from off-center landing (typically 5-10% → 500-1,000 pts via multiplier) cannot compensate. Even on the most fuel-starved landings (Moon C at 17% fuel), center remains optimal.
 **Consequences:** Achievement guidance and scoring tips can confidently recommend center landing as always optimal. No trade-off exists between precision and fuel efficiency for score maximization.
+
+---
+
+## [2026-02-01] Deterministic Campaign Reentry State + Feedback Upgrade
+**Context:** Campaign mode allowed a trivial "hold thrust" strategy to land on Platform A every time. Crash messages were random and unhelpful — same crash could produce different messages. No flight data was preserved at game-end for player review.
+**Options considered:** (1) Random reentry state per attempt, (2) Fixed deterministic reentry state, (3) Per-level unique reentry states.
+**Decision:** Option 2 — fixed 6.9° left tilt + 15 pts/s rightward drift applied when rocket becomes dynamic in Campaign mode only. Combined with three feedback improvements: HUD tilt angle display, frozen final stats panel on game-over, and deterministic cause-based crash messages.
+**Why:** Deterministic start means same level = same challenge every time (fairness, replayability). The tilt is above the safe landing threshold (2.9°) so players must correct before touchdown, but small enough that one rotation input fixes it. Random would violate the "physics credibility" design goal. Classic mode stays unchanged (upright start) to preserve the existing experience.
+**Consequences:** Campaign Platform A is no longer trivially achievable with thrust-only. Players must demonstrate basic rotation control. Crash messages now show exact failure values (e.g., "Tilt too high (18.4°). Land under 3°.") making the feedback loop actionable. Final stats panel gives players data to improve on. All feedback features work in both Classic and Campaign modes. Reentry constants are compile-time values — easy to tune if needed.

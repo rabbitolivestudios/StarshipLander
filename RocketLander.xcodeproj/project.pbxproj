@@ -40,6 +40,7 @@
 		T2000003 /* CampaignStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000003 /* CampaignStateTests.swift */; };
 		T2000004 /* LevelDefinitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000004 /* LevelDefinitionTests.swift */; };
 		T2000005 /* LandingMessagesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000005 /* LandingMessagesTests.swift */; };
+		T2000009 /* CrashDiagnosticTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000009 /* CrashDiagnosticTests.swift */; };
 		T2000006 /* GameStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000006 /* GameStateTests.swift */; };
 		T2000007 /* LandingPlatformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000007 /* LandingPlatformTests.swift */; };
 		T2000008 /* ScoringHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000008 /* ScoringHelper.swift */; };
@@ -90,6 +91,7 @@
 		T1000003 /* CampaignStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignStateTests.swift; sourceTree = "<group>"; };
 		T1000004 /* LevelDefinitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDefinitionTests.swift; sourceTree = "<group>"; };
 		T1000005 /* LandingMessagesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingMessagesTests.swift; sourceTree = "<group>"; };
+		T1000009 /* CrashDiagnosticTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashDiagnosticTests.swift; sourceTree = "<group>"; };
 		T1000006 /* GameStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStateTests.swift; sourceTree = "<group>"; };
 		T1000007 /* LandingPlatformTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPlatformTests.swift; sourceTree = "<group>"; };
 		T1000008 /* ScoringHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringHelper.swift; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				T1000003 /* CampaignStateTests.swift */,
 				T1000004 /* LevelDefinitionTests.swift */,
 				T1000005 /* LandingMessagesTests.swift */,
+				T1000009 /* CrashDiagnosticTests.swift */,
 				T1000006 /* GameStateTests.swift */,
 				T1000007 /* LandingPlatformTests.swift */,
 				T1000008 /* ScoringHelper.swift */,
@@ -358,6 +361,7 @@
 				T2000003 /* CampaignStateTests.swift in Sources */,
 				T2000004 /* LevelDefinitionTests.swift in Sources */,
 				T2000005 /* LandingMessagesTests.swift in Sources */,
+				T2000009 /* CrashDiagnosticTests.swift in Sources */,
 				T2000006 /* GameStateTests.swift in Sources */,
 				T2000007 /* LandingPlatformTests.swift in Sources */,
 				T2000008 /* ScoringHelper.swift in Sources */,

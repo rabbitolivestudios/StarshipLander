@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-01 (Session 31)
+> Last reconciled: 2026-02-01 (Session 32)
 
 ---
 
@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.2 (Build 16) |
-| Version Status | **SUBMITTED FOR APP STORE REVIEW** (2026-02-01, 07:52) |
+| Current Version | 2.0.3 (Build 17) |
+| Version Status | In development (v2.0.2 Build 16 submitted for App Store review) |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -37,7 +37,10 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **Scoring**: Continuous scoring with fuel (1.0-2.0x) and platform (1x/2x/5x) multipliers, max 20,000. Center precision weighted highest (600pts).
 - **Haptic Feedback**: Thrust, rotation, landing, crash
 - **Dual Controls**: Button and accelerometer (tilt) modes
-- **Landing Messages**: Contextual success/crash feedback with teaching tips
+- **Landing Messages**: Contextual success feedback; deterministic cause-based crash diagnostics with actual failure values
+- **HUD Tilt Display**: Real-time tilt angle in degrees with directional color coding (L/R)
+- **Final Stats Panel**: Frozen flight data (tilt, speeds, fuel, center distance) on game-over screen
+- **Campaign Reentry State**: Fixed 6.9° tilt + 15 pts/s drift on campaign start (prevents trivial thrust-only strategy)
 - **Per-Level High Scores**: Top-3 stored per campaign level, top-3 global for classic
 - **Dedicated Leaderboard Screen**: Tap "TOP PILOTS" to view classic + all campaign level scores
 - **Astronaut Easter Eggs**: Default leaderboard entries (Armstrong, Aldrin, etc.)
@@ -45,7 +48,7 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **AdMob**: Banner ads on menu and gameplay, ATT prompt on first launch
 - **16-Bit Sound Effects**: Thrust, rotation, landing, crash audio
 - **App Store Screenshots**: 10 screenshots at 1284x2778, uploaded
-- **Unit Tests**: 51 XCTest cases across 7 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data)
+- **Unit Tests**: 65 XCTest cases across 8 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data, crash diagnostics)
 - **Codebase**: Split from 2 monolithic files into 21 organized files
 - **Project Management**: CLAUDE.md, PR template, DECISIONS.md, session logging workflow
 - **Perfect Landing Score Analysis**: Frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Best: Classic C = 12,132 (via left screen wrap). Script: `Scripts/calculate_perfect_scores.py`
@@ -62,7 +65,7 @@ These are **not implemented**. Do not assume otherwise:
 - **iPad support** — iPhone only
 - **Landscape orientation** — portrait only
 - **Localization** — English only
-- **Automated testing** — unit tests added (51 XCTest cases across 7 test files covering scoring, models, game state); no UI tests (XCUITest) yet
+- **Automated testing** — unit tests added (65 XCTest cases across 8 test files covering scoring, models, game state, crash diagnostics); no UI tests (XCUITest) yet
 - **CI/CD pipeline** — no GitHub Actions or automated builds
 - **Device playtesting partially done** — haptics + ads verified on device via TestFlight. Accelerometer bug fixed in v2.0.2. Classic mode star rating verified on Build 16. Remaining: thrust vectoring feel, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
 - **v2.0.2 awaiting review** — submitted 2026-02-01, replacing v2.0.0 which was never reviewed
@@ -71,20 +74,20 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Awaiting Review — v2.0.2, then v2.1.0 (Community)**
+**Phase: Campaign Engagement — v2.0.3, then v2.1.0 (Community)**
 
-v2.0.0 (Build 12) was submitted 2026-01-30 but received no review response after 2 days. Decision: replaced with v2.0.2 (Build 16) which includes campaign polish (scoring rebalance, thrust vectoring, planet differentiation, star metadata). v2.0.2 submitted for App Store Review on 2026-02-01 at 07:52 (submission ID: 7ff9c921-0349-49c2-98b9-bfe9d1ca092f). App Store copy updated: description (20k score), What's New (thrust vectoring), review notes (explains v2.0.0 replacement), promotional text, keywords. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 17) adds campaign engagement features: fixed reentry start state (tilt + drift), HUD tilt angle display, final stats panel, and deterministic crash messages. These features improve the gameplay feedback loop without changing physics or scoring. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-2. If rejected: address feedback, fix, resubmit
-3. If approved: verify live listing, then plan v2.1.0
+1. Test v2.0.3 on simulator (reentry state, tilt HUD, final stats, crash diagnostics)
+2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+3. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
 4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
 5. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
-6. Device playtesting: remaining campaign mechanics verification on TestFlight
+6. Device playtesting: v2.0.3 campaign reentry + feedback features on TestFlight
 
 ---
 

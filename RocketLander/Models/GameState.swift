@@ -18,6 +18,18 @@ class GameState: ObservableObject {
     @Published var verticalVelocity: CGFloat = 0
     @Published var horizontalVelocity: CGFloat = 0
     @Published var rotation: CGFloat = 0
+    @Published var tiltAngle: CGFloat = 0  // Signed rotation (positive = left, negative = right)
+
+    // Final stats (frozen at touchdown/crash)
+    @Published var finalTiltAngle: CGFloat = 0
+    @Published var finalVerticalSpeed: CGFloat = 0
+    @Published var finalHorizontalSpeed: CGFloat = 0
+    @Published var finalFuel: Double = 0
+    @Published var finalDistanceFromCenter: CGFloat? = nil
+
+    // Crash diagnostics
+    @Published var crashDiagnosticPrimary: String = ""
+    @Published var crashDiagnosticSecondary: String = ""
 
     // Control states
     @Published var isThrusting: Bool = false
@@ -54,6 +66,7 @@ class GameState: ObservableObject {
         verticalVelocity = 0
         horizontalVelocity = 0
         rotation = 0
+        tiltAngle = 0
         isThrusting = false
         isRotatingLeft = false
         isRotatingRight = false
@@ -61,5 +74,12 @@ class GameState: ObservableObject {
         landingMessage = ""
         crashNudge = ""
         starsEarned = 0
+        finalTiltAngle = 0
+        finalVerticalSpeed = 0
+        finalHorizontalSpeed = 0
+        finalFuel = 0
+        finalDistanceFromCenter = nil
+        crashDiagnosticPrimary = ""
+        crashDiagnosticSecondary = ""
     }
 }

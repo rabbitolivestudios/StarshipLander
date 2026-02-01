@@ -2,6 +2,12 @@ import SpriteKit
 import SwiftUI
 import CoreMotion
 
+// MARK: - Campaign Reentry Constants
+struct CampaignReentryState {
+    static let initialTilt: CGFloat = 0.12          // ~6.9° left tilt (radians)
+    static let initialHorizontalSpeed: CGFloat = 15.0  // rightward drift (pts/s)
+}
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
     // MARK: - Properties (accessible to extensions)
@@ -163,7 +169,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if !hasStarted {
             hasStarted = true
             rocket.physicsBody?.isDynamic = true
+            applyCampaignReentryState()
         }
+    }
+
+    private func applyCampaignReentryState() {
+        guard gameState.currentMode == .campaign else { return }
+        rocket.zRotation = CampaignReentryState.initialTilt
+        rocket.physicsBody?.velocity = CGVector(
+            dx: CampaignReentryState.initialHorizontalSpeed,
+            dy: 0
+        )
     }
 
     // MARK: - Level-Specific Effects
@@ -203,6 +219,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if !hasStarted && (gameState.isThrusting || gameState.isRotatingLeft || gameState.isRotatingRight) {
             hasStarted = true
             rocket.physicsBody?.isDynamic = true
+            applyCampaignReentryState()
         }
 
         guard hasStarted else { return }
@@ -241,6 +258,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.gameState.verticalVelocity = currentVerticalSpeed
                 self.gameState.horizontalVelocity = abs(velocity.dx)
                 self.gameState.rotation = abs(self.rocket.zRotation)
+                self.gameState.tiltAngle = self.rocket.zRotation
             }
         }
 
@@ -499,11 +517,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 platform: landedPlatform
             )
         } else {
+            // Snapshot before crash so diagnostics use platform-contact values
+            snapshotFinalStats(platform: nil)
+            gameState.finalVerticalSpeed = verticalSpeed
+            gameState.finalHorizontalSpeed = horizontalSpeed
+            gameState.finalTiltAngle = rotation
+
+            let diagnostic = LandingMessages.diagnosticCrashMessage(
+                verticalSpeed: verticalSpeed,
+                horizontalSpeed: horizontalSpeed,
+                rotation: rotation,
+                approachSpeed: approachSpeed,
+                hitTerrain: false
+            )
+            gameState.crashDiagnosticPrimary = diagnostic.primaryMessage
+            gameState.crashDiagnosticSecondary = diagnostic.secondaryHint ?? ""
+
             crashRocket()
         }
     }
 
+    private func snapshotFinalStats(platform: LandingPlatform?) {
+        gameState.finalTiltAngle = abs(rocket.zRotation)
+        gameState.finalVerticalSpeed = max(0, -(rocket.physicsBody?.velocity.dy ?? 0))
+        gameState.finalHorizontalSpeed = abs(rocket.physicsBody?.velocity.dx ?? 0)
+        gameState.finalFuel = gameState.fuel
+        if let platform = platform {
+            let platformX = platform.xFraction * size.width
+            gameState.finalDistanceFromCenter = abs(rocket.position.x - platformX)
+        } else {
+            gameState.finalDistanceFromCenter = nil
+        }
+    }
+
     private func successfulLanding(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform) {
+        snapshotFinalStats(platform: platform)
+
         gameState.gameOver = true
         gameState.landed = true
 
@@ -537,6 +586,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private func crashRocket() {
         guard !gameState.gameOver else { return }
 
+        // Only snapshot and compute diagnostics if not already set by checkLanding
+        let diagnosticsAlreadySet = !gameState.crashDiagnosticPrimary.isEmpty
+
+        if !diagnosticsAlreadySet {
+            snapshotFinalStats(platform: nil)
+
+            let verticalSpeed = gameState.finalVerticalSpeed
+            let horizontalSpeed = gameState.finalHorizontalSpeed
+            let rotation = gameState.finalTiltAngle
+            let approachSpeed = recentVelocities.isEmpty ? verticalSpeed : recentVelocities.reduce(0, +) / CGFloat(recentVelocities.count)
+            let hitTerrain = rocket.position.y > -50
+
+            let diagnostic = LandingMessages.diagnosticCrashMessage(
+                verticalSpeed: verticalSpeed,
+                horizontalSpeed: horizontalSpeed,
+                rotation: rotation,
+                approachSpeed: approachSpeed,
+                hitTerrain: hitTerrain
+            )
+
+            gameState.crashDiagnosticPrimary = diagnostic.primaryMessage
+            gameState.crashDiagnosticSecondary = diagnostic.secondaryHint ?? ""
+        }
+
         gameState.gameOver = true
         gameState.landed = false
 
@@ -547,10 +620,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         playExplosionSound()
         HapticManager.shared.crash()
 
-        let crashResult = LandingMessages.crashMessage()
         DispatchQueue.main.async {
-            self.gameState.landingMessage = crashResult.message
-            self.gameState.crashNudge = crashResult.nudge
+            self.gameState.landingMessage = self.gameState.crashDiagnosticPrimary
+            self.gameState.crashNudge = ""
         }
 
         createExplosion(at: rocket.position)

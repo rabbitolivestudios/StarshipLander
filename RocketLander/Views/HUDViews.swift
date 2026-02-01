@@ -77,6 +77,7 @@ struct VelocityHUDView: View {
 
     private let maxSafeVertical: CGFloat = 50.0
     private let maxSafeHorizontal: CGFloat = 30.0
+    private let maxSafeRotation: CGFloat = 0.05  // radians (~2.9°)
 
     var body: some View {
         VStack(spacing: 8) {
@@ -146,12 +147,53 @@ struct VelocityHUDView: View {
             Divider()
                 .background(Color.gray.opacity(0.3))
 
+            // Tilt angle
+            HStack(spacing: 8) {
+                Image(systemName: "rotate.right")
+                    .frame(width: 20)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("TILT")
+                        .font(.system(size: 9, weight: .medium))
+                        .foregroundColor(.gray)
+
+                    HStack(spacing: 2) {
+                        Text(String(format: "%.1f°", tiltDegrees))
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .foregroundColor(tiltColor)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+
+                        if tiltDegrees > maxSafeRotation * 180 / .pi {
+                            Text(tiltDirection)
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .foregroundColor(tiltColor)
+                        }
+                    }
+                }
+
+                Spacer()
+
+                Text(tiltDegrees <= maxSafeRotation * 180 / .pi ? "OK" : "HIGH")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundColor(tiltColor)
+                    .lineLimit(1)
+                    .fixedSize()
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(tiltColor.opacity(0.2))
+                    .cornerRadius(4)
+            }
+
+            Divider()
+                .background(Color.gray.opacity(0.3))
+
             // Safe landing thresholds
             HStack {
                 Text("SAFE:")
                     .font(.system(size: 9, weight: .medium))
                     .foregroundColor(.gray)
-                Text("V<50  H<30")
+                Text("V<50 H<30 T<3°")
                     .font(.system(size: 9, weight: .medium, design: .monospaced))
                     .foregroundColor(.green.opacity(0.7))
             }
@@ -176,5 +218,21 @@ struct VelocityHUDView: View {
         if gameState.horizontalVelocity <= maxSafeHorizontal * 0.6 { return .green }
         if gameState.horizontalVelocity <= maxSafeHorizontal { return .yellow }
         return .red
+    }
+
+    var tiltDegrees: CGFloat {
+        abs(gameState.tiltAngle) * 180 / .pi
+    }
+
+    var tiltDirection: String {
+        gameState.tiltAngle > 0 ? "L" : "R"
+    }
+
+    var tiltColor: Color {
+        let safeDegrees = maxSafeRotation * 180 / .pi
+        if tiltDegrees <= safeDegrees { return .green }
+        if tiltDegrees <= safeDegrees * 2 { return .yellow }
+        // Direction-based color for high tilt
+        return gameState.tiltAngle > 0 ? .cyan : .orange
     }
 }

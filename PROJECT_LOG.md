@@ -29,11 +29,12 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
+| 2.0.3 | 17 | Campaign engagement: reentry state, tilt HUD, final stats, crash diagnostics |
 
 **NEXT STEPS:**
-1. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-2. If rejected, address feedback and resubmit
-3. If approved, verify live listing and plan v2.1.0
+1. Test v2.0.3 on simulator (reentry state, tilt HUD, final stats, crash diagnostics)
+2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+3. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -1132,6 +1133,72 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
+### Session 32 (2026-02-01) - Campaign Mode Engagement Upgrade (v2.0.3)
+
+**Goal:** Implement four coordinated changes to improve Campaign mode engagement and gameplay feedback.
+
+#### Changes Made:
+
+1. **Fixed Reentry Start State (Campaign Only) (`GameScene.swift`)**:
+   - `CampaignReentryState` struct: 0.12 rad (~6.9°) left tilt + 15 pts/s rightward drift
+   - Applied via `applyCampaignReentryState()` when rocket becomes dynamic
+   - Prevents trivial "hold thrust" strategy for Platform A
+   - Classic mode unchanged (upright start)
+
+2. **HUD Tilt Angle Display (`HUDViews.swift`)**:
+   - New tilt row in VelocityHUDView with real-time degree readout
+   - Directional color: cyan (left), orange (right), green (safe)
+   - Direction letter (L/R) shown when tilt exceeds safe threshold
+   - Safe threshold added to bottom line: "V<50 H<30 T<3°"
+
+3. **Final Stats Panel (`GameOverView.swift`, `GameScene.swift`, `GameState.swift`)**:
+   - `snapshotFinalStats()` freezes flight data at moment of landing/crash
+   - `FinalStatsView` component displays tilt, speeds, fuel, center distance
+   - Shown on both landing and crash game-over screens
+   - Color-coded: green (safe) / red (exceeded threshold)
+
+4. **Deterministic Crash Messages (`LandingMessages.swift`, `GameScene.swift`)**:
+   - `CrashCause` enum with precedence ordering
+   - `diagnosticCrashMessage()` produces cause-based feedback with actual values
+   - Priority: tilt > vertical > horizontal > approach > terrain > out-of-bounds
+   - Secondary hint for multiple failures
+   - Same inputs always produce same output (no randomness)
+
+5. **GameState Properties (`GameState.swift`)**:
+   - Added: `tiltAngle` (signed), `finalTiltAngle`, `finalVerticalSpeed`, `finalHorizontalSpeed`, `finalFuel`, `finalDistanceFromCenter`, `crashDiagnosticPrimary`, `crashDiagnosticSecondary`
+   - All cleared in `reset()`
+
+6. **Unit Tests (`CrashDiagnosticTests.swift`)**:
+   - 14 new tests: single-cause, precedence, secondary hints, determinism (100x), edge cases, value display
+   - Total test count: 65 across 8 files
+
+7. **Version Bump**: 2.0.3 (Build 17)
+
+#### Files Created:
+- `RocketLanderTests/CrashDiagnosticTests.swift`
+
+#### Files Modified:
+- `RocketLander/GameScene.swift` — CampaignReentryState, applyCampaignReentryState(), snapshotFinalStats(), crash diagnostic wiring, tiltAngle tracking
+- `RocketLander/Models/GameState.swift` — tiltAngle, final* properties, crashDiagnostic* properties, reset
+- `RocketLander/Models/LandingMessages.swift` — CrashCause, CrashDiagnostic, diagnosticCrashMessage()
+- `RocketLander/Views/HUDViews.swift` — tilt angle row, tilt color/direction properties
+- `RocketLander/Views/GameOverView.swift` — FinalStatsView, crash diagnostic display
+- `RocketLander/Info.plist` — version 2.0.3, build 17
+
+#### Definition of Done:
+- [x] Campaign ships spawn with tilt + drift
+- [x] Classic mode unchanged (upright start)
+- [x] HUD shows real-time tilt in degrees with direction
+- [x] Final stats frozen and displayed on game-over
+- [x] Crash messages are deterministic and cause-based
+- [x] 14 crash diagnostic tests pass
+- [x] All 65 tests pass
+- [x] Build succeeds
+- [x] Version bumped to 2.0.3 (Build 17)
+- [x] All docs updated
+
+---
+
 ## Contact / Accounts
 
 - **Apple Developer Account:** Thiago Borges de Oliveira
@@ -1140,4 +1207,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-02-01 (Session 31)*
+*Last updated: 2026-02-01 (Session 32)*

@@ -1,4 +1,20 @@
 import Foundation
+import CoreGraphics
+
+// MARK: - Crash Diagnostics
+struct CrashDiagnostic {
+    let primaryMessage: String
+    let secondaryHint: String?
+}
+
+enum CrashCause: Int, CaseIterable {
+    case tiltTooHigh = 0       // Highest priority
+    case verticalTooFast = 1
+    case horizontalTooFast = 2
+    case approachTooFast = 3
+    case terrainCollision = 4
+    case outOfBounds = 5
+}
 
 struct LandingMessages {
     // MARK: - Success Messages
@@ -58,10 +74,73 @@ struct LandingMessages {
         return standardSuccess.randomElement() ?? standardSuccess[0]
     }
 
-    /// Returns a crash message with a teaching nudge
+    /// Returns a crash message with a teaching nudge (legacy, kept for reference)
     static func crashMessage() -> (message: String, nudge: String) {
         let message = crashMessages.randomElement() ?? crashMessages[0]
         let nudge = crashNudges.randomElement() ?? crashNudges[0]
         return (message, nudge)
+    }
+
+    // MARK: - Deterministic Crash Diagnostics
+
+    /// Thresholds matching GameScene constants
+    private static let maxSafeRotation: CGFloat = 0.05
+    private static let maxSafeVerticalSpeed: CGFloat = 40.0
+    private static let maxSafeHorizontalSpeed: CGFloat = 25.0
+    private static let maxSafeApproachSpeed: CGFloat = 80.0
+
+    /// Returns a deterministic crash message based on actual failure values.
+    /// Same inputs always produce the same output.
+    static func diagnosticCrashMessage(
+        verticalSpeed: CGFloat,
+        horizontalSpeed: CGFloat,
+        rotation: CGFloat,
+        approachSpeed: CGFloat,
+        hitTerrain: Bool
+    ) -> CrashDiagnostic {
+        // Classify all failures
+        var causes: [(cause: CrashCause, message: String)] = []
+
+        let tiltDegrees = rotation * 180 / .pi
+
+        if rotation > maxSafeRotation {
+            causes.append((.tiltTooHigh,
+                "Tilt too high (\(String(format: "%.1f", tiltDegrees))°). Land under 3°."))
+        }
+        if verticalSpeed > maxSafeVerticalSpeed {
+            causes.append((.verticalTooFast,
+                "Vertical speed too high (\(String(format: "%.0f", verticalSpeed))). Keep under 40."))
+        }
+        if horizontalSpeed > maxSafeHorizontalSpeed {
+            causes.append((.horizontalTooFast,
+                "Horizontal drift too high (\(String(format: "%.0f", horizontalSpeed))). Keep under 25."))
+        }
+        if approachSpeed > maxSafeApproachSpeed {
+            causes.append((.approachTooFast,
+                "Approach speed too high (\(String(format: "%.0f", approachSpeed))). Slow down earlier."))
+        }
+
+        // If no threshold violations, it was terrain or out-of-bounds
+        if causes.isEmpty {
+            if hitTerrain {
+                return CrashDiagnostic(
+                    primaryMessage: "Missed the platform. Aim for the landing pads.",
+                    secondaryHint: nil
+                )
+            } else {
+                return CrashDiagnostic(
+                    primaryMessage: "Ship lost. Stay over the landing zone.",
+                    secondaryHint: nil
+                )
+            }
+        }
+
+        // Sort by priority (lowest rawValue = highest priority)
+        causes.sort { $0.cause.rawValue < $1.cause.rawValue }
+
+        let primary = causes[0].message
+        let secondary: String? = causes.count > 1 ? causes[1].message : nil
+
+        return CrashDiagnostic(primaryMessage: primary, secondaryHint: secondary)
     }
 }
