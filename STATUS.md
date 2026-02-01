@@ -62,7 +62,7 @@ These are **not implemented**. Do not assume otherwise:
 - **Localization** — English only
 - **Automated testing** — no unit or UI tests
 - **CI/CD pipeline** — no GitHub Actions or automated builds
-- **Device playtesting partially done** — haptics + ads verified on device via TestFlight. Accelerometer bug found and fixed locally. Campaign testing in progress.
+- **Device playtesting partially done** — haptics + ads verified on device via TestFlight. Accelerometer bug fixed in v2.0.2. Classic mode star rating verified on Build 16. Remaining: thrust vectoring feel, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
 - **v2.0.2 awaiting review** — submitted 2026-02-01, replacing v2.0.0 which was never reviewed
 
 ---
@@ -114,7 +114,7 @@ v2.0.0 (Build 12) was submitted 2026-01-30 but received no review response after
 
 - **v2.0.0 never reviewed** — submitted 2026-01-30, still "Waiting for Review" on 2026-02-01. Decision: replace with v2.0.2 (Build 16) to avoid shipping outdated gameplay
 - **v1.1.5 is the current live version** — published on App Store (Build 11)
-- **Device testing in progress** — TestFlight v2.0.1 (Build 13) installed. Haptics and ads verified working. Accelerometer bug found and fixed (not yet in TestFlight build). Campaign mode tested — design feedback addressed in v2.0.2: scoring rebalance, proportional thrust vectoring, planet mechanic differentiation (Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris), leaderboard star metadata. Classic mode star rating verified on device (Build 16). Campaign mechanics device testing in progress.
+- **Device testing in progress** — TestFlight Build 16 (v2.0.2) is latest. Haptics and ads verified working. Accelerometer fixed. Classic mode star rating verified on device. Remaining device tests: thrust vectoring feel (both control modes), Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris, scoring feel, backward-compat leaderboard stars.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
 

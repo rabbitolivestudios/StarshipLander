@@ -19,6 +19,7 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Continuous scoring with fuel multiplier (1.0–2.5x) and platform multiplier (1x/2x/5x). Max ~25,000.
 **Why:** Every improvement in landing quality produces a visible score change. Fuel incentivizes efficiency. Platform choice adds risk/reward.
 **Consequences:** Wide score range (100–25,000) makes leaderboard more meaningful. Harder to compare scores across platforms.
+**Superseded by:** [2026-01-31] Scoring Rebalance — fuel cap reduced to 2.0x, max now 20,000. See that entry for current values.
 
 ---
 
@@ -43,7 +44,7 @@ This file records key technical and design decisions, including context, alterna
 ## [2026-01-30] Campaign Gravity — Game-Balanced vs Real-World
 **Context:** Original campaign used real-world gravity values (Earth 9.8, Jupiter 24.8). These were unplayable because thrust power (12.0) is fixed.
 **Options considered:** (1) Scale thrust per level, (2) Reduce gravity to playable range, (3) Both.
-**Decision:** Reduced gravity values to game-friendly range. Thrust stays fixed at 12.0 for all levels.
+**Decision:** Reduced gravity values to game-friendly range. ~~Thrust stays fixed at 12.0 for all levels.~~ (Superseded — per-level thrust added, see [2026-01-30] Per-Level Thrust Scaling.)
 **Why:** Simpler than per-level thrust scaling. Players shouldn't need to relearn thrust feel per level. Gravity differences still create distinct difficulty.
 **Consequences:** Gravity values are NOT real-world accurate (labeled "m/s²" in UI but values are game-tuned). Earth went from -9.8→-4.5→-3.5. Jupiter from -24.8→-6.0 (still possibly too hard — needs testing).
 

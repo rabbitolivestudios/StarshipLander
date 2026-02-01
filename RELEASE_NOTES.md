@@ -1,7 +1,7 @@
 # Release Notes
 
 ## Version 2.0.2 (Build 16)
-**Status:** REPLACING v2.0.0 SUBMISSION — SUBMITTING TO APP STORE REVIEW (2026-02-01)
+**Status:** SUBMITTED FOR APP STORE REVIEW (2026-02-01) — replaces v2.0.0 (Build 12)
 
 ### Overview
 Version 2.0.2 is a major update that transforms Starship Lander from a single-mode arcade game into a full campaign experience across the solar system. Land on 10 different worlds, each with unique gravity, engine thrust, and environmental hazards. Choose between three landing platforms per level with increasing difficulty and score multipliers. Replaces the previously submitted v2.0.0 (Build 12) with gameplay tuning: rebalanced scoring, proportional thrust vectoring, differentiated planet mechanics, and leaderboard star metadata.
