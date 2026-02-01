@@ -114,14 +114,17 @@
 - [x] Level descriptions updated to match new mechanics
 - [x] Build succeeds (xcodebuild verified)
 - [x] README.md scoring table, mechanics, lateral assist updated
-- [x] CHANGELOG.md v2.0.2 unreleased section added
+- [x] CHANGELOG.md v2.0.2 section added
 - [x] DECISIONS.md 3 new entries (scoring, thrust vectoring, planet differentiation)
-- [x] STATUS.md updated (scoring, mechanics, device testing status)
+- [x] STATUS.md updated (scoring, mechanics, device testing status, version)
 - [x] PROJECT_LOG.md session 28 entry added
 - [x] Session summary created
+- [x] Version bumped to 2.0.2 (Build 14)
+- [x] Archived and uploaded to App Store Connect / TestFlight
 
 ## Commits
-- (pending — will be committed with this summary)
+- `35de6a9` — Campaign polish: scoring rebalance, thrust vectoring, planet differentiation
+- `1c754f8` — Bump version to 2.0.2 (Build 14), upload to TestFlight
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
@@ -130,10 +133,17 @@
 - [x] README.md scoring/mechanics accuracy verified and fixed
 - [x] No secrets or credentials in tracked files
 
+## Version Bump & TestFlight
+- Version bumped to 2.0.2 (Build 14) in Info.plist
+- All docs updated with new version: CHANGELOG, README, PROJECT_LOG, STATUS
+- Archived and uploaded to App Store Connect via `xcodebuild -exportArchive`
+- dSYM warnings for GoogleMobileAds and UserMessagingPlatform (harmless, known issue)
+- Build processing on App Store Connect — will appear in TestFlight shortly
+
 ## Next Actions
-- [ ] Bump version to 2.0.2 (needs explicit user approval)
-- [ ] New TestFlight build for device verification
+- [ ] Install v2.0.2 from TestFlight on device
 - [ ] Verify thrust vectoring feel on device (both control modes)
 - [ ] Verify Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris on device
 - [ ] Verify leaderboard star display with existing save data (backward compat)
+- [ ] Verify scoring changes feel right (center precision rewarded, fuel less dominant)
 - [ ] Wait for v2.0.0 App Store review response
