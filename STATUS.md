@@ -115,7 +115,7 @@ v2.0.0 (Build 12) submitted for App Store review on 2026-01-30. v2.0.2 (Build 14
 
 - **v2.0.0 not yet approved** — Apple may reject. Common risks: ad compliance, screenshot accuracy, privacy declarations
 - **v1.1.5 is the current live version** — published on App Store (Build 11)
-- **Device testing in progress** — TestFlight v2.0.1 (Build 13) installed. Haptics and ads verified working. Accelerometer bug found and fixed (not yet in TestFlight build). Campaign mode tested — design feedback addressed in v2.0.2: scoring rebalance, proportional thrust vectoring, planet mechanic differentiation (Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris), leaderboard star metadata. Needs new TestFlight build for device verification.
+- **Device testing in progress** — TestFlight v2.0.1 (Build 13) installed. Haptics and ads verified working. Accelerometer bug found and fixed (not yet in TestFlight build). Campaign mode tested — design feedback addressed in v2.0.2: scoring rebalance, proportional thrust vectoring, planet mechanic differentiation (Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris), leaderboard star metadata. Classic mode star rating verified on device (Build 16). Campaign mechanics device testing in progress.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
 
