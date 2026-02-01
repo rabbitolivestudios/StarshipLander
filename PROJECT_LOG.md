@@ -1120,6 +1120,11 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 #### No app code modified.
 
+#### Interpretation & Intent
+- These results reinforce the current design goals: the scoring system rewards skill (precision, fuel management, platform choice) over luck. No action or balance changes are required.
+- The data exists to inform future achievement thresholds, sanity-check scoring changes, and guard against regressions that would erode skill expression.
+- Platform C screen wrapping is considered emergent mastery, not an exploit. Center precision dominance is intentional and desirable.
+
 #### Definition of Done:
 - [x] All 33/33 landings computed
 - [x] Validated against real gameplay (sim 2,980 vs real 2,965 for Classic A)
