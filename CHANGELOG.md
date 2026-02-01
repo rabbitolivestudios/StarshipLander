@@ -34,10 +34,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Description: "Volcanic debris is deadly — time it."
 
 ### Added
-- **Leaderboard Star Metadata**: Campaign high score entries now store star rating
+- **Leaderboard Star Metadata**: High score entries now store star rating
   - HighScoreEntry gains backward-compatible `stars` field (defaults to 0 for old data)
-  - Small star icons displayed between name and score in campaign leaderboard rows
-  - Stars passed through from CampaignState.completedLevel
+  - Small star icons displayed between name and score in leaderboard rows
+  - Stars passed through from both CampaignState.completedLevel and classic mode saveScore
+
+### Fixed
+- **Classic mode star rating not saved**: Classic mode high scores now correctly store the star rating (platform A=1, B=2, C=3) — previously always saved as 0
 
 ---
 
