@@ -1101,6 +1101,30 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - [x] No behavior changes
 - [x] All docs updated
 
+### Session 31 (2026-02-01) - Perfect Landing Score Analysis
+
+**Goal:** Calculate maximum achievable scores for all 33 level/platform combinations using frame-by-frame physics simulation.
+
+#### Changes Made:
+
+1. **Created `Scripts/calculate_perfect_scores.py`**: Frame-by-frame physics simulation matching SpriteKit behavior (gravity×150 pts/m conversion, binary thrust, approach speed crash gate, screen wrapping). Reactive controller optimizes over descent speed, tilt angle, direction, and landing position.
+
+2. **Key discoveries**:
+   - Approach speed (avg of last 30 velocity samples) is a CRASH GATE, not just a scoring penalty
+   - Screen wrapping makes going left the optimal strategy for Platform C (170 pts vs 263 pts)
+   - Center landing always maximizes score — the 600 center bonus × multiplier always outweighs fuel savings from off-center landing
+   - Best possible: Classic C = 12,132 (30% fuel, via left wrap). Worst: Moon A = 2,684 (48% fuel).
+
+#### Files Created:
+- `Scripts/calculate_perfect_scores.py`
+
+#### No app code modified.
+
+#### Definition of Done:
+- [x] All 33/33 landings computed
+- [x] Validated against real gameplay (sim 2,980 vs real 2,965 for Classic A)
+- [x] All docs updated
+
 ---
 
 ## Contact / Accounts
@@ -1111,4 +1135,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-01-31 (Session 28 — final)*
+*Last updated: 2026-02-01 (Session 31)*

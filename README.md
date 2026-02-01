@@ -137,6 +137,7 @@ StarshipLander/
 │   ├── generate_icon.py             # App icon generator
 │   ├── generate_screenshots.py      # Screenshot generator
 │   ├── caption_screenshots.py       # App Store screenshot captioning
+│   ├── calculate_perfect_scores.py  # Perfect landing score analysis
 │   ├── app_store_metadata.json      # App Store metadata reference
 │   └── export_chat_transcripts.py   # Claude Code transcript exporter
 ├── .github/

@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-01 (Session 30)
+> Last reconciled: 2026-02-01 (Session 31)
 
 ---
 
@@ -48,6 +48,7 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **Unit Tests**: 51 XCTest cases across 7 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data)
 - **Codebase**: Split from 2 monolithic files into 21 organized files
 - **Project Management**: CLAUDE.md, PR template, DECISIONS.md, session logging workflow
+- **Perfect Landing Score Analysis**: Frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Best: Classic C = 12,132 (via left screen wrap). Script: `Scripts/calculate_perfect_scores.py`
 
 ---
 
