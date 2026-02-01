@@ -152,11 +152,13 @@
 - **Fix 2 (Build 16):** Two display-side issues remained — `LeaderboardView` classic section and `ContentView` menu TOP PILOTS section both called `scoreRow` without passing `entry.stars`. Added `stars: entry.stars` to both call sites.
 - **Found by:** Device testing on TestFlight (user landed 3-star in classic, stars not shown in leaderboard)
 
-## Next Actions
-- [ ] Install v2.0.2 (Build 15) from TestFlight on device
-- [ ] Verify classic mode star rating now saves and displays correctly
+## Device Testing Results (Build 16)
+- [x] Classic mode star rating saves and displays correctly — **VERIFIED**
 - [ ] Verify thrust vectoring feel on device (both control modes)
 - [ ] Verify Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris on device
 - [ ] Verify leaderboard star display with existing save data (backward compat)
 - [ ] Verify scoring changes feel right (center precision rewarded, fuel less dominant)
+
+## Next Actions
+- [ ] Continue device testing of campaign mechanics on TestFlight
 - [ ] Wait for v2.0.0 App Store review response
