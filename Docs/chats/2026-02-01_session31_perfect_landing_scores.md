@@ -120,6 +120,8 @@ The reactive controller uses:
 - `a49dc8b` — Add perfect landing score analysis: 33 level/platform combinations
 - `ab43822` — Update session 31 summary with commit hash
 - `9ed8272` — Update CHANGELOG.md and DECISIONS.md for session 31
+- `85165e3` — Update session 31 docs with all commit hashes
+- `f796383` — Add interpretation note to session 31 scoring analysis
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
