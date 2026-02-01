@@ -991,7 +991,7 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - `1c754f8` — Bump version to 2.0.2 (Build 14), upload to TestFlight
 - `4216f7e` — Update session 28 summary: commits, version bump, TestFlight upload
 - `cf1afd8` — End session 28: update PROJECT_LOG with commits and status
-- (pending) — Fix classic mode star rating, Build 15, re-upload to TestFlight
+- `e3ccdce` — Fix classic mode star rating not saved in high scores (Build 15)
 
 ---
 
@@ -1003,4 +1003,4 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-01-31 (Session 28)*
+*Last updated: 2026-01-31 (Session 28 — final)*
