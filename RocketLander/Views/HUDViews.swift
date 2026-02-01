@@ -37,7 +37,7 @@ struct TopHUDView: View {
                         HStack(spacing: 4) {
                             Image(systemName: "fuelpump.fill")
                                 .font(.caption)
-                            Text("\(Int(gameState.fuel))%")
+                            Text(String(format: "%.0f%%", displayFuel))
                                 .font(.system(.headline, design: .monospaced))
                         }
                         .foregroundColor(fuelColor)
@@ -50,7 +50,7 @@ struct TopHUDView: View {
 
                                 RoundedRectangle(cornerRadius: 3)
                                     .fill(fuelColor)
-                                    .frame(width: geo.size.width * gameState.fuel / 100)
+                                    .frame(width: geo.size.width * displayFuel / 100)
                             }
                         }
                         .frame(width: 80, height: 6)
@@ -64,9 +64,13 @@ struct TopHUDView: View {
         .padding()
     }
 
+    private var displayFuel: Double {
+        gameState.gameOver ? gameState.finalFuel : gameState.fuel
+    }
+
     var fuelColor: Color {
-        if gameState.fuel > 50 { return .green }
-        if gameState.fuel > 20 { return .yellow }
+        if displayFuel > 50 { return .green }
+        if displayFuel > 20 { return .yellow }
         return .red
     }
 }
@@ -78,6 +82,17 @@ struct VelocityHUDView: View {
     private let maxSafeVertical: CGFloat = 50.0
     private let maxSafeHorizontal: CGFloat = 30.0
     private let maxSafeRotation: CGFloat = 0.05  // radians (~2.9°)
+
+    // Display values: frozen final* on game-over, live during gameplay
+    private var displayVertical: CGFloat {
+        gameState.gameOver ? gameState.finalVerticalSpeed : gameState.verticalVelocity
+    }
+    private var displayHorizontal: CGFloat {
+        gameState.gameOver ? gameState.finalHorizontalSpeed : gameState.horizontalVelocity
+    }
+    private var displayTiltAngle: CGFloat {
+        gameState.gameOver ? gameState.finalTiltAngle : gameState.tiltAngle
+    }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -91,7 +106,7 @@ struct VelocityHUDView: View {
                         .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.gray)
 
-                    Text(String(format: "%.0f", gameState.verticalVelocity))
+                    Text(String(format: "%.0f", displayVertical))
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(verticalColor)
                         .lineLimit(1)
@@ -100,7 +115,7 @@ struct VelocityHUDView: View {
 
                 Spacer()
 
-                Text(gameState.verticalVelocity <= maxSafeVertical ? "OK" : "HIGH")
+                Text(displayVertical <= maxSafeVertical ? "OK" : "HIGH")
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(verticalColor)
                     .lineLimit(1)
@@ -124,7 +139,7 @@ struct VelocityHUDView: View {
                         .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.gray)
 
-                    Text(String(format: "%.0f", gameState.horizontalVelocity))
+                    Text(String(format: "%.0f", displayHorizontal))
                         .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(horizontalColor)
                         .lineLimit(1)
@@ -133,7 +148,7 @@ struct VelocityHUDView: View {
 
                 Spacer()
 
-                Text(gameState.horizontalVelocity <= maxSafeHorizontal ? "OK" : "HIGH")
+                Text(displayHorizontal <= maxSafeHorizontal ? "OK" : "HIGH")
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(horizontalColor)
                     .lineLimit(1)
@@ -159,15 +174,15 @@ struct VelocityHUDView: View {
 
                     HStack(spacing: 2) {
                         Text(String(format: "%.1f°", tiltDegrees))
-                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .font(.system(size: 16, weight: .bold, design: .monospaced))
                             .foregroundColor(tiltColor)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
+                            .fixedSize()
 
                         if tiltDegrees > maxSafeRotation * 180 / .pi {
                             Text(tiltDirection)
                                 .font(.system(size: 14, weight: .bold, design: .monospaced))
                                 .foregroundColor(tiltColor)
+                                .fixedSize()
                         }
                     }
                 }
@@ -199,7 +214,7 @@ struct VelocityHUDView: View {
             }
         }
         .padding(12)
-        .frame(width: 150)
+        .frame(width: 170)
         .background(Color.black.opacity(0.7))
         .cornerRadius(10)
         .overlay(
@@ -209,23 +224,23 @@ struct VelocityHUDView: View {
     }
 
     var verticalColor: Color {
-        if gameState.verticalVelocity <= maxSafeVertical * 0.6 { return .green }
-        if gameState.verticalVelocity <= maxSafeVertical { return .yellow }
+        if displayVertical <= maxSafeVertical * 0.6 { return .green }
+        if displayVertical <= maxSafeVertical { return .yellow }
         return .red
     }
 
     var horizontalColor: Color {
-        if gameState.horizontalVelocity <= maxSafeHorizontal * 0.6 { return .green }
-        if gameState.horizontalVelocity <= maxSafeHorizontal { return .yellow }
+        if displayHorizontal <= maxSafeHorizontal * 0.6 { return .green }
+        if displayHorizontal <= maxSafeHorizontal { return .yellow }
         return .red
     }
 
     var tiltDegrees: CGFloat {
-        abs(gameState.tiltAngle) * 180 / .pi
+        abs(displayTiltAngle) * 180 / .pi
     }
 
     var tiltDirection: String {
-        gameState.tiltAngle > 0 ? "L" : "R"
+        displayTiltAngle > 0 ? "L" : "R"
     }
 
     var tiltColor: Color {
@@ -233,6 +248,6 @@ struct VelocityHUDView: View {
         if tiltDegrees <= safeDegrees { return .green }
         if tiltDegrees <= safeDegrees * 2 { return .yellow }
         // Direction-based color for high tilt
-        return gameState.tiltAngle > 0 ? .cyan : .orange
+        return displayTiltAngle > 0 ? .cyan : .orange
     }
 }

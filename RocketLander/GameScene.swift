@@ -37,6 +37,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var recentVelocities: [CGFloat] = []
     let velocityHistorySize = 30
 
+    // Pre-contact tracking (for end-of-run snapshot — always reflects last update frame)
+    private var lastTrackedVerticalSpeed: CGFloat = 0
+    private var lastTrackedHorizontalSpeed: CGFloat = 0
+    private var lastTrackedTilt: CGFloat = 0  // signed
+
     // Campaign: wind state
     private var windForce: CGFloat = 0
     private var windTime: TimeInterval = 0
@@ -147,6 +152,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         maxDescentSpeed = 0
         recentVelocities = []
+        lastTrackedVerticalSpeed = 0
+        lastTrackedHorizontalSpeed = 0
+        lastTrackedTilt = 0
+
+        // Apply visual reentry state for campaign (tilt only — velocity applied on start)
+        if gameState.currentMode == .campaign {
+            rocket.zRotation = CampaignReentryState.initialTilt
+            gameState.tiltAngle = CampaignReentryState.initialTilt
+            lastTrackedTilt = CampaignReentryState.initialTilt
+        }
 
         stopThrustSound()
         wasRotatingLeft = false
@@ -253,6 +268,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if recentVelocities.count > velocityHistorySize {
                 recentVelocities.removeFirst()
             }
+
+            // Synchronous tracking for end-of-run snapshot (pre-contact values)
+            lastTrackedVerticalSpeed = currentVerticalSpeed
+            lastTrackedHorizontalSpeed = abs(velocity.dx)
+            lastTrackedTilt = rocket.zRotation
 
             DispatchQueue.main.async {
                 self.gameState.verticalVelocity = currentVerticalSpeed
@@ -517,16 +537,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 platform: landedPlatform
             )
         } else {
-            // Snapshot before crash so diagnostics use platform-contact values
+            // Snapshot uses pre-contact tracked values (non-zero touchdown speeds)
             snapshotFinalStats(platform: nil)
-            gameState.finalVerticalSpeed = verticalSpeed
-            gameState.finalHorizontalSpeed = horizontalSpeed
-            gameState.finalTiltAngle = rotation
 
+            // Diagnostics use the same frozen values as Flight Data for consistency
             let diagnostic = LandingMessages.diagnosticCrashMessage(
-                verticalSpeed: verticalSpeed,
-                horizontalSpeed: horizontalSpeed,
-                rotation: rotation,
+                verticalSpeed: gameState.finalVerticalSpeed,
+                horizontalSpeed: gameState.finalHorizontalSpeed,
+                rotation: abs(gameState.finalTiltAngle),
                 approachSpeed: approachSpeed,
                 hitTerrain: false
             )
@@ -538,9 +556,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     private func snapshotFinalStats(platform: LandingPlatform?) {
-        gameState.finalTiltAngle = abs(rocket.zRotation)
-        gameState.finalVerticalSpeed = max(0, -(rocket.physicsBody?.velocity.dy ?? 0))
-        gameState.finalHorizontalSpeed = abs(rocket.physicsBody?.velocity.dx ?? 0)
+        // Use pre-contact tracked values — these reflect the last update frame
+        // before the collision callback, avoiding post-collision zeroed velocities
+        gameState.finalTiltAngle = lastTrackedTilt  // signed (preserves direction)
+        gameState.finalVerticalSpeed = lastTrackedVerticalSpeed
+        gameState.finalHorizontalSpeed = lastTrackedHorizontalSpeed
         gameState.finalFuel = gameState.fuel
         if let platform = platform {
             let platformX = platform.xFraction * size.width
@@ -594,7 +614,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             let verticalSpeed = gameState.finalVerticalSpeed
             let horizontalSpeed = gameState.finalHorizontalSpeed
-            let rotation = gameState.finalTiltAngle
+            let rotation = abs(gameState.finalTiltAngle)  // abs() — finalTiltAngle is now signed
             let approachSpeed = recentVelocities.isEmpty ? verticalSpeed : recentVelocities.reduce(0, +) / CGFloat(recentVelocities.count)
             let hitTerrain = rocket.position.y > -50
 

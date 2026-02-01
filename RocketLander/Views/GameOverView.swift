@@ -106,7 +106,7 @@ struct GameOverView: View {
 
                 // Final stats panel (landing)
                 FinalStatsView(
-                    tiltDegrees: Double(gameState.finalTiltAngle) * 180 / .pi,
+                    tiltDegrees: abs(Double(gameState.finalTiltAngle)) * 180 / .pi,
                     verticalSpeed: gameState.finalVerticalSpeed,
                     horizontalSpeed: gameState.finalHorizontalSpeed,
                     fuel: gameState.finalFuel,
@@ -147,7 +147,7 @@ struct GameOverView: View {
 
                 // Final stats panel (crash)
                 FinalStatsView(
-                    tiltDegrees: Double(gameState.finalTiltAngle) * 180 / .pi,
+                    tiltDegrees: abs(Double(gameState.finalTiltAngle)) * 180 / .pi,
                     verticalSpeed: gameState.finalVerticalSpeed,
                     horizontalSpeed: gameState.finalHorizontalSpeed,
                     fuel: gameState.finalFuel,
