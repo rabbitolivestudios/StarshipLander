@@ -61,7 +61,6 @@ struct MenuView: View {
     @ObservedObject var highScoreManager: HighScoreManager
     @ObservedObject var campaignState: CampaignState
     @ObservedObject var gameState: GameState
-    @AppStorage("useAccelerometer") private var useAccelerometer = false
 
     var body: some View {
         ScrollView {
@@ -204,23 +203,23 @@ struct MenuView: View {
                     .foregroundColor(.orange)
 
                 HStack {
-                    Image(systemName: useAccelerometer ? "iphone.gen3.radiowaves.left.and.right" : "hand.tap.fill")
+                    Image(systemName: gameState.useAccelerometer ? "iphone.gen3.radiowaves.left.and.right" : "hand.tap.fill")
                         .foregroundColor(.white)
                         .frame(width: 24)
 
-                    Text(useAccelerometer ? "Tilt to Rotate" : "Buttons")
+                    Text(gameState.useAccelerometer ? "Tilt to Rotate" : "Buttons")
                         .font(.subheadline)
                         .foregroundColor(.white)
 
                     Spacer()
 
-                    Toggle("", isOn: $useAccelerometer)
+                    Toggle("", isOn: $gameState.useAccelerometer)
                         .labelsHidden()
                         .tint(.orange)
                 }
                 .padding(.horizontal, 8)
 
-                Text(useAccelerometer ? "Tilt your phone left/right" : "Use L/R buttons on screen")
+                Text(gameState.useAccelerometer ? "Tilt your phone left/right" : "Use L/R buttons on screen")
                     .font(.caption2)
                     .foregroundColor(.gray)
             }
@@ -237,7 +236,7 @@ struct MenuView: View {
 
                 VStack(alignment: .leading, spacing: 3) {
                     Label("Hold THRUST to fire engine", systemImage: "flame.fill")
-                    Label(useAccelerometer ? "Tilt phone to rotate" : "Use L/R to rotate", systemImage: useAccelerometer ? "iphone.gen3.radiowaves.left.and.right" : "arrow.left.arrow.right")
+                    Label(gameState.useAccelerometer ? "Tilt phone to rotate" : "Use L/R to rotate", systemImage: gameState.useAccelerometer ? "iphone.gen3.radiowaves.left.and.right" : "arrow.left.arrow.right")
                     Label("Land on platforms for points", systemImage: "arrow.down.to.line")
                 }
                 .font(.caption2)
