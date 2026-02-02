@@ -29,7 +29,7 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 21 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + menu ad fix. Uploaded to TestFlight. |
+| 2.0.3 | 21 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul. Uploaded to TestFlight. Menu ad fix committed to `main` after upload (Session 36) — not in Build 21. |
 
 **NEXT STEPS:**
 1. Device test Build 21 on TestFlight (scoring feel, HARD landing scores, threshold enforcement behavior)

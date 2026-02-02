@@ -14,7 +14,7 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 21) — per-platform speed bands, velocity threshold enforcement via `LandingThresholds.evaluate()`, removed HARD penalty, menu ad clipping fix. |
+| Current Version | 2.0.3 (Build 21) — per-platform speed bands, velocity threshold enforcement via `LandingThresholds.evaluate()`, removed HARD penalty. Menu ad clipping fix committed to `main` but NOT in Build 21 on TestFlight. |
 | Version Status | Build 21 uploaded to TestFlight. v2.0.2 Build 16 submitted for App Store review. |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
@@ -77,17 +77,17 @@ These are **not implemented**. Do not assume otherwise:
 
 **Phase: Campaign Engagement — v2.0.3 scoring & threshold overhaul complete, then v2.1.0 (Community)**
 
-v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 21) uploaded to TestFlight with: per-platform speed bands (`LandingThresholds.swift`), velocity threshold enforcement via `LandingThresholds.evaluate()` with post-thrust tracking, removed HARD landing 0.4× penalty (natural velocity loss is the penalty), scoring denominators use per-platform safe thresholds, HUD updated to show Platform C safe values, menu ad banner clipping fixed. Speed now affects landing success for the first time — per-platform FAIL thresholds (A: V>120/H>100, B: V>85/H>75, C: V>55/H>50). Perfect score simulation updated: best achievable is Classic C = 12,077 (all 33 landings in SAFE band). v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 21) uploaded to TestFlight with: per-platform speed bands (`LandingThresholds.swift`), velocity threshold enforcement via `LandingThresholds.evaluate()` with post-thrust tracking, removed HARD landing 0.4× penalty (natural velocity loss is the penalty), scoring denominators use per-platform safe thresholds, HUD updated to show Platform C safe values. Speed now affects landing success for the first time — per-platform FAIL thresholds (A: V>120/H>100, B: V>85/H>75, C: V>55/H>50). Perfect score simulation updated: best achievable is Classic C = 12,077 (all 33 landings in SAFE band). Menu ad banner clipping fix is committed to `main` (Session 36) but NOT included in Build 21 on TestFlight — will require a new build to ship. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
 1. Device test Build 21 on TestFlight (scoring feel, HARD landing scores, threshold enforcement behavior)
-4. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-5. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
-6. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
-7. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+3. If approved: decide whether to submit v2.0.3 or wait for v2.1.0 (new build needed to include menu ad fix)
+4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
+5. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---
 
