@@ -79,8 +79,8 @@ struct TopHUDView: View {
 struct VelocityHUDView: View {
     @ObservedObject var gameState: GameState
 
-    private let maxSafeVertical: CGFloat = 40.0
-    private let maxSafeHorizontal: CGFloat = 25.0
+    private let maxSafeVertical: CGFloat = 50.0
+    private let maxSafeHorizontal: CGFloat = 30.0
     private let maxSafeRotation: CGFloat = 0.05  // radians (~2.9°)
 
     // Display values: frozen final* on game-over, live during gameplay
@@ -208,7 +208,7 @@ struct VelocityHUDView: View {
                 Text("SAFE:")
                     .font(.system(size: 9, weight: .medium))
                     .foregroundColor(.gray)
-                Text("V<40 H<25 T<3°")
+                Text("V<50 H<30 T<3°")
                     .font(.system(size: 9, weight: .medium, design: .monospaced))
                     .foregroundColor(.green.opacity(0.7))
             }

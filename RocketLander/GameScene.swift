@@ -269,6 +269,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 recentVelocities.removeFirst()
             }
 
+            // Synchronous tracking for end-of-run snapshot (pre-contact values)
+            lastTrackedVerticalSpeed = currentVerticalSpeed
+            lastTrackedHorizontalSpeed = abs(velocity.dx)
+            lastTrackedTilt = rocket.zRotation
+
             DispatchQueue.main.async {
                 self.gameState.verticalVelocity = currentVerticalSpeed
                 self.gameState.horizontalVelocity = abs(velocity.dx)
@@ -378,15 +383,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Check if rocket fell off screen
         if rocket.position.y < -100 {
             crashRocket()
-        }
-
-        // Post-input tracking for end-of-run snapshot — captures velocity AFTER
-        // thrust, rotation, and campaign mechanics are applied this frame, but
-        // BEFORE the physics simulation resolves collisions
-        if let velocity = rocket.physicsBody?.velocity {
-            lastTrackedVerticalSpeed = max(0, -velocity.dy)
-            lastTrackedHorizontalSpeed = abs(velocity.dx)
-            lastTrackedTilt = rocket.zRotation
         }
     }
 
