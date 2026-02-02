@@ -119,7 +119,7 @@ This makes HARD landings about precision and control rather than speed — the r
 - [x] Repo housekeeping complete
 
 ## Commits
-- *(commit hash to be filled after commit)*
+- `1698220` — Scoring overhaul: per-platform speed bands + remove HARD penalty (Build 21)
 
 ## Repo Housekeeping
 - [x] Working tree clean (all files tracked or committed)
