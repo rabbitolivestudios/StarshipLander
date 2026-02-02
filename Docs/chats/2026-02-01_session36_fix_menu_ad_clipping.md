@@ -72,6 +72,7 @@ However, session 35's documentation incorrectly stated "this session's changes o
 - `58f646a` — Final session 36 summary — add missing commit hash
 - `5a51222` — Update README landing thresholds + version history for v2.0.3
 - `d02b07b` — Add mandatory documentation sweep checklist to CLAUDE.md
+- `5e06f58` — Update session 36 summary with final commits
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
