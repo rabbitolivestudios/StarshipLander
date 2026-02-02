@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Menu Ad Banner Clipping**: Banner ad at bottom of menu screen was clipped by home indicator safe area on iPhones without a home button. Added 16pt bottom padding to `BannerAdContainer()` in `MenuView` for clearance.
+
 ### Added
 - **Unit Tests**: 90 XCTest cases across 10 test files covering core game logic
   - ScoringTests: formula verification, HARD penalty, constraint tests, realistic scenarios (16 tests)

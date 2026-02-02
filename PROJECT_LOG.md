@@ -33,7 +33,7 @@ This file documents the development history and decisions for the Starship Lande
 
 **NEXT STEPS:**
 1. **Game design decision required** — should speed affect landing success? See `Docs/DIAGNOSTIC_velocity_thresholds.md`
-2. Fix velocity threshold enforcement based on decision. Fix HUD threshold display. Fix menu ad clipping.
+2. Fix velocity threshold enforcement based on decision. Fix HUD threshold display.
 3. Device test Build 21 on TestFlight (scoring feel, HARD landing scores)
 4. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 5. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
@@ -1458,4 +1458,28 @@ Key findings:
 
 ---
 
-*Last updated: 2026-02-01 (Session 35, Build 21)*
+### Session 36 (2026-02-01) - Fix Menu Ad Banner Clipping
+
+**Goal:** Fix the banner ad on the menu screen being clipped by the home indicator safe area.
+
+**What Changed:**
+- Added `.padding(.bottom, 16)` to `BannerAdContainer()` in `MenuView` (`ContentView.swift` line 260)
+- The ad was the last item in the ScrollView's VStack with no bottom padding, causing it to be clipped by the home indicator on iPhones without a home button
+- `GameContainerView.swift` already had `.padding(.bottom, 5)` on its banner ad; menu needed more clearance due to ScrollView behavior
+
+**Files Modified:**
+- `RocketLander/ContentView.swift` — added bottom padding to BannerAdContainer
+
+**Key Decisions:**
+- Used 16pt padding (vs 5pt in gameplay) because the menu ScrollView needs more clearance when scrolled to the bottom
+
+#### Definition of Done:
+- [x] Banner ad fully visible when scrolled to bottom on iPhone 16 Pro
+- [x] Build succeeds
+- [x] 90/90 tests pass
+- [x] All docs updated
+- [x] Session summary created
+
+---
+
+*Last updated: 2026-02-01 (Session 36, Build 21)*

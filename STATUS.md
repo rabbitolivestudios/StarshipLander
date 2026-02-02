@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-01 (Session 35)
+> Last reconciled: 2026-02-01 (Session 36)
 
 ---
 
@@ -84,7 +84,7 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 21
 ## Immediate Next Tasks (ordered)
 
 1. **Game design decision required:** Should speed affect landing success? See `Docs/DIAGNOSTIC_velocity_thresholds.md` for options and tradeoffs.
-2. Fix velocity threshold enforcement based on design decision. Fix HUD threshold display to match per-platform bands. Fix menu ad clipping (cosmetic).
+2. Fix velocity threshold enforcement based on design decision. Fix HUD threshold display to match per-platform bands.
 3. Device test Build 21 on TestFlight (scoring feel, HARD landing scores)
 4. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 5. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
