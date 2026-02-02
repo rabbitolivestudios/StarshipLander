@@ -114,6 +114,7 @@ StarshipLander/
 │   │   ├── ControlViews.swift       # Bottom controls + buttons
 │   │   ├── ShapeViews.swift         # Rocket illustration shapes
 │   │   ├── LeaderboardView.swift     # Dedicated leaderboard screen
+│   │   ├── HowToPlayView.swift      # How to Play info sheet
 │   │   └── LevelSelectView.swift    # Campaign level grid
 │   ├── Haptics/
 │   │   └── HapticManager.swift      # Haptic feedback manager

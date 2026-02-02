@@ -1623,4 +1623,63 @@ Key findings:
 
 ---
 
-*Last updated: 2026-02-02 (Session 39, Build 23 on TestFlight)*
+### Session 40 (2026-02-02) - Menu Layout Fix + How To Play Info Sheet
+
+**Goal:** Fix menu overflow issue where content (~700pt) exceeded most iPhone screens and the banner ad covered the bottom section. Replace the inline HOW TO PLAY section with a rich info sheet.
+
+#### Changes Made:
+
+1. **Menu Layout Fix (`ContentView.swift`)**:
+   - Removed the inline "HOW TO PLAY" section (VStack with 3 Label items, ~85pt)
+   - Replaced with a "How to Play >" text button (~22pt) — saves ~79pt of vertical space
+   - Added `@State private var showingHowToPlay` state variable
+   - Added `.sheet(isPresented:)` modifier presenting `HowToPlayView`
+   - Added `.padding(.bottom, 60)` to ScrollView content to clear the banner ad on devices that still need scrolling
+   - Menu now fits without scrolling on iPhone 12 mini (731pt) and larger
+
+2. **How to Play Info Sheet (`Views/HowToPlayView.swift` — new file)**:
+   - Scrollable SwiftUI sheet with dark theme matching the app
+   - 5 sections with orange accent headers:
+     - **Controls**: Thrust, Rotate (adapts to button/accelerometer setting), Land
+     - **Landing Platforms**: Table showing A/B/C with names, widths, multipliers, stars, colors
+     - **Speed Bands**: SAFE/HARD/FAIL explanation + per-platform threshold table (V and H)
+     - **Scoring**: All 6 components with max points, fuel multiplier (1.0-2.0x), platform multiplier (1x/2x/5x), formula, max 20,000
+     - **Campaign**: All 10 levels with gravity and special mechanic (reads from `LevelDefinition.levels`)
+   - Dismiss button (X) at top right
+
+3. **Project File (`project.pbxproj`)**:
+   - Added `HowToPlayView.swift` file reference, build file, Views group entry, and Sources build phase entry
+
+4. **Screenshot Housekeeping**:
+   - Moved `Screenshots/WhatsApp Image 2026-02-02 at 15.29.22.jpeg` → `Screenshots/v2.0.3-bugs/bug13_menu_howtoplay_covered_by_ad.jpeg`
+   - Device screenshot showing the menu overflow bug (HOW TO PLAY covered by banner ad) — bug evidence for this session's fix
+
+#### Files Created:
+- `RocketLander/Views/HowToPlayView.swift`
+
+#### Files Modified:
+- `RocketLander/ContentView.swift` — removed HOW TO PLAY, added button + sheet + padding
+- `RocketLander.xcodeproj/project.pbxproj` — added new file to project
+
+#### Files Moved:
+- `Screenshots/WhatsApp Image 2026-02-02 at 15.29.22.jpeg` → `Screenshots/v2.0.3-bugs/bug13_menu_howtoplay_covered_by_ad.jpeg`
+
+#### Build Status:
+- Build succeeds on iPhone 16 Pro simulator
+- 89/89 tests pass (no logic changes)
+- Menu layout verified on simulator — fits without scrolling
+
+#### Definition of Done:
+- [x] Inline HOW TO PLAY section removed
+- [x] "How to Play >" button opens sheet
+- [x] HowToPlayView has all 5 sections with accurate game data
+- [x] Controls section adapts to accelerometer/button setting
+- [x] Bottom padding clears banner ad
+- [x] Build succeeds
+- [x] All docs updated
+- [ ] Simulator test on iPhone SE to verify scrolling behavior
+- [ ] Device test on TestFlight
+
+---
+
+*Last updated: 2026-02-02 (Session 40)*

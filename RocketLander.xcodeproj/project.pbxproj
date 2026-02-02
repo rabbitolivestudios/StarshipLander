@@ -36,6 +36,7 @@
 		C2000016 /* GameScene+Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000016 /* GameScene+Sound.swift */; };
 		C2000017 /* GameScene+Scoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000017 /* GameScene+Scoring.swift */; };
 		C2000018 /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000018 /* LeaderboardView.swift */; };
+		C2000020 /* HowToPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000020 /* HowToPlayView.swift */; };
 		T2000001 /* ScoringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000001 /* ScoringTests.swift */; };
 		T2000002 /* HighScoreManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000002 /* HighScoreManagerTests.swift */; };
 		T2000003 /* CampaignStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000003 /* CampaignStateTests.swift */; };
@@ -89,6 +90,7 @@
 		C1000016 /* GameScene+Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Sound.swift"; sourceTree = "<group>"; };
 		C1000017 /* GameScene+Scoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Scoring.swift"; sourceTree = "<group>"; };
 		C1000018 /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
+		C1000020 /* HowToPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToPlayView.swift; sourceTree = "<group>"; };
 		T1000001 /* ScoringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringTests.swift; sourceTree = "<group>"; };
 		T1000002 /* HighScoreManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoreManagerTests.swift; sourceTree = "<group>"; };
 		T1000003 /* CampaignStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignStateTests.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				C1000011 /* GameOverView.swift */,
 				C1000012 /* LevelSelectView.swift */,
 				C1000018 /* LeaderboardView.swift */,
+				C1000020 /* HowToPlayView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -356,6 +359,7 @@
 				C2000017 /* GameScene+Scoring.swift in Sources */,
 				C2000019 /* LandingThresholds.swift in Sources */,
 				C2000018 /* LeaderboardView.swift in Sources */,
+				C2000020 /* HowToPlayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

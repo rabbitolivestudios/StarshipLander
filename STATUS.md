@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-02 (Session 39)
+> Last reconciled: 2026-02-02 (Session 40)
 
 ---
 
@@ -49,6 +49,7 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **AdMob**: Banner ads on menu and gameplay, ATT prompt on first launch
 - **16-Bit Sound Effects**: Thrust, rotation, landing, crash audio
 - **App Store Screenshots**: 10 screenshots at 1284x2778, uploaded
+- **How to Play Info Sheet**: Rich game documentation accessible from menu — covers Controls, Landing Platforms, Speed Bands, Scoring formula, and Campaign (all 10 levels). Adapts to button/accelerometer setting.
 - **Unit Tests**: 89 XCTest cases across 10 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data, crash diagnostics, landing evaluation, scoring helper)
 - **Codebase**: Split from 2 monolithic files into 21 organized files
 - **Project Management**: CLAUDE.md, PR template, DECISIONS.md, session logging workflow

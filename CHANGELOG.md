@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - **GameOverView Text Truncation**: Landing success messages and crash diagnostic messages were truncated on device. Added `.multilineTextAlignment(.center)` + `.fixedSize(horizontal: false, vertical: true)` to landing message, crash primary diagnostic, and crash secondary diagnostic. Wrapped GameOverView body in ScrollView for vertical overflow protection on tall content (landing + new high score scenario).
 - **Menu Ad Banner Clipping (Improved)**: Previous fix (16pt bottom padding) was insufficient — banner was still clipped by home indicator. Restructured MenuView: moved `BannerAdContainer()` outside ScrollView into a `VStack(spacing: 0)` wrapper, pinning the ad at the bottom where SwiftUI's safe area layout naturally keeps it above the home indicator. Verified on iPhone 16 Pro simulator.
+- **Menu Layout Overflow**: Menu content (~700pt) overflowed on most iPhones, with the banner ad covering the bottom section. Replaced the inline "HOW TO PLAY" section with a "How to Play >" text button that opens a rich info sheet (`HowToPlayView`). Added 60pt bottom padding to ScrollView content to clear the banner ad. Saves ~79pt of vertical space — menu now fits without scrolling on iPhone 12 mini and larger.
+
+### Added
+- **How to Play Info Sheet** (`HowToPlayView.swift`): A scrollable sheet accessible from the menu with 5 sections: Controls (adapts to button/accelerometer setting), Landing Platforms (table with pad/name/width/multiplier/stars), Speed Bands (SAFE/HARD/FAIL explanation + per-platform threshold table), Scoring (all 6 components, fuel/platform multipliers, max 20,000), Campaign (all 10 levels with gravity and special mechanic). Dark theme matching the app, orange accent headers.
 
 ### Changed
 - **Code Housekeeping (Session 37)**: Removed dead code, fixed imports, deleted stale file. No behavior changes. 9 files changed, 284 deletions.

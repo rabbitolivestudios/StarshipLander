@@ -60,6 +60,7 @@ struct MenuView: View {
     @ObservedObject var highScoreManager: HighScoreManager
     @ObservedObject var campaignState: CampaignState
     @ObservedObject var gameState: GameState
+    @State private var showingHowToPlay = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -238,28 +239,20 @@ struct MenuView: View {
             .cornerRadius(10)
             .frame(maxWidth: 250)
 
-            // Instructions
-            VStack(spacing: 6) {
-                Text("HOW TO PLAY")
-                    .font(.caption.bold())
-                    .foregroundColor(.orange)
-
-                VStack(alignment: .leading, spacing: 3) {
-                    Label("Hold THRUST to fire engine", systemImage: "flame.fill")
-                    Label(gameState.useAccelerometer ? "Tilt phone to rotate" : "Use L/R to rotate", systemImage: gameState.useAccelerometer ? "iphone.gen3.radiowaves.left.and.right" : "arrow.left.arrow.right")
-                    Label("Land on platforms for points", systemImage: "arrow.down.to.line")
-                }
-                .font(.caption2)
-                .foregroundColor(.gray)
+            Button(action: { showingHowToPlay = true }) {
+                Text("How to Play >")
+                    .font(.subheadline)
+                    .foregroundColor(.orange.opacity(0.8))
             }
-            .padding(10)
-            .background(Color.white.opacity(0.05))
-            .cornerRadius(10)
 
         }
         .padding(.horizontal)
+        .padding(.bottom, 60)
         }
         BannerAdContainer()
+        }
+        .sheet(isPresented: $showingHowToPlay) {
+            HowToPlayView(useAccelerometer: gameState.useAccelerometer)
         }
         .overlay(alignment: .topTrailing) {
             Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
