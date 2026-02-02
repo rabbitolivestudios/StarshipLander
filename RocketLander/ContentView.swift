@@ -258,6 +258,7 @@ struct MenuView: View {
 
             // Banner Ad
             BannerAdContainer()
+                .padding(.bottom, 16)
         }
         .padding(.horizontal)
         }
