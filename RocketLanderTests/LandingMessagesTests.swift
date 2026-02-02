@@ -33,14 +33,6 @@ final class LandingMessagesTests: XCTestCase {
         }
     }
 
-    func testCrashMessageStructure() {
-        for _ in 0..<20 {
-            let result = LandingMessages.crashMessage()
-            XCTAssertFalse(result.message.isEmpty, "Crash message should not be empty")
-            XCTAssertFalse(result.nudge.isEmpty, "Crash nudge should not be empty")
-        }
-    }
-
     func testRareMessageRequiresHighScore() {
         // With score <= 4500, rare message should never appear
         for _ in 0..<200 {
@@ -54,8 +46,6 @@ final class LandingMessagesTests: XCTestCase {
         XCTAssertFalse(LandingMessages.standardSuccess.isEmpty)
         XCTAssertFalse(LandingMessages.eliteSuccess.isEmpty)
         XCTAssertFalse(LandingMessages.hardLandingSuccess.isEmpty)
-        XCTAssertFalse(LandingMessages.crashMessages.isEmpty)
-        XCTAssertFalse(LandingMessages.crashNudges.isEmpty)
         XCTAssertFalse(LandingMessages.rareSuccess.isEmpty)
     }
 

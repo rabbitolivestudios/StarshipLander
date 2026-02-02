@@ -39,7 +39,6 @@ final class GameStateTests: XCTestCase {
         state.isThrusting = true
         state.landedPlatform = .c
         state.landingMessage = "Great!"
-        state.crashNudge = "Try again"
         state.starsEarned = 3
 
         state.reset()
@@ -57,7 +56,6 @@ final class GameStateTests: XCTestCase {
         XCTAssertFalse(state.isRotatingRight)
         XCTAssertNil(state.landedPlatform)
         XCTAssertEqual(state.landingMessage, "")
-        XCTAssertEqual(state.crashNudge, "")
         XCTAssertEqual(state.starsEarned, 0)
     }
 

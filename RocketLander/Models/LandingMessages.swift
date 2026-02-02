@@ -7,12 +7,10 @@ struct CrashDiagnostic {
     let secondaryHint: String?
 }
 
-enum CrashCause: Int, CaseIterable {
+enum CrashCause: Int {
     case tiltTooHigh = 0       // Highest priority
     case verticalTooFast = 1
     case horizontalTooFast = 2
-    case terrainCollision = 3
-    case outOfBounds = 4
 }
 
 struct LandingMessages {
@@ -43,25 +41,6 @@ struct LandingMessages {
 
     static let rareSuccess = "This was exceptional."
 
-    // MARK: - Crash Messages
-    static let crashMessages: [String] = [
-        "Descent unstable.",
-        "Rapid unscheduled disassembly.",
-        "Contact lost.",
-        "Vehicle integrity compromised.",
-        "Landing aborted.",
-        "Structural failure.",
-    ]
-
-    static let crashNudges: [String] = [
-        "Try a slower approach.",
-        "Reduce horizontal drift before landing.",
-        "Keep the rocket upright on final approach.",
-        "Use short thrust bursts to slow down.",
-        "Watch your vertical speed indicator.",
-        "Aim for the larger platforms first.",
-    ]
-
     // MARK: - Message Selection
 
     /// Returns a landing message based on the platform, score, and speed band
@@ -82,13 +61,6 @@ struct LandingMessages {
         }
 
         return standardSuccess.randomElement() ?? standardSuccess[0]
-    }
-
-    /// Returns a crash message with a teaching nudge (legacy, kept for reference)
-    static func crashMessage() -> (message: String, nudge: String) {
-        let message = crashMessages.randomElement() ?? crashMessages[0]
-        let nudge = crashNudges.randomElement() ?? crashNudges[0]
-        return (message, nudge)
     }
 
     // MARK: - Deterministic Crash Diagnostics

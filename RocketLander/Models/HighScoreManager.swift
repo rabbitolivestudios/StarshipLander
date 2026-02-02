@@ -1,4 +1,5 @@
-import SwiftUI
+import Foundation
+import Combine
 
 // MARK: - High Score Entry
 struct HighScoreEntry: Codable, Identifiable {
@@ -72,7 +73,4 @@ class HighScoreManager: ObservableObject {
         saveScores()
     }
 
-    func getTopScore() -> Int {
-        return scores.first?.score ?? 0
-    }
 }

@@ -1,4 +1,5 @@
-import SwiftUI
+import Foundation
+import Combine
 
 // MARK: - Game Mode
 enum GameMode: String, Codable {
@@ -39,7 +40,6 @@ class GameState: ObservableObject {
     // Platform & landing info (Phase 1)
     @Published var landedPlatform: LandingPlatform?
     @Published var landingMessage: String = ""
-    @Published var crashNudge: String = ""
     @Published var starsEarned: Int = 0
     @Published var landingSpeedBand: SpeedBand = .safe
 
@@ -73,7 +73,6 @@ class GameState: ObservableObject {
         isRotatingRight = false
         landedPlatform = nil
         landingMessage = ""
-        crashNudge = ""
         starsEarned = 0
         landingSpeedBand = .safe
         finalTiltAngle = 0

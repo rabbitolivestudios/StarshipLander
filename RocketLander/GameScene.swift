@@ -1,5 +1,5 @@
 import SpriteKit
-import SwiftUI
+import Combine
 import CoreMotion
 
 // MARK: - Campaign Reentry Constants
@@ -14,8 +14,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var gameState: GameState
     var rocket: SKNode!
     var flame: SKEmitterNode?
-    var leftFlame: SKEmitterNode?
-    var rightFlame: SKEmitterNode?
     var platforms: [SKShapeNode] = []
     var ground: SKShapeNode!
     var terrain: SKShapeNode!
@@ -142,7 +140,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameState.rotation = 0
         gameState.landedPlatform = nil
         gameState.landingMessage = ""
-        gameState.crashNudge = ""
         gameState.starsEarned = 0
 
         maxDescentSpeed = 0
@@ -644,7 +641,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         DispatchQueue.main.async {
             self.gameState.landingMessage = self.gameState.crashDiagnosticPrimary
-            self.gameState.crashNudge = ""
         }
 
         createExplosion(at: rocket.position)
