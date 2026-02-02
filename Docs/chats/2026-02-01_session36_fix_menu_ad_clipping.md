@@ -70,6 +70,8 @@ However, session 35's documentation incorrectly stated "this session's changes o
 - `7e22dd5` — Build 22 uploaded to TestFlight — includes menu ad clipping fix
 - `65bdf7f` — Update session 36 summary with Build 22 commit hash
 - `58f646a` — Final session 36 summary — add missing commit hash
+- `5a51222` — Update README landing thresholds + version history for v2.0.3
+- `d02b07b` — Add mandatory documentation sweep checklist to CLAUDE.md
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
