@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-01)
+## Current Status (2026-02-02)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -29,13 +29,12 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 22 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + menu ad clipping fix. On TestFlight. Device testing found text truncation + ad still clipped (fixed Session 38, pending Build 23). |
+| 2.0.3 | 23 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping. **Build 23 on TestFlight** (uploaded 2026-02-02). Pending device testing of text truncation fix. |
 
 **NEXT STEPS:**
-1. Bump build to 23, archive and upload to TestFlight
-2. User tests Fix A (text truncation) on device via TestFlight
-3. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-4. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
+1. User tests Fix A (text truncation) on device via TestFlight Build 23
+2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+3. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -1590,4 +1589,35 @@ Key findings:
 
 ---
 
-*Last updated: 2026-02-02 (Session 38, Build 22 + local fixes)*
+### Session 39 (2026-02-02) - Build 23 Upload to TestFlight
+
+**Goal:** Archive and upload Build 23 to TestFlight for device testing of Session 38 bug fixes. Previous session's archive/export failed due to Keychain access issues in Tailscale SSH session.
+
+#### Changes Made:
+
+1. **App Store Connect API Key Setup**:
+   - Created API key in App Store Connect for headless CLI uploads
+   - Saved key to `~/.appstoreconnect/private_keys/` with restricted permissions
+   - Enables `xcodebuild -exportArchive` over SSH/Tailscale without Keychain access
+
+2. **Build 23 Archived and Uploaded**:
+   - Archive succeeded: v2.0.3 Build 23 (already bumped in Session 38)
+   - Export + upload via API key authentication — bypasses Keychain entirely
+   - Build 23 confirmed processing and visible on TestFlight
+   - dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless, same as always)
+
+3. **API Key Rotated**: User rotated the API key after upload per security policy. New key should be generated for future uploads.
+
+#### No code changes. No files modified in the repo.
+
+#### Definition of Done:
+- [x] Build 23 archived (v2.0.3)
+- [x] Build 23 exported and uploaded to App Store Connect
+- [x] Build 23 visible on TestFlight
+- [x] authentication updated after use
+- [x] All docs updated
+- [x] Session summary created
+
+---
+
+*Last updated: 2026-02-02 (Session 39, Build 23 on TestFlight)*

@@ -247,7 +247,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 | Version | Date | Description |
 |---------|------|-------------|
-| 2.0.3 | 2026-02-01 | Per-platform speed bands, velocity threshold enforcement, scoring overhaul, menu ad fix (Build 22 on TestFlight) |
+| 2.0.3 | 2026-02-02 | Per-platform speed bands, velocity threshold enforcement, scoring overhaul, text truncation fix, menu ad fix (Build 23 on TestFlight) |
 | 2.0.2 | 2026-01-31 | Campaign polish: scoring, thrust vectoring, planet differentiation |
 | 2.0.1 | 2026-01-31 | Dedicated leaderboard screen, version label fix |
 | 2.0.0 | 2026-01-30 | Campaign mode, per-planet physics, visual effects |

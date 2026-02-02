@@ -5,7 +5,7 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] — pending Build 23 upload to TestFlight
+## [Unreleased] — Build 23 on TestFlight (uploaded 2026-02-02)
 
 ### Fixed
 - **GameOverView Text Truncation**: Landing success messages and crash diagnostic messages were truncated on device. Added `.multilineTextAlignment(.center)` + `.fixedSize(horizontal: false, vertical: true)` to landing message, crash primary diagnostic, and crash secondary diagnostic. Wrapped GameOverView body in ScrollView for vertical overflow protection on tall content (landing + new high score scenario).
