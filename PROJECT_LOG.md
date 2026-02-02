@@ -1272,6 +1272,7 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 #### Commits:
 - `e6db4b5` — Fix v2.0.3 telemetry bugs: HUD truncation, snapshot timing, visual start state
+- `d6befb5` — Bump to Build 18 + update all docs for v2.0.3 bug fixes
 
 #### Definition of Done:
 - [x] All 4 bugs fixed
@@ -1281,7 +1282,7 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 - [x] User confirmed fixes work on device
 - [x] Build number bumped to 18
 - [x] All docs updated (CHANGELOG, STATUS, PROJECT_LOG, DECISIONS, session summary)
-- [ ] Build 18 archived and uploaded to TestFlight
+- [x] Build 18 archived and uploaded to TestFlight
 
 ---
 

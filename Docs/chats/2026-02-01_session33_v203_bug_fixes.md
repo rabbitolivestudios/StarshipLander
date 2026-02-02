@@ -73,12 +73,12 @@
 - [x] Bug evidence screenshots saved to `Screenshots/v2.0.3-bugs/`
 - [x] All docs updated (CHANGELOG, STATUS, PROJECT_LOG, DECISIONS, README)
 - [x] Build number bumped to 18
-- [ ] Build 18 archived and uploaded to TestFlight
+- [x] Build 18 archived and uploaded to TestFlight
 - [x] Session summary created
 
 ## Commits
 - `e6db4b5` — Fix v2.0.3 telemetry bugs: HUD truncation, snapshot timing, visual start state
-- (pending) — Documentation + build bump + TestFlight upload
+- `d6befb5` — Bump to Build 18 + update all docs for v2.0.3 bug fixes
 
 ## Repo Housekeeping
 - [x] Working tree clean after commit
