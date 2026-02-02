@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Visual Start State Mismatch**: Campaign ships appeared upright at spawn despite having a reentry tilt. Fixed by applying `rocket.zRotation` in `setupScene()` after rocket creation.
 - **Fuel Display Rounding**: HUD fuel used `Int()` (truncation) while Flight Data used `"%.0f"` (rounding), causing 99% vs 100% discrepancy for the same value. Both now use `"%.0f"` rounding.
 - **Signed Tilt Preservation**: `finalTiltAngle` changed from absolute to signed value to preserve L/R direction for HUD display on game-over. `abs()` applied where needed (Flight Data, crash diagnostics).
+- **Landing Threshold Using Post-Collision Velocity**: `checkLanding()` read velocity from physics body after SpriteKit collision resolution absorbed impact energy, allowing landings at V.Speed=71 to pass the V<50 threshold. Now uses pre-contact tracked values for threshold checks — same source as HUD, Flight Data, and crash diagnostics.
 
 ---
 

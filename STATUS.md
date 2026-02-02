@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 18) |
-| Version Status | Bug fixes tested on device, uploading to TestFlight (v2.0.2 Build 16 submitted for App Store review) |
+| Current Version | 2.0.3 (Build 19) |
+| Version Status | Device testing via TestFlight (v2.0.2 Build 16 submitted for App Store review) |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -76,13 +76,13 @@ These are **not implemented**. Do not assume otherwise:
 
 **Phase: Campaign Engagement — v2.0.3, then v2.1.0 (Community)**
 
-v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 18) adds campaign engagement features and bug fixes from device testing: fixed reentry start state (tilt + drift), HUD tilt angle display, final stats panel, deterministic crash messages, pre-contact velocity tracking for accurate flight data, and HUD/Flight Data consistency fixes. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 19) adds campaign engagement features and bug fixes from device testing: fixed reentry start state (tilt + drift), HUD tilt angle display, final stats panel, deterministic crash messages, pre-contact velocity tracking for accurate flight data, HUD/Flight Data consistency fixes, and landing threshold consistency (uses pre-contact values for pass/fail). v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. Upload v2.0.3 Build 18 to TestFlight for continued device testing
+1. Device testing of v2.0.3 Build 19 on TestFlight (uploaded)
 2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 3. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
 4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
@@ -118,7 +118,7 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 18
 
 - **v2.0.0 never reviewed** — submitted 2026-01-30, still "Waiting for Review" on 2026-02-01. Decision: replace with v2.0.2 (Build 16) to avoid shipping outdated gameplay
 - **v1.1.5 is the current live version** — published on App Store (Build 11)
-- **Device testing in progress** — TestFlight Build 18 (v2.0.3) is latest. Haptics and ads verified working. Accelerometer fixed. Classic mode star rating verified on device. v2.0.3 bug fixes (HUD truncation, velocity snapshot, visual start state, fuel rounding) verified on device with Build 17 and simulator. Remaining device tests: thrust vectoring feel (both control modes), Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris, scoring feel, backward-compat leaderboard stars.
+- **Device testing in progress** — TestFlight Build 19 (v2.0.3) is latest. Haptics and ads verified working. Accelerometer fixed. Classic mode star rating verified on device. v2.0.3 bug fixes (HUD truncation, velocity snapshot, visual start state, fuel rounding, landing threshold consistency) tested across Builds 17-19. Remaining device tests: thrust vectoring feel (both control modes), Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris, scoring feel, backward-compat leaderboard stars.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
 

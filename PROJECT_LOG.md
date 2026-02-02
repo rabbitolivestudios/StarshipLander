@@ -29,10 +29,10 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 18 | Campaign engagement + bug fixes: reentry state, tilt HUD, final stats, crash diagnostics, telemetry fixes |
+| 2.0.3 | 19 | Campaign engagement + bug fixes: reentry state, tilt HUD, final stats, crash diagnostics, telemetry + threshold fixes |
 
 **NEXT STEPS:**
-1. Upload v2.0.3 Build 18 to TestFlight for continued device testing
+1. Device testing of v2.0.3 Build 19 on TestFlight (uploaded)
 2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 3. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
@@ -1262,28 +1262,37 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 5. **Bug Evidence Screenshots**: Saved to `Screenshots/v2.0.3-bugs/` with descriptive names
 
-6. **Build Bump**: Build 17 → 18 for TestFlight upload
+6. **Landing Threshold Consistency (`GameScene.swift`)**:
+   - Device testing of Build 18 revealed successful landings at V.Speed=71 (threshold is 50)
+   - Root cause: `checkLanding()` read velocity from physics body after collision resolution absorbed impact
+   - Fix: `checkLanding()` now uses `lastTrackedVerticalSpeed`/`lastTrackedHorizontalSpeed`/`lastTrackedTilt` (pre-contact values) for threshold checks
+   - Same fix applies to both Classic and Campaign modes (no mode-specific branching)
+
+7. **Build Bumps**: Build 17 → 18 → 19 for TestFlight uploads
 
 #### Files Modified:
-- `RocketLander/GameScene.swift` — pre-contact tracking, visual start state, signed tilt
+- `RocketLander/GameScene.swift` — pre-contact tracking, visual start state, signed tilt, landing threshold fix
 - `RocketLander/Views/HUDViews.swift` — display properties, fixedSize, fuel rounding, widened HUD
 - `RocketLander/Views/GameOverView.swift` — abs() on finalTiltAngle for FinalStatsView
-- `RocketLander/Info.plist` — build 17 → 18
+- `RocketLander/Info.plist` — build 17 → 19
 
 #### Commits:
 - `e6db4b5` — Fix v2.0.3 telemetry bugs: HUD truncation, snapshot timing, visual start state
 - `d6befb5` — Bump to Build 18 + update all docs for v2.0.3 bug fixes
+- `a177219` — End session 33: finalize docs with commit hashes and TestFlight status
+- `361bf4f` — Fix landing threshold using post-collision velocity instead of pre-contact
 
 #### Definition of Done:
-- [x] All 4 bugs fixed
+- [x] All 4 original bugs fixed
+- [x] Landing threshold consistency bug fixed (Build 19)
 - [x] 65/65 tests pass
 - [x] Build succeeds
-- [x] Bug evidence screenshots saved
-- [x] User confirmed fixes work on device
-- [x] Build number bumped to 18
+- [x] Bug evidence screenshots saved (5 total)
+- [x] User confirmed Build 17 fixes work on device
+- [x] Build number bumped to 19
 - [x] All docs updated (CHANGELOG, STATUS, PROJECT_LOG, DECISIONS, session summary)
-- [x] Build 18 archived and uploaded to TestFlight
+- [x] Build 19 archived and uploaded to TestFlight
 
 ---
 
-*Last updated: 2026-02-01 (Session 33)*
+*Last updated: 2026-02-01 (Session 33, Build 19)*
