@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - CrashDiagnosticTests: crash classification, precedence, determinism (14 tests)
   - LandingEvaluationTests: per-platform speed band classification, boundaries, composites (20 tests)
   - ScoringHelper: test-only scoring formula replica
-- **Per-Platform Speed Bands**: `LandingThresholds.swift` — single source of truth for SAFE/HARD/FAIL speed thresholds per platform. Platform A (V≤80/H≤60 safe), B (V≤55/H≤45), C (V≤35/H≤30). Pure `evaluate()` function for landing classification.
+- **Per-Platform Speed Bands + Threshold Enforcement**: `LandingThresholds.swift` — single source of truth for SAFE/HARD/FAIL speed thresholds per platform. Platform A (V≤80/H≤60 safe), B (V≤55/H≤45), C (V≤35/H≤30). `checkLanding()` rewritten to use `LandingThresholds.evaluate()` with post-thrust tracked velocities — speed now affects landing success for the first time (exceeding FAIL threshold = crash). HUD updated to show Platform C safe values (V<35, H<30). Old hardcoded V<40/H<25 constants removed.
 - **Perfect Landing Score Analysis**: `Scripts/calculate_perfect_scores.py` — frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Models exact SpriteKit physics (gravity, thrust, fuel, screen wrapping, campaign reentry state). Best: Classic C = 12,077 via left screen wrap.
 
 ### Changed

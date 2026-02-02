@@ -14,7 +14,7 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 21) — per-platform speed bands + removed HARD penalty. Velocity threshold enforcement still pending design decision. |
+| Current Version | 2.0.3 (Build 21) — per-platform speed bands, velocity threshold enforcement via `LandingThresholds.evaluate()`, removed HARD penalty, menu ad clipping fix. |
 | Version Status | Build 21 uploaded to TestFlight. v2.0.2 Build 16 submitted for App Store review. |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
@@ -35,7 +35,7 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **Level Mechanics**: Wind, dense atmosphere, ice surfaces, moving platforms, vertical updrafts (Venus), heat interference (Mercury), deep craters, deadly volcanic debris (Io), sudden gusts (Jupiter)
 - **Star Rating**: 1-3 stars per landing based on platform (30 total)
 - **Scoring**: Continuous scoring with fuel (1.0-2.0x) and platform (1x/2x/5x) multipliers, max 20,000. Center precision weighted highest (600pts). HARD landings penalized naturally (velocity components zero out, ~45% subtotal loss) — no explicit multiplier penalty.
-- **Per-Platform Speed Bands**: `LandingThresholds.swift` — SAFE/HARD/FAIL classification per platform with platform-specific thresholds. Scoring denominators match safe thresholds.
+- **Per-Platform Speed Bands + Threshold Enforcement**: `LandingThresholds.swift` — SAFE/HARD/FAIL classification per platform with platform-specific thresholds. `checkLanding()` uses `LandingThresholds.evaluate()` with post-thrust tracked velocities — speed now affects landing success (FAIL = crash). HUD shows Platform C safe values (V<35, H<30). Scoring denominators match safe thresholds.
 - **Haptic Feedback**: Thrust, rotation, landing, crash
 - **Dual Controls**: Button and accelerometer (tilt) modes
 - **Landing Messages**: Contextual success feedback; deterministic cause-based crash diagnostics with actual failure values
@@ -75,17 +75,15 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Campaign Engagement — v2.0.3 scoring overhaul in progress, then v2.1.0 (Community)**
+**Phase: Campaign Engagement — v2.0.3 scoring & threshold overhaul complete, then v2.1.0 (Community)**
 
-v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 21) uploaded to TestFlight with: per-platform speed bands (LandingThresholds.swift), removed HARD landing 0.4× penalty (natural velocity loss is the penalty), scoring denominators use per-platform safe thresholds. Velocity threshold enforcement (whether speed affects landing success) still requires game design decision — see `Docs/DIAGNOSTIC_velocity_thresholds.md`. Perfect score simulation updated: best achievable is Classic C = 12,077 (all 33 landings in SAFE band). v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 21) uploaded to TestFlight with: per-platform speed bands (`LandingThresholds.swift`), velocity threshold enforcement via `LandingThresholds.evaluate()` with post-thrust tracking, removed HARD landing 0.4× penalty (natural velocity loss is the penalty), scoring denominators use per-platform safe thresholds, HUD updated to show Platform C safe values, menu ad banner clipping fixed. Speed now affects landing success for the first time — per-platform FAIL thresholds (A: V>120/H>100, B: V>85/H>75, C: V>55/H>50). Perfect score simulation updated: best achievable is Classic C = 12,077 (all 33 landings in SAFE band). v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. **Game design decision required:** Should speed affect landing success? See `Docs/DIAGNOSTIC_velocity_thresholds.md` for options and tradeoffs.
-2. Fix velocity threshold enforcement based on design decision. Fix HUD threshold display to match per-platform bands.
-3. Device test Build 21 on TestFlight (scoring feel, HARD landing scores)
+1. Device test Build 21 on TestFlight (scoring feel, HARD landing scores, threshold enforcement behavior)
 4. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 5. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
 6. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
@@ -121,9 +119,9 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 21
 
 - **v2.0.0 never reviewed** — submitted 2026-01-30, still "Waiting for Review" on 2026-02-01. Decision: replace with v2.0.2 (Build 16) to avoid shipping outdated gameplay
 - **v1.1.5 is the current live version** — published on App Store (Build 11)
-- **Build 21** — scoring overhaul (per-platform speed bands, removed HARD penalty). Velocity threshold enforcement still uses pre-thrust tracked values — landing may still be impossible depending on design decision. Full diagnostic: `Docs/DIAGNOSTIC_velocity_thresholds.md`
-- **Velocity thresholds were dead code since initial commit** — SpriteKit collision resolution zeros velocities before `didBegin(contact:)` fires. V<40 and H<25 checks always auto-passed. Speed never affected landing success in any shipped build. All prior 3-star scores were achieved with effectively V≈0 in the threshold check.
-- **HUD threshold mismatch since creation** — HUD shows V<50 H<30 but actual thresholds are V<40 H<25. Created wrong in commit `fede844`, never caught because both the display and the check were "wrong" in compatible ways.
+- **Build 21** — scoring overhaul (per-platform speed bands, removed HARD penalty, velocity threshold enforcement). Speed now affects landing success for the first time via `LandingThresholds.evaluate()` with post-thrust tracking. Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
+- **Velocity thresholds were dead code before Build 21** — SpriteKit collision resolution zeroed velocities before `didBegin(contact:)` fired in all builds through Build 18. All prior high scores were achieved under "speed doesn't matter" regime. **RESOLVED in Build 21** with post-thrust tracking and per-platform FAIL thresholds.
+- **HUD threshold mismatch RESOLVED** — HUD previously showed V<50 H<30 with actual thresholds V<40 H<25. **Fixed in Build 21** — HUD now reads from `LandingThresholds.platformC` (V<35, H<30).
 - **Unit tests have no integration coverage** — 65 tests all test isolated pure functions. No test simulates a physics collision to verify landing pass/fail decision. This is the test that would have caught the bug.
 - **Scoring was inflated** — all prior scores used near-zero post-collision velocity inputs, meaning speed components were near-maximum. With per-platform scoring denominators, speed components now scale correctly relative to platform difficulty.
 - **Device testing in progress** — Haptics and ads verified. Accelerometer fixed. Remaining: thrust vectoring, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.

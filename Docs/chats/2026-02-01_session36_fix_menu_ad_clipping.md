@@ -1,7 +1,8 @@
-# 2026-02-01 — Session 36: Fix Menu Ad Banner Clipping
+# 2026-02-01 — Session 36: Fix Menu Ad Banner Clipping + Documentation Corrections
 
 ## Goals
 - Fix the banner ad on the menu screen being clipped by the home indicator safe area on iPhones without a home button
+- Correct stale documentation that incorrectly described velocity threshold enforcement as "pending"
 
 ## Changes Made
 
@@ -12,28 +13,50 @@
 
 **Technical detail:** `GameContainerView.swift` already had `.padding(.bottom, 5)` on its `BannerAdContainer()`. The menu needs more clearance (16pt) because the ScrollView allows the user to scroll the ad right to the safe area edge, while the gameplay view has a fixed layout.
 
+### 2. Documentation Corrections — Velocity Threshold Enforcement Is RESOLVED
+**What:** Fixed all documentation that incorrectly described the velocity threshold enforcement design decision as "PENDING."
+**Why:** Session 35 (commit `1698220`, Build 21) implemented the full velocity threshold enforcement system:
+- `checkLanding()` was rewritten to use `LandingThresholds.evaluate()` with per-platform SAFE/HARD/FAIL bands
+- Velocity tracking was moved to post-thrust position (fixing the Build 19 "too strict" problem)
+- Old hardcoded constants (V<40/H<25) were removed
+- HUD was updated to show Platform C safe values (V<35, H<30)
+
+However, session 35's documentation incorrectly stated "this session's changes only affect the scoring formula, not the landing pass/fail check" — the actual git diff proves `checkLanding()` was rewritten in that same commit. This error propagated to DECISIONS.md, STATUS.md, and PROJECT_LOG.md.
+
+**Files corrected:**
+- `DECISIONS.md` — changed "PENDING" entry to "RESOLVED" with full implementation details
+- `STATUS.md` — removed all "pending design decision" references, updated Current Version, Current Phase, Immediate Next Tasks, Known Risks
+- `PROJECT_LOG.md` — updated v2.0.3 status row and NEXT STEPS
+- `CHANGELOG.md` — updated Per-Platform Speed Bands entry to include threshold enforcement
+
 ## Research / Ideas Discussed
-- None — straightforward one-line fix
+- Deep dive through all code and documentation confirmed velocity threshold enforcement IS implemented in current code
+- `GameScene.swift` lines 504-554: `checkLanding()` uses `LandingThresholds.evaluate()` — speed exceeding FAIL threshold causes crash
+- `GameScene.swift` lines 345-368: tracking happens post-thrust, post-rotation, post-mechanics
+- `LandingThresholds.swift` lines 84-111: `evaluate()` classifies speeds and returns success/fail
+- All consumers (scoring, HUD, GameOverView, LandingMessages) use `LandingThresholds`
 
 ## Technical Notes
 - The VStack containing the ad only had `.padding(.horizontal)` (line 262), no vertical padding after the last item
 - 16pt provides comfortable clearance for the home indicator when fully scrolled
+- The documentation error in session 35 likely occurred because the session was framed as a "scoring overhaul" — the threshold enforcement changes were part of the same commit but weren't called out separately
 
 ## Decisions
 1. Used 16pt bottom padding (vs 5pt in gameplay view) because ScrollView behavior requires more clearance at the bottom edge
+2. Corrected all stale documentation — velocity threshold enforcement is RESOLVED, not pending
 
 ## Definition of Done
 - [x] Banner ad fully visible when scrolled to bottom on iPhone 16 Pro simulator
 - [x] Build succeeds
 - [x] 90/90 tests pass
-- [x] CHANGELOG.md updated
-- [x] STATUS.md updated
-- [x] PROJECT_LOG.md updated
+- [x] All stale "pending" references corrected across DECISIONS.md, STATUS.md, PROJECT_LOG.md, CHANGELOG.md
 - [x] Session summary created
 
 ## Commits
 - `3356fc3` — Fix menu ad banner clipped by home indicator safe area
 - `f6f114b` — Documentation updates + session summary
+- `71fc211` — Update session 36 summary with commit hash
+- `_pending_` — Correct stale docs: velocity threshold enforcement is resolved, not pending
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
@@ -42,7 +65,7 @@
 - [x] No secrets or credentials in tracked files
 
 ## Next Actions
-- [ ] Game design decision: should speed affect landing success?
-- [ ] Fix velocity threshold enforcement based on decision
-- [ ] Fix HUD threshold display to match per-platform bands
-- [ ] Device test Build 21 on TestFlight
+- [ ] Device test Build 21 on TestFlight (scoring feel, HARD landing scores, threshold enforcement behavior)
+- [ ] Wait for App Store review response for v2.0.2
+- [ ] If approved, decide whether to submit v2.0.3 or wait for v2.1.0
+- [ ] Implement v2.1.0 (Community): Game Center leaderboards, achievements, Share Score Card

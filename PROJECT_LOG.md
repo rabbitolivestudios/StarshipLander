@@ -29,12 +29,10 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 21 | Per-platform speed bands + removed HARD penalty + scoring overhaul. Uploaded to TestFlight. Velocity threshold enforcement still pending design decision. |
+| 2.0.3 | 21 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + menu ad fix. Uploaded to TestFlight. |
 
 **NEXT STEPS:**
-1. **Game design decision required** — should speed affect landing success? See `Docs/DIAGNOSTIC_velocity_thresholds.md`
-2. Fix velocity threshold enforcement based on decision. Fix HUD threshold display.
-3. Device test Build 21 on TestFlight (scoring feel, HARD landing scores)
+1. Device test Build 21 on TestFlight (scoring feel, HARD landing scores, threshold enforcement behavior)
 4. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 5. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
