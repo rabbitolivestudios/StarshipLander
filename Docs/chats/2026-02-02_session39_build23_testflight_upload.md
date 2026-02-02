@@ -45,7 +45,7 @@
 - [x] Session summary created
 
 ## Commits
-- (pending — will be added after commit)
+- `291d825` — Session 39: Upload Build 23 to TestFlight via API key
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
