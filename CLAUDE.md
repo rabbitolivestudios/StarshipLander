@@ -246,6 +246,22 @@ Format:
 - Update "Known Risks / Watchouts" as risks are resolved or new ones emerge
 - Reconcile with other docs if discrepancies are found — STATUS.md wins
 
+### Mandatory Documentation Sweep
+
+**Every time you update documentation, you MUST sweep ALL of the following files.** Do not update some and forget others. Go through this list one by one, read each file, and verify it is accurate. This is not optional.
+
+| # | File | Check |
+|---|------|-------|
+| 1 | `STATUS.md` | Version, build number, phase, next tasks, known risks — all accurate? |
+| 2 | `PROJECT_LOG.md` | Current Status table, NEXT STEPS, latest session entry — all accurate? |
+| 3 | `CHANGELOG.md` | Version entries reflect what is actually implemented and shipped? |
+| 4 | `README.md` | Version, features, thresholds, scoring, version history table — all accurate? |
+| 5 | `DECISIONS.md` | Any new or changed decisions documented? No stale "PENDING" entries? |
+| 6 | `RELEASE_NOTES.md` | If a build was uploaded or submitted, does this reflect it? |
+| 7 | `Docs/chats/` session summary | All commits listed? All changes described? Next actions correct? |
+
+**Do not commit documentation updates until you have verified every file in this list.** If a file doesn't need changes, that's fine — but you must have READ it and confirmed it's correct.
+
 ### Cross-cutting rule
 If you change any of the following, you MUST update README + CHANGELOG + any affected docs:
 - Version number
