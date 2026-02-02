@@ -33,7 +33,7 @@
 
 ## Commits
 - `3356fc3` — Fix menu ad banner clipped by home indicator safe area
-- `_pending_` — Documentation updates + session summary
+- `f6f114b` — Documentation updates + session summary
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
