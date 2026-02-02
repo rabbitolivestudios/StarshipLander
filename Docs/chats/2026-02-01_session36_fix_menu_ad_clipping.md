@@ -56,7 +56,7 @@ However, session 35's documentation incorrectly stated "this session's changes o
 - `3356fc3` — Fix menu ad banner clipped by home indicator safe area
 - `f6f114b` — Documentation updates + session summary
 - `71fc211` — Update session 36 summary with commit hash
-- `_pending_` — Correct stale docs: velocity threshold enforcement is resolved, not pending
+- `5051587` — Correct stale docs: velocity threshold enforcement is resolved, not pending
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
