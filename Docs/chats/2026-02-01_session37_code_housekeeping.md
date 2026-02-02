@@ -65,7 +65,7 @@
 
 ## Commits
 - `75169bf` — Code housekeeping: remove dead code, fix imports, delete stale file
-- (doc update commit hash to be added after commit)
+- `cb42d6d` — Update all docs for Session 37 code housekeeping
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
