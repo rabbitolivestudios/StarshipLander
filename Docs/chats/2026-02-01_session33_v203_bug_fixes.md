@@ -93,6 +93,7 @@
 - `d6befb5` — Bump to Build 18 + update all docs for v2.0.3 bug fixes
 - `a177219` — End session 33: finalize docs with commit hashes and TestFlight status
 - `361bf4f` — Fix landing threshold using post-collision velocity instead of pre-contact
+- `a8f9a66` — End session 33: finalize all docs for Build 19 with threshold fix
 
 ## Repo Housekeeping
 - [x] Working tree clean after commit
