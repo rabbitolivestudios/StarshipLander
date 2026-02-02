@@ -213,11 +213,17 @@ python3 Scripts/generate_sounds.py
 - Thrust vectoring: proportional lateral force when tilted while thrusting (0.15 factor)
 - Accelerometer sensitivity: 0.06 with 0.1 dead zone
 
-### Landing Thresholds
-- Max vertical speed: 40 units/frame
-- Max horizontal speed: 25 units/frame
-- Max rotation: 0.05 radians (~3°)
-- Max approach speed: 80 units/frame
+### Landing Thresholds (Per-Platform Speed Bands)
+
+| Platform | V Safe | V Hard | V Fail | H Safe | H Hard | H Fail |
+|----------|--------|--------|--------|--------|--------|--------|
+| A (Training) | ≤80 | ≤120 | >120 | ≤60 | ≤100 | >100 |
+| B (Precision) | ≤55 | ≤85 | >85 | ≤45 | ≤75 | >75 |
+| C (Elite) | ≤35 | ≤55 | >55 | ≤30 | ≤50 | >50 |
+
+- Max rotation: 0.05 radians (~3°) — same for all platforms
+- SAFE = full speed score, HARD = speed components zero out (~45% subtotal loss), FAIL = crash
+- HUD displays Platform C safe thresholds (V<35, H<30) as reference
 
 ### Fuel Consumption
 - Thrust: 0.3% per frame
@@ -241,6 +247,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 2.0.3 | 2026-02-01 | Per-platform speed bands, velocity threshold enforcement, scoring overhaul, menu ad fix (Build 22 on TestFlight) |
 | 2.0.2 | 2026-01-31 | Campaign polish: scoring, thrust vectoring, planet differentiation |
 | 2.0.1 | 2026-01-31 | Dedicated leaderboard screen, version label fix |
 | 2.0.0 | 2026-01-30 | Campaign mode, per-planet physics, visual effects |
