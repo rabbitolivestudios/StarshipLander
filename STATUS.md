@@ -85,7 +85,7 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 23
 
 1. User tests Fix A (text truncation) on device via TestFlight Build 23
 2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-4. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
+3. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
 4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
 5. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 

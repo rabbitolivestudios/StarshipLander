@@ -16,7 +16,16 @@
 **Why:** Build 23 contains Session 38 bug fixes (text truncation + menu ad clipping) that need device testing.
 **Files:** No repo files changed — archive was already at `build/RocketLander.xcarchive`
 
-### 3. API Key Rotated
+### 3. Screenshot Housekeeping
+**What:** Moved 4 JPEG screenshots from `Screenshots/` root into `Screenshots/v2.0.3-bugs/` with descriptive names matching the bugs they document.
+**Why:** Screenshots were uploaded to GitHub via web UI with generic names (Screenshot1-4.jpeg) for Session 38 bug analysis. Needed to be organized into the correct project folder with meaningful names.
+**Files:**
+- `Screenshot1.jpeg` → `v2.0.3-bugs/bug9_text_truncation_landing_success_precision.jpeg`
+- `Screenshot2.jpeg` → `v2.0.3-bugs/bug10_text_truncation_landing_success_training.jpeg`
+- `Screenshot3.jpeg` → `v2.0.3-bugs/bug11_text_truncation_crash_secondary_diagnostic.jpeg`
+- `Screenshot4.jpeg` → `v2.0.3-bugs/bug12_menu_screen_build22_device.jpeg`
+
+### 4. API Key Rotated
 **What:** User rotated the API key in App Store Connect after successful upload.
 **Why:** The key was rotated after use per security policy.
 
@@ -41,11 +50,14 @@
 - [x] Build 23 exported and uploaded to App Store Connect
 - [x] Build 23 visible on TestFlight
 - [x] authentication updated
+- [x] Bug screenshots moved to v2.0.3-bugs with descriptive names
 - [x] All 7 documentation files verified and updated
 - [x] Session summary created
 
 ## Commits
 - `291d825` — Session 39: Upload Build 23 to TestFlight via API key
+- `ab8dc3f` — Update session 39 summary with commit hash
+- `ff6ebb0` — Move Build 22 bug screenshots to v2.0.3-bugs with descriptive names
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)

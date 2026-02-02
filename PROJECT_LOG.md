@@ -1606,15 +1606,18 @@ Key findings:
    - Build 23 confirmed processing and visible on TestFlight
    - dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless, same as always)
 
-3. **API Key Rotated**: User rotated the API key after upload per security policy. New key should be generated for future uploads.
+3. **Screenshot Housekeeping**: Moved 4 JPEG screenshots from `Screenshots/` root to `Screenshots/v2.0.3-bugs/` with descriptive names (bug9–bug12). These were uploaded via GitHub web UI for Session 38 bug analysis.
 
-#### No code changes. No files modified in the repo.
+4. **API Key Rotated**: User rotated the API key after upload per security policy. New key should be generated for future uploads.
+
+#### No app code changes. Screenshot renames only.
 
 #### Definition of Done:
 - [x] Build 23 archived (v2.0.3)
 - [x] Build 23 exported and uploaded to App Store Connect
 - [x] Build 23 visible on TestFlight
 - [x] authentication updated after use
+- [x] Bug screenshots organized into v2.0.3-bugs with descriptive names
 - [x] All docs updated
 - [x] Session summary created
 
