@@ -508,11 +508,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     private func checkLanding(contactNode: SKNode?) {
-        guard let velocity = rocket.physicsBody?.velocity else { return }
-
-        let verticalSpeed = max(0, -velocity.dy)
-        let horizontalSpeed = abs(velocity.dx)
-        let rotation = abs(rocket.zRotation)
+        // Use pre-contact tracked values for threshold checks — these reflect
+        // the actual touchdown speed before SpriteKit's collision resolution
+        // absorbs impact energy (which would artificially lower the readings)
+        let verticalSpeed = lastTrackedVerticalSpeed
+        let horizontalSpeed = lastTrackedHorizontalSpeed
+        let rotation = abs(lastTrackedTilt)
 
         let approachSpeed = recentVelocities.isEmpty ? verticalSpeed : recentVelocities.reduce(0, +) / CGFloat(recentVelocities.count)
 
