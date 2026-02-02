@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-01 (Session 36)
+> Last reconciled: 2026-02-01 (Session 37)
 
 ---
 
@@ -49,7 +49,7 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **AdMob**: Banner ads on menu and gameplay, ATT prompt on first launch
 - **16-Bit Sound Effects**: Thrust, rotation, landing, crash audio
 - **App Store Screenshots**: 10 screenshots at 1284x2778, uploaded
-- **Unit Tests**: 90 XCTest cases across 10 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data, crash diagnostics, landing evaluation, scoring helper)
+- **Unit Tests**: 89 XCTest cases across 10 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data, crash diagnostics, landing evaluation, scoring helper)
 - **Codebase**: Split from 2 monolithic files into 21 organized files
 - **Project Management**: CLAUDE.md, PR template, DECISIONS.md, session logging workflow
 - **Perfect Landing Score Analysis**: Frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations, including campaign reentry state (tilt + drift). Best: Classic C = 12,077 (via left screen wrap). All 33/33 land in SAFE band. Script: `Scripts/calculate_perfect_scores.py`
@@ -66,7 +66,7 @@ These are **not implemented**. Do not assume otherwise:
 - **iPad support** — iPhone only
 - **Landscape orientation** — portrait only
 - **Localization** — English only
-- **Automated testing** — unit tests added (90 XCTest cases across 10 test files covering scoring, models, game state, crash diagnostics, landing evaluation); no UI tests (XCUITest) yet
+- **Automated testing** — unit tests added (89 XCTest cases across 10 test files covering scoring, models, game state, crash diagnostics, landing evaluation); no UI tests (XCUITest) yet
 - **CI/CD pipeline** — no GitHub Actions or automated builds
 - **Device playtesting partially done** — haptics + ads verified on device via TestFlight. Accelerometer bug fixed in v2.0.2. Classic mode star rating verified on Build 16. Remaining: thrust vectoring feel, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
 - **v2.0.2 awaiting review** — submitted 2026-02-01, replacing v2.0.0 which was never reviewed

@@ -1488,4 +1488,65 @@ Key findings:
 
 ---
 
-*Last updated: 2026-02-01 (Session 36, Build 22)*
+### Session 37 (2026-02-01) - Code Housekeeping Pass
+
+**Goal:** Remove dead code, fix imports, delete stale files. No behavior changes, no refactors, no features, no version bump.
+
+#### Changes Made:
+
+1. **Removed dead code (6 items)**:
+   - `leftFlame`/`rightFlame` unused properties from `GameScene.swift` (always nil)
+   - `crashMessage()`, `crashMessages`, `crashNudges` from `LandingMessages.swift` (legacy, replaced by `diagnosticCrashMessage()`)
+   - `crashNudge` property from `GameState.swift` and its assignments in `GameScene.swift`
+   - `getTopScore()` from `HighScoreManager.swift` (zero callers)
+   - `Triangle` shape from `ShapeViews.swift` (zero references)
+   - Unused `CrashCause` enum cases `terrainCollision` and `outOfBounds` + `CaseIterable` conformance
+
+2. **Fixed imports (3 files)**:
+   - `GameScene.swift`: `import SwiftUI` → `import Combine`
+   - `GameState.swift`: `import SwiftUI` → `import Foundation` + `import Combine`
+   - `HighScoreManager.swift`: `import SwiftUI` → `import Foundation` + `import Combine`
+   - `ContentView.swift`: removed unused `import SpriteKit`
+
+3. **Deleted stale file**: `SETUP.txt` (referenced nonexistent scripts/tools from initial scaffolding)
+
+4. **Updated tests**:
+   - Removed `testCrashMessageStructure` from `LandingMessagesTests.swift` (tested deleted function)
+   - Removed checks for deleted arrays from `testAllMessageArraysNonEmpty`
+   - Removed `crashNudge` references from `GameStateTests.swift`
+   - Test count: 90 → 89 (1 test removed for deleted function)
+
+#### Files Modified:
+- `RocketLander/GameScene.swift` — removed leftFlame/rightFlame, crashNudge assignments, fixed import
+- `RocketLander/Models/LandingMessages.swift` — removed crashMessage(), crashMessages, crashNudges, unused enum cases
+- `RocketLander/Models/GameState.swift` — removed crashNudge, fixed import
+- `RocketLander/Models/HighScoreManager.swift` — removed getTopScore(), fixed import
+- `RocketLander/Views/ShapeViews.swift` — removed Triangle
+- `RocketLander/ContentView.swift` — removed unused import SpriteKit
+- `RocketLanderTests/LandingMessagesTests.swift` — removed test for deleted function, updated array checks
+- `RocketLanderTests/GameStateTests.swift` — removed crashNudge references
+
+#### Files Deleted:
+- `SETUP.txt`
+
+#### Build Status:
+- Build succeeds, 89/89 tests pass
+- 9 files changed, 284 deletions total
+
+#### Commits:
+- `75169bf` — Code housekeeping: remove dead code, fix imports, delete stale file
+
+#### Definition of Done:
+- [x] All dead code identified and removed
+- [x] Unused imports fixed
+- [x] Stale files deleted
+- [x] Tests updated to match removals
+- [x] Build succeeds, all 89 tests pass
+- [x] No behavior changes
+- [x] All 7 documentation files verified and updated
+- [x] Session summary created
+- [x] Repo housekeeping checklist completed
+
+---
+
+*Last updated: 2026-02-01 (Session 37, Build 22)*

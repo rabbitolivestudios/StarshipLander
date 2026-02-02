@@ -10,13 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - **Menu Ad Banner Clipping**: Banner ad at bottom of menu screen was clipped by home indicator safe area on iPhones without a home button. Added 16pt bottom padding to `BannerAdContainer()` in `MenuView` for clearance.
 
+### Changed
+- **Code Housekeeping (Session 37)**: Removed dead code, fixed imports, deleted stale file. No behavior changes. 9 files changed, 284 deletions.
+  - Removed: `leftFlame`/`rightFlame` (GameScene), `crashMessage()`/`crashMessages`/`crashNudges` (LandingMessages), `crashNudge` (GameState), `getTopScore()` (HighScoreManager), `Triangle` shape (ShapeViews), unused `CrashCause` enum cases (`terrainCollision`, `outOfBounds`)
+  - Fixed imports: `import SwiftUI` → `import Foundation` + `import Combine` in model files; removed unused `import SpriteKit` from ContentView
+  - Deleted stale `SETUP.txt`
+  - Updated tests to match removals (90 → 89 tests)
+
 ### Added
-- **Unit Tests**: 90 XCTest cases across 10 test files covering core game logic
+- **Unit Tests**: 89 XCTest cases across 10 test files covering core game logic
   - ScoringTests: formula verification, HARD penalty, constraint tests, realistic scenarios (16 tests)
   - HighScoreManagerTests: persistence, sorting, backward-compat decoding (9 tests)
   - CampaignStateTests: level unlock, stars, score tracking, persistence (10 tests)
   - LevelDefinitionTests: level data integrity, gravity/thrust progression (8 tests)
-  - LandingMessagesTests: message selection logic, pool verification (5 tests)
+  - LandingMessagesTests: message selection logic, pool verification (4 tests)
   - GameStateTests: initial values, reset, accelerometer persistence (3 tests)
   - LandingPlatformTests: multipliers, stars, widths, positions (5 tests)
   - CrashDiagnosticTests: crash classification, precedence, determinism (14 tests)
