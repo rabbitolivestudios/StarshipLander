@@ -60,7 +60,7 @@
 - [ ] Build 23 uploaded to TestFlight
 
 ## Commits
-- (commit hash pending — committing at session end)
+- `d07398d` — Fix text truncation and menu ad clipping from Build 22 device testing
 
 ## Repo Housekeeping
 - [x] Working tree clean after commit
