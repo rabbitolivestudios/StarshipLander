@@ -133,7 +133,8 @@ StarshipLander/
 │   ├── CrashDiagnosticTests.swift     # Crash classification + determinism (14 tests)
 │   └── ScoringHelper.swift            # Test-only scoring formula replica
 ├── Docs/
-│   └── chats/                       # Session summaries (context restoration)
+│   ├── chats/                       # Session summaries (context restoration)
+│   └── DIAGNOSTIC_velocity_thresholds.md  # Critical bug analysis (Build 19)
 ├── Screenshots/
 │   ├── v2.0.0/                      # App Store screenshots (1284x2778)
 │   └── v2.0.3-bugs/                 # Bug evidence from v2.0.3 device testing

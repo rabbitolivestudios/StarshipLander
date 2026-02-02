@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-01 (Session 33)
+> Last reconciled: 2026-02-01 (Session 34)
 
 ---
 
@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 19) |
-| Version Status | Device testing via TestFlight (v2.0.2 Build 16 submitted for App Store review) |
+| Current Version | 2.0.3 (Build 19) — **CRITICAL BUG: velocity thresholds never enforced, see Docs/DIAGNOSTIC_velocity_thresholds.md** |
+| Version Status | Build 19 BROKEN (impossible to land). Device testing via TestFlight. v2.0.2 Build 16 submitted for App Store review. |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -74,19 +74,21 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Campaign Engagement — v2.0.3, then v2.1.0 (Community)**
+**Phase: Campaign Engagement — v2.0.3 BLOCKED on threshold decision, then v2.1.0 (Community)**
 
-v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 19) adds campaign engagement features and bug fixes from device testing: fixed reentry start state (tilt + drift), HUD tilt angle display, final stats panel, deterministic crash messages, pre-contact velocity tracking for accurate flight data, HUD/Flight Data consistency fixes, and landing threshold consistency (uses pre-contact values for pass/fail). v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 19) is **BROKEN** — impossible to land on device. Root cause: velocity landing thresholds (V<40, H<25) have been dead code since the initial commit (SpriteKit zeros velocities during collision resolution before `checkLanding()` reads them). Build 19 was the first build to enforce speed thresholds, but used pre-thrust tracked values (too strict). See `Docs/DIAGNOSTIC_velocity_thresholds.md` for full analysis. **Requires game design decision before fix can proceed:** should speed affect landing success? HUD also shows wrong thresholds (V<50 H<30 vs actual V<40 H<25) since creation. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. Device testing of v2.0.3 Build 19 on TestFlight (uploaded)
-2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-3. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
-4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
-5. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+1. **BLOCKED — Game design decision required:** Should speed affect landing success? See `Docs/DIAGNOSTIC_velocity_thresholds.md` for options and tradeoffs. This must be resolved before any code fix.
+2. Fix Build 19 landing bug based on design decision. Fix HUD threshold mismatch (V<50→V<40, H<30→H<25 or whatever values are chosen). Fix menu ad clipping (cosmetic).
+3. Bump build, upload to TestFlight, device test
+4. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+5. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
+6. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
+7. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---
 
@@ -118,7 +120,12 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 19
 
 - **v2.0.0 never reviewed** — submitted 2026-01-30, still "Waiting for Review" on 2026-02-01. Decision: replace with v2.0.2 (Build 16) to avoid shipping outdated gameplay
 - **v1.1.5 is the current live version** — published on App Store (Build 11)
-- **Device testing in progress** — TestFlight Build 19 (v2.0.3) is latest. Haptics and ads verified working. Accelerometer fixed. Classic mode star rating verified on device. v2.0.3 bug fixes (HUD truncation, velocity snapshot, visual start state, fuel rounding, landing threshold consistency) tested across Builds 17-19. Remaining device tests: thrust vectoring feel (both control modes), Venus updrafts, Jupiter gusts, Mercury heat interference, Io deadly debris, scoring feel, backward-compat leaderboard stars.
+- **Build 19 BROKEN** — impossible to land on device. Velocity thresholds enforced for first time but using pre-thrust values (too strict). Full diagnostic: `Docs/DIAGNOSTIC_velocity_thresholds.md`
+- **Velocity thresholds were dead code since initial commit** — SpriteKit collision resolution zeros velocities before `didBegin(contact:)` fires. V<40 and H<25 checks always auto-passed. Speed never affected landing success in any shipped build. All prior 3-star scores were achieved with effectively V≈0 in the threshold check.
+- **HUD threshold mismatch since creation** — HUD shows V<50 H<30 but actual thresholds are V<40 H<25. Created wrong in commit `fede844`, never caught because both the display and the check were "wrong" in compatible ways.
+- **Unit tests have no integration coverage** — 65 tests all test isolated pure functions. No test simulates a physics collision to verify landing pass/fail decision. This is the test that would have caught the bug.
+- **Scoring was inflated** — all prior scores used near-zero post-collision velocity inputs, meaning speed components were near-maximum. If thresholds are enforced, achievable scores will decrease.
+- **Device testing in progress** — Haptics and ads verified. Accelerometer fixed. Remaining: thrust vectoring, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
 

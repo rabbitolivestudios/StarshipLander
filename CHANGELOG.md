@@ -43,6 +43,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Signed Tilt Preservation**: `finalTiltAngle` changed from absolute to signed value to preserve L/R direction for HUD display on game-over. `abs()` applied where needed (Flight Data, crash diagnostics).
 - **Landing Threshold Using Post-Collision Velocity**: `checkLanding()` read velocity from physics body after SpriteKit collision resolution absorbed impact energy, allowing landings at V.Speed=71 to pass the V<50 threshold. Now uses pre-contact tracked values for threshold checks — same source as HUD, Flight Data, and crash diagnostics.
 
+### Known Issues (Build 19)
+- **⚠️ CRITICAL: Impossible to land on device.** Pre-contact tracked values are captured before thrust application in `update()`, making them systematically higher than actual post-thrust velocity. Landing threshold check rejects valid landings.
+- **⚠️ CRITICAL: Velocity thresholds were dead code since initial commit.** SpriteKit zeros velocities during collision resolution before `didBegin(contact:)`. The V<40 and H<25 checks always saw V≈0 — speed never affected landing success in any build through Build 18. Build 19 is the first build to enforce speed. See `Docs/DIAGNOSTIC_velocity_thresholds.md`.
+- **HUD threshold mismatch since creation.** HUD shows V<50 H<30 but actual GameScene thresholds are V<40 H<25. Created wrong in commit `fede844`, never caught because both display and threshold check were "wrong" in compatible ways.
+- **Scoring was inflated.** All prior scores used near-zero post-collision velocities for speed components, producing near-maximum speed scores. Enforcement would lower achievable scores.
+
 ---
 
 ## [2.0.2] - 2026-01-31 (Phase: Campaign Polish) — SUBMITTED FOR REVIEW 2026-02-01

@@ -29,12 +29,13 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 19 | Campaign engagement + bug fixes: reentry state, tilt HUD, final stats, crash diagnostics, telemetry + threshold fixes |
+| 2.0.3 | 19 | **BROKEN — impossible to land.** Velocity thresholds dead code since initial commit; Build 19 first enforcement but pre-thrust values too strict. See DIAGNOSTIC. |
 
 **NEXT STEPS:**
-1. Device testing of v2.0.3 Build 19 on TestFlight (uploaded)
-2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-3. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
+1. **BLOCKED: Game design decision required** — should speed affect landing success? See `Docs/DIAGNOSTIC_velocity_thresholds.md`
+2. Fix Build 19 based on decision. Fix HUD threshold mismatch. Fix menu ad clipping.
+3. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+4. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -1295,4 +1296,72 @@ Gravity increases monotonically with level number. Thrust is fixed at 12.0. Targ
 
 ---
 
-*Last updated: 2026-02-01 (Session 33, Build 19)*
+### Session 34 (2026-02-01) - CRITICAL: Velocity Thresholds Never Enforced
+
+**Goal:** Investigate and document Build 19 device testing failure — impossible to land on TestFlight.
+
+#### Critical Discoveries:
+
+1. **Velocity thresholds were dead code since initial commit (`e8e9656`)**:
+   - `checkLanding()` reads from `rocket.physicsBody?.velocity` in `didBegin(contact:)`
+   - SpriteKit zeros velocities during collision resolution before callback fires
+   - V<40 and H<25 checks always saw V≈0 → always passed → speed never mattered
+   - The only functional landing constraint was rotation (< 0.05 rad)
+
+2. **Build 19 was first-ever speed enforcement, but too strict**:
+   - Changed `checkLanding()` to use `lastTrackedVerticalSpeed` (pre-contact tracked)
+   - But tracking happens at line 272 of `update()`, BEFORE thrust at line 286
+   - Pre-thrust values are ~10-15 units higher than post-thrust when player is decelerating
+   - Result: impossible to land even with careful approach
+
+3. **HUD threshold mismatch since creation (commit `fede844`)**:
+   - HUD uses V<50, H<30; actual GameScene thresholds are V<40, H<25
+   - Never caught because both display and threshold were wrong in compatible ways
+
+4. **Scoring was inflated in all prior builds**:
+   - Scoring formula received near-zero post-collision velocities → max speed scores
+   - All existing high scores achieved under "speed doesn't matter" regime
+
+5. **Tests didn't catch it because**:
+   - 65 unit tests all test isolated pure functions
+   - No integration test simulates a physics collision and verifies pass/fail
+   - Scoring simulation assumes thresholds work; has no knowledge of SpriteKit collision behavior
+   - Device testing never tested boundary velocities specifically
+
+#### Actions Taken:
+- Reverted unauthorized Build 20 commit (`git revert 4a676cc` → `f500a2b`)
+- Created comprehensive diagnostic: `Docs/DIAGNOSTIC_velocity_thresholds.md`
+- Updated all project management docs (STATUS, DECISIONS, CHANGELOG, PROJECT_LOG)
+- **No code fix implemented** — requires game design decision first
+
+#### Files Created:
+- `Docs/DIAGNOSTIC_velocity_thresholds.md` — full diagnostic report for developer review
+
+#### Files Modified:
+- `STATUS.md` — updated with critical bug status
+- `DECISIONS.md` — added pending threshold design decision entry
+- `CHANGELOG.md` — added known issues section for Build 19
+- `PROJECT_LOG.md` — this entry
+
+#### Pending Decision:
+Should speed affect landing success? Options:
+- (A) Revert to pre-Build 19 behavior (speed thresholds remain dead code)
+- (B) Post-thrust tracking + current thresholds V<40/H<25 (new, harder game)
+- (C) Post-thrust tracking + raised thresholds (new enforcement, generous)
+- (D) Split sources (display vs enforcement different)
+
+See `Docs/DIAGNOSTIC_velocity_thresholds.md` for full analysis.
+
+#### Definition of Done:
+- [x] Root cause fully analyzed (3 iterations of deepening analysis)
+- [x] Unauthorized Build 20 reverted
+- [x] Diagnostic document created
+- [x] All project management docs updated
+- [ ] Bug evidence screenshots saved (waiting for user to re-share)
+- [ ] Session summary created
+- [ ] Design decision made
+- [ ] Fix implemented and tested
+
+---
+
+*Last updated: 2026-02-01 (Session 34, Build 19 — BROKEN)*
