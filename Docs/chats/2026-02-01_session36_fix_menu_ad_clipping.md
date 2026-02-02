@@ -1,8 +1,9 @@
-# 2026-02-01 — Session 36: Fix Menu Ad Banner Clipping + Documentation Corrections
+# 2026-02-01 — Session 36: Fix Menu Ad Banner Clipping + Build 22 Upload
 
 ## Goals
 - Fix the banner ad on the menu screen being clipped by the home indicator safe area on iPhones without a home button
 - Correct stale documentation that incorrectly described velocity threshold enforcement as "pending"
+- Upload Build 22 to TestFlight with all v2.0.3 changes including menu ad fix
 
 ## Changes Made
 
@@ -29,6 +30,11 @@ However, session 35's documentation incorrectly stated "this session's changes o
 - `PROJECT_LOG.md` — updated v2.0.3 status row and NEXT STEPS
 - `CHANGELOG.md` — updated Per-Platform Speed Bands entry to include threshold enforcement
 
+### 3. Build 22 Uploaded to TestFlight
+**What:** Bumped build number 21 → 22, archived, exported, and uploaded to App Store Connect.
+**Why:** Build 21 on TestFlight did not include the menu ad banner clipping fix (committed after Build 21 upload). Build 22 includes all v2.0.3 changes: scoring overhaul, threshold enforcement, AND the menu ad fix.
+**Files:** `RocketLander/Info.plist` (build number 21 → 22)
+
 ## Research / Ideas Discussed
 - Deep dive through all code and documentation confirmed velocity threshold enforcement IS implemented in current code
 - `GameScene.swift` lines 504-554: `checkLanding()` uses `LandingThresholds.evaluate()` — speed exceeding FAIL threshold causes crash
@@ -40,6 +46,7 @@ However, session 35's documentation incorrectly stated "this session's changes o
 - The VStack containing the ad only had `.padding(.horizontal)` (line 262), no vertical padding after the last item
 - 16pt provides comfortable clearance for the home indicator when fully scrolled
 - The documentation error in session 35 likely occurred because the session was framed as a "scoring overhaul" — the threshold enforcement changes were part of the same commit but weren't called out separately
+- dSYM warnings during upload (GoogleMobileAds, UserMessagingPlatform) are known and harmless — third-party SDK symbols
 
 ## Decisions
 1. Used 16pt bottom padding (vs 5pt in gameplay view) because ScrollView behavior requires more clearance at the bottom edge
@@ -50,6 +57,8 @@ However, session 35's documentation incorrectly stated "this session's changes o
 - [x] Build succeeds
 - [x] 90/90 tests pass
 - [x] All stale "pending" references corrected across DECISIONS.md, STATUS.md, PROJECT_LOG.md, CHANGELOG.md
+- [x] Build 22 archived, exported, and uploaded to TestFlight
+- [x] All docs updated with accurate build info (Build 22 = Build 21 + menu ad fix)
 - [x] Session summary created
 
 ## Commits
@@ -57,6 +66,8 @@ However, session 35's documentation incorrectly stated "this session's changes o
 - `f6f114b` — Documentation updates + session summary
 - `71fc211` — Update session 36 summary with commit hash
 - `5051587` — Correct stale docs: velocity threshold enforcement is resolved, not pending
+- `a36bbb9` — Fix docs: menu ad fix is on main, not in Build 21 on TestFlight
+- `_pending_` — Build 22 upload + documentation updates
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
@@ -65,7 +76,7 @@ However, session 35's documentation incorrectly stated "this session's changes o
 - [x] No secrets or credentials in tracked files
 
 ## Next Actions
-- [ ] Device test Build 21 on TestFlight (scoring feel, HARD landing scores, threshold enforcement behavior)
+- [ ] Device test Build 22 on TestFlight (scoring feel, HARD landing scores, threshold enforcement, menu ad fix)
 - [ ] Wait for App Store review response for v2.0.2
-- [ ] If approved, decide whether to submit v2.0.3 or wait for v2.1.0
+- [ ] If approved, decide whether to submit v2.0.3 (Build 22) or wait for v2.1.0
 - [ ] Implement v2.1.0 (Community): Game Center leaderboards, achievements, Share Score Card

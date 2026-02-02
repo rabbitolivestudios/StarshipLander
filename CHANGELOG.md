@@ -5,7 +5,7 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased] — included in v2.0.3 Build 22 on TestFlight
 
 ### Fixed
 - **Menu Ad Banner Clipping**: Banner ad at bottom of menu screen was clipped by home indicator safe area on iPhones without a home button. Added 16pt bottom padding to `BannerAdContainer()` in `MenuView` for clearance.

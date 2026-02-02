@@ -29,12 +29,12 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 21 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul. Uploaded to TestFlight. Menu ad fix committed to `main` after upload (Session 36) — not in Build 21. |
+| 2.0.3 | 22 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + menu ad clipping fix. Uploaded to TestFlight. Supersedes Build 21. |
 
 **NEXT STEPS:**
-1. Device test Build 21 on TestFlight (scoring feel, HARD landing scores, threshold enforcement behavior)
-4. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-5. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
+1. Device test Build 22 on TestFlight (scoring feel, HARD landing scores, threshold enforcement behavior, menu ad fix)
+2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+3. If approved, decide whether to submit v2.0.3 (Build 22) or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -1456,17 +1456,23 @@ Key findings:
 
 ---
 
-### Session 36 (2026-02-01) - Fix Menu Ad Banner Clipping
+### Session 36 (2026-02-01) - Fix Menu Ad Banner Clipping + Build 22 Upload
 
-**Goal:** Fix the banner ad on the menu screen being clipped by the home indicator safe area.
+**Goal:** Fix the banner ad on the menu screen being clipped by the home indicator safe area. Correct stale documentation. Upload Build 22 to TestFlight with all v2.0.3 changes including menu ad fix.
 
 **What Changed:**
 - Added `.padding(.bottom, 16)` to `BannerAdContainer()` in `MenuView` (`ContentView.swift` line 260)
 - The ad was the last item in the ScrollView's VStack with no bottom padding, causing it to be clipped by the home indicator on iPhones without a home button
 - `GameContainerView.swift` already had `.padding(.bottom, 5)` on its banner ad; menu needed more clearance due to ScrollView behavior
+- Corrected stale documentation that incorrectly described velocity threshold enforcement as "pending" (it was implemented in Build 21, commit `1698220`)
+- Bumped build number 21 → 22 in Info.plist
+- Archived, exported, and uploaded Build 22 to TestFlight (includes menu ad fix + all Build 21 changes)
 
 **Files Modified:**
 - `RocketLander/ContentView.swift` — added bottom padding to BannerAdContainer
+- `RocketLander/Info.plist` — build number 21 → 22
+- `DECISIONS.md` — changed velocity threshold entry from PENDING to RESOLVED
+- `STATUS.md`, `PROJECT_LOG.md`, `CHANGELOG.md` — corrected stale references, updated build info
 
 **Key Decisions:**
 - Used 16pt padding (vs 5pt in gameplay) because the menu ScrollView needs more clearance when scrolled to the bottom
@@ -1475,9 +1481,11 @@ Key findings:
 - [x] Banner ad fully visible when scrolled to bottom on iPhone 16 Pro
 - [x] Build succeeds
 - [x] 90/90 tests pass
-- [x] All docs updated
+- [x] Build 22 archived, exported, and uploaded to TestFlight
+- [x] All stale "pending" references corrected
+- [x] All docs updated with accurate build info
 - [x] Session summary created
 
 ---
 
-*Last updated: 2026-02-01 (Session 36, Build 21)*
+*Last updated: 2026-02-01 (Session 36, Build 22)*
