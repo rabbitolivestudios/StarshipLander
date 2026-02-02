@@ -88,13 +88,13 @@
 ## Commits
 - `dde3215` — Fix session 33 summary: add missing final commit hash (start of session housekeeping)
 - `f500a2b` — Revert "Fix velocity tracking order and HUD threshold mismatch (Build 20)" (reverted unauthorized changes)
-- *(end-of-session commit pending)*
+- `758d625` — Session 34: diagnostic — velocity thresholds never enforced since initial commit
 
 ## Repo Housekeeping
-- [ ] Working tree clean after commit
-- [ ] .gitignore up to date
-- [ ] README.md project structure matches actual files
-- [ ] No secrets or credentials in tracked files
+- [x] Working tree clean after commit
+- [x] .gitignore up to date
+- [x] README.md project structure matches actual files (added DIAGNOSTIC doc)
+- [x] No secrets or credentials in tracked files
 
 ## Next Actions
 - [ ] Developer team reviews `Docs/DIAGNOSTIC_velocity_thresholds.md` and decides: should speed affect landing success?
