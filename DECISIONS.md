@@ -81,6 +81,8 @@ This file records key technical and design decisions, including context, alterna
 **Why:** ScrollView automatically respects safe area. Also solves "HOW TO PLAY" cutoff at bottom on smaller screens. Content still fits on one screen on iPhone 16 Pro without scrolling.
 **Consequences:** Flexible `Spacer()` replaced with fixed spacing. Content is slightly more compact. Works on all screen sizes.
 
+**Session 38 update (2026-02-02):** BannerAdContainer moved OUTSIDE the ScrollView into a `VStack(spacing: 0)` wrapper. Previous approach (ad inside ScrollView with bottom padding) left the ad clipped by the home indicator on device. The ad is now pinned at the bottom of the screen where SwiftUI's safe area layout naturally handles clearance.
+
 ---
 
 ## [2026-01-30] Ganymede Craters — Ridge Terrain with Physics

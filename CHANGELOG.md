@@ -5,10 +5,11 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] — included in v2.0.3 Build 22 on TestFlight
+## [Unreleased] — pending Build 23 upload to TestFlight
 
 ### Fixed
-- **Menu Ad Banner Clipping**: Banner ad at bottom of menu screen was clipped by home indicator safe area on iPhones without a home button. Added 16pt bottom padding to `BannerAdContainer()` in `MenuView` for clearance.
+- **GameOverView Text Truncation**: Landing success messages and crash diagnostic messages were truncated on device. Added `.multilineTextAlignment(.center)` + `.fixedSize(horizontal: false, vertical: true)` to landing message, crash primary diagnostic, and crash secondary diagnostic. Wrapped GameOverView body in ScrollView for vertical overflow protection on tall content (landing + new high score scenario).
+- **Menu Ad Banner Clipping (Improved)**: Previous fix (16pt bottom padding) was insufficient — banner was still clipped by home indicator. Restructured MenuView: moved `BannerAdContainer()` outside ScrollView into a `VStack(spacing: 0)` wrapper, pinning the ad at the bottom where SwiftUI's safe area layout naturally keeps it above the home indicator. Verified on iPhone 16 Pro simulator.
 
 ### Changed
 - **Code Housekeeping (Session 37)**: Removed dead code, fixed imports, deleted stale file. No behavior changes. 9 files changed, 284 deletions.

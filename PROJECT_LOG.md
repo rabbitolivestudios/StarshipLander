@@ -29,12 +29,13 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 22 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + menu ad clipping fix. Uploaded to TestFlight. Supersedes Build 21. |
+| 2.0.3 | 22 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + menu ad clipping fix. On TestFlight. Device testing found text truncation + ad still clipped (fixed Session 38, pending Build 23). |
 
 **NEXT STEPS:**
-1. Device test Build 22 on TestFlight (scoring feel, HARD landing scores, threshold enforcement behavior, menu ad fix)
-2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-3. If approved, decide whether to submit v2.0.3 (Build 22) or wait for v2.1.0
+1. Bump build to 23, archive and upload to TestFlight
+2. User tests Fix A (text truncation) on device via TestFlight
+3. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+4. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -1549,4 +1550,44 @@ Key findings:
 
 ---
 
-*Last updated: 2026-02-01 (Session 37, Build 22)*
+### Session 38 (2026-02-02) - Build 22 Device Testing Bug Fixes
+
+**Goal:** Fix two bugs found during Build 22 device testing on iPhone 16: (1) landing/crash messages truncated, (2) menu ad banner still clipped despite Session 36 padding fix.
+
+#### Changes Made:
+
+1. **GameOverView Text Truncation Fix (`GameOverView.swift`)**:
+   - Landing success message: added `.multilineTextAlignment(.center)` + `.fixedSize(horizontal: false, vertical: true)` so long messages wrap instead of truncating
+   - Crash primary diagnostic: added `.fixedSize(horizontal: false, vertical: true)` (already had `.multilineTextAlignment(.center)`)
+   - Crash secondary diagnostic: added `.fixedSize(horizontal: false, vertical: true)` (already had `.multilineTextAlignment(.center)`)
+   - Wrapped body VStack in ScrollView for vertical overflow protection when content is tall (landing + new high score scenario)
+
+2. **Menu Ad Banner Clipping Fix (Improved) (`ContentView.swift`)**:
+   - Previous fix (16pt bottom padding, Session 36) was insufficient — banner still clipped on device
+   - Restructured MenuView: moved `BannerAdContainer()` outside ScrollView into a `VStack(spacing: 0)` wrapper
+   - Ad now pinned at bottom of screen where SwiftUI safe area layout naturally keeps it above the home indicator
+   - Verified on iPhone 16 Pro simulator — ad fully visible
+
+#### Files Modified:
+- `RocketLander/Views/GameOverView.swift` — text wrapping fixes + ScrollView wrapper
+- `RocketLander/ContentView.swift` — menu ad moved outside ScrollView
+
+#### Build Status:
+- Build succeeds, 89/89 tests pass
+- Fix B verified on simulator (screenshot saved to `Screenshots/v2.0.3-bugs/fix_b_menu_ad_verified.png`)
+- Fix A requires device testing (user will test on TestFlight)
+
+#### Definition of Done:
+- [x] Fix A: text wrapping modifiers applied to 3 text elements
+- [x] Fix A: GameOverView body wrapped in ScrollView for overflow protection
+- [x] Fix B: BannerAdContainer moved outside ScrollView
+- [x] Fix B: verified on iPhone 16 Pro simulator — ad fully visible
+- [x] Build succeeds
+- [x] 89/89 tests pass
+- [ ] Fix A: verified on device (pending TestFlight Build 23)
+- [ ] Build 23 uploaded to TestFlight
+- [x] All docs updated
+
+---
+
+*Last updated: 2026-02-02 (Session 38, Build 22 + local fixes)*

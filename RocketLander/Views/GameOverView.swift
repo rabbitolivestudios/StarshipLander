@@ -84,6 +84,7 @@ struct GameOverView: View {
     }
 
     var body: some View {
+        ScrollView {
         VStack(spacing: 16) {
             // Result icon
             Image(systemName: gameState.landed ? "checkmark.circle.fill" : "xmark.circle.fill")
@@ -95,6 +96,8 @@ struct GameOverView: View {
                 Text(gameState.landingMessage.isEmpty ? "LANDING CONFIRMED" : gameState.landingMessage.uppercased())
                     .font(.title2.bold())
                     .foregroundColor(.green)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 // Star display
                 if gameState.starsEarned > 0 {
@@ -150,6 +153,7 @@ struct GameOverView: View {
                         .font(.subheadline)
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal)
                 }
 
@@ -158,6 +162,7 @@ struct GameOverView: View {
                         .font(.caption)
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal)
                 }
 
@@ -179,6 +184,7 @@ struct GameOverView: View {
             }
         }
         .padding(30)
+        }
         .background(Color.black.opacity(0.85))
         .cornerRadius(20)
         .overlay(

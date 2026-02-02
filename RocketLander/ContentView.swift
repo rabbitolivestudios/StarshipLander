@@ -62,6 +62,7 @@ struct MenuView: View {
     @ObservedObject var gameState: GameState
 
     var body: some View {
+        VStack(spacing: 0) {
         ScrollView {
         VStack(spacing: 16) {
             // Title
@@ -255,11 +256,10 @@ struct MenuView: View {
             .background(Color.white.opacity(0.05))
             .cornerRadius(10)
 
-            // Banner Ad
-            BannerAdContainer()
-                .padding(.bottom, 16)
         }
         .padding(.horizontal)
+        }
+        BannerAdContainer()
         }
         .overlay(alignment: .topTrailing) {
             Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
