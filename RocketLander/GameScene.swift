@@ -62,11 +62,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let platformCategory: UInt32 = 0x1 << 1
     let groundCategory: UInt32 = 0x1 << 2
 
-    // Landing thresholds
-    static let maxSafeVerticalSpeed: CGFloat = 40.0
-    static let maxSafeHorizontalSpeed: CGFloat = 25.0
-    static let maxSafeRotation: CGFloat = 0.05
-    static let maxSafeApproachSpeed: CGFloat = 80.0
 
     // MARK: - Init
 
@@ -256,32 +251,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
 
-        // Track velocity
-        if let velocity = rocket.physicsBody?.velocity {
-            let currentVerticalSpeed = max(0, -velocity.dy)
-
-            if currentVerticalSpeed > maxDescentSpeed {
-                maxDescentSpeed = currentVerticalSpeed
-            }
-
-            recentVelocities.append(currentVerticalSpeed)
-            if recentVelocities.count > velocityHistorySize {
-                recentVelocities.removeFirst()
-            }
-
-            // Synchronous tracking for end-of-run snapshot (pre-contact values)
-            lastTrackedVerticalSpeed = currentVerticalSpeed
-            lastTrackedHorizontalSpeed = abs(velocity.dx)
-            lastTrackedTilt = rocket.zRotation
-
-            DispatchQueue.main.async {
-                self.gameState.verticalVelocity = currentVerticalSpeed
-                self.gameState.horizontalVelocity = abs(velocity.dx)
-                self.gameState.rotation = abs(self.rocket.zRotation)
-                self.gameState.tiltAngle = self.rocket.zRotation
-            }
-        }
-
         // Apply main thrust
         if gameState.isThrusting && gameState.fuel > 0 {
             guard var velocity = rocket.physicsBody?.velocity else { return }
@@ -372,6 +341,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Apply campaign special mechanics
         applyCampaignMechanics(dt: dt, currentTime: currentTime)
+
+        // Track velocity (post-thrust, post-rotation, post-mechanics — authoritative snapshot)
+        if let velocity = rocket.physicsBody?.velocity {
+            let currentVerticalSpeed = max(0, -velocity.dy)
+
+            if currentVerticalSpeed > maxDescentSpeed {
+                maxDescentSpeed = currentVerticalSpeed
+            }
+
+            recentVelocities.append(currentVerticalSpeed)
+            if recentVelocities.count > velocityHistorySize {
+                recentVelocities.removeFirst()
+            }
+
+            lastTrackedVerticalSpeed = currentVerticalSpeed
+            lastTrackedHorizontalSpeed = abs(velocity.dx)
+            lastTrackedTilt = rocket.zRotation
+
+            DispatchQueue.main.async {
+                self.gameState.verticalVelocity = currentVerticalSpeed
+                self.gameState.horizontalVelocity = abs(velocity.dx)
+                self.gameState.rotation = abs(self.rocket.zRotation)
+                self.gameState.tiltAngle = self.rocket.zRotation
+            }
+        }
 
         // Screen wrap
         if rocket.position.x < -20 {
@@ -508,9 +502,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     private func checkLanding(contactNode: SKNode?) {
-        // Use pre-contact tracked values for threshold checks — these reflect
-        // the actual touchdown speed before SpriteKit's collision resolution
-        // absorbs impact energy (which would artificially lower the readings)
+        // Determine platform from contact node FIRST
+        let landedPlatform = determineLandedPlatform(contactNode: contactNode) ?? .a
+
+        // Use pre-contact tracked values — these reflect the actual touchdown
+        // speed before SpriteKit's collision resolution absorbs impact energy
         let verticalSpeed = lastTrackedVerticalSpeed
         let horizontalSpeed = lastTrackedHorizontalSpeed
         let rotation = abs(lastTrackedTilt)
@@ -523,30 +519,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.gameState.rotation = rotation
         }
 
-        let verticalOK = verticalSpeed <= GameScene.maxSafeVerticalSpeed
-        let horizontalOK = horizontalSpeed <= GameScene.maxSafeHorizontalSpeed
-        let rotationOK = rotation <= GameScene.maxSafeRotation
-        let approachOK = approachSpeed <= GameScene.maxSafeApproachSpeed
+        // Evaluate landing using platform-specific thresholds
+        let result = LandingThresholds.evaluate(
+            verticalSpeed: verticalSpeed,
+            horizontalSpeed: horizontalSpeed,
+            rotation: rotation,
+            platform: landedPlatform
+        )
 
-        if verticalOK && horizontalOK && rotationOK && approachOK {
-            let landedPlatform = determineLandedPlatform(contactNode: contactNode) ?? .a
+        if result.success {
             successfulLanding(
                 verticalSpeed: verticalSpeed,
                 horizontalSpeed: horizontalSpeed,
                 rotation: rotation,
                 approachSpeed: approachSpeed,
-                platform: landedPlatform
+                platform: landedPlatform,
+                speedBand: result.speedBand
             )
         } else {
-            // Snapshot uses pre-contact tracked values (non-zero touchdown speeds)
             snapshotFinalStats(platform: nil)
 
-            // Diagnostics use the same frozen values as Flight Data for consistency
             let diagnostic = LandingMessages.diagnosticCrashMessage(
                 verticalSpeed: gameState.finalVerticalSpeed,
                 horizontalSpeed: gameState.finalHorizontalSpeed,
                 rotation: abs(gameState.finalTiltAngle),
                 approachSpeed: approachSpeed,
+                platform: landedPlatform,
                 hitTerrain: false
             )
             gameState.crashDiagnosticPrimary = diagnostic.primaryMessage
@@ -571,7 +569,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    private func successfulLanding(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform) {
+    private func successfulLanding(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform, speedBand: SpeedBand) {
         snapshotFinalStats(platform: platform)
 
         gameState.gameOver = true
@@ -589,16 +587,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             horizontalSpeed: horizontalSpeed,
             rotation: rotation,
             approachSpeed: approachSpeed,
-            platform: platform
+            platform: platform,
+            speedBand: speedBand
         )
 
-        let message = LandingMessages.successMessage(platform: platform, score: totalScore)
+        let message = LandingMessages.successMessage(platform: platform, score: totalScore, speedBand: speedBand)
 
         DispatchQueue.main.async {
             self.gameState.score = totalScore
             self.gameState.landedPlatform = platform
             self.gameState.starsEarned = platform.stars
             self.gameState.landingMessage = message
+            self.gameState.landingSpeedBand = speedBand
         }
 
         createSuccessEffect()
@@ -615,7 +615,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             let verticalSpeed = gameState.finalVerticalSpeed
             let horizontalSpeed = gameState.finalHorizontalSpeed
-            let rotation = abs(gameState.finalTiltAngle)  // abs() — finalTiltAngle is now signed
+            let rotation = abs(gameState.finalTiltAngle)
             let approachSpeed = recentVelocities.isEmpty ? verticalSpeed : recentVelocities.reduce(0, +) / CGFloat(recentVelocities.count)
             let hitTerrain = rocket.position.y > -50
 
@@ -624,6 +624,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 horizontalSpeed: horizontalSpeed,
                 rotation: rotation,
                 approachSpeed: approachSpeed,
+                platform: nil,
                 hitTerrain: hitTerrain
             )
 

@@ -53,8 +53,17 @@ final class LandingMessagesTests: XCTestCase {
     func testAllMessageArraysNonEmpty() {
         XCTAssertFalse(LandingMessages.standardSuccess.isEmpty)
         XCTAssertFalse(LandingMessages.eliteSuccess.isEmpty)
+        XCTAssertFalse(LandingMessages.hardLandingSuccess.isEmpty)
         XCTAssertFalse(LandingMessages.crashMessages.isEmpty)
         XCTAssertFalse(LandingMessages.crashNudges.isEmpty)
         XCTAssertFalse(LandingMessages.rareSuccess.isEmpty)
+    }
+
+    func testHardLandingMessage() {
+        let allHard = Set(LandingMessages.hardLandingSuccess)
+        for _ in 0..<50 {
+            let msg = LandingMessages.successMessage(platform: .a, score: 1000, speedBand: .hard)
+            XCTAssertTrue(allHard.contains(msg), "HARD band should produce hard landing message, got: \(msg)")
+        }
     }
 }

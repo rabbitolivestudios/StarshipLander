@@ -104,6 +104,7 @@ StarshipLander/
 │   │   ├── HighScoreManager.swift   # High score persistence
 │   │   ├── LandingPlatform.swift    # Platform A/B/C definitions
 │   │   ├── LandingMessages.swift    # Success messages + deterministic crash diagnostics
+│   │   ├── LandingThresholds.swift  # Per-platform speed bands (SAFE/HARD/FAIL)
 │   │   ├── LevelDefinition.swift    # 10 campaign level definitions
 │   │   └── CampaignState.swift      # Campaign progress persistence
 │   ├── Views/
@@ -123,7 +124,7 @@ StarshipLander/
 │       ├── land_success.wav         # Victory fanfare
 │       └── explosion.wav            # Crash sound
 ├── RocketLanderTests/
-│   ├── ScoringTests.swift             # Scoring formula verification (11 tests)
+│   ├── ScoringTests.swift             # Scoring formula verification (16 tests)
 │   ├── HighScoreManagerTests.swift    # High score persistence (9 tests)
 │   ├── CampaignStateTests.swift       # Campaign state management (10 tests)
 │   ├── LevelDefinitionTests.swift     # Level data integrity (8 tests)
@@ -131,6 +132,7 @@ StarshipLander/
 │   ├── GameStateTests.swift           # Game state management (3 tests)
 │   ├── LandingPlatformTests.swift     # Platform data verification (5 tests)
 │   ├── CrashDiagnosticTests.swift     # Crash classification + determinism (14 tests)
+│   ├── LandingEvaluationTests.swift   # Per-platform speed band tests (20 tests)
 │   └── ScoringHelper.swift            # Test-only scoring formula replica
 ├── Docs/
 │   ├── chats/                       # Session summaries (context restoration)

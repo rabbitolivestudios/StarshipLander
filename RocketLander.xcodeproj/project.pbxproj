@@ -23,6 +23,7 @@
 		C2000004 /* LandingMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000004 /* LandingMessages.swift */; };
 		C2000005 /* LevelDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000005 /* LevelDefinition.swift */; };
 		C2000006 /* CampaignState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000006 /* CampaignState.swift */; };
+		C2000019 /* LandingThresholds.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000019 /* LandingThresholds.swift */; };
 		C2000007 /* ShapeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000007 /* ShapeViews.swift */; };
 		C2000008 /* HUDViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000008 /* HUDViews.swift */; };
 		C2000009 /* ControlViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000009 /* ControlViews.swift */; };
@@ -44,6 +45,7 @@
 		T2000006 /* GameStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000006 /* GameStateTests.swift */; };
 		T2000007 /* LandingPlatformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000007 /* LandingPlatformTests.swift */; };
 		T2000008 /* ScoringHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000008 /* ScoringHelper.swift */; };
+		T2000010 /* LandingEvaluationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000010 /* LandingEvaluationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +76,7 @@
 		C1000004 /* LandingMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingMessages.swift; sourceTree = "<group>"; };
 		C1000005 /* LevelDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDefinition.swift; sourceTree = "<group>"; };
 		C1000006 /* CampaignState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignState.swift; sourceTree = "<group>"; };
+		C1000019 /* LandingThresholds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingThresholds.swift; sourceTree = "<group>"; };
 		C1000007 /* ShapeViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeViews.swift; sourceTree = "<group>"; };
 		C1000008 /* HUDViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDViews.swift; sourceTree = "<group>"; };
 		C1000009 /* ControlViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlViews.swift; sourceTree = "<group>"; };
@@ -95,6 +98,7 @@
 		T1000006 /* GameStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStateTests.swift; sourceTree = "<group>"; };
 		T1000007 /* LandingPlatformTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPlatformTests.swift; sourceTree = "<group>"; };
 		T1000008 /* ScoringHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringHelper.swift; sourceTree = "<group>"; };
+		T1000010 /* LandingEvaluationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingEvaluationTests.swift; sourceTree = "<group>"; };
 		T3000002 /* RocketLanderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RocketLanderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -176,6 +180,7 @@
 				C1000004 /* LandingMessages.swift */,
 				C1000005 /* LevelDefinition.swift */,
 				C1000006 /* CampaignState.swift */,
+				C1000019 /* LandingThresholds.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -211,6 +216,7 @@
 				T1000004 /* LevelDefinitionTests.swift */,
 				T1000005 /* LandingMessagesTests.swift */,
 				T1000009 /* CrashDiagnosticTests.swift */,
+				T1000010 /* LandingEvaluationTests.swift */,
 				T1000006 /* GameStateTests.swift */,
 				T1000007 /* LandingPlatformTests.swift */,
 				T1000008 /* ScoringHelper.swift */,
@@ -348,6 +354,7 @@
 				C2000015 /* GameScene+Effects.swift in Sources */,
 				C2000016 /* GameScene+Sound.swift in Sources */,
 				C2000017 /* GameScene+Scoring.swift in Sources */,
+				C2000019 /* LandingThresholds.swift in Sources */,
 				C2000018 /* LeaderboardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,6 +372,7 @@
 				T2000006 /* GameStateTests.swift in Sources */,
 				T2000007 /* LandingPlatformTests.swift in Sources */,
 				T2000008 /* ScoringHelper.swift in Sources */,
+				T2000010 /* LandingEvaluationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

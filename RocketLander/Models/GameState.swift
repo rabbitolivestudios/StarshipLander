@@ -41,6 +41,7 @@ class GameState: ObservableObject {
     @Published var landingMessage: String = ""
     @Published var crashNudge: String = ""
     @Published var starsEarned: Int = 0
+    @Published var landingSpeedBand: SpeedBand = .safe
 
     // Mode & campaign (Phase 2)
     @Published var currentMode: GameMode = .classic
@@ -74,6 +75,7 @@ class GameState: ObservableObject {
         landingMessage = ""
         crashNudge = ""
         starsEarned = 0
+        landingSpeedBand = .safe
         finalTiltAngle = 0
         finalVerticalSpeed = 0
         finalHorizontalSpeed = 0

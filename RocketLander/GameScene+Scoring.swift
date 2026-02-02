@@ -3,19 +3,21 @@ import SpriteKit
 // MARK: - Scoring Logic
 extension GameScene {
 
-    func calculateScore(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform) -> Int {
+    func calculateScore(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform, speedBand: SpeedBand) -> Int {
         // === CONTINUOUS SCORING SYSTEM WITH FUEL + PLATFORM MULTIPLIER ===
         // Max possible: ~20,000 points (2000 base x 2.0 fuel x 5.0 platform)
 
+        let bands = LandingThresholds.bands(for: platform)
+
         var subtotal: Double = 100
 
-        // 1. SOFT LANDING (0-500 points)
-        let verticalRatio = min(1.0, verticalSpeed / GameScene.maxSafeVerticalSpeed)
+        // 1. SOFT LANDING (0-500 points) — scaled to platform's safe vertical threshold
+        let verticalRatio = min(1.0, verticalSpeed / bands.safeVertical)
         let softLandingScore = 500.0 * pow(1.0 - verticalRatio, 2)
         subtotal += softLandingScore
 
-        // 2. HORIZONTAL PRECISION (0-400 points)
-        let horizontalRatio = min(1.0, horizontalSpeed / GameScene.maxSafeHorizontalSpeed)
+        // 2. HORIZONTAL PRECISION (0-400 points) — scaled to platform's safe horizontal threshold
+        let horizontalRatio = min(1.0, horizontalSpeed / bands.safeHorizontal)
         let horizontalScore = 400.0 * pow(1.0 - horizontalRatio, 2)
         subtotal += horizontalScore
 
@@ -28,16 +30,18 @@ extension GameScene {
         subtotal += centerScore
 
         // 4. ROTATION PRECISION (0-250 points)
-        let rotationRatio = min(1.0, Double(rotation) / GameScene.maxSafeRotation)
+        let rotationRatio = min(1.0, Double(rotation) / LandingThresholds.maxRotation)
         let rotationScore = 250.0 * pow(1.0 - rotationRatio, 2)
         subtotal += rotationScore
 
-        // 5. APPROACH CONTROL (0-150 points)
-        let approachRatio = min(1.0, Double(approachSpeed) / GameScene.maxSafeApproachSpeed)
+        // 5. APPROACH CONTROL (0-150 points) — scoring quality metric, not a gate
+        let approachRatio = min(1.0, Double(approachSpeed) / LandingThresholds.approachSpeedScoringThreshold)
         let approachScore = 150.0 * pow(1.0 - approachRatio, 2)
         subtotal += approachScore
 
         // Subtotal max: 100 + 500 + 400 + 600 + 250 + 150 = 2000
+        // HARD landings: no explicit penalty — velocity components naturally zero out
+        // (speeds exceed safe threshold = scoring denominator), losing ~45% of subtotal.
 
         // 6. FUEL MULTIPLIER (1.0x to 2.0x)
         let fuelMultiplier = 1.0 + (gameState.fuel / 100.0) * 1.0

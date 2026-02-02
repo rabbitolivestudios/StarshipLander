@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Unit Tests**: 65 XCTest cases across 8 test files covering core game logic
-  - ScoringTests: formula verification + realistic best-achievable scenarios (11 tests)
+- **Unit Tests**: 90 XCTest cases across 10 test files covering core game logic
+  - ScoringTests: formula verification, HARD penalty, constraint tests, realistic scenarios (16 tests)
   - HighScoreManagerTests: persistence, sorting, backward-compat decoding (9 tests)
   - CampaignStateTests: level unlock, stars, score tracking, persistence (10 tests)
   - LevelDefinitionTests: level data integrity, gravity/thrust progression (8 tests)
@@ -17,8 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - GameStateTests: initial values, reset, accelerometer persistence (3 tests)
   - LandingPlatformTests: multipliers, stars, widths, positions (5 tests)
   - CrashDiagnosticTests: crash classification, precedence, determinism (14 tests)
-- **Test-Only Scoring Helper**: `ScoringHelper.calculateScore()` in test target replicates the scoring formula for unit testing without modifying app code
-- **Perfect Landing Score Analysis**: `Scripts/calculate_perfect_scores.py` — frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Models exact SpriteKit physics (gravity, thrust, fuel, approach speed crash gate, screen wrapping, campaign reentry state). Best: Classic C = 12,132 via left screen wrap.
+  - LandingEvaluationTests: per-platform speed band classification, boundaries, composites (20 tests)
+  - ScoringHelper: test-only scoring formula replica
+- **Per-Platform Speed Bands**: `LandingThresholds.swift` — single source of truth for SAFE/HARD/FAIL speed thresholds per platform. Platform A (V≤80/H≤60 safe), B (V≤55/H≤45), C (V≤35/H≤30). Pure `evaluate()` function for landing classification.
+- **Perfect Landing Score Analysis**: `Scripts/calculate_perfect_scores.py` — frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Models exact SpriteKit physics (gravity, thrust, fuel, screen wrapping, campaign reentry state). Best: Classic C = 12,077 via left screen wrap.
+
+### Changed
+- **Removed explicit HARD landing penalty**: The 0.4× subtotal multiplier for HARD landings has been removed. HARD landings are now penalized naturally — velocity components (500 soft + 400 horizontal = 900 pts) score zero because speeds exceed the safe threshold (the scoring denominator). This produces a consistent ~55% reduction with no scoring discontinuity at the SAFE/HARD boundary. HARD-C now scores higher than perfect SAFE-B at all fuel levels.
+- **Scoring uses per-platform denominators**: Velocity scoring components use platform-specific safe thresholds as denominators instead of fixed values, meaning harder platforms have tighter scoring curves.
 
 ---
 

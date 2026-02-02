@@ -15,6 +15,7 @@ final class ScoringTests: XCTestCase {
         approachSpeed: CGFloat = 0,
         fuel: Double = 100,
         platform: LandingPlatform = .c,
+        speedBand: SpeedBand = .safe,
         rocketOffset: CGFloat = 0  // offset from platform center
     ) -> Int {
         let rocketX = platform.xFraction * sceneWidth + rocketOffset
@@ -26,7 +27,8 @@ final class ScoringTests: XCTestCase {
             fuel: fuel,
             rocketX: rocketX,
             sceneWidth: sceneWidth,
-            platform: platform
+            platform: platform,
+            speedBand: speedBand
         )
     }
 
@@ -41,10 +43,13 @@ final class ScoringTests: XCTestCase {
     }
 
     func testBaseScoreOnly() {
-        // Max speeds, max rotation, 0% fuel, at platform edge → minimal score
+        // Max safe speeds for platform A, max rotation, 0% fuel, at platform edge → minimal score
+        let bands = LandingThresholds.bands(for: .a)
         let result = score(
-            verticalSpeed: 40, horizontalSpeed: 25,
-            rotation: 0.05, approachSpeed: 80,
+            verticalSpeed: bands.safeVertical,
+            horizontalSpeed: bands.safeHorizontal,
+            rotation: CGFloat(LandingThresholds.maxRotation),
+            approachSpeed: CGFloat(LandingThresholds.approachSpeedScoringThreshold),
             fuel: 0, platform: .a,
             rocketOffset: LandingPlatform.a.width / 2  // at edge → 0 center points
         )
@@ -80,12 +85,12 @@ final class ScoringTests: XCTestCase {
     }
 
     func testSoftLandingComponent() {
-        // Isolate vertical speed effect: vary vertical, keep others perfect
+        // Isolate vertical speed effect on platform A
+        let bands = LandingThresholds.bands(for: .a)
         let perfectV = score(verticalSpeed: 0, fuel: 0, platform: .a, rocketOffset: 0)
-        let halfV = score(verticalSpeed: 20, fuel: 0, platform: .a, rocketOffset: 0)
-        let maxV = score(verticalSpeed: 40, fuel: 0, platform: .a, rocketOffset: 0)
+        let halfV = score(verticalSpeed: bands.safeVertical / 2, fuel: 0, platform: .a, rocketOffset: 0)
+        let maxV = score(verticalSpeed: bands.safeVertical, fuel: 0, platform: .a, rocketOffset: 0)
 
-        // At 0 speed: soft landing = 500, at 20 (ratio 0.5): 500*(0.5)^2 = 125, at 40: 0
         XCTAssertGreaterThan(perfectV, halfV)
         XCTAssertGreaterThan(halfV, maxV)
     }
@@ -97,15 +102,102 @@ final class ScoringTests: XCTestCase {
 
         // Center gets full 600 points, edge gets 0
         XCTAssertGreaterThan(center, edge)
-        // Difference should be approximately 600
         XCTAssertEqual(center - edge, 600, accuracy: 1)
     }
 
     func testSubtotalMax() {
         // Perfect landing, fuel 0 (mult 1.0), platform A (mult 1.0)
-        // → raw subtotal visible
         let result = score(fuel: 0, platform: .a)
         XCTAssertEqual(result, 2000, "Subtotal before multipliers should be 2000")
+    }
+
+    // MARK: - Hard Landing Natural Penalty
+
+    func testHardLandingNaturalPenalty() {
+        // HARD landings have no explicit penalty multiplier.
+        // The natural penalty comes from velocity components zeroing out
+        // (speeds exceed the safe threshold, which IS the scoring denominator).
+        // Perfect SAFE: 100+500+400+600+250+150 = 2000
+        // HARD (velocity components = 0): 100+0+0+600+250+150 = 1100
+        let safeScore = score(fuel: 0, platform: .a, speedBand: .safe)
+        let hardScore = score(fuel: 0, platform: .a, speedBand: .hard)
+
+        // No explicit penalty — both use subtotal directly
+        XCTAssertEqual(safeScore, 2000)
+        XCTAssertEqual(hardScore, 2000, "HARD with perfect velocities gets same score (in practice, velocity components will be 0)")
+    }
+
+    // MARK: - HARD-C > SAFE-B > SAFE-A Constraint
+
+    func testHardCBeatsSafeB() {
+        // A HARD landing on C should score better than a SAFE landing on B
+        // at multiple fuel levels.
+        // HARD-C: velocities exceed safe threshold → velocity components = 0
+        //   Subtotal = 100 + 0 + 0 + 600 + 250 + 150 = 1100, mult = 5.0x
+        // SAFE-B (perfect): Subtotal = 2000, mult = 2.0x
+        let bands = LandingThresholds.bands(for: .c)
+        for fuel in stride(from: 0.0, through: 100.0, by: 25.0) {
+            let hardC = score(
+                verticalSpeed: bands.safeVertical + 1,  // just into HARD band
+                horizontalSpeed: bands.safeHorizontal + 1,
+                fuel: fuel, platform: .c, speedBand: .hard
+            )
+            let safeB = score(fuel: fuel, platform: .b, speedBand: .safe)
+
+            XCTAssertGreaterThan(hardC, safeB,
+                "HARD-C (\(hardC)) should beat perfect SAFE-B (\(safeB)) at fuel \(fuel)%")
+        }
+    }
+
+    func testHardCBeatsSafeA() {
+        let bands = LandingThresholds.bands(for: .c)
+        for fuel in stride(from: 0.0, through: 100.0, by: 25.0) {
+            let hardC = score(
+                verticalSpeed: bands.safeVertical + 1,
+                horizontalSpeed: bands.safeHorizontal + 1,
+                fuel: fuel, platform: .c, speedBand: .hard
+            )
+            let safeA = score(fuel: fuel, platform: .a, speedBand: .safe)
+
+            XCTAssertGreaterThan(hardC, safeA,
+                "HARD-C (\(hardC)) should beat perfect SAFE-A (\(safeA)) at fuel \(fuel)%")
+        }
+    }
+
+    func testNoPenaltyDiscontinuity() {
+        // Score at V=34 (just under SAFE threshold on C) should be close to
+        // score at V=36 (just into HARD band on C). No scoring valley.
+        let bandsC = LandingThresholds.bands(for: .c)
+        let justSafe = score(
+            verticalSpeed: bandsC.safeVertical - 1,  // 34
+            horizontalSpeed: bandsC.safeHorizontal - 1,  // 29
+            fuel: 75, platform: .c, speedBand: .safe
+        )
+        let justHard = score(
+            verticalSpeed: bandsC.safeVertical + 1,  // 36
+            horizontalSpeed: bandsC.safeHorizontal + 1,  // 31
+            fuel: 75, platform: .c, speedBand: .hard
+        )
+
+        let gap = abs(justSafe - justHard)
+        XCTAssertLessThan(gap, 100,
+            "Score gap at SAFE/HARD boundary should be small (was \(gap)): SAFE=\(justSafe), HARD=\(justHard)")
+    }
+
+    func testApproachSpeedImpact() {
+        // Zero approach speed vs max approach speed should differ by ~150 pts (component range)
+        let zeroApproach = score(
+            approachSpeed: 0,
+            fuel: 0, platform: .a, speedBand: .safe
+        )
+        let maxApproach = score(
+            approachSpeed: CGFloat(LandingThresholds.approachSpeedScoringThreshold),
+            fuel: 0, platform: .a, speedBand: .safe
+        )
+
+        let diff = zeroApproach - maxApproach
+        XCTAssertEqual(diff, 150, accuracy: 1,
+            "Approach component should contribute ~150 points (was \(diff))")
     }
 
     // MARK: - Realistic Best-Achievable Scenarios
@@ -122,21 +214,18 @@ final class ScoringTests: XCTestCase {
             approachSpeed: 10.0,
             fuel: fuel,
             platform: platform,
-            rocketOffset: 3.0  // 3pt lateral offset — human-realistic precision
+            rocketOffset: 3.0
         )
     }
 
     func testRealisticBestScoreClassic() {
-        // Classic mode ~ Earth level: gravity 2.8, thrust 12.0, ~75% fuel
         let scoreA = realisticScore(fuel: 75, platform: .a)
         let scoreB = realisticScore(fuel: 75, platform: .b)
         let scoreC = realisticScore(fuel: 75, platform: .c)
 
-        // With near-perfect inputs and 75% fuel, scores should be substantial
         XCTAssertGreaterThan(scoreA, 2000)
         XCTAssertGreaterThan(scoreB, 4000)
         XCTAssertGreaterThan(scoreC, 10000)
-        // Platform ordering
         XCTAssertGreaterThan(scoreC, scoreB)
         XCTAssertGreaterThan(scoreB, scoreA)
     }
@@ -152,10 +241,8 @@ final class ScoringTests: XCTestCase {
             let fuel = fuelByLevel[levelId]!
             let scoreC = realisticScore(fuel: fuel, platform: .c)
 
-            // Each level should produce a positive, meaningful score
             XCTAssertGreaterThan(scoreC, 5000, "Level \(levelId) should produce meaningful score on C")
 
-            // Higher difficulty (less fuel) → lower score
             if levelId > 1 {
                 XCTAssertLessThan(scoreC, previousScoreC,
                     "Level \(levelId) with less fuel should score lower than level \(levelId - 1)")
@@ -169,7 +256,6 @@ final class ScoringTests: XCTestCase {
         let lowFuel = realisticScore(fuel: 52, platform: .c)
 
         XCTAssertGreaterThan(highFuel, lowFuel)
-        // The difference should be significant (fuel goes from 1.85x to 1.52x)
         let ratio = Double(highFuel) / Double(lowFuel)
         XCTAssertGreaterThan(ratio, 1.15, "85% vs 52% fuel should produce >15% score difference")
     }

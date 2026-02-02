@@ -29,13 +29,14 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 19 | **BROKEN — impossible to land.** Velocity thresholds dead code since initial commit; Build 19 first enforcement but pre-thrust values too strict. See DIAGNOSTIC. |
+| 2.0.3 | 21 | Per-platform speed bands + removed HARD penalty + scoring overhaul. Uploaded to TestFlight. Velocity threshold enforcement still pending design decision. |
 
 **NEXT STEPS:**
-1. **BLOCKED: Game design decision required** — should speed affect landing success? See `Docs/DIAGNOSTIC_velocity_thresholds.md`
-2. Fix Build 19 based on decision. Fix HUD threshold mismatch. Fix menu ad clipping.
-3. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-4. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
+1. **Game design decision required** — should speed affect landing success? See `Docs/DIAGNOSTIC_velocity_thresholds.md`
+2. Fix velocity threshold enforcement based on decision. Fix HUD threshold display. Fix menu ad clipping.
+3. Device test Build 21 on TestFlight (scoring feel, HARD landing scores)
+4. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+5. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -1364,4 +1365,97 @@ See `Docs/DIAGNOSTIC_velocity_thresholds.md` for full analysis.
 
 ---
 
-*Last updated: 2026-02-01 (Session 34, Build 19 — BROKEN)*
+### Session 35 (2026-02-01) - Scoring Overhaul: Per-Platform Speed Bands + HARD Penalty Removal
+
+**Goal:** Remove the overly harsh 0.4× HARD landing penalty, commit per-platform speed bands system, upload Build 21 to TestFlight, and run updated perfect score simulation.
+
+#### Changes Made:
+
+1. **Per-Platform Speed Bands (`LandingThresholds.swift` — new file)**:
+   - `SpeedBand` enum: `.safe`, `.hard`, `.fail` with Comparable conformance
+   - `PlatformBands` struct: per-platform safe/hard thresholds for V and H speeds
+   - Platform A: V≤80/H≤60 (safe), V≤120/H≤100 (hard), above = fail
+   - Platform B: V≤55/H≤45 (safe), V≤85/H≤75 (hard), above = fail
+   - Platform C: V≤35/H≤30 (safe), V≤55/H≤50 (hard), above = fail
+   - Pure `evaluate()` function for landing classification
+   - `LandingEvaluationTests.swift`: 20 tests covering all platforms, boundaries, composites
+
+2. **Removed explicit HARD landing penalty (`GameScene+Scoring.swift`, `ScoringHelper.swift`)**:
+   - Removed `if speedBand == .hard { subtotal *= 0.4 }` from both production and test scoring
+   - HARD landings are now penalized naturally: velocity components (500 soft + 400 horizontal = 900 pts) score zero because speeds exceed the safe threshold (the scoring denominator)
+   - Consistent ~55% reduction (HARD gets ~1100/2000 subtotal vs SAFE's 2000/2000)
+   - No scoring discontinuity at the SAFE/HARD boundary
+   - Satisfies constraint: HARD-C > SAFE-B > SAFE-A at all fuel levels
+
+3. **Updated scoring tests (`ScoringTests.swift`)**:
+   - Renamed `testHardLandingPenalty` → `testHardLandingNaturalPenalty`
+   - Added `testHardCBeatsSafeB`: verifies constraint at multiple fuel levels
+   - Added `testHardCBeatsSafeA`: verifies constraint
+   - Added `testNoPenaltyDiscontinuity`: V=34 (SAFE-C) ≈ V=36 (HARD-C) within 100 pts
+   - Added `testApproachSpeedImpact`: approach component contributes ~150 pts
+   - Total: 16 scoring tests (was 11)
+
+4. **Updated Python scoring script (`Scripts/calculate_perfect_scores.py`)**:
+   - Removed 0.4× HARD penalty from `calc_score()` and `score_detail()`
+   - All 33/33 optimal landings are in SAFE band (no HARD landings in optimal play)
+   - Best: Classic C = 12,077 (via left screen wrap, 30% fuel)
+   - Worst: Europa A = 2,663 (43% fuel)
+   - Score range: 2,663 – 12,077
+
+5. **Build 21 uploaded to TestFlight**:
+   - Bumped build from 19 → 21 (skipping 20 which was reverted)
+   - Archive + export succeeded. dSYM warnings for GoogleMobileAds are harmless.
+
+6. **Documented in DECISIONS.md**: Full entry for the removal decision with context, options, and consequences.
+
+#### Perfect Score Simulation Results (Build 21):
+
+| Level | Platform A | Platform B | Platform C | C Direction |
+|-------|-----------|-----------|-----------|-------------|
+| Classic | 3,023 (60% fuel) | 5,135 (39%) | 12,077 (30%) | ← wrap |
+| Moon | 2,776 (53%) | 4,423 (25%) | 10,110 (16%) | ← wrap |
+| Mars | 2,766 (55%) | 4,311 (23%) | 10,494 (16%) | ← wrap |
+| Titan | 2,687 (50%) | 4,489 (22%) | 10,126 (14%) | ← wrap |
+| Europa | 2,663 (43%) | 4,340 (24%) | 9,975 (12%) | ← wrap |
+| Earth | 2,750 (48%) | 4,504 (31%) | 10,574 (17%) | ← wrap |
+| Venus | 2,757 (50%) | 4,658 (29%) | 10,610 (18%) | ← wrap |
+| Mercury | 2,738 (51%) | 4,700 (32%) | 11,047 (23%) | ← wrap |
+| Ganymede | 2,781 (53%) | 4,738 (30%) | 10,977 (16%) | ← wrap |
+| Io | 2,794 (51%) | 4,454 (21%) | 11,289 (22%) | ← wrap |
+| Jupiter | 2,715 (57%) | 4,856 (32%) | 11,244 (25%) | ← wrap |
+
+**Achievement planning (% of ceiling)**: Expert=70%, Good=45%, Average=25%
+
+Key findings:
+- All 33/33 landings in SAFE band — optimal play never enters HARD
+- 11/33 use left screen wrap (all Platform C)
+- 0/33 off-center — center landing always optimal
+- Fuel range: 12%–60% remaining
+
+#### Files Created:
+- `RocketLander/Models/LandingThresholds.swift`
+- `RocketLanderTests/LandingEvaluationTests.swift`
+
+#### Files Modified:
+- `RocketLander/GameScene+Scoring.swift` — removed HARD penalty
+- `RocketLanderTests/ScoringHelper.swift` — removed HARD penalty
+- `RocketLanderTests/ScoringTests.swift` — updated + 5 new tests
+- `Scripts/calculate_perfect_scores.py` — removed HARD penalty
+- `DECISIONS.md` — new entry for HARD penalty removal
+- `RocketLander/Info.plist` — build 19 → 21
+- `RocketLander.xcodeproj/project.pbxproj` — added new files to project
+
+#### Definition of Done:
+- [x] HARD penalty removed from all 3 scoring implementations (app, test helper, Python)
+- [x] Per-platform speed bands committed (LandingThresholds.swift)
+- [x] 90/90 tests pass (25 new tests: 20 landing evaluation + 5 scoring)
+- [x] Build succeeds
+- [x] Build 21 archived and uploaded to TestFlight
+- [x] Perfect score simulation updated (33/33 computed, all SAFE band)
+- [x] DECISIONS.md entry added
+- [x] All docs updated (CHANGELOG, STATUS, PROJECT_LOG, README)
+- [x] Session summary created
+
+---
+
+*Last updated: 2026-02-01 (Session 35, Build 21)*

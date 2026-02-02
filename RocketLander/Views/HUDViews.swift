@@ -79,9 +79,8 @@ struct TopHUDView: View {
 struct VelocityHUDView: View {
     @ObservedObject var gameState: GameState
 
-    private let maxSafeVertical: CGFloat = 50.0
-    private let maxSafeHorizontal: CGFloat = 30.0
-    private let maxSafeRotation: CGFloat = 0.05  // radians (~2.9°)
+    // HUD uses Platform C (strictest) thresholds as universal reference
+    private let hudBands = LandingThresholds.platformC
 
     // Display values: frozen final* on game-over, live during gameplay
     private var displayVertical: CGFloat {
@@ -115,7 +114,7 @@ struct VelocityHUDView: View {
 
                 Spacer()
 
-                Text(displayVertical <= maxSafeVertical ? "OK" : "HIGH")
+                Text(displayVertical <= hudBands.safeVertical ? "OK" : "HIGH")
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(verticalColor)
                     .lineLimit(1)
@@ -148,7 +147,7 @@ struct VelocityHUDView: View {
 
                 Spacer()
 
-                Text(displayHorizontal <= maxSafeHorizontal ? "OK" : "HIGH")
+                Text(displayHorizontal <= hudBands.safeHorizontal ? "OK" : "HIGH")
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(horizontalColor)
                     .lineLimit(1)
@@ -178,7 +177,7 @@ struct VelocityHUDView: View {
                             .foregroundColor(tiltColor)
                             .fixedSize()
 
-                        if tiltDegrees > maxSafeRotation * 180 / .pi {
+                        if tiltDegrees > safeTiltDegrees {
                             Text(tiltDirection)
                                 .font(.system(size: 14, weight: .bold, design: .monospaced))
                                 .foregroundColor(tiltColor)
@@ -189,7 +188,7 @@ struct VelocityHUDView: View {
 
                 Spacer()
 
-                Text(tiltDegrees <= maxSafeRotation * 180 / .pi ? "OK" : "HIGH")
+                Text(tiltDegrees <= safeTiltDegrees ? "OK" : "HIGH")
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(tiltColor)
                     .lineLimit(1)
@@ -203,12 +202,12 @@ struct VelocityHUDView: View {
             Divider()
                 .background(Color.gray.opacity(0.3))
 
-            // Safe landing thresholds
+            // Safe landing thresholds (Platform C reference)
             HStack {
                 Text("SAFE:")
                     .font(.system(size: 9, weight: .medium))
                     .foregroundColor(.gray)
-                Text("V<50 H<30 T<3°")
+                Text("V<\(Int(hudBands.safeVertical)) H<\(Int(hudBands.safeHorizontal)) T<3°")
                     .font(.system(size: 9, weight: .medium, design: .monospaced))
                     .foregroundColor(.green.opacity(0.7))
             }
@@ -223,15 +222,19 @@ struct VelocityHUDView: View {
         )
     }
 
+    private var safeTiltDegrees: CGFloat {
+        LandingThresholds.maxRotation * 180 / .pi
+    }
+
     var verticalColor: Color {
-        if displayVertical <= maxSafeVertical * 0.6 { return .green }
-        if displayVertical <= maxSafeVertical { return .yellow }
+        if displayVertical <= hudBands.safeVertical { return .green }
+        if displayVertical <= hudBands.hardVertical { return .yellow }
         return .red
     }
 
     var horizontalColor: Color {
-        if displayHorizontal <= maxSafeHorizontal * 0.6 { return .green }
-        if displayHorizontal <= maxSafeHorizontal { return .yellow }
+        if displayHorizontal <= hudBands.safeHorizontal { return .green }
+        if displayHorizontal <= hudBands.hardHorizontal { return .yellow }
         return .red
     }
 
@@ -244,10 +247,8 @@ struct VelocityHUDView: View {
     }
 
     var tiltColor: Color {
-        let safeDegrees = maxSafeRotation * 180 / .pi
-        if tiltDegrees <= safeDegrees { return .green }
-        if tiltDegrees <= safeDegrees * 2 { return .yellow }
-        // Direction-based color for high tilt
+        if tiltDegrees <= safeTiltDegrees { return .green }
+        if tiltDegrees <= safeTiltDegrees * 2 { return .yellow }
         return displayTiltAngle > 0 ? .cyan : .orange
     }
 }

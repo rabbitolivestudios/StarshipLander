@@ -1,0 +1,112 @@
+import CoreGraphics
+
+// MARK: - Speed Band Classification
+
+enum SpeedBand: Int, Comparable {
+    case safe = 0
+    case hard = 1
+    case fail = 2
+
+    static func < (lhs: SpeedBand, rhs: SpeedBand) -> Bool {
+        lhs.rawValue < rhs.rawValue
+    }
+}
+
+// MARK: - Landing Result
+
+struct LandingResult {
+    let success: Bool
+    let speedBand: SpeedBand
+    let rotationFailed: Bool
+}
+
+// MARK: - Platform Speed Bands
+
+struct PlatformBands {
+    let safeVertical: CGFloat
+    let hardVertical: CGFloat    // FAIL threshold is > hardVertical
+    let safeHorizontal: CGFloat
+    let hardHorizontal: CGFloat  // FAIL threshold is > hardHorizontal
+}
+
+// MARK: - Landing Thresholds (Single Source of Truth)
+
+enum LandingThresholds {
+
+    // Hard gate — all platforms
+    static let maxRotation: CGFloat = 0.05  // ~2.9°
+
+    // Approach speed — scoring/messaging only, NOT a crash gate
+    static let approachSpeedScoringThreshold: CGFloat = 80.0
+
+    // Per-platform speed bands
+    static let platformA = PlatformBands(
+        safeVertical: 80, hardVertical: 120,
+        safeHorizontal: 60, hardHorizontal: 100
+    )
+
+    static let platformB = PlatformBands(
+        safeVertical: 55, hardVertical: 85,
+        safeHorizontal: 45, hardHorizontal: 75
+    )
+
+    static let platformC = PlatformBands(
+        safeVertical: 35, hardVertical: 55,
+        safeHorizontal: 30, hardHorizontal: 50
+    )
+
+    static func bands(for platform: LandingPlatform) -> PlatformBands {
+        switch platform {
+        case .a: return platformA
+        case .b: return platformB
+        case .c: return platformC
+        }
+    }
+
+    // MARK: - Band Classification
+
+    static func verticalBand(_ speed: CGFloat, platform: LandingPlatform) -> SpeedBand {
+        let b = bands(for: platform)
+        if speed <= b.safeVertical { return .safe }
+        if speed <= b.hardVertical { return .hard }
+        return .fail
+    }
+
+    static func horizontalBand(_ speed: CGFloat, platform: LandingPlatform) -> SpeedBand {
+        let b = bands(for: platform)
+        if speed <= b.safeHorizontal { return .safe }
+        if speed <= b.hardHorizontal { return .hard }
+        return .fail
+    }
+
+    // MARK: - Pure Landing Evaluation
+
+    static func evaluate(
+        verticalSpeed: CGFloat,
+        horizontalSpeed: CGFloat,
+        rotation: CGFloat,
+        platform: LandingPlatform
+    ) -> LandingResult {
+        let rotationFailed = rotation > maxRotation
+
+        let vBand = verticalBand(verticalSpeed, platform: platform)
+        let hBand = horizontalBand(horizontalSpeed, platform: platform)
+
+        // Worst band wins (higher = worse)
+        let overallBand = max(vBand, hBand)
+
+        if rotationFailed || overallBand == .fail {
+            return LandingResult(
+                success: false,
+                speedBand: overallBand,
+                rotationFailed: rotationFailed
+            )
+        }
+
+        return LandingResult(
+            success: true,
+            speedBand: overallBand,
+            rotationFailed: false
+        )
+    }
+}

@@ -10,11 +10,15 @@ Physics model (matching GameScene.swift + SpriteKit internals):
   Tilt θ: vy += cos(θ)*T, vx += sin(θ)*T*0.85 (net after vectoring)
   Fuel: 0.3%/thrust frame, 0.08%/rotation frame
 
-  Landing gates (ALL must pass, or crash):
-    - verticalSpeed <= 40 pts/s
-    - horizontalSpeed <= 25 pts/s
-    - rotation <= 0.05 rad
-    - approachSpeed <= 80 pts/s  (average of last 30 velocity samples)
+  Landing evaluation (per-platform speed bands):
+    - rotation <= 0.05 rad (hard gate, all platforms)
+    - vertical/horizontal speed checked against platform-specific SAFE/HARD/FAIL bands
+    - approach speed is scoring only, NOT a crash gate
+
+  Per-platform thresholds (matching LandingThresholds.swift):
+    Platform A: V_safe=80  V_hard=120  H_safe=60  H_hard=100
+    Platform B: V_safe=55  V_hard=85   H_safe=45  H_hard=75
+    Platform C: V_safe=35  V_hard=55   H_safe=30  H_hard=50
 
   Screen wrapping: x < -20 → x = screenW + 20; x > screenW + 20 → x = -20
   Velocity preserved through wrap. Going left from start can be shorter to
@@ -51,11 +55,18 @@ FUEL_ROTATE = 0.08
 CAMPAIGN_INITIAL_TILT = 0.12       # ~6.9° left tilt (radians)
 CAMPAIGN_INITIAL_HSPEED = 15.0     # rightward drift (pts/s)
 
-MAX_SAFE_VERT = 40.0
-MAX_SAFE_HORIZ = 25.0
 MAX_SAFE_ROT = 0.05
-MAX_SAFE_APPROACH = 80.0
 APPROACH_WINDOW = 30
+
+# Approach speed scoring threshold (not a crash gate)
+APPROACH_SCORING_THRESHOLD = 80.0
+
+# Per-platform speed bands (matching LandingThresholds.swift)
+PLATFORM_BANDS = {
+    "A": {"v_safe": 80.0, "v_hard": 120.0, "h_safe": 60.0, "h_hard": 100.0},
+    "B": {"v_safe": 55.0, "v_hard": 85.0,  "h_safe": 45.0, "h_hard": 75.0},
+    "C": {"v_safe": 35.0, "v_hard": 55.0,  "h_safe": 30.0, "h_hard": 50.0},
+}
 
 
 # =============================================================================
@@ -89,35 +100,51 @@ def g_frame(g_val):
     return abs(g_val) * PTS_PER_M * DT
 
 
+def classify_band(v, h, plat_name):
+    """Classify landing into SAFE/HARD/FAIL band for a platform."""
+    bands = PLATFORM_BANDS[plat_name]
+    v_band = "safe" if v <= bands["v_safe"] else ("hard" if v <= bands["v_hard"] else "fail")
+    h_band = "safe" if h <= bands["h_safe"] else ("hard" if h <= bands["h_hard"] else "fail")
+    # Worst band wins
+    order = {"safe": 0, "hard": 1, "fail": 2}
+    return max(v_band, h_band, key=lambda b: order[b])
+
+
 # =============================================================================
 # Scoring
 # =============================================================================
 
-def calc_score(v, h, rot, appr, fuel, rx, plat):
+def calc_score(v, h, rot, appr, fuel, rx, plat, speed_band="safe"):
+    bands = PLATFORM_BANDS[plat["name"]]
     sub = 100.0
-    sub += 500.0 * (1.0 - min(1.0, v / MAX_SAFE_VERT)) ** 2
-    sub += 400.0 * (1.0 - min(1.0, h / MAX_SAFE_HORIZ)) ** 2
+    sub += 500.0 * (1.0 - min(1.0, v / bands["v_safe"])) ** 2
+    sub += 400.0 * (1.0 - min(1.0, h / bands["h_safe"])) ** 2
     cr = min(1.0, abs(rx - plat["x"]) / (plat["w"] / 2.0))
     sub += 600.0 * (1.0 - cr) ** 2
     sub += 250.0 * (1.0 - min(1.0, rot / MAX_SAFE_ROT)) ** 2
-    sub += 150.0 * (1.0 - min(1.0, appr / MAX_SAFE_APPROACH)) ** 2
+    sub += 150.0 * (1.0 - min(1.0, appr / APPROACH_SCORING_THRESHOLD)) ** 2
+    # HARD landings: no explicit penalty — velocity components naturally zero out.
+
     fm = 1.0 + fuel / 100.0
     return int(sub * fm * plat["mult"]), sub, fm
 
 
-def score_detail(v, h, rot, appr, fuel, rx, plat):
+def score_detail(v, h, rot, appr, fuel, rx, plat, speed_band="safe"):
+    bands = PLATFORM_BANDS[plat["name"]]
     base = 100.0
-    soft = 500.0 * (1.0 - min(1.0, v / MAX_SAFE_VERT)) ** 2
-    hz = 400.0 * (1.0 - min(1.0, h / MAX_SAFE_HORIZ)) ** 2
+    soft = 500.0 * (1.0 - min(1.0, v / bands["v_safe"])) ** 2
+    hz = 400.0 * (1.0 - min(1.0, h / bands["h_safe"])) ** 2
     cr = min(1.0, abs(rx - plat["x"]) / (plat["w"] / 2.0))
     ctr = 600.0 * (1.0 - cr) ** 2
     rt = 250.0 * (1.0 - min(1.0, rot / MAX_SAFE_ROT)) ** 2
-    ap = 150.0 * (1.0 - min(1.0, appr / MAX_SAFE_APPROACH)) ** 2
+    ap = 150.0 * (1.0 - min(1.0, appr / APPROACH_SCORING_THRESHOLD)) ** 2
     sub = base + soft + hz + ctr + rt + ap
+    # HARD landings: no explicit penalty — velocity components naturally zero out.
     fm = 1.0 + fuel / 100.0
     return {"base": base, "soft": soft, "horiz": hz, "center": ctr,
             "rot": rt, "approach": ap, "sub": sub, "fm": fm,
-            "pm": plat["mult"], "total": int(sub * fm * plat["mult"])}
+            "pm": plat["mult"], "total": int(sub * fm * plat["mult"]),
+            "band": speed_band}
 
 
 # =============================================================================
@@ -164,6 +191,7 @@ def simulate(level, plat, target_desc=35.0, max_tilt=0.40,
     (1.0-2.0x multiplier on entire subtotal), and other landing quality metrics.
     Landing off-center but saving fuel can sometimes score higher.
     """
+    bands = PLATFORM_BANDS[plat["name"]]
     gv = g_frame(level["g"])
     T = level["T"]
     net_upright = T - gv
@@ -225,7 +253,7 @@ def simulate(level, plat, target_desc=35.0, max_tilt=0.40,
         if len(vel_ring) > APPROACH_WINDOW:
             vel_ring.pop(0)
 
-        if height <= 0.5 and desc <= MAX_SAFE_VERT:
+        if height <= 0.5 and desc <= bands["v_safe"]:
             break
         if height < -10 or fuel <= 0.5:
             return None
@@ -334,7 +362,7 @@ def simulate(level, plat, target_desc=35.0, max_tilt=0.40,
         x += vx / FPS
         y += vy / FPS
 
-        # Screen wrapping (matching GameScene.swift lines 338-343)
+        # Screen wrapping (matching GameScene.swift)
         if x < -20:
             x = SCREEN_W + 20
         elif x > SCREEN_W + 20:
@@ -360,10 +388,18 @@ def simulate(level, plat, target_desc=35.0, max_tilt=0.40,
 
     appr = sum(vel_ring) / len(vel_ring) if vel_ring else lv
 
-    if lv > MAX_SAFE_VERT or lh > MAX_SAFE_HORIZ or appr > MAX_SAFE_APPROACH:
+    # Classify speed band for this platform
+    band = classify_band(lv, lh, plat["name"])
+
+    # FAIL band = crash (speed too high for this platform)
+    if band == "fail":
         return None
 
-    score, sub, fm = calc_score(lv, lh, rot, appr, fuel, x, plat)
+    # Rotation gate
+    if rot > MAX_SAFE_ROT:
+        return None
+
+    score, sub, fm = calc_score(lv, lh, rot, appr, fuel, x, plat, speed_band=band)
 
     return {
         "score": score, "sub": round(sub, 1), "fm": round(fm, 3),
@@ -372,6 +408,7 @@ def simulate(level, plat, target_desc=35.0, max_tilt=0.40,
         "appr": round(appr, 1),
         "frames": frame + 1, "x": round(x, 1),
         "go_left": go_left, "x_offset": round(x_offset, 2),
+        "band": band,
     }
 
 
@@ -443,8 +480,16 @@ def main():
     print("PHYSICS MODEL")
     print(f"  Screen: {SCREEN_W:.0f}×{SCREEN_H:.0f} | Start: ({START_X:.1f}, {START_Y:.0f}) | Platform Y: {PLATFORM_Y:.0f} | Fall: {FALL_HEIGHT:.0f} pts")
     print(f"  Gravity/frame: |g|×2.5 | Thrust/frame: T | Hover duty: g_frame/T")
-    print(f"  Approach gate: avg(last {APPROACH_WINDOW} speeds) <= {MAX_SAFE_APPROACH}")
+    print(f"  Approach scoring threshold: {APPROACH_SCORING_THRESHOLD} (NOT a crash gate)")
     print(f"  Screen wrap: x<-20 → {SCREEN_W:.0f}+20 | x>{SCREEN_W:.0f}+20 → -20")
+    print()
+
+    print("PER-PLATFORM SPEED BANDS")
+    print(f"  {'Plat':>4} | {'V_safe':>6} {'V_hard':>6} {'V_fail':>7} | {'H_safe':>6} {'H_hard':>6} {'H_fail':>7}")
+    print(f"  {'-'*4} | {'-'*6} {'-'*6} {'-'*7} | {'-'*6} {'-'*6} {'-'*7}")
+    for pn, b in PLATFORM_BANDS.items():
+        print(f"  {pn:>4} | {b['v_safe']:>6.0f} {b['v_hard']:>6.0f} {'>'+str(int(b['v_hard'])):>7} | "
+              f"{b['h_safe']:>6.0f} {b['h_hard']:>6.0f} {'>'+str(int(b['h_hard'])):>7}")
     print()
 
     print(f"  {'Level':<10} {'|g|':>4} {'T':>5} | {'g/f':>5} {'Net':>5} {'Ratio':>6} {'Hover':>6}")
@@ -483,9 +528,9 @@ def main():
     print("OPTIMAL PLAY SCORES (maximum achievable points)")
     print("Optimized over: descent speed, tilt angle, direction (L/R), landing position")
     print()
-    hdr = f"  {'Level':<10} {'g':>4} {'T':>5} | {'A':>7} {'f%':>4} | {'B':>7} {'f%':>4} | {'C':>7} {'f%':>4} {'dir':>4}"
+    hdr = f"  {'Level':<10} {'g':>4} {'T':>5} | {'A':>7} {'f%':>4} {'band':>4} | {'B':>7} {'f%':>4} {'band':>4} | {'C':>7} {'f%':>4} {'band':>4} {'dir':>4}"
     print(hdr)
-    print("  " + "-" * 72)
+    print("  " + "-" * 85)
 
     all_r = {}
     for lv in LEVELS:
@@ -496,12 +541,13 @@ def main():
             r = find_best(lv, p, is_campaign=is_campaign)
             if r:
                 d = "←" if r.get("go_left") else "→"
-                row += f" {r['score']:>7,} {r['fuel']:>3.0f}% |"
+                b = r.get("band", "safe")[0].upper()
+                row += f" {r['score']:>7,} {r['fuel']:>3.0f}% {b:>4} |"
                 if p["name"] == "C":
                     row += f"  {d}"
                 lr[p["name"]] = r
             else:
-                row += f" {'FAIL':>7} {'':>4} |"
+                row += f" {'FAIL':>7} {'':>4} {'':>4} |"
                 lr[p["name"]] = None
         print(row)
         all_r[lv["name"]] = lr
@@ -509,8 +555,8 @@ def main():
 
     # Landing details
     print("LANDING DETAILS")
-    print(f"  {'Level':<10} | {'A v':>4} {'Ah':>4} {'Aap':>4} {'Axo':>4} | {'B v':>4} {'Bh':>4} {'Bap':>4} {'Bxo':>4} | {'C v':>4} {'Ch':>4} {'Cap':>4} {'Cxo':>4}")
-    print("  " + "-" * 75)
+    print(f"  {'Level':<10} | {'A v':>4} {'Ah':>4} {'Aap':>4} {'Axo':>4} {'Ab':>4} | {'B v':>4} {'Bh':>4} {'Bap':>4} {'Bxo':>4} {'Bb':>4} | {'C v':>4} {'Ch':>4} {'Cap':>4} {'Cxo':>4} {'Cb':>4}")
+    print("  " + "-" * 90)
     for lv in LEVELS:
         lr = all_r[lv["name"]]
         row = f"  {lv['name']:<10} |"
@@ -518,9 +564,10 @@ def main():
             r = lr.get(pn)
             if r:
                 xo = r.get("x_offset", 0)
-                row += f" {r['v']:>4.0f} {r['h']:>4.1f} {r['appr']:>4.0f} {xo:>+4.1f} |"
+                b = r.get("band", "safe")[0].upper()
+                row += f" {r['v']:>4.0f} {r['h']:>4.1f} {r['appr']:>4.0f} {xo:>+4.1f} {b:>4} |"
             else:
-                row += f" {'—':>4} {'—':>4} {'—':>4} {'—':>4} |"
+                row += f" {'—':>4} {'—':>4} {'—':>4} {'—':>4} {'—':>4} |"
         print(row)
     print()
 
@@ -541,10 +588,11 @@ def main():
             print()
             continue
         p = next(pp for pp in PLATFORMS if pp["name"] == pname)
-        bd = score_detail(r["v"], r["h"], 0.005, r["appr"], r["fuel"], r["x"], p)
+        band = r.get("band", "safe")
+        bd = score_detail(r["v"], r["h"], 0.005, r["appr"], r["fuel"], r["x"], p, speed_band=band)
         d = "←wrap" if r.get("go_left") else "→"
         xo = r.get("x_offset", 0)
-        print(f"  {lname} {pname} — {desc}")
+        print(f"  {lname} {pname} — {desc} [{band.upper()}]")
         print(f"    Dir: {d} | Fuel: {r['fuel']:.0f}% | x={r['x']:.0f} (offset {xo:+.1f}) | {r['frames']}f")
         print(f"    B:{bd['base']:.0f} S:{bd['soft']:.0f} H:{bd['horiz']:.0f} "
               f"C:{bd['center']:.0f} R:{bd['rot']:.0f} A:{bd['approach']:.0f} "
@@ -579,12 +627,16 @@ def main():
         fuels = [r["fuel"] for _, _, r in scores]
         wraps = sum(1 for _, _, r in scores if r.get("go_left"))
         offcenter = sum(1 for _, _, r in scores if abs(r.get("x_offset", 0)) > 0.1)
+        safe_count = sum(1 for _, _, r in scores if r.get("band") == "safe")
+        hard_count = sum(1 for _, _, r in scores if r.get("band") == "hard")
         print(f"  Best:  {hi[0]} {hi[1]} = {hi[2]['score']:,} (fuel {hi[2]['fuel']:.0f}%)")
         print(f"  Worst: {lo[0]} {lo[1]} = {lo[2]['score']:,} (fuel {lo[2]['fuel']:.0f}%)")
         print(f"  Fuel range: {min(fuels):.0f}%–{max(fuels):.0f}%")
-        print(f"  Landings using left wrap: {wraps}/33")
-        print(f"  Landings off-center: {offcenter}/33")
-        print(f"  Landings computed: {len(scores)}/33")
+        print(f"  Landings using left wrap: {wraps}/{len(scores)}")
+        print(f"  Landings off-center: {offcenter}/{len(scores)}")
+        print(f"  Landings in SAFE band: {safe_count}/{len(scores)}")
+        print(f"  Landings in HARD band: {hard_count}/{len(scores)}")
+        print(f"  Landings computed: {len(scores)}/{len(LEVELS) * len(PLATFORMS)}")
     else:
         print("  ERROR: No landings succeeded. Physics model needs review.")
 

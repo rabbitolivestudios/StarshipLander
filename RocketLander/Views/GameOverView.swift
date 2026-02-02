@@ -7,23 +7,37 @@ struct FinalStatsView: View {
     let horizontalSpeed: CGFloat
     let fuel: Double
     let distanceFromCenter: CGFloat?
+    let platform: LandingPlatform?
+    let speedBand: SpeedBand
 
-    private let maxSafeRotationDeg: Double = 0.05 * 180 / .pi
-    private let maxSafeVertical: CGFloat = 40.0
-    private let maxSafeHorizontal: CGFloat = 25.0
+    private var bands: PlatformBands {
+        LandingThresholds.bands(for: platform ?? .c)
+    }
+
+    private var maxSafeRotationDeg: Double {
+        LandingThresholds.maxRotation * 180 / .pi
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("FLIGHT DATA")
-                .font(.system(size: 10, weight: .bold))
-                .foregroundColor(.gray)
+            HStack {
+                Text("FLIGHT DATA")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundColor(.gray)
+                Spacer()
+                if speedBand == .hard {
+                    Text("HARD LANDING")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundColor(.yellow)
+                }
+            }
 
             statRow(label: "Tilt", value: String(format: "%.1f°", tiltDegrees),
                     safe: tiltDegrees <= maxSafeRotationDeg)
             statRow(label: "V.Speed", value: String(format: "%.0f", verticalSpeed),
-                    safe: verticalSpeed <= maxSafeVertical)
+                    safe: verticalSpeed <= bands.safeVertical)
             statRow(label: "H.Speed", value: String(format: "%.0f", horizontalSpeed),
-                    safe: horizontalSpeed <= maxSafeHorizontal)
+                    safe: horizontalSpeed <= bands.safeHorizontal)
             statRow(label: "Fuel", value: String(format: "%.0f%%", fuel),
                     safe: fuel > 0)
 
@@ -110,7 +124,9 @@ struct GameOverView: View {
                     verticalSpeed: gameState.finalVerticalSpeed,
                     horizontalSpeed: gameState.finalHorizontalSpeed,
                     fuel: gameState.finalFuel,
-                    distanceFromCenter: gameState.finalDistanceFromCenter
+                    distanceFromCenter: gameState.finalDistanceFromCenter,
+                    platform: gameState.landedPlatform,
+                    speedBand: gameState.landingSpeedBand
                 )
 
                 // High score input
@@ -151,7 +167,9 @@ struct GameOverView: View {
                     verticalSpeed: gameState.finalVerticalSpeed,
                     horizontalSpeed: gameState.finalHorizontalSpeed,
                     fuel: gameState.finalFuel,
-                    distanceFromCenter: nil
+                    distanceFromCenter: nil,
+                    platform: nil,
+                    speedBand: .fail
                 )
             }
 
