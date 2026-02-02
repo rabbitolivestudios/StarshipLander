@@ -67,7 +67,7 @@ However, session 35's documentation incorrectly stated "this session's changes o
 - `71fc211` — Update session 36 summary with commit hash
 - `5051587` — Correct stale docs: velocity threshold enforcement is resolved, not pending
 - `a36bbb9` — Fix docs: menu ad fix is on main, not in Build 21 on TestFlight
-- `_pending_` — Build 22 upload + documentation updates
+- `7e22dd5` — Build 22 uploaded to TestFlight — includes menu ad clipping fix
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
