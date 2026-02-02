@@ -1677,9 +1677,36 @@ Key findings:
 - [x] Bottom padding clears banner ad
 - [x] Build succeeds
 - [x] All docs updated
+- [x] Build 24 archived and uploaded to TestFlight
 - [ ] Simulator test on iPhone SE to verify scrolling behavior
-- [ ] Device test on TestFlight
+- [ ] Device test on TestFlight Build 24
+
+#### Commits:
+- `edf13e1` — Session 40: Replace inline HOW TO PLAY with rich info sheet
+- `37a0fa8` — Bump build number to 24 for TestFlight upload
+- `4c03154` — Remove API key from repo — moved to ~/.appstoreconnect/private_keys/
 
 ---
 
-*Last updated: 2026-02-02 (Session 40)*
+### Session 41 (2026-02-02) - Build 24 TestFlight Upload
+
+**Goal:** Commit Session 40 changes, archive Build 24, and upload to TestFlight for device testing.
+
+#### Changes Made:
+
+1. **Committed Session 40 work**: Menu layout fix (How to Play info sheet replacing inline section), HowToPlayView.swift, screenshot housekeeping, all documentation updates.
+
+2. **Build 24 archived and uploaded to TestFlight**: Bumped build number 23 → 24. Archived over Tailscale SSH after unlocking Keychain. Exported and uploaded via App Store Connect API key (key ID: removed, auth: removed). dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless).
+
+3. **New API key setup**: Previous key (removed) was rotated after Session 39. New key (removed) created by user, saved to `~/.appstoreconnect/private_keys/` with restricted permissions. Key was transferred securely and later rotated per security policy.
+
+#### No app code changes (build bump only).
+
+#### Commits:
+- `edf13e1` — Session 40: Replace inline HOW TO PLAY with rich info sheet
+- `37a0fa8` — Bump build number to 24 for TestFlight upload
+- `4c03154` — Remove API key from repo
+
+---
+
+*Last updated: 2026-02-02 (Session 41)*

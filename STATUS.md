@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-02 (Session 40)
+> Last reconciled: 2026-02-02 (Session 41)
 
 ---
 
@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 23) — per-platform speed bands, velocity threshold enforcement, removed HARD penalty, menu ad fix, text truncation fixes. |
-| Version Status | Build 23 on TestFlight (uploaded 2026-02-02). v2.0.2 Build 16 submitted for App Store review. |
+| Current Version | 2.0.3 (Build 24) — per-platform speed bands, velocity threshold enforcement, removed HARD penalty, menu ad fix, text truncation fixes, How to Play info sheet. |
+| Version Status | Build 24 on TestFlight (uploaded 2026-02-02). v2.0.2 Build 16 submitted for App Store review. |
 | Last Published | v1.1.5 (Build 11) — on App Store |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -78,13 +78,13 @@ These are **not implemented**. Do not assume otherwise:
 
 **Phase: Campaign Engagement — v2.0.3 scoring & threshold overhaul complete, then v2.1.0 (Community)**
 
-v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 23) uploaded to TestFlight on 2026-02-02 — includes all fixes from Session 38 (text truncation, menu ad restructure). Pending device testing of Fix A (text truncation). All v2.0.3 changes: per-platform speed bands, velocity threshold enforcement, removed HARD penalty, scoring overhaul, text truncation fixes, menu ad restructure, code housekeeping. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 24) uploaded to TestFlight on 2026-02-02 — includes all fixes through Session 40 (text truncation, menu ad restructure, How to Play info sheet, menu layout fix). All v2.0.3 changes: per-platform speed bands, velocity threshold enforcement, removed HARD penalty, scoring overhaul, text truncation fixes, menu ad restructure, code housekeeping, How to Play info sheet, menu layout fix. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. User tests Fix A (text truncation) on device via TestFlight Build 23
+1. User tests Build 24 on device via TestFlight (How to Play sheet, menu layout, text truncation)
 2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 3. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
 4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
@@ -120,7 +120,7 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 23
 
 - **v2.0.0 never reviewed** — submitted 2026-01-30, still "Waiting for Review" on 2026-02-01. Decision: replace with v2.0.2 (Build 16) to avoid shipping outdated gameplay
 - **v1.1.5 is the current live version** — published on App Store (Build 11)
-- **Build 23** — includes all v2.0.3 changes through Session 38 (text truncation fix, menu ad restructure, code housekeeping). Uploaded to TestFlight 2026-02-02. Pending device testing of Fix A (text truncation). Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
+- **Build 24** — includes all v2.0.3 changes through Session 40 (text truncation fix, menu ad restructure, code housekeeping, How to Play info sheet, menu layout fix). Uploaded to TestFlight 2026-02-02. Pending device testing. Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
 - **Velocity thresholds were dead code before Build 21** — SpriteKit collision resolution zeroed velocities before `didBegin(contact:)` fired in all builds through Build 18. All prior high scores were achieved under "speed doesn't matter" regime. **RESOLVED in Build 21** with post-thrust tracking and per-platform FAIL thresholds.
 - **HUD threshold mismatch RESOLVED** — HUD previously showed V<50 H<30 with actual thresholds V<40 H<25. **Fixed in Build 21** — HUD now reads from `LandingThresholds.platformC` (V<35, H<30).
 - **Unit tests have no integration coverage** — 65 tests all test isolated pure functions. No test simulates a physics collision to verify landing pass/fail decision. This is the test that would have caught the bug.

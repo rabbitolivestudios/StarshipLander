@@ -58,10 +58,13 @@ Sections:
 - [x] All documentation updated (CHANGELOG, STATUS, PROJECT_LOG, README, CLAUDE.md, session summary)
 - [ ] Sheet UI verified visually (user should tap "How to Play >" in simulator)
 - [ ] iPhone SE scrolling behavior verified
-- [ ] Device test on TestFlight (requires new build upload)
+- [ ] Device test on TestFlight Build 24
 
 ## Commits
-- (pending — changes not yet committed)
+- `edf13e1` — Session 40: Replace inline HOW TO PLAY with rich info sheet
+- `37a0fa8` — Bump build number to 24 for TestFlight upload
+- `17aebc6` — (user) Add API key via GitHub web UI
+- `4c03154` — Remove API key from repo — moved to ~/.appstoreconnect/private_keys/
 
 ## Repo Housekeeping
 - [x] Working tree clean (only expected modified/new files)
@@ -74,6 +77,7 @@ Sections:
 ## Next Actions
 - [ ] User taps "How to Play >" in simulator to verify sheet content and layout
 - [ ] Test on iPhone SE (3rd gen) simulator to verify scrolling behavior
-- [ ] Commit and push changes
-- [ ] Upload new TestFlight build if desired for device testing
+- [x] Commit and push changes
+- [x] Upload Build 24 to TestFlight
+- [ ] Device test Build 24 on TestFlight
 - [ ] Continue with v2.1.0 planning (Game Center, achievements, share card)
