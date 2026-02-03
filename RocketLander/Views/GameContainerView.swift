@@ -17,18 +17,8 @@ struct GameContainerView: View {
 
             // HUD and controls overlay
             VStack(spacing: 0) {
-                TopHUDView(gameState: gameState, showingGame: $showingGame)
-
-                Spacer()
-
-                if gameState.gameOver {
-                    GameOverView(
-                        gameState: gameState,
-                        showingGame: $showingGame,
-                        highScoreManager: highScoreManager,
-                        campaignState: campaignState
-                    )
-                    .transition(.scale.combined(with: .opacity))
+                if !gameState.gameOver {
+                    TopHUDView(gameState: gameState, showingGame: $showingGame)
                 }
 
                 Spacer()
@@ -39,6 +29,18 @@ struct GameContainerView: View {
 
                 BannerAdContainer()
                     .padding(.bottom, 5)
+            }
+
+            // Full-screen game-over overlay
+            if gameState.gameOver {
+                GameOverView(
+                    gameState: gameState,
+                    showingGame: $showingGame,
+                    highScoreManager: highScoreManager,
+                    campaignState: campaignState
+                )
+                .transition(.scale.combined(with: .opacity))
+                .padding(.bottom, 60) // clear the banner ad
             }
         }
         .environmentObject(gameState)

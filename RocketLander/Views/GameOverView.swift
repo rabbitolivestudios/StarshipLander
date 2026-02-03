@@ -10,57 +10,127 @@ struct FinalStatsView: View {
     let platform: LandingPlatform?
     let speedBand: SpeedBand
 
-    private var bands: PlatformBands {
-        LandingThresholds.bands(for: platform ?? .c)
-    }
-
     private var maxSafeRotationDeg: Double {
         LandingThresholds.maxRotation * 180 / .pi
     }
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text("FLIGHT DATA")
-                    .font(.system(size: 10, weight: .bold))
-                    .foregroundColor(.gray)
-                Spacer()
-                if speedBand == .hard {
-                    Text("HARD LANDING")
-                        .font(.system(size: 9, weight: .bold))
-                        .foregroundColor(.yellow)
-                }
-            }
+    private var tiltBand: SpeedBand {
+        tiltDegrees <= maxSafeRotationDeg ? .safe : .fail
+    }
 
-            statRow(label: "Tilt", value: String(format: "%.1f°", tiltDegrees),
-                    safe: tiltDegrees <= maxSafeRotationDeg)
-            statRow(label: "V.Speed", value: String(format: "%.0f", verticalSpeed),
-                    safe: verticalSpeed <= bands.safeVertical)
-            statRow(label: "H.Speed", value: String(format: "%.0f", horizontalSpeed),
-                    safe: horizontalSpeed <= bands.safeHorizontal)
-            statRow(label: "Fuel", value: String(format: "%.0f%%", fuel),
-                    safe: fuel > 0)
+    private var vBand: SpeedBand {
+        LandingThresholds.verticalBand(verticalSpeed, platform: platform ?? .c)
+    }
+
+    private var hBand: SpeedBand {
+        LandingThresholds.horizontalBand(horizontalSpeed, platform: platform ?? .c)
+    }
+
+    private var fuelBand: SpeedBand {
+        if fuel > 20 { return .safe }
+        if fuel > 0 { return .hard }
+        return .fail
+    }
+
+    private var centerBand: SpeedBand {
+        guard let dist = distanceFromCenter else { return .safe }
+        if dist < 20 { return .safe }
+        if dist < 30 { return .hard }
+        return .fail
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header
+            HStack(spacing: 6) {
+                Image(systemName: "sparkle")
+                    .font(.system(size: 8))
+                    .foregroundColor(.gray)
+                Text("FLIGHT DATA")
+                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                    .foregroundColor(.gray)
+                Image(systemName: "sparkle")
+                    .font(.system(size: 8))
+                    .foregroundColor(.gray)
+            }
+            .padding(.vertical, 8)
+
+            dividerLine
+
+            statRow(icon: "rotate.right", label: "TILT", value: String(format: "%.1f°", tiltDegrees), band: tiltBand)
+            dividerLine
+            statRow(icon: "arrow.down", label: "V.SPEED", value: String(format: "%.0f", verticalSpeed), band: vBand)
+            dividerLine
+            statRow(icon: "arrow.left.arrow.right", label: "H.SPEED", value: String(format: "%.0f", horizontalSpeed), band: hBand)
+            dividerLine
+            statRow(icon: "fuelpump.fill", label: "FUEL", value: String(format: "%.0f%%", fuel), band: fuelBand)
 
             if let dist = distanceFromCenter {
-                statRow(label: "Center", value: String(format: "%.1fpt", dist),
-                        safe: dist < 30)
+                dividerLine
+                statRow(icon: "scope", label: "CENTER", value: String(format: "%.1fpt", dist), band: centerBand)
+            }
+
+            // Landing outcome badge
+            if speedBand == .hard || speedBand == .fail {
+                Spacer().frame(height: 8)
+                Text(speedBand == .fail ? "RAPID UNSCHEDULED DISASSEMBLY" : "HARD LANDING")
+                    .font(.system(size: 10, weight: .bold, design: .monospaced))
+                    .foregroundColor(speedBand == .fail ? .red : .yellow)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background((speedBand == .fail ? Color.red : Color.yellow).opacity(0.15))
+                    .cornerRadius(4)
+                    .padding(.bottom, 6)
             }
         }
-        .padding(10)
         .background(Color.black.opacity(0.5))
         .cornerRadius(8)
     }
 
-    private func statRow(label: String, value: String, safe: Bool) -> some View {
+    // MARK: - Helpers
+
+    private var dividerLine: some View {
+        Rectangle()
+            .fill(Color.gray.opacity(0.25))
+            .frame(height: 1)
+            .padding(.horizontal, 8)
+    }
+
+    private func statRow(icon: String, label: String, value: String, band: SpeedBand) -> some View {
         HStack {
-            Text(label)
-                .font(.system(size: 10, weight: .medium, design: .monospaced))
+            Image(systemName: icon)
+                .font(.system(size: 12))
                 .foregroundColor(.gray)
-                .frame(width: 55, alignment: .leading)
-            Text(value)
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundColor(safe ? .green : .red)
+                .frame(width: 20)
+            Text(label)
+                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                .foregroundColor(.gray)
             Spacer()
+            Text(value)
+                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                .foregroundColor(colorFor(band))
+            badgeView(band)
+                .frame(width: 42)
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+    }
+
+    private func badgeView(_ band: SpeedBand) -> some View {
+        Text(band == .safe ? "OK" : band == .hard ? "HARD" : "FAIL")
+            .font(.system(size: 9, weight: .bold))
+            .foregroundColor(colorFor(band))
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(colorFor(band).opacity(0.2))
+            .cornerRadius(4)
+    }
+
+    private func colorFor(_ band: SpeedBand) -> Color {
+        switch band {
+        case .safe: return .green
+        case .hard: return .yellow
+        case .fail: return .red
         }
     }
 }
@@ -73,6 +143,36 @@ struct GameOverView: View {
 
     @State private var playerName = ""
     @State private var scoreSaved = false
+    @State private var showingHighScoreSheet = false
+    @State private var crashMessage = crashMessages.randomElement()!
+
+    // Pool of crash headlines — randomized each game over
+    private static let crashMessages = [
+        // SpaceX / rocket culture
+        "RAPID UNSCHEDULED DISASSEMBLY",
+        "LITHOBRAKING DETECTED",
+        "UNPLANNED GROUND CONTACT",
+        "ANOMALY RESOLVED... POORLY",
+        "FLIGHT TERMINATED",
+        "FULL SEND INTO TERRAIN",
+        // Space mission references
+        "HOUSTON, WE HAVE A PROBLEM",
+        "OBVIOUSLY A MAJOR MALFUNCTION",
+        "NOMINAL... UNTIL IT WASN'T",
+        // Kerbal / gaming vibes
+        "RAPID LITHOBRAKING EVENT",
+        "GRAVITY: 1 — PILOT: 0",
+        "STRUCTURAL INTEGRITY: ZERO",
+        "LANDING GEAR SOLD SEPARATELY",
+        "THAT'S NOT HOW LANDINGS WORK",
+        // Dry humor
+        "PRECISION CRATER FORMATION",
+        "AGGRESSIVE TERRAIN SAMPLING",
+        "BOLD APPROACH, BAD OUTCOME",
+        "TASK FAILED SUCCESSFULLY",
+        "FULL THROTTLE, WRONG DIRECTION",
+        "RETURN TO SENDER",
+    ]
 
     var isNewHighScore: Bool {
         guard gameState.landed && !scoreSaved else { return false }
@@ -84,8 +184,7 @@ struct GameOverView: View {
     }
 
     var body: some View {
-        ScrollView {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             // Result icon
             Image(systemName: gameState.landed ? "checkmark.circle.fill" : "xmark.circle.fill")
                 .font(.system(size: 50))
@@ -132,11 +231,6 @@ struct GameOverView: View {
                     speedBand: gameState.landingSpeedBand
                 )
 
-                // High score input
-                if isNewHighScore {
-                    highScoreInputView
-                }
-
                 if scoreSaved {
                     Text("Score saved!")
                         .font(.subheadline)
@@ -144,9 +238,11 @@ struct GameOverView: View {
                 }
             } else {
                 // Crash display with diagnostics
-                Text("CRASH!")
-                    .font(.title.bold())
+                Text(crashMessage)
+                    .font(.system(size: crashMessage.count > 20 ? 16 : 22, weight: .bold, design: .monospaced))
                     .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 if !gameState.crashDiagnosticPrimary.isEmpty {
                     Text(gameState.crashDiagnosticPrimary)
@@ -178,64 +274,40 @@ struct GameOverView: View {
                 )
             }
 
-            // Action buttons
-            if !isNewHighScore || scoreSaved || !gameState.landed {
-                actionButtons
-            }
+            // Action buttons — always visible
+            actionButtons
         }
-        .padding(30)
-        }
+        .padding(24)
         .background(Color.black.opacity(0.85))
         .cornerRadius(20)
         .overlay(
             RoundedRectangle(cornerRadius: 20)
                 .stroke(gameState.landed ? Color.green.opacity(0.5) : Color.red.opacity(0.5), lineWidth: 2)
         )
-    }
-
-    // MARK: - High Score Input
-    private var highScoreInputView: some View {
-        VStack(spacing: 12) {
-            HStack {
-                Image(systemName: "star.fill")
-                Text("NEW HIGH SCORE!")
-                Image(systemName: "star.fill")
+        .padding(.horizontal, 16)
+        .onAppear {
+            crashMessage = Self.crashMessages.randomElement()!
+            if isNewHighScore {
+                showingHighScoreSheet = true
             }
-            .font(.headline)
-            .foregroundColor(.yellow)
-
-            Text("Enter your name:")
-                .font(.subheadline)
-                .foregroundColor(.gray)
-
-            TextField("Pilot name", text: $playerName)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .frame(maxWidth: 200)
-                .textInputAutocapitalization(.words)
-                .autocorrectionDisabled(true)
-                .onChange(of: playerName) { newValue in
-                    if newValue.count > 20 {
-                        playerName = String(newValue.prefix(20))
-                    }
-                }
-
-            Button(action: saveScore) {
-                HStack {
-                    Image(systemName: "trophy.fill")
-                    Text("Save Score")
-                }
-                .font(.headline)
-                .foregroundColor(.black)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .background(Color.yellow)
-                .cornerRadius(8)
-            }
-            .disabled(playerName.trimmingCharacters(in: .whitespaces).isEmpty)
         }
-        .padding()
-        .background(Color.white.opacity(0.1))
-        .cornerRadius(12)
+        .onChange(of: gameState.score) { _ in
+            if isNewHighScore && !showingHighScoreSheet {
+                showingHighScoreSheet = true
+            }
+        }
+        .onChange(of: gameState.landed) { _ in
+            if isNewHighScore && !showingHighScoreSheet {
+                showingHighScoreSheet = true
+            }
+        }
+        .sheet(isPresented: $showingHighScoreSheet) {
+            HighScoreInputSheet(
+                score: gameState.score,
+                playerName: $playerName,
+                onSave: saveScore
+            )
+        }
     }
 
     // MARK: - Action Buttons
@@ -326,5 +398,85 @@ struct GameOverView: View {
         }
 
         scoreSaved = true
+        showingHighScoreSheet = false
+    }
+}
+
+// MARK: - High Score Input Sheet
+struct HighScoreInputSheet: View {
+    let score: Int
+    @Binding var playerName: String
+    let onSave: () -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Spacer()
+
+            HStack {
+                Image(systemName: "star.fill")
+                Text("NEW HIGH SCORE!")
+                Image(systemName: "star.fill")
+            }
+            .font(.title2.bold())
+            .foregroundColor(.yellow)
+
+            Text("\(score) points")
+                .font(.title.bold())
+                .foregroundColor(.white)
+
+            VStack(spacing: 12) {
+                Text("Enter your name:")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+
+                TextField("Pilot name", text: $playerName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .frame(maxWidth: 250)
+                    .textInputAutocapitalization(.words)
+                    .autocorrectionDisabled(true)
+                    .onChange(of: playerName) { newValue in
+                        if newValue.count > 20 {
+                            playerName = String(newValue.prefix(20))
+                        }
+                    }
+            }
+
+            Button(action: onSave) {
+                HStack {
+                    Image(systemName: "trophy.fill")
+                    Text("Save Score")
+                }
+                .font(.headline)
+                .foregroundColor(.black)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+                .background(Color.yellow)
+                .cornerRadius(10)
+            }
+            .disabled(playerName.trimmingCharacters(in: .whitespaces).isEmpty)
+
+            Button("Skip") {
+                dismiss()
+            }
+            .font(.subheadline)
+            .foregroundColor(.gray)
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(red: 0.05, green: 0.05, blue: 0.12).ignoresSafeArea())
+        .modifier(MediumDetentModifier())
+    }
+}
+
+// MARK: - iOS 16+ Presentation Detent
+private struct MediumDetentModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 16.0, *) {
+            content.presentationDetents([.medium])
+        } else {
+            content
+        }
     }
 }
