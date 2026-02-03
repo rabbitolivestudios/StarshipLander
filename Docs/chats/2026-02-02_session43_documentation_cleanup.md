@@ -56,7 +56,8 @@
 
 ## Commits
 - `523f00b` — Documentation cleanup and add credential protection guardrails
-- Note: All commit hashes changed due to history rewrite
+- `a31c278` — Add session 43 summary and update PROJECT_LOG
+- Note: All prior commit hashes changed due to history rewrite
 
 ## Repo Housekeeping
 - [x] Working tree clean
@@ -83,7 +84,7 @@
 | mobileprovision | 10 | Structural (.gitignore + file paths) |
 
 ## Next Actions
-- [ ] Contact GitHub Support to request garbage collection of unreachable objects
+- [x] Contact GitHub Support to request garbage collection of unreachable objects — ticket created
 - [ ] User tests Build 24 on device via TestFlight
 - [ ] Wait for App Store review response for v2.0.2
 - [ ] Continue with v2.1.0 planning (Game Center, achievements, share card)
