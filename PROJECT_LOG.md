@@ -1737,7 +1737,7 @@ Key findings:
 #### No version bump. Build 24 unchanged (code-only changes, no behavioral impact in release builds).
 
 #### Commits:
-- (to be added after commit)
+- `861d8bc` — Code quality improvements — harden .gitignore, wrap prints in DEBUG, optimize ATT, cap player name
 
 ---
 

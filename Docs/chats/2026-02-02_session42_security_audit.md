@@ -91,7 +91,7 @@
 - [ ] **PENDING (user action)**: Change macOS credential
 
 ## Commits
-- (to be added after commit)
+- `861d8bc` — Code quality improvements — harden .gitignore, wrap prints in DEBUG, optimize ATT, cap player name
 
 ## Repo Housekeeping
 - [x] Working tree clean (Podfile deleted, no stale untracked files)
