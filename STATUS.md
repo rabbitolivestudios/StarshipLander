@@ -110,10 +110,11 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 26
 1. Read `CLAUDE.md` — full project guidelines and session checklist
 2. Read `STATUS.md` (this file) — authoritative current state
 3. Read `PROJECT_LOG.md` — latest session entry and backlog
-4. Read latest file in `Docs/chats/` — detailed context from last session
-5. Run `git log --oneline -10` — verify recent commits
-6. Ask the user what to work on
-7. Define "done checklist" before writing code
+4. Read the **project history summary** at the top of `PROJECT_LOG_ARCHIVE.md` — older session context
+5. Read latest file in `Docs/chats/` — detailed context from last session
+6. Run `git log --oneline -10` — verify recent commits
+7. Ask the user what to work on
+8. Define "done checklist" before writing code
 
 ---
 

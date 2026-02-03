@@ -15,14 +15,15 @@ Every session must begin with these steps:
 1. Read this file (`CLAUDE.md`) end-to-end
 2. Read `STATUS.md` — this is the **authoritative snapshot** of what is done, not done, and next
 3. Read `PROJECT_LOG.md` — check Current Status table, next steps, and latest session entry
-4. Read `CHANGELOG.md` — understand what version is current and what's been done
-5. Read `RELEASE_NOTES.md` — understand release status
-6. Read `DECISIONS.md` — understand standing decisions and policies
-7. Read the latest file in `Docs/chats/` — restore detailed context from last session (historical input, not authoritative)
-8. Summarize the current project state in 5-10 bullets before proceeding
-9. Ask the user what they want to work on
-10. Confirm target phase and scope
-11. Define a "done checklist" before writing any code
+4. Read the **project history summary** at the top of `PROJECT_LOG_ARCHIVE.md` — compressed overview of older sessions (do NOT read the full archive unless investigating a specific past decision)
+5. Read `CHANGELOG.md` — understand what version is current and what's been done
+6. Read `RELEASE_NOTES.md` — understand release status
+7. Read `DECISIONS.md` — understand standing decisions and policies
+8. Read the latest file in `Docs/chats/` — restore detailed context from last session (historical input, not authoritative)
+9. Summarize the current project state in 5-10 bullets before proceeding
+10. Ask the user what they want to work on
+11. Confirm target phase and scope
+12. Define a "done checklist" before writing any code
 
 If any of these documentation files are missing, create them before implementing major new features.
 
@@ -87,7 +88,8 @@ Sessions may expire or lose context at any time. These files ensure the project 
 | File | Purpose | Source of truth for |
 |------|---------|---------------------|
 | `STATUS.md` | **Authoritative project snapshot** | What is done, not done, current phase, next tasks. Overrides chat logs. |
-| `PROJECT_LOG.md` | Project state, session history | Current status, what happened, next steps |
+| `PROJECT_LOG.md` | Project state, session history | Current status, what happened, next steps. Last 10 sessions. |
+| `PROJECT_LOG_ARCHIVE.md` | Archived session history | Older sessions (1-35+). Has a project history summary at the top. |
 | `Docs/chats/YYYY-MM-DD_sessionNN_*.md` | Historical session summaries | Technical details, decisions, file changes (input, not authoritative) |
 | `CHANGELOG.md` | Version-level change tracking | What changed in each version (Keep a Changelog) |
 | `RELEASE_NOTES.md` | User-facing release descriptions | App Store copy, marketing text |
@@ -95,6 +97,34 @@ Sessions may expire or lose context at any time. These files ensure the project 
 | `README.md` | High-level project truth | Features, structure, how to build |
 
 **Precedence when sources conflict:** STATUS.md > repo documentation > chat logs.
+
+### PROJECT_LOG Archiving
+
+`PROJECT_LOG.md` grows with every session. To keep it readable and within tool size limits:
+
+1. **Structure**: `PROJECT_LOG.md` keeps the full header (overview, status table, AdMob config, backlog) plus the **last 10 session entries**. Older sessions live in `PROJECT_LOG_ARCHIVE.md`.
+
+2. **Archive trigger**: When `PROJECT_LOG.md` exceeds **~800 lines**, archive the oldest sessions to bring it back under the limit while keeping the last 10 sessions.
+
+3. **How to archive**:
+   - Move the oldest session entries from `PROJECT_LOG.md` to the end of `PROJECT_LOG_ARCHIVE.md`
+   - Update the archive's header to reflect the new session range
+   - Update the archive notice in `PROJECT_LOG.md`'s Development History section to reflect the new range
+   - Do NOT change the structure of `PROJECT_LOG.md` — keep all header sections, tables, and status blocks intact
+
+4. **When to read the archive**:
+   - **At session start**: Read the **project history summary** at the top of the archive (not the full file) for high-level context
+   - **When investigating old decisions**: If a task touches something from an archived session, read the relevant session entry from the archive
+   - **When DECISIONS.md doesn't have enough context**: The archive has implementation details that DECISIONS.md may not cover
+   - **Do NOT read the full archive routinely** — it exists as reference, not as session startup material
+
+5. **Archive file structure**:
+   ```
+   PROJECT_LOG_ARCHIVE.md
+   ├── Header (title, description, session range)
+   ├── Project History Summary (compressed narrative of key milestones)
+   └── Archived Session Entries (verbatim, oldest first)
+   ```
 
 ---
 

@@ -156,7 +156,8 @@ StarshipLander/
 ├── CLAUDE.md                        # Claude Code session guidelines
 ├── STATUS.md                        # Authoritative project snapshot
 ├── CHANGELOG.md                     # Version history
-├── PROJECT_LOG.md                   # Development session logs
+├── PROJECT_LOG.md                   # Development session logs (last 10 sessions)
+├── PROJECT_LOG_ARCHIVE.md           # Archived session logs (older sessions)
 ├── RELEASE_NOTES.md                 # App Store release notes
 ├── DECISIONS.md                     # Architectural/design decision records
 └── README.md                        # This file

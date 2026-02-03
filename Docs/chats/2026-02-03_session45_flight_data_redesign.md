@@ -93,6 +93,17 @@
 - `3b5934c` — Redesign Flight Data panel with HUD-style layout and randomized crash messages
 - `21ac776` — Bump build number to 26 for TestFlight upload
 
+### 5. PROJECT_LOG Archiving
+**What:** Established PROJECT_LOG archiving workflow. Moved sessions 1-35 to `PROJECT_LOG_ARCHIVE.md`. PROJECT_LOG.md went from 1,768 lines to 410 lines.
+**Why:** PROJECT_LOG.md exceeded tool read limits (25K tokens), making it impossible to read in one pass at session start.
+**Files:** `PROJECT_LOG.md`, `PROJECT_LOG_ARCHIVE.md` (new), `CLAUDE.md`, `STATUS.md`, `README.md`
+**Details:**
+- Archive includes a project history summary at the top for quick context restoration
+- Last 10 sessions kept in active PROJECT_LOG.md
+- Archive trigger: when PROJECT_LOG.md exceeds ~800 lines
+- Rules embedded in CLAUDE.md (Session Continuity section + Start of Session Checklist)
+- Session start checklist updated to read archive summary (step 4)
+
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
 - [x] .gitignore up to date
