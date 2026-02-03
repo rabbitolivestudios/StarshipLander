@@ -40,9 +40,9 @@
 
 | Severity | Finding | Status |
 |----------|---------|--------|
-| CRITICAL | API key `removed` in git history | **PENDING** — user must revoke key + BFG scrub |
+| CRITICAL | API key `removed` in git history | **RESOLVED** — authentication updated, cleanupbed with cleanup tool |
 | HIGH | .gitignore missing credential patterns | **FIXED** |
-| MEDIUM | `embedded.provision-file` in git history | **PENDING** — will be cleaned by BFG scrub |
+| MEDIUM | `embedded.provision-file` in git history | **RESOLVED** — scrubbed from history |
 | MEDIUM | Credential in session 41 summary | **FIXED** (redacted) |
 | LOW | Print statements in production | **FIXED** |
 | LOW | No player name length limit | **FIXED** |
@@ -62,7 +62,7 @@
 - This rewrites ALL commit hashes — coordinate with any forks/collaborators
 
 ## Technical Notes
-- The API key file was identified in `git show 17aebc6:Screenshots/auth-file_removed.p8` until history is scrubbed
+- ~~The API key file was identified in git history~~ — **RESOLVED**: cleanupbed with `cleanup tool`, pushed to GitHub. Key also rotated in App Store Connect.
 - App Store Connect API keys can: upload builds, manage metadata, access sales/financial reports, manage TestFlight
 - The provisioning profile in history contains team/certificate/device info — lower risk but still shouldn't be public
 
@@ -86,9 +86,11 @@
 - [x] STATUS.md updated (next tasks, known risks)
 - [x] PROJECT_LOG.md updated (session entry, current status)
 - [x] Session summary created
-- [ ] **PENDING (user action)**: Revoke API key removed in App Store Connect
-- [ ] **PENDING (user action)**: Scrub git history with BFG Repo-Cleaner
-- [ ] **PENDING (user action)**: Change macOS credential
+- [x] authentication updated in App Store Connect (both removed and removed)
+- [x] Git cleanupbed with `cleanup tool` (removed *.p8, *provision-file)
+- [x] macOS credential changed
+- [x] identifiers updated from all documentation
+- [x] Stale "pending" statuses updated to resolved across all docs
 
 ## Commits
 - `861d8bc` — Code quality improvements — harden .gitignore, wrap prints in DEBUG, optimize ATT, cap player name
@@ -100,9 +102,10 @@
 - [x] No secrets or credentials in tracked files
 
 ## Next Actions
-- [ ] **CRITICAL**: User revokes API key `removed` in App Store Connect
-- [ ] **CRITICAL**: Scrub git history with BFG Repo-Cleaner (removes *.p8, embedded.provision-file)
-- [ ] **RECOMMENDED**: User changes macOS login/credential
+- [x] ~~API key revocation~~ — DONE (both authentication updated)
+- [x] ~~Git cleanup~~ — DONE (cleanup tool, pushed)
+- [x] ~~macOS credential change~~ — DONE
+- [x] ~~identifiers updated from docs~~ — DONE
 - [ ] User tests Build 24 on device via TestFlight
 - [ ] Wait for App Store review response for v2.0.2
 - [ ] Continue with v2.1.0 planning (Game Center, achievements, share card)

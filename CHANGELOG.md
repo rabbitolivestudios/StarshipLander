@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Player name TextField capped at 20 characters
   - Session 41 credential reference redacted
   - Legacy `Podfile` deleted (project uses SPM)
-  - **Pending**: API key `removed` revocation + git cleanup (requires user action)
+  - API keys (`removed`, `removed`) rotated, git cleanupbed with `cleanup tool`, identifiers updated from docs
 
 ### Fixed
 - **GameOverView Text Truncation**: Landing success messages and crash diagnostic messages were truncated on device. Added `.multilineTextAlignment(.center)` + `.fixedSize(horizontal: false, vertical: true)` to landing message, crash primary diagnostic, and crash secondary diagnostic. Wrapped GameOverView body in ScrollView for vertical overflow protection on tall content (landing + new high score scenario).

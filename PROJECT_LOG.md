@@ -32,11 +32,9 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.3 | 24 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping + **code review remediation**. **Build 24 on TestFlight** (uploaded 2026-02-02). Pending device testing. |
 
 **NEXT STEPS:**
-1. **CRITICAL**: Revoke API key `removed` in App Store Connect + scrub git history with BFG
-2. **RECOMMENDED**: Change macOS credential
-3. User tests Build 24 on device via TestFlight
-4. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-5. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
+1. User tests Build 24 on device via TestFlight
+2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+3. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -1729,10 +1727,11 @@ Key findings:
 
 6. **Legacy Podfile deleted**: Project uses SPM exclusively. Podfile was confusing artifact.
 
-#### Pending (requires user action):
-- Revoke API key `removed` in App Store Connect
-- Scrub git history with BFG Repo-Cleaner (`*.p8`, `embedded.provision-file`)
-- Change macOS credential
+#### Completed (user actions):
+- authentication updated in App Store Connect (both `removed` and `removed`)
+- Git cleanupbed with `cleanup tool` — all `.p8` and `provision-file` files removed, pushed
+- macOS credential changed
+- identifiers updated from all documentation
 
 #### No version bump. Build 24 unchanged (code-only changes, no behavioral impact in release builds).
 

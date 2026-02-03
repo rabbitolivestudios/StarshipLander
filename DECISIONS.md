@@ -297,7 +297,7 @@ This file records key technical and design decisions, including context, alterna
 - **LOW**: No character limit on player name TextField.
 - **LOW**: Legacy Podfile (project uses SPM).
 - **INFO**: ATT `requestTrackingAuthorization` called on every foreground instead of only when `.notDetermined`.
-**Decision:** Remediate all findings. User must manually revoke API key `removed` in App Store Connect and change macOS credential. Git cleanup with BFG Repo-Cleaner deferred to user coordination (rewrites all commit hashes).
+**Decision:** Remediate all findings. All actions completed: authentication updated, git cleanupbed with `cleanup tool`, credential updated, identifiers updated from docs.
 **Actions taken:**
 1. `.gitignore` updated with all missing credential and build artifact patterns
 2. Session 41 summary keychain reference redacted
@@ -305,4 +305,8 @@ This file records key technical and design decisions, including context, alterna
 4. Player name TextField capped at 20 characters via `.onChange`
 5. ATT request optimized: checks `trackingAuthorizationStatus` before requesting
 6. Legacy `Podfile` deleted (project uses SPM exclusively)
-**Consequences:** No functional behavior changes in release builds. Print statements only appear in DEBUG. ATT prompt still shows once on first launch (unchanged UX). Player names capped at 20 chars (no existing names affected — new input only). Git cleanup pending user action on API key revocation.
+7. API keys (`removed`, `removed`) rotated in App Store Connect
+8. Git cleanupbed with `cleanup tool` — all `.p8` and `provision-file` files removed from all commits, pushed
+9. macOS credential changed
+10. identifiers updated from all documentation
+**Consequences:** No functional behavior changes in release builds. Print statements only appear in DEBUG. ATT prompt still shows once on first launch (unchanged UX). Player names capped at 20 chars (no existing names affected — new input only). All commit hashes changed due to history rewrite. All security findings fully resolved.

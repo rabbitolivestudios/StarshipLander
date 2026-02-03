@@ -36,7 +36,7 @@
 
 ## Research / Ideas Discussed
 - Keychain access over Tailscale SSH requires the keychain to be unlocked — it locks after reboot or timeout. In Session 39 it was still unlocked from a recent local login.
-- New API key identifier is different from the old one (removed... vs removed...).
+- New API key identifier is different from the old one.
 
 ## Technical Notes
 - API key was transferred and secured. Key later rotated per security policy.
