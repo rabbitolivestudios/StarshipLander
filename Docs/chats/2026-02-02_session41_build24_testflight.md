@@ -40,7 +40,7 @@
 
 ## Technical Notes
 - API key was transferred and secured. Key later rotated per security policy.
-- Keychain was unlocked during session for code signing.
+- Keychain was unlocked during session for code signing. [removed: credential reference removed in code review — Session 42]
 
 ## Decisions
 1. Used same Identifier discovery approach as Session 39 — trial and error with the export command until authentication succeeds.

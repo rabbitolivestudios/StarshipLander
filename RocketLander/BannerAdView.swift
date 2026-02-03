@@ -47,19 +47,27 @@ struct BannerAdView: UIViewRepresentable {
 
     class Coordinator: NSObject, BannerViewDelegate {
         func bannerViewDidReceiveAd(_ bannerView: BannerView) {
-            print("✅ Ad loaded successfully")
+            #if DEBUG
+            print("Ad loaded successfully")
+            #endif
         }
 
         func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
-            print("❌ Ad failed to load: \(error.localizedDescription)")
+            #if DEBUG
+            print("Ad failed to load: \(error.localizedDescription)")
+            #endif
         }
 
         func bannerViewDidRecordImpression(_ bannerView: BannerView) {
-            print("📊 Ad impression recorded")
+            #if DEBUG
+            print("Ad impression recorded")
+            #endif
         }
 
         func bannerViewDidRecordClick(_ bannerView: BannerView) {
-            print("👆 Ad clicked")
+            #if DEBUG
+            print("Ad clicked")
+            #endif
         }
     }
 }

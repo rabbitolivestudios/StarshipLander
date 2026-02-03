@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-02 (Session 41)
+> Last reconciled: 2026-02-02 (Session 42)
 
 ---
 
@@ -84,11 +84,14 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 24
 
 ## Immediate Next Tasks (ordered)
 
-1. User tests Build 24 on device via TestFlight (How to Play sheet, menu layout, text truncation)
-2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-3. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
-4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
-5. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+1. **CRITICAL**: Revoke API key `removed` in App Store Connect (manual — user action required)
+2. **CRITICAL**: Scrub git history with BFG Repo-Cleaner to remove `*.p8` and `embedded.provision-file` from history
+3. **RECOMMENDED**: Change macOS login/credential ([resolved in Session 42])
+4. User tests Build 24 on device via TestFlight (How to Play sheet, menu layout, text truncation)
+5. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+6. If approved: decide whether to submit v2.0.3 or wait for v2.1.0
+7. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
+8. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---
 
@@ -128,6 +131,8 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 24
 - **Device testing in progress** — Haptics and ads verified. Accelerometer fixed. Remaining: thrust vectoring, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
+- **CRITICAL: API key in git history** — `auth-file_removed.p8` was committed in `17aebc6` and removed in `4c03154`, but remains extractable from git history. Key must be rotated in App Store Connect, then cleanupbed with BFG Repo-Cleaner. `embedded.provision-file` also in history (lower risk). Code quality improvements completed in Session 42 (code changes), cleanup pending user action.
+- **Credential handling** — credentials were handled securely. Resolved in Session 42.
 
 ---
 

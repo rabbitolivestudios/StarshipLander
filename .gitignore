@@ -2,6 +2,9 @@
 build/
 DerivedData/
 *.xcarchive
+*.ipa
+*.dSYM
+*.dSYM.zip
 
 # Xcode
 *.pbxuser
@@ -39,9 +42,16 @@ fastlane/test_output/
 ._*
 
 # Secrets (never commit these)
+*.p8
 *.p12
+*.pem
+*.key
+*.secret
 *.provision-file
 *.cer
+.env
+.env.*
+.apple_id
 Secrets/
 
 # Video recordings

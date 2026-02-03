@@ -29,12 +29,14 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 23 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping. **Build 23 on TestFlight** (uploaded 2026-02-02). Pending device testing of text truncation fix. |
+| 2.0.3 | 24 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping + **code review remediation**. **Build 24 on TestFlight** (uploaded 2026-02-02). Pending device testing. |
 
 **NEXT STEPS:**
-1. User tests Fix A (text truncation) on device via TestFlight Build 23
-2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-3. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
+1. **CRITICAL**: Revoke API key `removed` in App Store Connect + scrub git history with BFG
+2. **RECOMMENDED**: Change macOS credential
+3. User tests Build 24 on device via TestFlight
+4. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
+5. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -1709,4 +1711,34 @@ Key findings:
 
 ---
 
-*Last updated: 2026-02-02 (Session 41)*
+### Session 42 (2026-02-02) - Code Quality Review Remediation
+
+**Goal:** Complete code review of all source code, repo files, git history, and GitHub settings. Remediate all findings.
+
+#### Changes Made:
+
+1. **`.gitignore` hardened**: Added missing patterns for credential files (`*.p8`, `*.key`, `*.pem`, `*.secret`, `.env`, `.env.*`, `.apple_id`) and build artifacts (`*.ipa`, `*.dSYM`, `*.dSYM.zip`).
+
+2. **Session 41 keychain reference redacted**: Removed line about credential being used during session.
+
+3. **Print statements wrapped in `#if DEBUG`**: 5 occurrences across `RocketLanderApp.swift` (ATT status) and `BannerAdView.swift` (4 ad lifecycle events). No output in release builds.
+
+4. **Player name length limit**: Added `.onChange` modifier to TextField in `GameOverView.swift` to cap at 20 characters.
+
+5. **ATT request optimized**: `requestTrackingPermission()` now checks `ATTrackingManager.trackingAuthorizationStatus == .notDetermined` before calling `requestTrackingAuthorization`. Eliminates wasted SDK calls on every foreground.
+
+6. **Legacy Podfile deleted**: Project uses SPM exclusively. Podfile was confusing artifact.
+
+#### Pending (requires user action):
+- Revoke API key `removed` in App Store Connect
+- Scrub git history with BFG Repo-Cleaner (`*.p8`, `embedded.provision-file`)
+- Change macOS credential
+
+#### No version bump. Build 24 unchanged (code-only changes, no behavioral impact in release builds).
+
+#### Commits:
+- (to be added after commit)
+
+---
+
+*Last updated: 2026-02-02 (Session 42)*

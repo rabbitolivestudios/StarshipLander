@@ -16,12 +16,12 @@ struct RocketLanderApp: App {
     }
 
     private func requestTrackingPermission() {
-        // Delay to ensure app is fully active
+        guard ATTrackingManager.trackingAuthorizationStatus == .notDetermined else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             ATTrackingManager.requestTrackingAuthorization { status in
-                // Ads will work regardless of user choice
-                // If denied, ads are just less personalized
+                #if DEBUG
                 print("Tracking authorization status: \(status.rawValue)")
+                #endif
             }
         }
     }

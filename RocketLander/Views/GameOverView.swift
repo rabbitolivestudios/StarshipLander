@@ -213,6 +213,11 @@ struct GameOverView: View {
                 .frame(maxWidth: 200)
                 .textInputAutocapitalization(.words)
                 .autocorrectionDisabled(true)
+                .onChange(of: playerName) { newValue in
+                    if newValue.count > 20 {
+                        playerName = String(newValue.prefix(20))
+                    }
+                }
 
             Button(action: saveScore) {
                 HStack {

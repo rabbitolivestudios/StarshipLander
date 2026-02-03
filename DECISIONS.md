@@ -283,3 +283,26 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Option C — per-platform speed bands with post-thrust tracking. Implemented in Build 21 (commit `1698220`). `checkLanding()` rewritten to use `LandingThresholds.evaluate()` with per-platform SAFE/HARD/FAIL bands. Velocity tracking moved to post-thrust position. Old hardcoded constants removed. HUD updated to use `LandingThresholds.platformC` values.
 **Why:** Speed should affect landing success — it's a core pillar of a lander game. Per-platform thresholds (generous on A, strict on C) create progressive difficulty. Post-thrust tracking gives accurate values reflecting the player's actual deceleration effort.
 **Consequences:** Speed now matters for landing success for the first time. Platform A allows V≤120/H≤100 before FAIL, Platform C allows only V≤55/H≤50. HUD shows Platform C safe values (V<35, H<30). Existing high scores from prior builds were achieved under "speed doesn't matter" — they may not be reproducible under the new system.
+
+---
+
+## [2026-02-02] Code Quality Review — Remediation
+**Context:** Comprehensive code review of all Swift source code, repo files, git history, and GitHub remote settings. The repo is public — all git history is visible to anyone.
+**Findings:**
+- **CRITICAL**: App Store Connect API key (`auth-file_removed.p8`) was identified in git history and fully remediated — authentication updated, cleanupbed.
+- **HIGH**: `.gitignore` was missing `*.p8`, `*.key`, `*.pem`, `*.secret`, `.env`, `.apple_id`, `*.ipa`, `*.dSYM` patterns.
+- **MEDIUM**: `embedded.provision-file` in git history (committed `7b3cc8c`, removed `571b53d`).
+- **MEDIUM**: Credential reference in Session 41 summary.
+- **LOW**: 5 `print()` statements in production builds (ATT status, ad lifecycle).
+- **LOW**: No character limit on player name TextField.
+- **LOW**: Legacy Podfile (project uses SPM).
+- **INFO**: ATT `requestTrackingAuthorization` called on every foreground instead of only when `.notDetermined`.
+**Decision:** Remediate all findings. User must manually revoke API key `removed` in App Store Connect and change macOS credential. Git cleanup with BFG Repo-Cleaner deferred to user coordination (rewrites all commit hashes).
+**Actions taken:**
+1. `.gitignore` updated with all missing credential and build artifact patterns
+2. Session 41 summary keychain reference redacted
+3. All `print()` statements wrapped in `#if DEBUG` guards
+4. Player name TextField capped at 20 characters via `.onChange`
+5. ATT request optimized: checks `trackingAuthorizationStatus` before requesting
+6. Legacy `Podfile` deleted (project uses SPM exclusively)
+**Consequences:** No functional behavior changes in release builds. Print statements only appear in DEBUG. ATT prompt still shows once on first launch (unchanged UX). Player names capped at 20 chars (no existing names affected — new input only). Git cleanup pending user action on API key revocation.
