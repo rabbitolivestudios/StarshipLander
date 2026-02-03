@@ -69,7 +69,16 @@
 - The `FinalStatsView` is used by both the landing and crash game-over paths. The crash path passes `distanceFromCenter: nil` (CENTER row hidden) and `platform: nil` (falls back to Platform C thresholds).
 - `@State private var crashMessage` ensures the random message is stable across SwiftUI view redraws within the same game-over presentation.
 
-### 6. PROJECT_LOG Archiving
+### 6. Bug Screenshot Organization
+**What:** Saved and organized 3 device screenshots documenting the game-over overlay scroll issue from Build 25 (pre-redesign state).
+**Why:** Bug evidence for the issues that Session 45 changes (overlay restructure + high score sheet extraction) resolved.
+**Files:** `Screenshots/v2.0.3-bugs/`
+**Details:**
+- `bug14_gameover_overlay_cutoff_buttons_hidden.jpeg` — hard landing overlay cut off at bottom, Menu/Retry buttons not visible
+- `bug15_gameover_overlay_scrolled_buttons_visible.jpeg` — same landing after scrolling down, buttons now visible
+- `bug16_highscore_inline_requires_scroll.jpeg` — high score input inline within overlay, also required scrolling
+
+### 7. PROJECT_LOG Archiving
 **What:** Established PROJECT_LOG archiving workflow. Moved sessions 1-35 to `PROJECT_LOG_ARCHIVE.md`. PROJECT_LOG.md went from 1,768 lines to 410 lines.
 **Why:** PROJECT_LOG.md exceeded tool read limits (25K tokens), making it impossible to read in one pass at session start.
 **Files:** `PROJECT_LOG.md`, `PROJECT_LOG_ARCHIVE.md` (new), `CLAUDE.md`, `STATUS.md`, `README.md`
@@ -109,6 +118,8 @@
 - `21ac776` — Bump build number to 26 for TestFlight upload
 - `a5a95be` — Add session 45 documentation — Flight Data redesign and crash messages
 - `d850a26` — Archive PROJECT_LOG sessions 1-35 and establish archiving workflow
+- `67d1ee6` — Finalize session 45 documentation — add archiving work to summaries
+- `fc21e40` — Add bug screenshots for game-over overlay scroll issue (Build 25)
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)

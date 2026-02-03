@@ -401,13 +401,17 @@ This file documents the development history and decisions for the Starship Lande
 
 5. **Build 26 uploaded to TestFlight** (`Info.plist`): Build number 25 → 26. Archived and uploaded via CLI.
 
-6. **PROJECT_LOG archiving** (`PROJECT_LOG.md`, `PROJECT_LOG_ARCHIVE.md`, `CLAUDE.md`, `STATUS.md`, `README.md`): Moved sessions 1-35 to archive (1,768 → 410 lines). Archive includes project history summary. Archiving rules embedded in CLAUDE.md. Session start checklist updated.
+6. **Bug screenshot organization** (`Screenshots/v2.0.3-bugs/`): Saved 3 device screenshots (bug14-16) documenting the game-over overlay scroll issue from Build 25 that this session's overlay restructure fixed.
+
+7. **PROJECT_LOG archiving** (`PROJECT_LOG.md`, `PROJECT_LOG_ARCHIVE.md`, `CLAUDE.md`, `STATUS.md`, `README.md`): Moved sessions 1-35 to archive (1,768 → 410 lines). Archive includes project history summary. Archiving rules embedded in CLAUDE.md. Session start checklist updated.
 
 #### Commits:
 - `3b5934c` — Redesign Flight Data panel with HUD-style layout and randomized crash messages
 - `21ac776` — Bump build number to 26 for TestFlight upload
 - `a5a95be` — Add session 45 documentation — Flight Data redesign and crash messages
 - `d850a26` — Archive PROJECT_LOG sessions 1-35 and establish archiving workflow
+- `67d1ee6` — Finalize session 45 documentation — add archiving work to summaries
+- `fc21e40` — Add bug screenshots for game-over overlay scroll issue (Build 25)
 
 ---
 
