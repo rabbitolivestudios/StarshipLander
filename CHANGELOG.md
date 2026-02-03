@@ -17,10 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - "HARD LANDING" yellow badge / "RAPID UNSCHEDULED DISASSEMBLY" red badge at bottom
   - Band logic: tilt (safe/fail), V/H speed (uses LandingThresholds), fuel (>20%/>0%/0%), center (<20pt/<30pt/≥30pt)
 - **Randomized Crash Headlines (Session 45)**: Static "CRASH!" replaced with pool of 20 randomized messages. SpaceX references ("RAPID UNSCHEDULED DISASSEMBLY", "LITHOBRAKING DETECTED"), space mission quotes ("HOUSTON, WE HAVE A PROBLEM"), Kerbal vibes ("GRAVITY: 1 — PILOT: 0"), dry humor ("TASK FAILED SUCCESSFULLY"). Different message each crash.
-- **Game-Over Overlay Restructure (Session 45)**: `GameOverView` moved from HUD VStack to ZStack root in `GameContainerView` for proper full-screen layering.
+- **Game-Over Overlay Restructure (Session 45)**: `GameOverView` moved from HUD VStack to ZStack root in `GameContainerView` for proper full-screen layering. Previously, the overlay was constrained within the HUD VStack causing buttons to be cut off and requiring scroll. See `Screenshots/v2.0.3-bugs/bug14_gameover_overlay_cutoff_buttons_hidden.jpeg` and `bug15_gameover_overlay_scrolled_buttons_visible.jpeg`.
 
 ### Fixed
-- **High Score Sheet Not Appearing (Session 45)**: Race condition where `onAppear` fired before `gameState` properties propagated. Added `onChange` listeners for `gameState.score` and `gameState.landed` as fallback triggers.
+- **High Score Sheet Not Appearing (Session 45)**: Race condition where `onAppear` fired before `gameState` properties propagated. Added `onChange` listeners for `gameState.score` and `gameState.landed` as fallback triggers. Previously the high score input was inline within the overlay, also requiring scroll — see `Screenshots/v2.0.3-bugs/bug16_highscore_inline_requires_scroll.jpeg`. Now presented as a modal sheet.
 
 ### Changed
 - **Build Hygiene Improvements (Session 42)**:

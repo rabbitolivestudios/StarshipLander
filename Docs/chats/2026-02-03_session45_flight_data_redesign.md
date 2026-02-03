@@ -42,16 +42,16 @@
 
 ### 3. High Score Sheet Fix
 **What:** Fixed the high score input sheet not appearing after landing with a qualifying score.
-**Why:** Race condition — `onAppear` fired before `gameState` properties fully propagated through SwiftUI's `@ObservedObject` mechanism.
+**Why:** Race condition — `onAppear` fired before `gameState` properties fully propagated through SwiftUI's `@ObservedObject` mechanism. Previously, high score input was inline within the overlay requiring scroll (see `Screenshots/v2.0.3-bugs/bug16_highscore_inline_requires_scroll.jpeg`).
 **Files:** `RocketLander/Views/GameOverView.swift`
 **Details:**
 - Added `onChange(of: gameState.score)` and `onChange(of: gameState.landed)` listeners
 - These fire when the observed properties update, catching cases where `onAppear` evaluated too early
-- High score sheet now uses `HighScoreInputSheet` presented via `.sheet()` modifier (already existed from prior session's GameContainerView overlay restructure)
+- High score sheet now uses `HighScoreInputSheet` presented via `.sheet()` modifier (modal, no longer inline)
 
 ### 4. GameContainerView Overlay Restructure
 **What:** Moved `GameOverView` from inside the HUD VStack to the ZStack root.
-**Why:** Proper layering — game-over overlay should cover the entire screen, not be constrained within the HUD layout.
+**Why:** Proper layering — game-over overlay should cover the entire screen, not be constrained within the HUD layout. The old layout caused the overlay to be cut off with buttons hidden (see `Screenshots/v2.0.3-bugs/bug14_gameover_overlay_cutoff_buttons_hidden.jpeg`, `bug15_gameover_overlay_scrolled_buttons_visible.jpeg`).
 **Files:** `RocketLander/Views/GameContainerView.swift`
 **Details:**
 - `GameOverView` now renders as a sibling to the HUD VStack in the ZStack
