@@ -69,11 +69,23 @@
 - The `FinalStatsView` is used by both the landing and crash game-over paths. The crash path passes `distanceFromCenter: nil` (CENTER row hidden) and `platform: nil` (falls back to Platform C thresholds).
 - `@State private var crashMessage` ensures the random message is stable across SwiftUI view redraws within the same game-over presentation.
 
+### 6. PROJECT_LOG Archiving
+**What:** Established PROJECT_LOG archiving workflow. Moved sessions 1-35 to `PROJECT_LOG_ARCHIVE.md`. PROJECT_LOG.md went from 1,768 lines to 410 lines.
+**Why:** PROJECT_LOG.md exceeded tool read limits (25K tokens), making it impossible to read in one pass at session start.
+**Files:** `PROJECT_LOG.md`, `PROJECT_LOG_ARCHIVE.md` (new), `CLAUDE.md`, `STATUS.md`, `README.md`
+**Details:**
+- Archive includes a project history summary at the top for quick context restoration
+- Last 10 sessions kept in active PROJECT_LOG.md
+- Archive trigger: when PROJECT_LOG.md exceeds ~800 lines
+- Rules embedded in CLAUDE.md (Session Continuity section + Start of Session Checklist)
+- Session start checklist updated to read archive summary (step 4)
+
 ## Decisions
 1. **Tilt has no "hard" band** — it's binary (safe or fail at 2.9°). This matches the game logic where rotation is a hard gate.
 2. **Fuel band thresholds**: >20% safe, >0% hard, 0% fail. These are display-only (fuel doesn't affect landing success).
 3. **Center band thresholds**: <20pt safe, <30pt hard, ≥30pt fail. Display-only.
 4. **"RAPID UNSCHEDULED DISASSEMBLY"** appears in TWO places: as a potential random crash headline AND always as the red badge in the Flight Data panel on crashes. This is intentional — the badge is always present, while the headline rotates through the full pool.
+5. **PROJECT_LOG archiving**: Archive at ~800 lines, keep last 10 sessions, archive summary at top for quick context. Rules in CLAUDE.md.
 
 ## Definition of Done
 - [x] Icons shown for each metric
@@ -88,21 +100,15 @@
 - [x] Layout fits within game-over overlay
 - [x] Build succeeds
 - [x] Build 26 uploaded to TestFlight
+- [x] PROJECT_LOG archived (1,768 → 410 lines)
+- [x] Archiving rules embedded in CLAUDE.md
+- [x] All documentation updated
 
 ## Commits
 - `3b5934c` — Redesign Flight Data panel with HUD-style layout and randomized crash messages
 - `21ac776` — Bump build number to 26 for TestFlight upload
-
-### 5. PROJECT_LOG Archiving
-**What:** Established PROJECT_LOG archiving workflow. Moved sessions 1-35 to `PROJECT_LOG_ARCHIVE.md`. PROJECT_LOG.md went from 1,768 lines to 410 lines.
-**Why:** PROJECT_LOG.md exceeded tool read limits (25K tokens), making it impossible to read in one pass at session start.
-**Files:** `PROJECT_LOG.md`, `PROJECT_LOG_ARCHIVE.md` (new), `CLAUDE.md`, `STATUS.md`, `README.md`
-**Details:**
-- Archive includes a project history summary at the top for quick context restoration
-- Last 10 sessions kept in active PROJECT_LOG.md
-- Archive trigger: when PROJECT_LOG.md exceeds ~800 lines
-- Rules embedded in CLAUDE.md (Session Continuity section + Start of Session Checklist)
-- Session start checklist updated to read archive summary (step 4)
+- `a5a95be` — Add session 45 documentation — Flight Data redesign and crash messages
+- `d850a26` — Archive PROJECT_LOG sessions 1-35 and establish archiving workflow
 
 ## Repo Housekeeping
 - [x] Working tree clean (no stale untracked files)
