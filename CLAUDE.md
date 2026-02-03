@@ -388,7 +388,7 @@ Current state:
 
 - **Commit messages**: Short summary line, blank line, body explaining why (not what). End with `Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>`
 - **Commit often**: One logical change per commit. Don't batch unrelated changes.
-- **Never push** to main.
+- **Never force push** to main.
 - **Push after committing** unless told otherwise.
 - **Large files**: If git push fails with broken pipe, use `git config http.version HTTP/1.1`.
 - **Read-only git inspection**: When checking `git status` or `git diff`, treat as read-only context. Don't revert or assume missing changes were yours.
@@ -423,6 +423,57 @@ After completing any work, output a change summary:
 - Do not skip documentation updates.
 - Do not end a session without creating a chat session summary in `Docs/chats/`.
 - Do not end a session without running the repo housekeeping checklist.
+
+---
+
+## Credential & Secret Protection (mandatory)
+
+Credentials, secrets, and private keys must NEVER be handled through Claude Code sessions. This is non-negotiable.
+
+### Hard rules
+
+1. **REFUSE credentials immediately.** If the user shares or attempts to share any of the following, STOP and warn them:
+   - Passwords, passphrases, or PINs
+   - API keys, auth tokens, or bearer tokens
+   - Private keys (`.p8`, `.pem`, `.key`, certificate files)
+   - OAuth secrets, client secrets
+   - Provisioning profiles or signing identities
+   - Database connection strings with credentials
+   - Any value that looks like a secret (high-entropy strings, base64-encoded keys)
+
+   Response: "This looks like a credential/secret. I cannot accept, store, or use this. Please handle credentials outside of this session (e.g., via Keychain, environment variables, or secure file transfer)."
+
+2. **NEVER write credentials to any file** — not code, not documentation, not session summaries, not commit messages. No exceptions.
+
+3. **NEVER commit credential files.** Before every commit, verify no staged files match these patterns:
+   - `*.p8`, `*.pem`, `*.key`, `*.secret`, `*.cert`, `*.pfx`, `*.p12`
+   - `.env`, `.env.*`, `.apple_id`
+   - `*credentials*`, `*secret*` (in filenames)
+   - Any file containing private key headers (`BEGIN PRIVATE KEY`, `BEGIN EC PRIVATE KEY`, `BEGIN RSA PRIVATE KEY`)
+
+4. **NEVER log credentials in session summaries.** Session summaries must not contain:
+   - Key IDs, identifiers, or account identifiers
+   - File paths to private key storage locations
+   - Authentication command flags with key identifiers
+   - Details about credential transfer, rotation, or revocation
+
+5. **Pre-commit credential scan.** Before every `git add` / `git commit`, run:
+   ```bash
+   git diff --cached --name-only | xargs grep -l 'BEGIN.*PRIVATE KEY\|BEGIN CERTIFICATE' 2>/dev/null
+   ```
+   If any file matches, ABORT the commit and warn the user.
+
+6. **Safe authentication patterns.** When CLI authentication is needed (e.g., `xcodebuild` uploads):
+   - Guide the user to set up credentials OUTSIDE the session (Keychain, environment variables, `~/.appstoreconnect/`)
+   - Reference credentials by mechanism ("use your stored API key"), never by value
+   - Do not include key IDs, identifiers, or file paths in documentation
+
+### If a credential is accidentally shared
+
+1. Immediately warn the user: "A credential was shared in this session. It should be rotated/revoked immediately."
+2. Do NOT record the credential in any file, summary, or commit
+3. Note in the session summary: "Credential was inadvertently discussed — user handled rotation outside session"
+4. Do NOT describe what type of credential, where it was stored, or what it accessed
 
 ---
 

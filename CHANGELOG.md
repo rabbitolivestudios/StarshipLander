@@ -7,15 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] — Build 24 on TestFlight (uploaded 2026-02-02)
 
-### Security
-- **Code Review Remediation (Session 42)**: Comprehensive audit and remediation of all source code, repo files, and git history.
+### Changed
+- **Build Hygiene Improvements (Session 42)**:
   - `.gitignore` updated: added `*.p8`, `*.key`, `*.pem`, `*.secret`, `.env`, `.env.*`, `.apple_id`, `*.ipa`, `*.dSYM`, `*.dSYM.zip` patterns
   - All `print()` statements wrapped in `#if DEBUG` guards (5 occurrences in `RocketLanderApp.swift` and `BannerAdView.swift`)
   - ATT request optimized: only calls `requestTrackingAuthorization` when status is `.notDetermined`
   - Player name TextField capped at 20 characters
-  - Session 41 credential reference redacted
   - Legacy `Podfile` deleted (project uses SPM)
-  - API keys (`removed`, `removed`) rotated, git cleanupbed with `cleanup tool`, identifiers updated from docs
 
 ### Fixed
 - **GameOverView Text Truncation**: Landing success messages and crash diagnostic messages were truncated on device. Added `.multilineTextAlignment(.center)` + `.fixedSize(horizontal: false, vertical: true)` to landing message, crash primary diagnostic, and crash secondary diagnostic. Wrapped GameOverView body in ScrollView for vertical overflow protection on tall content (landing + new high score scenario).

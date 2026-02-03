@@ -38,7 +38,7 @@
 - `.multilineTextAlignment(.center)` must be combined with `.fixedSize(vertical: true)` to work — without fixedSize, SwiftUI may not give the text enough lines to wrap to
 - Moving BannerAdContainer outside ScrollView means it's always visible at the bottom, regardless of scroll position — this is the correct UX for a banner ad
 - SourceKit shows "Cannot find type" errors during editing (cross-file Swift extensions) — these are expected IDE diagnostics, actual xcodebuild succeeds
-- **Archive failed remotely**: `errSecInternalComponent` on CodeSign for GoogleMobileAds.framework and UserMessagingPlatform.framework. Root cause: Keychain access requires interactive unlock, which doesn't work in SSH/Tailscale remote sessions. Solution: unlock Keychain locally with `security unlock-keychain -p "PASSWORD" ~/Library/Keychains/login.keychain-db` then retry, or archive from Xcode GUI.
+- **Archive failed remotely**: `errSecInternalComponent` on CodeSign for GoogleMobileAds.framework and UserMessagingPlatform.framework. Root cause: Keychain access requires interactive unlock, which doesn't work in SSH/Tailscale remote sessions. Solution: unlock Keychain locally or archive from Xcode GUI.
 
 ## Decisions
 1. Used ScrollView wrapper on GameOverView body instead of just adding fixedSize — provides overflow protection for tall content scenarios

@@ -63,8 +63,8 @@ Sections:
 ## Commits
 - `edf13e1` — Session 40: Replace inline HOW TO PLAY with rich info sheet
 - `37a0fa8` — Bump build number to 24 for TestFlight upload
-- `17aebc6` — (user) Add API key via GitHub web UI
-- `4c03154` — Remove API key from repo — moved to ~/.appstoreconnect/private_keys/
+- `17aebc6` — Configure CLI authentication
+- `4c03154` — Update CLI authentication setup
 
 ## Repo Housekeeping
 - [x] Working tree clean (only expected modified/new files)

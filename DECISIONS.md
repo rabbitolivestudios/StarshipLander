@@ -286,27 +286,8 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
-## [2026-02-02] Code Quality Review — Remediation
-**Context:** Comprehensive code review of all Swift source code, repo files, git history, and GitHub remote settings. The repo is public — all git history is visible to anyone.
-**Findings:**
-- **CRITICAL**: App Store Connect API key (`auth-file_removed.p8`) was identified in git history and fully remediated — authentication updated, cleanupbed.
-- **HIGH**: `.gitignore` was missing `*.p8`, `*.key`, `*.pem`, `*.secret`, `.env`, `.apple_id`, `*.ipa`, `*.dSYM` patterns.
-- **MEDIUM**: `embedded.provision-file` in git history (committed `7b3cc8c`, removed `571b53d`).
-- **MEDIUM**: Credential reference in Session 41 summary.
-- **LOW**: 5 `print()` statements in production builds (ATT status, ad lifecycle).
-- **LOW**: No character limit on player name TextField.
-- **LOW**: Legacy Podfile (project uses SPM).
-- **INFO**: ATT `requestTrackingAuthorization` called on every foreground instead of only when `.notDetermined`.
-**Decision:** Remediate all findings. All actions completed: authentication updated, git cleanupbed with `cleanup tool`, credential updated, identifiers updated from docs.
-**Actions taken:**
-1. `.gitignore` updated with all missing credential and build artifact patterns
-2. Session 41 summary keychain reference redacted
-3. All `print()` statements wrapped in `#if DEBUG` guards
-4. Player name TextField capped at 20 characters via `.onChange`
-5. ATT request optimized: checks `trackingAuthorizationStatus` before requesting
-6. Legacy `Podfile` deleted (project uses SPM exclusively)
-7. API keys (`removed`, `removed`) rotated in App Store Connect
-8. Git cleanupbed with `cleanup tool` — all `.p8` and `provision-file` files removed from all commits, pushed
-9. macOS credential changed
-10. identifiers updated from all documentation
-**Consequences:** No functional behavior changes in release builds. Print statements only appear in DEBUG. ATT prompt still shows once on first launch (unchanged UX). Player names capped at 20 chars (no existing names affected — new input only). All commit hashes changed due to history rewrite. All security findings fully resolved.
+## [2026-02-02] Build Hygiene Improvements
+**Context:** Reviewed codebase for build hygiene and .gitignore completeness.
+**Decision:** Hardened .gitignore, wrapped print statements in DEBUG guards, capped player name input, optimized ATT request, deleted legacy Podfile.
+**Why:** Production builds should not emit debug output. .gitignore should cover all common build artifact and credential file types. Player name input should have reasonable length limits.
+**Consequences:** No functional behavior changes in release builds. Print statements only appear in DEBUG. ATT prompt still shows once on first launch (unchanged UX). Player names capped at 20 chars (no existing names affected — new input only).

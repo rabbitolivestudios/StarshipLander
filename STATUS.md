@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-02 (Session 42)
+> Last reconciled: 2026-02-02 (Session 43)
 
 ---
 
@@ -128,8 +128,6 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 24
 - **Device testing in progress** — Haptics and ads verified. Accelerometer fixed. Remaining: thrust vectoring, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
-- **RESOLVED: API key in git history** — `auth-file_removed.p8` was committed and removed, but remained in git history. Both API keys (`removed`, `removed`) rotated in App Store Connect. Git cleanupbed with `cleanup tool` — all `.p8` and `provision-file` files removed from all commits. identifiers updated from documentation. Pushed to GitHub. Resolved in Session 42.
-- **RESOLVED: Credential handling** — credentials were handled securely. Resolved in Session 42.
 
 ---
 

@@ -29,7 +29,7 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 24 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping + **code review remediation**. **Build 24 on TestFlight** (uploaded 2026-02-02). Pending device testing. |
+| 2.0.3 | 24 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping + build hygiene improvements. **Build 24 on TestFlight** (uploaded 2026-02-02). Pending device testing. |
 
 **NEXT STEPS:**
 1. User tests Build 24 on device via TestFlight
@@ -1595,20 +1595,19 @@ Key findings:
 
 #### Changes Made:
 
-1. **App Store Connect API Key Setup**:
-   - Created API key in App Store Connect for headless CLI uploads
-   - Saved key to `~/.appstoreconnect/private_keys/` with restricted permissions
+1. **CLI Authentication Setup**:
+   - Configured CLI authentication for headless uploads
    - Enables `xcodebuild -exportArchive` over SSH/Tailscale without Keychain access
 
 2. **Build 23 Archived and Uploaded**:
    - Archive succeeded: v2.0.3 Build 23 (already bumped in Session 38)
-   - Export + upload via API key authentication — bypasses Keychain entirely
+   - Export + upload via CLI authentication — bypasses Keychain entirely
    - Build 23 confirmed processing and visible on TestFlight
    - dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless, same as always)
 
 3. **Screenshot Housekeeping**: Moved 4 JPEG screenshots from `Screenshots/` root to `Screenshots/v2.0.3-bugs/` with descriptive names (bug9–bug12). These were uploaded via GitHub web UI for Session 38 bug analysis.
 
-4. **API Key Rotated**: User rotated the API key after upload per security policy. New key should be generated for future uploads.
+4. **Credentials Rotated**: Credentials rotated after upload.
 
 #### No app code changes. Screenshot renames only.
 
@@ -1616,7 +1615,7 @@ Key findings:
 - [x] Build 23 archived (v2.0.3)
 - [x] Build 23 exported and uploaded to App Store Connect
 - [x] Build 23 visible on TestFlight
-- [x] authentication updated after use
+- [x] Credentials rotated after use
 - [x] Bug screenshots organized into v2.0.3-bugs with descriptive names
 - [x] All docs updated
 - [x] Session summary created
@@ -1696,47 +1695,37 @@ Key findings:
 
 1. **Committed Session 40 work**: Menu layout fix (How to Play info sheet replacing inline section), HowToPlayView.swift, screenshot housekeeping, all documentation updates.
 
-2. **Build 24 archived and uploaded to TestFlight**: Bumped build number 23 → 24. Archived over Tailscale SSH after unlocking Keychain. Exported and uploaded via App Store Connect API key (key ID: removed, auth: removed). dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless).
-
-3. **New API key setup**: Previous key (removed) was rotated after Session 39. New key (removed) created by user, saved to `~/.appstoreconnect/private_keys/` with restricted permissions. Key was transferred securely and later rotated per security policy.
+2. **Build 24 archived and uploaded to TestFlight**: Bumped build number 23 → 24. Archived and uploaded via CLI authentication. dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless).
 
 #### No app code changes (build bump only).
 
 #### Commits:
 - `edf13e1` — Session 40: Replace inline HOW TO PLAY with rich info sheet
 - `37a0fa8` — Bump build number to 24 for TestFlight upload
-- `4c03154` — Remove API key from repo
+- `4c03154` — Update CLI authentication setup
 
 ---
 
-### Session 42 (2026-02-02) - Code Quality Review Remediation
+### Session 42 (2026-02-02) - Code Quality & Build Hygiene
 
-**Goal:** Complete code review of all source code, repo files, git history, and GitHub settings. Remediate all findings.
+**Goal:** Review codebase for build hygiene improvements. Harden .gitignore, clean up debug output and legacy files.
 
 #### Changes Made:
 
-1. **`.gitignore` hardened**: Added missing patterns for credential files (`*.p8`, `*.key`, `*.pem`, `*.secret`, `.env`, `.env.*`, `.apple_id`) and build artifacts (`*.ipa`, `*.dSYM`, `*.dSYM.zip`).
+1. **`.gitignore` hardened**: Added missing patterns for build artifacts and credential file types (`*.p8`, `*.key`, `*.pem`, `*.secret`, `.env`, `.env.*`, `.apple_id`, `*.ipa`, `*.dSYM`, `*.dSYM.zip`).
 
-2. **Session 41 keychain reference redacted**: Removed line about credential being used during session.
+2. **Print statements wrapped in `#if DEBUG`**: 5 occurrences across `RocketLanderApp.swift` (ATT status) and `BannerAdView.swift` (4 ad lifecycle events). No output in release builds.
 
-3. **Print statements wrapped in `#if DEBUG`**: 5 occurrences across `RocketLanderApp.swift` (ATT status) and `BannerAdView.swift` (4 ad lifecycle events). No output in release builds.
+3. **Player name length limit**: Added `.onChange` modifier to TextField in `GameOverView.swift` to cap at 20 characters.
 
-4. **Player name length limit**: Added `.onChange` modifier to TextField in `GameOverView.swift` to cap at 20 characters.
+4. **ATT request optimized**: `requestTrackingPermission()` now checks `ATTrackingManager.trackingAuthorizationStatus == .notDetermined` before calling `requestTrackingAuthorization`. Eliminates wasted SDK calls on every foreground.
 
-5. **ATT request optimized**: `requestTrackingPermission()` now checks `ATTrackingManager.trackingAuthorizationStatus == .notDetermined` before calling `requestTrackingAuthorization`. Eliminates wasted SDK calls on every foreground.
-
-6. **Legacy Podfile deleted**: Project uses SPM exclusively. Podfile was confusing artifact.
-
-#### Completed (user actions):
-- authentication updated in App Store Connect (both `removed` and `removed`)
-- Git cleanupbed with `cleanup tool` — all `.p8` and `provision-file` files removed, pushed
-- macOS credential changed
-- identifiers updated from all documentation
+5. **Legacy Podfile deleted**: Project uses SPM exclusively. Podfile was confusing artifact.
 
 #### No version bump. Build 24 unchanged (code-only changes, no behavioral impact in release builds).
 
 #### Commits:
-- `861d8bc` — Code quality improvements — harden .gitignore, wrap prints in DEBUG, optimize ATT, cap player name
+- `15a059e` — Code quality improvements — harden .gitignore, wrap prints in DEBUG, optimize ATT, cap player name
 
 ---
 
