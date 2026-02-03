@@ -23,8 +23,9 @@ Guide your Starship through a controlled descent and land safely on one of three
 - **16-Bit Sound Effects**: Retro chiptune audio for all actions
 - **Star Rating System**: Earn 1-3 stars per landing based on platform difficulty
 - **Landing Messages**: Contextual feedback with deterministic cause-based crash diagnostics
+- **Randomized Crash Headlines**: 20 fun crash messages (SpaceX references, space mission quotes, gaming humor)
 - **HUD Tilt Display**: Real-time tilt angle in degrees with directional color coding
-- **Final Stats Panel**: Frozen flight data displayed on landing and crash screens
+- **Final Stats Panel**: HUD-style Flight Data with icons, OK/HARD/FAIL badges, 3-color values, and "RAPID UNSCHEDULED DISASSEMBLY" badge on crashes
 - **Campaign Reentry Challenge**: Ships spawn with tilt and drift in Campaign mode
 - **Skill-Based Scoring**: Up to 20,000 points with platform and fuel multipliers
 - **High Score Leaderboard**: Track your top 3 landings
@@ -248,7 +249,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 | Version | Date | Description |
 |---------|------|-------------|
-| 2.0.3 | 2026-02-02 | Per-platform speed bands, velocity threshold enforcement, scoring overhaul, text truncation fix, menu ad fix, build hygiene (Build 25 on TestFlight) |
+| 2.0.3 | 2026-02-03 | Per-platform speed bands, velocity threshold enforcement, scoring overhaul, HUD-style Flight Data, randomized crash messages, high score fix (Build 26 on TestFlight) |
 | 2.0.2 | 2026-01-31 | Campaign polish: scoring, thrust vectoring, planet differentiation |
 | 2.0.1 | 2026-01-31 | Dedicated leaderboard screen, version label fix |
 | 2.0.0 | 2026-01-30 | Campaign mode, per-planet physics, visual effects |

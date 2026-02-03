@@ -291,3 +291,21 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Hardened .gitignore, wrapped print statements in DEBUG guards, capped player name input, optimized ATT request, deleted legacy Podfile.
 **Why:** Production builds should not emit debug output. .gitignore should cover all common build artifact and credential file types. Player name input should have reasonable length limits.
 **Consequences:** No functional behavior changes in release builds. Print statements only appear in DEBUG. ATT prompt still shows once on first launch (unchanged UX). Player names capped at 20 chars (no existing names affected — new input only).
+
+---
+
+## [2026-02-03] Flight Data Panel Redesign — HUD-Style with Badge System
+**Context:** The Flight Data panel on the game-over screen was plain text with binary green/red coloring. It didn't match the HUD visual language and provided no nuance between safe, hard, and fail metrics.
+**Options considered:** (1) Add colors only (minimal change), (2) Full HUD-style redesign with icons, badges, and 3-color system, (3) Collapsible panel with expandable details.
+**Decision:** Option 2 — full redesign with SF Symbol icons, OK/HARD/FAIL badge pills, 3-color values (green/yellow/red), dividers, and centered header.
+**Why:** Matches the in-game HUD design language. Badge pills provide instant visual feedback on each metric. 3-color system adds the "hard" intermediate state that was missing from the binary display.
+**Consequences:** Slightly taller panel (~130-140pt vs ~100-110pt). Band logic for fuel and center is display-only (not used for landing success/failure). Tilt has no "hard" band (binary safe/fail matching game logic). Uses `sparkle` SF Symbol which may require iOS 17+ (needs verification).
+
+---
+
+## [2026-02-03] Randomized Crash Headlines — SpaceX Easter Egg
+**Context:** Static "CRASH!" text was repetitive and missed an opportunity for personality. SpaceX commonly refers to explosions as "Rapid Unscheduled Disassembly" (RUD).
+**Options considered:** (1) Keep "CRASH!" and add RUD badge only, (2) Replace "CRASH!" with rotating pool of crash messages, (3) Context-sensitive crash messages based on failure type.
+**Decision:** Option 2 — pool of 20 randomized messages spanning SpaceX culture, space mission references, Kerbal gaming vibes, and dry humor. "RAPID UNSCHEDULED DISASSEMBLY" also appears as a permanent red badge in the Flight Data panel on all crashes.
+**Why:** Adds replayability and discovery. Each crash feels slightly different. The messages are educational (real space mission references) and entertaining. Consistent badge in Flight Data panel maintains the diagnostic/technical feel.
+**Consequences:** 20 static strings in the view — negligible memory impact. Messages stored in `@State` to prevent re-randomization on SwiftUI redraws. Re-randomized in `onAppear` for each new game over. Font size adapts for longer messages (16pt vs 22pt).

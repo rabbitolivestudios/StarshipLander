@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-02)
+## Current Status (2026-02-03)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -29,10 +29,10 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 25 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping + build hygiene improvements. **Build 25 on TestFlight** (uploaded 2026-02-02). Pending device testing. |
+| 2.0.3 | 26 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping + build hygiene improvements + HUD-style Flight Data panel + randomized crash messages + high score sheet fix. **Build 26 on TestFlight** (uploaded 2026-02-03). Pending device testing. |
 
 **NEXT STEPS:**
-1. User tests Build 25 on device via TestFlight
+1. User tests Build 26 on device via TestFlight (Flight Data badges, crash messages, high score sheet)
 2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 3. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
@@ -1762,6 +1762,28 @@ Key findings:
 
 #### Commits:
 - `31c371a` — Bump build number to 25 for TestFlight upload
+
+---
+
+### Session 45 (2026-02-03) - Flight Data Panel Redesign & Crash Messages
+
+**Goal:** Redesign Flight Data panel to match HUD design language. Add randomized crash headline easter eggs.
+
+#### Changes Made:
+
+1. **FinalStatsView HUD-style redesign** (`GameOverView.swift`): Complete rewrite with SF Symbol icons, OK/HARD/FAIL badge pills, 3-color value system, gray dividers, centered header. Band logic per metric (tilt safe/fail, speeds via LandingThresholds, fuel >20%/>0%/0%, center <20pt/<30pt/≥30pt). "HARD LANDING" / "RAPID UNSCHEDULED DISASSEMBLY" badges at bottom. Applied to both landing and crash game-over screens.
+
+2. **Randomized crash headlines** (`GameOverView.swift`): Pool of 20 messages replacing static "CRASH!" text. SpaceX references, space mission quotes, Kerbal vibes, dry humor. Randomized each game over via `@State` property.
+
+3. **High score sheet fix** (`GameOverView.swift`): Added `onChange` listeners for `gameState.score` and `gameState.landed` to handle race condition where `onAppear` fired before state propagated.
+
+4. **GameContainerView overlay restructure** (`GameContainerView.swift`): Moved `GameOverView` from HUD VStack to ZStack root for proper full-screen layering.
+
+5. **Build 26 uploaded to TestFlight** (`Info.plist`): Build number 25 → 26. Archived and uploaded via CLI.
+
+#### Commits:
+- `3b5934c` — Redesign Flight Data panel with HUD-style layout and randomized crash messages
+- `21ac776` — Bump build number to 26 for TestFlight upload
 
 ---
 

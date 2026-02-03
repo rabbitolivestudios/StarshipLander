@@ -5,7 +5,22 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] — Build 25 on TestFlight (uploaded 2026-02-02)
+## [Unreleased] — Build 26 on TestFlight (uploaded 2026-02-03)
+
+### Changed
+- **Flight Data Panel Redesign (Session 45)**: Complete rewrite of `FinalStatsView` with HUD-style design language:
+  - SF Symbol icons per metric (rotate.right, arrow.down, arrow.left.arrow.right, fuelpump.fill, scope)
+  - OK/HARD/FAIL colored badge pills (green/yellow/red) per metric based on thresholds
+  - 3-color value system matching badges
+  - Gray divider lines between rows
+  - Centered header with sparkle decorations
+  - "HARD LANDING" yellow badge / "RAPID UNSCHEDULED DISASSEMBLY" red badge at bottom
+  - Band logic: tilt (safe/fail), V/H speed (uses LandingThresholds), fuel (>20%/>0%/0%), center (<20pt/<30pt/≥30pt)
+- **Randomized Crash Headlines (Session 45)**: Static "CRASH!" replaced with pool of 20 randomized messages. SpaceX references ("RAPID UNSCHEDULED DISASSEMBLY", "LITHOBRAKING DETECTED"), space mission quotes ("HOUSTON, WE HAVE A PROBLEM"), Kerbal vibes ("GRAVITY: 1 — PILOT: 0"), dry humor ("TASK FAILED SUCCESSFULLY"). Different message each crash.
+- **Game-Over Overlay Restructure (Session 45)**: `GameOverView` moved from HUD VStack to ZStack root in `GameContainerView` for proper full-screen layering.
+
+### Fixed
+- **High Score Sheet Not Appearing (Session 45)**: Race condition where `onAppear` fired before `gameState` properties propagated. Added `onChange` listeners for `gameState.score` and `gameState.landed` as fallback triggers.
 
 ### Changed
 - **Build Hygiene Improvements (Session 42)**:
