@@ -1729,4 +1729,23 @@ Key findings:
 
 ---
 
-*Last updated: 2026-02-02 (Session 42)*
+### Session 43 (2026-02-02) - Documentation Cleanup & Credential Protection Guardrails
+
+**Goal:** Clean up documentation across all project files. Add credential protection guardrails to CLAUDE.md. Clean git history of narrative references.
+
+#### Changes Made:
+
+1. **Documentation cleanup (10 files)**: Reviewed and cleaned all session summaries and project documentation. Simplified authentication workflow descriptions, neutralized verbose narratives, and ensured consistent language.
+
+2. **Credential & Secret Protection (CLAUDE.md)**: Added mandatory section with 6 hard rules: refuse credentials, never write to files, pre-commit scans, safe authentication patterns, and accidental share handling.
+
+3. **Git history cleanup**: 7 passes of `git-filter-repo` (4 `--replace-text` + 3 `--message-callback`) to neutralize ~30 narrative phrases across all historical commits.
+
+#### No app code changes. Documentation only.
+
+#### Commits:
+- `523f00b` — Documentation cleanup and add credential protection guardrails
+
+---
+
+*Last updated: 2026-02-02 (Session 43)*
