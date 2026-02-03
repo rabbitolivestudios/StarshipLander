@@ -29,10 +29,10 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
-| 2.0.3 | 24 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping + build hygiene improvements. **Build 24 on TestFlight** (uploaded 2026-02-02). Pending device testing. |
+| 2.0.3 | 25 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping + build hygiene improvements. **Build 25 on TestFlight** (uploaded 2026-02-02). Pending device testing. |
 
 **NEXT STEPS:**
-1. User tests Build 24 on device via TestFlight
+1. User tests Build 25 on device via TestFlight
 2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
 3. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
 
@@ -1748,4 +1748,21 @@ Key findings:
 
 ---
 
-*Last updated: 2026-02-02 (Session 43)*
+### Session 44 (2026-02-02) - Build 25 TestFlight Upload
+
+**Goal:** Bump build number to 25 and upload to TestFlight so the TestFlight build matches the current source (which includes Session 42 build hygiene changes and Session 43 documentation cleanup).
+
+#### Changes Made:
+
+1. **Build number bumped 24 → 25** (`Info.plist`): Aligns TestFlight build with current source code.
+
+2. **Build 25 archived and uploaded to TestFlight**: Uploaded via Xcode Organizer GUI. dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless, same as always).
+
+#### No app code changes (build bump only).
+
+#### Commits:
+- `31c371a` — Bump build number to 25 for TestFlight upload
+
+---
+
+*Last updated: 2026-02-02 (Session 44)*
