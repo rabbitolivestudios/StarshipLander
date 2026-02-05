@@ -28,13 +28,12 @@ This file documents the development history and decisions for the Starship Lande
 | 1.1.5 | 11 | Published on App Store - New scoring system + HUD fixes |
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
-| 2.0.2 | 16 | **SUBMITTED FOR REVIEW** (2026-02-01) — replaces v2.0.0, campaign polish + star fixes |
+| 2.0.2 | 16 | **PUBLISHED** (approved 2026-02-05) — Campaign Mode live on App Store |
 | 2.0.3 | 26 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping + build hygiene improvements + HUD-style Flight Data panel + randomized crash messages + high score sheet fix. **Build 26 on TestFlight** (uploaded 2026-02-03). Pending device testing. |
 
 **NEXT STEPS:**
 1. User tests Build 26 on device via TestFlight (Flight Data badges, crash messages, high score sheet)
-2. Wait for App Store review response for v2.0.2 (submitted 2026-02-01)
-3. If approved, decide whether to submit v2.0.3 or wait for v2.1.0
+2. Decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
