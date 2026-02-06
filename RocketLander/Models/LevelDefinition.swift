@@ -37,16 +37,15 @@ struct CelestialBody {
     let hasRings: Bool
     let craterCount: Int
 
-    static let moon = CelestialBody(name: "Moon", radius: 40, color: SKColor(red: 0.85, green: 0.85, blue: 0.8, alpha: 1.0), hasRings: false, craterCount: 5)
-    static let mars = CelestialBody(name: "Mars", radius: 45, color: SKColor(red: 0.8, green: 0.3, blue: 0.2, alpha: 1.0), hasRings: false, craterCount: 3)
-    static let titan = CelestialBody(name: "Saturn", radius: 50, color: SKColor(red: 0.9, green: 0.8, blue: 0.6, alpha: 1.0), hasRings: true, craterCount: 0)
-    static let europa = CelestialBody(name: "Jupiter", radius: 55, color: SKColor(red: 0.8, green: 0.7, blue: 0.5, alpha: 1.0), hasRings: false, craterCount: 0)
-    static let earth = CelestialBody(name: "Earth", radius: 50, color: SKColor(red: 0.2, green: 0.5, blue: 0.8, alpha: 1.0), hasRings: false, craterCount: 0)
-    static let venus = CelestialBody(name: "Venus", radius: 48, color: SKColor(red: 0.9, green: 0.7, blue: 0.4, alpha: 1.0), hasRings: false, craterCount: 0)
-    static let mercury = CelestialBody(name: "Mercury", radius: 35, color: SKColor(red: 0.6, green: 0.6, blue: 0.55, alpha: 1.0), hasRings: false, craterCount: 8)
-    static let ganymede = CelestialBody(name: "Jupiter", radius: 55, color: SKColor(red: 0.8, green: 0.7, blue: 0.5, alpha: 1.0), hasRings: false, craterCount: 0)
-    static let io = CelestialBody(name: "Jupiter", radius: 55, color: SKColor(red: 0.8, green: 0.7, blue: 0.5, alpha: 1.0), hasRings: false, craterCount: 0)
-    static let jupiter = CelestialBody(name: "Jupiter", radius: 60, color: SKColor(red: 0.8, green: 0.7, blue: 0.5, alpha: 1.0), hasRings: false, craterCount: 0)
+    // What you see from each landing location
+    static let earth = CelestialBody(name: "Earth", radius: 50, color: SKColor(red: 0.2, green: 0.5, blue: 0.8, alpha: 1.0), hasRings: false, craterCount: 0)          // from Moon
+    static let sunSmall = CelestialBody(name: "Sun", radius: 30, color: SKColor(red: 1.0, green: 0.9, blue: 0.5, alpha: 1.0), hasRings: false, craterCount: 0)          // from Mars (distant)
+    static let saturn = CelestialBody(name: "Saturn", radius: 50, color: SKColor(red: 0.9, green: 0.8, blue: 0.6, alpha: 1.0), hasRings: true, craterCount: 0)          // from Titan
+    static let jupiter = CelestialBody(name: "Jupiter", radius: 55, color: SKColor(red: 0.8, green: 0.7, blue: 0.5, alpha: 1.0), hasRings: false, craterCount: 0)       // from Europa, Ganymede, Io
+    static let moon = CelestialBody(name: "Moon", radius: 40, color: SKColor(red: 0.85, green: 0.85, blue: 0.8, alpha: 1.0), hasRings: false, craterCount: 5)           // from Earth
+    static let sunMedium = CelestialBody(name: "Sun", radius: 45, color: SKColor(red: 1.0, green: 0.95, blue: 0.6, alpha: 1.0), hasRings: false, craterCount: 0)        // from Venus
+    static let sunLarge = CelestialBody(name: "Sun", radius: 70, color: SKColor(red: 1.0, green: 0.95, blue: 0.7, alpha: 1.0), hasRings: false, craterCount: 0)         // from Mercury (closest)
+    static let europaSmall = CelestialBody(name: "Europa", radius: 25, color: SKColor(red: 0.7, green: 0.8, blue: 0.9, alpha: 1.0), hasRings: false, craterCount: 0)    // from Jupiter
 }
 
 // MARK: - Level Definition
@@ -73,7 +72,7 @@ struct LevelDefinition {
             skyColorBottom: SKColor(red: 0.05, green: 0.05, blue: 0.15, alpha: 1.0),
             terrainColor: SKColor(red: 0.6, green: 0.6, blue: 0.55, alpha: 1.0),
             terrainStrokeColor: SKColor(red: 0.7, green: 0.7, blue: 0.65, alpha: 1.0),
-            celestialBody: .earth,
+            celestialBody: .earth,  // You see Earth from the Moon
             specialMechanic: .none,
             description: "Low gravity training. No hazards."
         ),
@@ -85,7 +84,7 @@ struct LevelDefinition {
             skyColorBottom: SKColor(red: 0.4, green: 0.2, blue: 0.1, alpha: 1.0),
             terrainColor: SKColor(red: 0.6, green: 0.25, blue: 0.15, alpha: 1.0),
             terrainStrokeColor: SKColor(red: 0.7, green: 0.35, blue: 0.2, alpha: 1.0),
-            celestialBody: .mars,
+            celestialBody: .sunSmall,  // You see the Sun from Mars (distant)
             specialMechanic: .lightWind,
             description: "Light dust winds push your craft."
         ),
@@ -97,9 +96,9 @@ struct LevelDefinition {
             skyColorBottom: SKColor(red: 0.5, green: 0.4, blue: 0.2, alpha: 1.0),
             terrainColor: SKColor(red: 0.4, green: 0.35, blue: 0.2, alpha: 1.0),
             terrainStrokeColor: SKColor(red: 0.5, green: 0.45, blue: 0.3, alpha: 1.0),
-            celestialBody: .titan,
+            celestialBody: .saturn,  // You see Saturn from Titan (with rings!)
             specialMechanic: .denseAtmosphere,
-            description: "Dense atmosphere increases drag."
+            description: "Dense atmosphere reduces thrust efficiency."
         ),
         // Level 4: Europa — ice makes landing tricky (ratio 4.4x)
         LevelDefinition(
@@ -109,7 +108,7 @@ struct LevelDefinition {
             skyColorBottom: SKColor(red: 0.1, green: 0.15, blue: 0.3, alpha: 1.0),
             terrainColor: SKColor(red: 0.7, green: 0.8, blue: 0.9, alpha: 1.0),
             terrainStrokeColor: SKColor(red: 0.8, green: 0.9, blue: 1.0, alpha: 1.0),
-            celestialBody: .europa,
+            celestialBody: .jupiter,  // You see Jupiter from Europa
             specialMechanic: .iceSurface,
             description: "Ice surface — low friction landing."
         ),
@@ -133,7 +132,7 @@ struct LevelDefinition {
             skyColorBottom: SKColor(red: 0.7, green: 0.5, blue: 0.2, alpha: 1.0),
             terrainColor: SKColor(red: 0.5, green: 0.4, blue: 0.25, alpha: 1.0),
             terrainStrokeColor: SKColor(red: 0.6, green: 0.5, blue: 0.35, alpha: 1.0),
-            celestialBody: .venus,
+            celestialBody: .sunMedium,  // You see the Sun from Venus
             specialMechanic: .heavyTurbulence,
             description: "Vertical updrafts disrupt your descent."
         ),
@@ -145,7 +144,7 @@ struct LevelDefinition {
             skyColorBottom: SKColor(red: 0.1, green: 0.08, blue: 0.05, alpha: 1.0),
             terrainColor: SKColor(red: 0.45, green: 0.4, blue: 0.35, alpha: 1.0),
             terrainStrokeColor: SKColor(red: 0.55, green: 0.5, blue: 0.45, alpha: 1.0),
-            celestialBody: .mercury,
+            celestialBody: .sunLarge,  // You see the Sun from Mercury (very large!)
             specialMechanic: .heatShimmer,
             description: "Heat shimmer disrupts thrust control."
         ),
@@ -157,7 +156,7 @@ struct LevelDefinition {
             skyColorBottom: SKColor(red: 0.1, green: 0.1, blue: 0.2, alpha: 1.0),
             terrainColor: SKColor(red: 0.35, green: 0.3, blue: 0.25, alpha: 1.0),
             terrainStrokeColor: SKColor(red: 0.45, green: 0.4, blue: 0.35, alpha: 1.0),
-            celestialBody: .ganymede,
+            celestialBody: .jupiter,  // You see Jupiter from Ganymede
             specialMechanic: .deepCraters,
             description: "Deep craters make terrain deadly."
         ),
@@ -169,19 +168,19 @@ struct LevelDefinition {
             skyColorBottom: SKColor(red: 0.3, green: 0.2, blue: 0.05, alpha: 1.0),
             terrainColor: SKColor(red: 0.7, green: 0.6, blue: 0.2, alpha: 1.0),
             terrainStrokeColor: SKColor(red: 0.8, green: 0.7, blue: 0.3, alpha: 1.0),
-            celestialBody: .io,
+            celestialBody: .jupiter,  // You see Jupiter from Io
             specialMechanic: .volcanicEruptions,
             description: "Volcanic debris is deadly — time it."
         ),
-        // Level 10: Jupiter — extreme gravity + wind (ratio 3.8x)
+        // Level 10: Jupiter — extreme gravity + wind (ratio 3.6x)
         LevelDefinition(
             id: 10, name: "Jupiter",
-            gravity: -4.8, thrustPower: 18.5,
+            gravity: -5.2, thrustPower: 18.5,
             skyColorTop: SKColor(red: 0.2, green: 0.15, blue: 0.05, alpha: 1.0),
             skyColorBottom: SKColor(red: 0.6, green: 0.45, blue: 0.2, alpha: 1.0),
             terrainColor: SKColor(red: 0.5, green: 0.4, blue: 0.25, alpha: 1.0),
             terrainStrokeColor: SKColor(red: 0.6, green: 0.5, blue: 0.3, alpha: 1.0),
-            celestialBody: .jupiter,
+            celestialBody: .europaSmall,  // You see Europa (a moon) from Jupiter
             specialMechanic: .extremeWind,
             description: "Sudden gusts between calm windows."
         ),

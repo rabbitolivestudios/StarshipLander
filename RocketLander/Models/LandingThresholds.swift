@@ -39,20 +39,22 @@ enum LandingThresholds {
     // Approach speed — scoring/messaging only, NOT a crash gate
     static let approachSpeedScoringThreshold: CGFloat = 80.0
 
-    // Per-platform speed bands
+    // Per-platform speed bands (tightened in v2.0.3)
+    // A & B: ~15% tighter for more challenge
+    // C: ~5% tighter (already the hardest)
     static let platformA = PlatformBands(
-        safeVertical: 80, hardVertical: 120,
-        safeHorizontal: 60, hardHorizontal: 100
+        safeVertical: 70, hardVertical: 100,
+        safeHorizontal: 50, hardHorizontal: 80
     )
 
     static let platformB = PlatformBands(
-        safeVertical: 55, hardVertical: 85,
-        safeHorizontal: 45, hardHorizontal: 75
+        safeVertical: 50, hardVertical: 75,
+        safeHorizontal: 40, hardHorizontal: 60
     )
 
     static let platformC = PlatformBands(
-        safeVertical: 35, hardVertical: 55,
-        safeHorizontal: 30, hardHorizontal: 50
+        safeVertical: 33, hardVertical: 52,
+        safeHorizontal: 28, hardHorizontal: 48
     )
 
     static func bands(for platform: LandingPlatform) -> PlatformBands {

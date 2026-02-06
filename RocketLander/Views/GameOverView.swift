@@ -67,7 +67,22 @@ struct FinalStatsView: View {
 
             if let dist = distanceFromCenter {
                 dividerLine
-                statRow(icon: "scope", label: "CENTER", value: String(format: "%.1fpt", dist), band: centerBand)
+                // CENTER row without badge — center distance is scoring-only, not a pass/fail metric
+                HStack {
+                    Image(systemName: "scope")
+                        .font(.system(size: 12))
+                        .foregroundColor(.gray)
+                        .frame(width: 20)
+                    Text("CENTER")
+                        .font(.system(size: 10, weight: .bold, design: .monospaced))
+                        .foregroundColor(.gray)
+                    Spacer()
+                    Text(String(format: "%.1fpt", dist))
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
+                }
+                .padding(.vertical, 6)
+                .padding(.horizontal, 10)
             }
 
             // Landing outcome badge
@@ -316,17 +331,17 @@ struct GameOverView: View {
             Button(action: {
                 showingGame = false
             }) {
-                HStack(spacing: 6) {
+                HStack(spacing: 4) {
                     Image(systemName: "house.fill")
                     Text("Menu")
-                        .lineLimit(1)
                 }
                 .font(.headline)
                 .foregroundColor(.white)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 12)
                 .padding(.vertical, 12)
                 .background(Color.gray.opacity(0.5))
                 .cornerRadius(10)
+                .fixedSize(horizontal: true, vertical: false)
             }
 
             if gameState.currentMode == .campaign {

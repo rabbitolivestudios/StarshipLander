@@ -30,8 +30,9 @@ final class LandingEvaluationTests: XCTestCase {
     // MARK: - Platform A Band Tests
 
     func testPlatformA_SafeBand() {
+        // V≤70, H≤50 → safe
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 79, horizontalSpeed: 59,
+            verticalSpeed: 69, horizontalSpeed: 49,
             rotation: 0.03, platform: .a
         )
         XCTAssertTrue(result.success)
@@ -39,8 +40,9 @@ final class LandingEvaluationTests: XCTestCase {
     }
 
     func testPlatformA_HardBand() {
+        // V>70 ≤100, H>50 ≤80 → hard
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 81, horizontalSpeed: 61,
+            verticalSpeed: 71, horizontalSpeed: 51,
             rotation: 0.03, platform: .a
         )
         XCTAssertTrue(result.success)
@@ -48,8 +50,9 @@ final class LandingEvaluationTests: XCTestCase {
     }
 
     func testPlatformA_FailBand() {
+        // V>100, H>80 → fail
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 121, horizontalSpeed: 101,
+            verticalSpeed: 101, horizontalSpeed: 81,
             rotation: 0.03, platform: .a
         )
         XCTAssertFalse(result.success)
@@ -59,8 +62,9 @@ final class LandingEvaluationTests: XCTestCase {
     // MARK: - Platform B Band Tests
 
     func testPlatformB_SafeBand() {
+        // V≤50, H≤40 → safe
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 54, horizontalSpeed: 44,
+            verticalSpeed: 49, horizontalSpeed: 39,
             rotation: 0.03, platform: .b
         )
         XCTAssertTrue(result.success)
@@ -68,8 +72,9 @@ final class LandingEvaluationTests: XCTestCase {
     }
 
     func testPlatformB_HardBand() {
+        // V>50 ≤75, H>40 ≤60 → hard
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 56, horizontalSpeed: 46,
+            verticalSpeed: 51, horizontalSpeed: 41,
             rotation: 0.03, platform: .b
         )
         XCTAssertTrue(result.success)
@@ -77,8 +82,9 @@ final class LandingEvaluationTests: XCTestCase {
     }
 
     func testPlatformB_FailBand() {
+        // V>75, H>60 → fail
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 86, horizontalSpeed: 76,
+            verticalSpeed: 76, horizontalSpeed: 61,
             rotation: 0.03, platform: .b
         )
         XCTAssertFalse(result.success)
@@ -88,8 +94,9 @@ final class LandingEvaluationTests: XCTestCase {
     // MARK: - Platform C Band Tests
 
     func testPlatformC_SafeBand() {
+        // V≤33, H≤28 → safe
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 34, horizontalSpeed: 29,
+            verticalSpeed: 32, horizontalSpeed: 27,
             rotation: 0.03, platform: .c
         )
         XCTAssertTrue(result.success)
@@ -97,8 +104,9 @@ final class LandingEvaluationTests: XCTestCase {
     }
 
     func testPlatformC_HardBand() {
+        // V>33 ≤52, H>28 ≤48 → hard
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 36, horizontalSpeed: 31,
+            verticalSpeed: 34, horizontalSpeed: 29,
             rotation: 0.03, platform: .c
         )
         XCTAssertTrue(result.success)
@@ -106,8 +114,9 @@ final class LandingEvaluationTests: XCTestCase {
     }
 
     func testPlatformC_FailBand() {
+        // V>52, H>48 → fail
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 56, horizontalSpeed: 51,
+            verticalSpeed: 53, horizontalSpeed: 49,
             rotation: 0.03, platform: .c
         )
         XCTAssertFalse(result.success)
@@ -117,9 +126,9 @@ final class LandingEvaluationTests: XCTestCase {
     // MARK: - Exact Boundary Tests
 
     func testExactBoundary_Safe() {
-        // V=80 on A → .safe (≤ is safe)
+        // V=70 on A → .safe (≤ is safe)
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 80, horizontalSpeed: 5,
+            verticalSpeed: 70, horizontalSpeed: 5,
             rotation: 0.03, platform: .a
         )
         XCTAssertTrue(result.success)
@@ -127,9 +136,9 @@ final class LandingEvaluationTests: XCTestCase {
     }
 
     func testExactBoundary_Hard() {
-        // V=120 on A → .hard (≤ is hard)
+        // V=100 on A → .hard (≤ is hard)
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 120, horizontalSpeed: 5,
+            verticalSpeed: 100, horizontalSpeed: 5,
             rotation: 0.03, platform: .a
         )
         XCTAssertTrue(result.success)
@@ -137,9 +146,9 @@ final class LandingEvaluationTests: XCTestCase {
     }
 
     func testExactBoundary_HorizontalSafe() {
-        // H=60 on A → .safe (≤ is safe)
+        // H=50 on A → .safe (≤ is safe)
         let result = LandingThresholds.evaluate(
-            verticalSpeed: 5, horizontalSpeed: 60,
+            verticalSpeed: 5, horizontalSpeed: 50,
             rotation: 0.03, platform: .a
         )
         XCTAssertTrue(result.success)
@@ -171,16 +180,18 @@ final class LandingEvaluationTests: XCTestCase {
     // MARK: - Band Classification Direct Tests
 
     func testVerticalBandClassification() {
-        XCTAssertEqual(LandingThresholds.verticalBand(80, platform: .a), .safe)
-        XCTAssertEqual(LandingThresholds.verticalBand(81, platform: .a), .hard)
-        XCTAssertEqual(LandingThresholds.verticalBand(120, platform: .a), .hard)
-        XCTAssertEqual(LandingThresholds.verticalBand(121, platform: .a), .fail)
+        // Platform A: safeV=70, hardV=100
+        XCTAssertEqual(LandingThresholds.verticalBand(70, platform: .a), .safe)
+        XCTAssertEqual(LandingThresholds.verticalBand(71, platform: .a), .hard)
+        XCTAssertEqual(LandingThresholds.verticalBand(100, platform: .a), .hard)
+        XCTAssertEqual(LandingThresholds.verticalBand(101, platform: .a), .fail)
     }
 
     func testHorizontalBandClassification() {
-        XCTAssertEqual(LandingThresholds.horizontalBand(60, platform: .a), .safe)
-        XCTAssertEqual(LandingThresholds.horizontalBand(61, platform: .a), .hard)
-        XCTAssertEqual(LandingThresholds.horizontalBand(100, platform: .a), .hard)
-        XCTAssertEqual(LandingThresholds.horizontalBand(101, platform: .a), .fail)
+        // Platform A: safeH=50, hardH=80
+        XCTAssertEqual(LandingThresholds.horizontalBand(50, platform: .a), .safe)
+        XCTAssertEqual(LandingThresholds.horizontalBand(51, platform: .a), .hard)
+        XCTAssertEqual(LandingThresholds.horizontalBand(80, platform: .a), .hard)
+        XCTAssertEqual(LandingThresholds.horizontalBand(81, platform: .a), .fail)
     }
 }

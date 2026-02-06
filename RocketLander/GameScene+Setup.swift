@@ -82,16 +82,16 @@ extension GameScene {
         switch celestial.name {
         case "Earth":
             addEarthFeatures(to: body, radius: r)
-        case "Mars":
-            addMarsFeatures(to: body, radius: r)
         case "Jupiter":
             addJupiterBands(to: body, radius: r)
-        case "Venus":
-            addVenusFeatures(to: body, radius: r)
         case "Saturn":
             addSaturnFeatures(to: body, radius: r, hasRings: celestial.hasRings)
-        case "Mercury":
+        case "Sun":
+            addSunFeatures(to: body, radius: r)
+        case "Moon":
             break // craters are enough
+        case "Europa":
+            addEuropaFeatures(to: body, radius: r)
         default:
             break
         }
@@ -309,6 +309,36 @@ extension GameScene {
             band.position = CGPoint(x: 0, y: yPos)
             band.zPosition = 1
             body.addChild(band)
+        }
+    }
+
+    private func addSunFeatures(to body: SKShapeNode, radius r: CGFloat) {
+        // Bright inner glow
+        let innerGlow = SKShapeNode(circleOfRadius: r * 0.85)
+        innerGlow.fillColor = SKColor(red: 1.0, green: 0.98, blue: 0.85, alpha: 0.7)
+        innerGlow.strokeColor = .clear
+        innerGlow.zPosition = 1
+        body.addChild(innerGlow)
+
+        // Outer corona glow
+        let corona = SKShapeNode(circleOfRadius: r + 12)
+        corona.fillColor = .clear
+        corona.strokeColor = SKColor(red: 1.0, green: 0.9, blue: 0.4, alpha: 0.4)
+        corona.lineWidth = 8
+        corona.glowWidth = 15
+        corona.zPosition = -1
+        body.addChild(corona)
+
+        // Subtle "sunspot" darker regions
+        for _ in 0..<2 {
+            let spot = SKShapeNode(circleOfRadius: CGFloat.random(in: r * 0.05...r * 0.1))
+            spot.fillColor = SKColor(red: 0.95, green: 0.8, blue: 0.4, alpha: 0.5)
+            spot.strokeColor = .clear
+            let angle = CGFloat.random(in: 0...(.pi * 2))
+            let dist = CGFloat.random(in: 0...r * 0.5)
+            spot.position = CGPoint(x: cos(angle) * dist, y: sin(angle) * dist)
+            spot.zPosition = 2
+            body.addChild(spot)
         }
     }
 

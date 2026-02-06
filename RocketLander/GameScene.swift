@@ -207,7 +207,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case .volcanicEruptions:
             createVolcanicEruption()
         case .denseAtmosphere:
-            rocket.physicsBody?.linearDamping = 0.5
+            // Titan: dense atmosphere reduces thrust efficiency (handled in update loop)
+            // No linearDamping — that makes landing easier, which is wrong
             createAtmosphereHaze()
         case .iceSurface:
             rocket.physicsBody?.friction = 0.01
@@ -253,10 +254,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             guard var velocity = rocket.physicsBody?.velocity else { return }
 
             // Per-level thrust in campaign, fixed 12.0 in classic
-            let thrustPower: CGFloat
+            var thrustPower: CGFloat
             if gameState.currentMode == .campaign,
                let level = LevelDefinition.level(for: gameState.currentLevelId) {
                 thrustPower = level.thrustPower
+
+                // Titan (level 3): dense atmosphere reduces thrust efficiency by 25%
+                if level.id == 3 {
+                    thrustPower *= 0.75
+                }
             } else {
                 thrustPower = 12.0
             }
@@ -395,53 +401,57 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             rocket.physicsBody?.applyForce(CGVector(dx: 0, dy: verticalForce))
 
         case .extremeWind:
-            // Jupiter: sudden gusts with calm windows
+            // Jupiter: sudden gusts pushing left→right with calm windows
             gustTimer += dt
             if gustActive {
-                let gustForce: CGFloat = 15.0 * gustDirection + CGFloat.random(in: -2...2)
+                // Strong consistent rightward push (positive dx)
+                let gustForce: CGFloat = 20.0 + CGFloat.random(in: -3...3)
                 rocket.physicsBody?.applyForce(CGVector(dx: gustForce, dy: 0))
                 if gustTimer >= gustActiveDuration {
                     gustActive = false
                     gustTimer = 0
-                    gustCalmDuration = Double.random(in: 2.5...4.0)
+                    gustCalmDuration = Double.random(in: 2.0...3.5)
                 }
             } else {
-                rocket.physicsBody?.applyForce(CGVector(dx: CGFloat.random(in: -1...1), dy: 0))
+                // Light residual rightward drift during calm
+                rocket.physicsBody?.applyForce(CGVector(dx: CGFloat.random(in: 0.5...2), dy: 0))
                 if gustTimer >= gustCalmDuration {
                     gustActive = true
                     gustTimer = 0
-                    gustDirection = Bool.random() ? 1.0 : -1.0
                     gustActiveDuration = Double.random(in: 1.5...2.5)
                 }
             }
 
         case .heatShimmer:
-            // Mercury: heat interference — random thrust perturbation when thrusting
+            // Mercury: heat interference — stronger random perturbation when thrusting
             if gameState.isThrusting && gameState.fuel > 0 {
-                let dx = CGFloat.random(in: -1.5...1.5)
-                let dy = CGFloat.random(in: -0.8...0.8)
+                // Significant thrust disruption — makes control harder
+                let dx = CGFloat.random(in: -3.5...3.5)
+                let dy = CGFloat.random(in: -2.0...2.0)
                 rocket.physicsBody?.velocity.dx += dx
                 rocket.physicsBody?.velocity.dy += dy
+                // Also slight angular perturbation
+                rocket.physicsBody?.angularVelocity += CGFloat.random(in: -0.02...0.02)
             }
 
         case .movingPlatform:
             // Platform A (left):   slow vertical bob only
-            // Platform B (center): horizontal sway, constrained to center zone
-            // Platform C (right):  horizontal + vertical bob, constrained to right zone
-            let speeds: [CGFloat] = [12, 25, 30]
-            let hRanges: [CGFloat] = [0, 30, 20]    // horizontal displacement limit
-            let vRange: CGFloat = 15                  // vertical displacement limit
+            // Platform B (center): horizontal sway within center zone
+            // Platform C (right):  diagonal movement within right zone
+            let speeds: [CGFloat] = [15, 30, 25]
+            let vRange: CGFloat = 18
 
-            // Compute safe horizontal bounds to prevent overlap
-            let widths: [CGFloat] = platforms.enumerated().map { (i, _) in
-                LandingPlatform.allCases[i].width
-            }
+            // Each platform stays within its own zone (no relative clamping)
+            // Zone boundaries based on screen thirds, with gaps
+            let zoneARight = size.width * 0.30
+            let zoneBLeft = size.width * 0.35
+            let zoneBRight = size.width * 0.65
+            let zoneCLeft = size.width * 0.70
 
             for (i, plat) in platforms.enumerated() {
                 guard i < platformOriginalPositions.count && i < platformDirections.count else { continue }
                 let origin = platformOriginalPositions[i]
                 let speed = speeds[min(i, speeds.count - 1)]
-                let hRange = hRanges[min(i, hRanges.count - 1)]
 
                 if i == 0 {
                     // Platform A: gentle vertical bob only
@@ -452,23 +462,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 } else if i == 1 {
                     // Platform B: horizontal sway within center zone
                     plat.position.x += platformDirections[i] * speed * CGFloat(dt)
-                    if abs(plat.position.x - origin.x) > hRange {
+                    let halfWidth = LandingPlatform.allCases[1].width / 2
+                    let minX = zoneBLeft + halfWidth
+                    let maxX = zoneBRight - halfWidth
+                    if plat.position.x <= minX || plat.position.x >= maxX {
                         platformDirections[i] *= -1
+                        plat.position.x = max(minX, min(maxX, plat.position.x))
                     }
-                    // Clamp to avoid overlapping neighbors
-                    let leftEdge = platforms[0].position.x + widths[0] / 2 + widths[1] / 2 + 10
-                    let rightEdge = platforms[2].position.x - widths[2] / 2 - widths[1] / 2 - 10
-                    plat.position.x = max(leftEdge, min(rightEdge, plat.position.x))
                 } else {
-                    // Platform C: horizontal + vertical bob
+                    // Platform C: diagonal movement (horizontal + vertical)
                     plat.position.x += platformDirections[i] * speed * CGFloat(dt)
-                    if abs(plat.position.x - origin.x) > hRange {
+                    plat.position.y = origin.y + CGFloat(sin(currentTime * 1.5)) * vRange
+                    let halfWidth = LandingPlatform.allCases[2].width / 2
+                    let minX = zoneCLeft + halfWidth
+                    let maxX = size.width - halfWidth - 10
+                    if plat.position.x <= minX || plat.position.x >= maxX {
                         platformDirections[i] *= -1
+                        plat.position.x = max(minX, min(maxX, plat.position.x))
                     }
-                    plat.position.y = origin.y + CGFloat(sin(currentTime * 1.2)) * vRange
-                    // Clamp to avoid overlapping center platform
-                    let leftEdge = platforms[1].position.x + widths[1] / 2 + widths[2] / 2 + 10
-                    plat.position.x = max(leftEdge, plat.position.x)
                 }
             }
 
@@ -502,6 +513,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Determine platform from contact node FIRST
         let landedPlatform = determineLandedPlatform(contactNode: contactNode) ?? .a
 
+        // Check that both legs are on the platform (no partial landing)
+        // Rocket legs span ~47 units (feet at ±23.5 from center)
+        let legSpan: CGFloat = 47
+        let rocketLeft = rocket.position.x - legSpan / 2
+        let rocketRight = rocket.position.x + legSpan / 2
+        let platformCenterX = landedPlatform.xFraction * size.width
+        let platformHalfWidth = landedPlatform.width / 2
+        let platformLeft = platformCenterX - platformHalfWidth
+        let platformRight = platformCenterX + platformHalfWidth
+
+        if rocketLeft < platformLeft || rocketRight > platformRight {
+            // One or both legs are off the platform — crash
+            snapshotFinalStats(platform: nil)
+            gameState.crashDiagnosticPrimary = "Missed the platform!"
+            gameState.crashDiagnosticSecondary = "Both legs must be on the platform to land safely."
+            crashRocket()
+            return
+        }
+
         // Use pre-contact tracked values — these reflect the actual touchdown
         // speed before SpriteKit's collision resolution absorbs impact energy
         let verticalSpeed = lastTrackedVerticalSpeed
@@ -523,6 +553,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             rotation: rotation,
             platform: landedPlatform
         )
+
+        // Europa ice check — slide off if horizontal speed too high
+        // Ice surface requires much gentler horizontal approach
+        let europaIceSlideThreshold: CGFloat = 20
+        let isEuropa = gameState.currentMode == .campaign && gameState.currentLevelId == 4
+        if isEuropa && horizontalSpeed > europaIceSlideThreshold && result.success {
+            snapshotFinalStats(platform: landedPlatform)
+            gameState.crashDiagnosticPrimary = String(format: "Slid off the ice! (H.Speed: %.0f)", horizontalSpeed)
+            gameState.crashDiagnosticSecondary = "Ice surface requires H.Speed < \(Int(europaIceSlideThreshold)) to grip."
+            crashRocket()
+            return
+        }
 
         if result.success {
             successfulLanding(

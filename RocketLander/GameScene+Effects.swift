@@ -202,20 +202,35 @@ extension GameScene {
                             duration: Double(self.size.height / speed)
                         )
                     } else {
-                        // Horizontal streaks for Mars/Jupiter
+                        // Horizontal streaks for Mars (right→left) and Jupiter (left→right)
+                        let isJupiter = (intensity == .extreme)
                         streakSize = CGSize(
                             width: CGFloat.random(in: 15...40),
                             height: CGFloat.random(in: 1...2)
                         )
-                        startPos = CGPoint(
-                            x: self.size.width + 20,
-                            y: CGFloat.random(in: 100...self.size.height - 50)
-                        )
-                        moveAction = SKAction.moveBy(
-                            x: -(self.size.width + 60),
-                            y: CGFloat.random(in: -30...30),
-                            duration: Double(self.size.width / speed)
-                        )
+                        if isJupiter {
+                            // Jupiter: particles blow left→right (matching wind direction)
+                            startPos = CGPoint(
+                                x: -20,
+                                y: CGFloat.random(in: 100...self.size.height - 50)
+                            )
+                            moveAction = SKAction.moveBy(
+                                x: self.size.width + 60,
+                                y: CGFloat.random(in: -30...30),
+                                duration: Double(self.size.width / speed)
+                            )
+                        } else {
+                            // Mars: particles blow right→left
+                            startPos = CGPoint(
+                                x: self.size.width + 20,
+                                y: CGFloat.random(in: 100...self.size.height - 50)
+                            )
+                            moveAction = SKAction.moveBy(
+                                x: -(self.size.width + 60),
+                                y: CGFloat.random(in: -30...30),
+                                duration: Double(self.size.width / speed)
+                            )
+                        }
                     }
 
                     let streak = SKShapeNode(rectOf: streakSize)
@@ -304,21 +319,55 @@ extension GameScene {
     func createHeatShimmer() {
         guard gameState.currentMode == .campaign && gameState.currentLevelId == 7 else { return }
 
+        // Visible heat shimmer — wobbles the rocket noticeably
         let shimmer = SKAction.sequence([
             SKAction.run { [weak self] in
                 guard let self = self, let rocket = self.rocket else { return }
-                // Slight visual distortion by rapidly offsetting
-                let dx = CGFloat.random(in: -1.5...1.5)
-                let dy = CGFloat.random(in: -0.5...0.5)
+                // More pronounced visual wobble
+                let dx = CGFloat.random(in: -3.0...3.0)
+                let dy = CGFloat.random(in: -1.5...1.5)
                 let distort = SKAction.sequence([
-                    SKAction.moveBy(x: dx, y: dy, duration: 0.05),
-                    SKAction.moveBy(x: -dx, y: -dy, duration: 0.05)
+                    SKAction.moveBy(x: dx, y: dy, duration: 0.08),
+                    SKAction.moveBy(x: -dx, y: -dy, duration: 0.08)
                 ])
                 rocket.run(distort)
             },
-            SKAction.wait(forDuration: 0.3)
+            SKAction.wait(forDuration: 0.15)
         ])
         run(SKAction.repeatForever(shimmer), withKey: "heatShimmer")
+
+        // Also add rising heat distortion particles
+        let heatParticles = SKAction.sequence([
+            SKAction.run { [weak self] in
+                guard let self = self else { return }
+                for _ in 0..<2 {
+                    let particle = SKShapeNode(ellipseOf: CGSize(
+                        width: CGFloat.random(in: 30...60),
+                        height: CGFloat.random(in: 8...15)
+                    ))
+                    particle.fillColor = SKColor(red: 1.0, green: 0.9, blue: 0.7, alpha: 0.08)
+                    particle.strokeColor = .clear
+                    particle.position = CGPoint(
+                        x: CGFloat.random(in: 30...self.size.width - 30),
+                        y: CGFloat.random(in: 150...250)
+                    )
+                    particle.zPosition = 4
+                    self.addChild(particle)
+
+                    let rise = SKAction.moveBy(x: CGFloat.random(in: -20...20), y: 150, duration: 2.0)
+                    let wobble = SKAction.sequence([
+                        SKAction.moveBy(x: 5, y: 0, duration: 0.3),
+                        SKAction.moveBy(x: -10, y: 0, duration: 0.3),
+                        SKAction.moveBy(x: 5, y: 0, duration: 0.3)
+                    ])
+                    let fade = SKAction.fadeOut(withDuration: 2.0)
+                    let group = SKAction.group([rise, SKAction.repeatForever(wobble), fade])
+                    particle.run(SKAction.sequence([group, SKAction.removeFromParent()]))
+                }
+            },
+            SKAction.wait(forDuration: 0.5)
+        ])
+        run(SKAction.repeatForever(heatParticles), withKey: "heatParticles")
     }
 
     // MARK: - Volcanic Eruptions (Io)
