@@ -5,7 +5,7 @@ enum SpecialMechanic: String, Codable {
     case none
     case lightWind           // Mars: light dust wind
     case denseAtmosphere     // Titan: higher damping
-    case iceSurface          // Europa: low friction platform
+    case cryogeysers         // Europa: cryogeyser eruptions
     case movingPlatform      // Earth: moving barge
     case heavyTurbulence     // Venus: variable wind
     case heatShimmer         // Mercury: visual effect
@@ -18,7 +18,7 @@ enum SpecialMechanic: String, Codable {
         case .none: return "None"
         case .lightWind: return "Light Wind"
         case .denseAtmosphere: return "Dense Atmosphere"
-        case .iceSurface: return "Ice Surface"
+        case .cryogeysers: return "Cryogeysers"
         case .movingPlatform: return "Moving Platform"
         case .heavyTurbulence: return "Vertical Updrafts"
         case .heatShimmer: return "Heat Shimmer"
@@ -100,7 +100,7 @@ struct LevelDefinition {
             specialMechanic: .denseAtmosphere,
             description: "Dense atmosphere reduces thrust efficiency."
         ),
-        // Level 4: Europa — ice makes landing tricky (ratio 4.4x)
+        // Level 4: Europa — cryogeysers disrupt descent (ratio 4.4x)
         LevelDefinition(
             id: 4, name: "Europa",
             gravity: -2.5, thrustPower: 11.0,
@@ -109,8 +109,8 @@ struct LevelDefinition {
             terrainColor: SKColor(red: 0.7, green: 0.8, blue: 0.9, alpha: 1.0),
             terrainStrokeColor: SKColor(red: 0.8, green: 0.9, blue: 1.0, alpha: 1.0),
             celestialBody: .jupiter,  // You see Jupiter from Europa
-            specialMechanic: .iceSurface,
-            description: "Ice surface — low friction landing."
+            specialMechanic: .cryogeysers,
+            description: "Cryogeysers erupt from the ice — time your descent."
         ),
         // Level 5: Earth — familiar feel like classic (ratio 4.3x)
         LevelDefinition(

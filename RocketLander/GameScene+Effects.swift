@@ -315,6 +315,53 @@ extension GameScene {
         run(SKAction.repeatForever(sparkle), withKey: "iceShimmer")
     }
 
+    // MARK: - Cryogeyser Effect (Europa)
+    func createCryogeyserEffect() {
+        let spawn = SKAction.sequence([
+            SKAction.run { [weak self] in
+                guard let self = self else { return }
+                for i in 0..<self.geyserPositions.count {
+                    guard i < self.geyserActive.count, self.geyserActive[i] else { continue }
+                    let gx = self.geyserPositions[i]
+                    let baseY: CGFloat = 180
+
+                    // Spawn 3-5 particles per tick per active geyser
+                    let particleCount = Int.random(in: 3...5)
+                    for _ in 0..<particleCount {
+                        let radius = CGFloat.random(in: 2...5)
+                        let particle = SKShapeNode(circleOfRadius: radius)
+                        let colors: [SKColor] = [
+                            SKColor(red: 0.7, green: 0.85, blue: 1.0, alpha: 0.8),  // light blue
+                            SKColor(red: 0.85, green: 0.9, blue: 1.0, alpha: 0.75), // white-blue
+                            SKColor(red: 0.5, green: 0.9, blue: 0.95, alpha: 0.7)   // cyan
+                        ]
+                        particle.fillColor = colors.randomElement()!
+                        particle.strokeColor = .clear
+                        particle.position = CGPoint(
+                            x: gx + CGFloat.random(in: -8...8),
+                            y: baseY
+                        )
+                        particle.zPosition = 15
+                        self.addChild(particle)
+
+                        // Vertical column trajectory
+                        let dy = CGFloat.random(in: 150...300)
+                        let dx = CGFloat.random(in: -5...5)
+                        let duration = Double.random(in: 0.5...1.0)
+
+                        let move = SKAction.moveBy(x: dx, y: dy, duration: duration)
+                        let fade = SKAction.fadeOut(withDuration: duration)
+                        let scale = SKAction.scale(to: 0.3, duration: duration)
+                        let group = SKAction.group([move, fade, scale])
+                        particle.run(SKAction.sequence([group, SKAction.removeFromParent()]))
+                    }
+                }
+            },
+            SKAction.wait(forDuration: 0.15)
+        ])
+        run(SKAction.repeatForever(spawn), withKey: "cryogeysers")
+    }
+
     // MARK: - Heat Shimmer Effect (Mercury)
     func createHeatShimmer() {
         guard gameState.currentMode == .campaign && gameState.currentLevelId == 7 else { return }

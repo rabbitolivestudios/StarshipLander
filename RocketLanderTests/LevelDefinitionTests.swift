@@ -52,7 +52,7 @@ final class LevelDefinitionTests: XCTestCase {
             1: .none,
             2: .lightWind,
             3: .denseAtmosphere,
-            4: .iceSurface,
+            4: .cryogeysers,
             5: .movingPlatform,
             6: .heavyTurbulence,
             7: .heatShimmer,

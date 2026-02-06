@@ -51,6 +51,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var gustCalmDuration: TimeInterval = 3.0
     private var gustActiveDuration: TimeInterval = 2.0
 
+    // Campaign: cryogeyser state (Europa)
+    var geyserPositions: [CGFloat] = []
+    var geyserActive: [Bool] = []
+    var geyserTimers: [TimeInterval] = []
+    var geyserActiveDurations: [TimeInterval] = []
+    var geyserCalmDurations: [TimeInterval] = []
+
     // Campaign: moving platforms (per-platform state)
     private var platformDirections: [CGFloat] = [1, 1, 1]
     private var platformOriginalPositions: [CGPoint] = []
@@ -210,11 +217,45 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // Titan: dense atmosphere reduces thrust efficiency (handled in update loop)
             // No linearDamping — that makes landing easier, which is wrong
             createAtmosphereHaze()
-        case .iceSurface:
+        case .cryogeysers:
             rocket.physicsBody?.friction = 0.01
             createIceShimmer()
+            setupCryogeysers()
+            createCryogeyserEffect()
         default:
             break
+        }
+    }
+
+    // MARK: - Cryogeyser Setup (Europa)
+
+    private func setupCryogeysers() {
+        // 3 geyser positions in gaps between platforms (~8%, ~34%, ~66% of screen width)
+        let fractions: [CGFloat] = [0.08, 0.34, 0.66]
+        geyserPositions = fractions.map { $0 * size.width }
+        geyserActive = [false, false, false]
+        // Stagger initial timers so they don't all fire at once
+        geyserTimers = [0.0, 1.5, 3.0]
+        geyserActiveDurations = [
+            Double.random(in: 2.0...3.0),
+            Double.random(in: 2.0...3.0),
+            Double.random(in: 2.0...3.0)
+        ]
+        geyserCalmDurations = [
+            Double.random(in: 3.0...5.0),
+            Double.random(in: 3.0...5.0),
+            Double.random(in: 3.0...5.0)
+        ]
+
+        // Add subtle vent markers at each geyser position
+        for x in geyserPositions {
+            let vent = SKShapeNode(ellipseOf: CGSize(width: 12, height: 4))
+            vent.fillColor = SKColor(red: 0.5, green: 0.7, blue: 0.9, alpha: 0.6)
+            vent.strokeColor = SKColor(red: 0.6, green: 0.8, blue: 1.0, alpha: 0.4)
+            vent.position = CGPoint(x: x, y: 178)
+            vent.zPosition = 6
+            vent.name = "geyserVent"
+            addChild(vent)
         }
     }
 
@@ -244,6 +285,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             removeAction(forKey: "windParticles")
             removeAction(forKey: "atmosphereHaze")
             removeAction(forKey: "iceShimmer")
+            removeAction(forKey: "cryogeysers")
+            geyserPositions = []
+            geyserActive = []
+            geyserTimers = []
+            geyserActiveDurations = []
+            geyserCalmDurations = []
             lastUpdateTime = 0
             setupScene()
             return
@@ -434,6 +481,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 rocket.physicsBody?.angularVelocity += CGFloat.random(in: -0.02...0.02)
             }
 
+        case .cryogeysers:
+            // Europa: cycle geysers between active/calm, apply upward push when rocket is in plume zone
+            for i in 0..<geyserPositions.count {
+                geyserTimers[i] += dt
+                if geyserActive[i] {
+                    // Check if eruption should end
+                    if geyserTimers[i] >= geyserActiveDurations[i] {
+                        geyserActive[i] = false
+                        geyserTimers[i] = 0
+                        geyserCalmDurations[i] = Double.random(in: 3.0...5.0)
+                    }
+                    // Apply upward force if rocket is in plume zone
+                    let gx = geyserPositions[i]
+                    let horizontalRange: CGFloat = 30
+                    let plumeBottom: CGFloat = 180
+                    let plumeTop: CGFloat = 480
+                    if let rocketPos = rocket?.position,
+                       abs(rocketPos.x - gx) < horizontalRange,
+                       rocketPos.y >= plumeBottom && rocketPos.y <= plumeTop {
+                        // Force tapers with height (stronger near surface)
+                        let heightFraction = 1.0 - (rocketPos.y - plumeBottom) / (plumeTop - plumeBottom)
+                        let baseForce: CGFloat = 18.0
+                        let upwardForce = baseForce * heightFraction
+                        let lateralJitter = CGFloat.random(in: -1.5...1.5)
+                        rocket.physicsBody?.applyForce(CGVector(dx: lateralJitter, dy: upwardForce))
+                    }
+                } else {
+                    // Check if calm period should end
+                    if geyserTimers[i] >= geyserCalmDurations[i] {
+                        geyserActive[i] = true
+                        geyserTimers[i] = 0
+                        geyserActiveDurations[i] = Double.random(in: 2.0...3.0)
+                    }
+                }
+            }
+
         case .movingPlatform:
             // Platform A (left):   slow vertical bob only
             // Platform B (center): horizontal sway within center zone
@@ -553,18 +636,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             rotation: rotation,
             platform: landedPlatform
         )
-
-        // Europa ice check — slide off if horizontal speed too high
-        // Ice surface requires much gentler horizontal approach
-        let europaIceSlideThreshold: CGFloat = 20
-        let isEuropa = gameState.currentMode == .campaign && gameState.currentLevelId == 4
-        if isEuropa && horizontalSpeed > europaIceSlideThreshold && result.success {
-            snapshotFinalStats(platform: landedPlatform)
-            gameState.crashDiagnosticPrimary = String(format: "Slid off the ice! (H.Speed: %.0f)", horizontalSpeed)
-            gameState.crashDiagnosticSecondary = "Ice surface requires H.Speed < \(Int(europaIceSlideThreshold)) to grip."
-            crashRocket()
-            return
-        }
 
         if result.success {
             successfulLanding(
