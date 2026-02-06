@@ -96,12 +96,15 @@ struct LeaderboardView: View {
     // MARK: - Game Center Dashboard
 
     private func openGameCenterDashboard() {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let rootVC = windowScene.windows.first?.rootViewController else { return }
+        guard let topVC = GameCenterManager.topViewController() else { return }
 
-        let gcVC = GKGameCenterViewController(state: .leaderboards)
+        let gcVC = GKGameCenterViewController(
+            leaderboardID: GameCenterManager.LeaderboardID.galaxyRank,
+            playerScope: .global,
+            timeScope: .allTime
+        )
         gcVC.gameCenterDelegate = GKDismissHandler.shared
-        rootVC.present(gcVC, animated: true)
+        topVC.present(gcVC, animated: true)
     }
 
     // MARK: - Classic Mode Card

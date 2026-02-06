@@ -1,5 +1,5 @@
 import GameKit
-import Foundation
+import UIKit
 
 // MARK: - Game Center Manager
 // ObservableObject + singleton for fire-and-forget calls from GameScene
@@ -52,6 +52,16 @@ class GameCenterManager: ObservableObject {
         GKLocalPlayer.local.authenticateHandler = { [weak self] viewController, error in
             DispatchQueue.main.async {
                 guard let self = self else { return }
+
+                // When GC needs the player to complete sign-in, it provides a VC
+                // that MUST be presented. Dropping it silently breaks per-app auth.
+                if let vc = viewController {
+                    if let topVC = Self.topViewController() {
+                        topVC.present(vc, animated: true)
+                    }
+                    return
+                }
+
                 if let error = error {
                     #if DEBUG
                     print("Game Center auth error: \(error.localizedDescription)")
@@ -68,6 +78,17 @@ class GameCenterManager: ObservableObject {
                 }
             }
         }
+    }
+
+    /// Walk the presentation chain to find the topmost visible view controller.
+    static func topViewController() -> UIViewController? {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootVC = windowScene.windows.first?.rootViewController else { return nil }
+        var vc = rootVC
+        while let presented = vc.presentedViewController {
+            vc = presented
+        }
+        return vc
     }
 
     // MARK: - Score Submission
