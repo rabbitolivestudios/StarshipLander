@@ -98,7 +98,7 @@ v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 submitted for review (Sessi
 5. ~~v2.1.0: Fix GC auth — present authenticateHandler viewController~~ — **DONE** (Session 51, Build 32)
 6. ~~v2.1.0: Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)~~ — **DONE** (Session 52, all GC features verified)
 7. ~~v2.1.0: App Store submission~~ — **SUBMITTED** (Session 52, Build 32)
-8. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+8. Plan v2.2.0 (Monetization): approach TBD — will discuss alternatives
 
 ---
 

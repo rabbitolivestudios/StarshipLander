@@ -52,8 +52,8 @@ This file documents the development history and decisions for the Starship Lande
 - [done] Leaderboard scores reset before submission (setup_game_center.py --reset)
 - [done] App Store submission — Build 32 submitted for review 2026-02-06
 
-**v2.2.0 PLANNED — Phase: Monetization (scope locked):**
-- [planned] "Support Development" IAP (remove ads, StoreKit 2)
+**v2.2.0 PLANNED — Phase: Monetization (approach TBD):**
+- [planned] Monetization — alternatives to be discussed
 
 **BACKLOG (v2.3+):**
 - ~~Campaign per-level high scores display~~ — **DONE in v2.0.1**
