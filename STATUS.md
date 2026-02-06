@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-06 (Session 51)
+> Last reconciled: 2026-02-06 (Session 52)
 
 ---
 
@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 30) — live on App Store. v2.1.0 Build 32 on TestFlight (Game Center + Share). |
-| Version Status | **v2.0.3 Build 30 live on App Store** (approved 2026-02-06). **v2.1.0 Build 32 on TestFlight** — GC auth fix applied, pending device testing. |
+| Current Version | 2.0.3 (Build 30) — live on App Store. v2.1.0 Build 32 on TestFlight — device tested, ready for App Store submission. |
+| Version Status | **v2.0.3 Build 30 live on App Store** (approved 2026-02-06). **v2.1.0 Build 32 device tested** — GC working (leaderboards, achievements, Galaxy Rank, score submission verified). Ready for App Store submission. |
 | Last Published | v2.0.3 (Build 30) — on App Store (approved 2026-02-06) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -67,7 +67,7 @@ These features are fully implemented, build-verified, and included in v2.0.3:
 
 These are **not implemented**. Do not assume otherwise:
 
-- **Game Center integration** — **CODE COMPLETE** for v2.1.0. GameCenterManager.swift (auth, 12 leaderboards, 10 achievements, Galaxy Rank). Build 32 on TestFlight (Build 31 had GC auth bug — authenticateHandler viewController was dropped). App Store Connect configured (12 leaderboards + 10 achievements created via API). Pending: device testing.
+- ~~**Game Center integration**~~ — **DEVICE TESTED** for v2.1.0. All 12 leaderboards visible, scores submitted (Moon 3,323 pts, Galaxy Rank 12,323 pts), Galaxy Rank #1, 10 achievements visible, GKAccessPoint working. Ready for App Store submission. Note: VPN blocks GC network traffic (root cause of initial "Sign in" issue in Session 52).
 - **In-App Purchases (IAP)** — planned for v2.2.0 (Monetization phase; StoreKit 2 approach decided, decisions documented)
 - ~~**Campaign per-level leaderboard viewing**~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
 - **iPad support** — iPhone only
@@ -83,9 +83,9 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Community (v2.1.0) — Build 32 on TestFlight, ASC configured, pending device testing**
+**Phase: Community (v2.1.0) — Device tested, ready for App Store submission**
 
-v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 on TestFlight (Session 50-51): Game Center auth (fixed in Build 32 — auth VC now presented), 12 leaderboards, 10 achievements, Galaxy Rank, GKAccessPoint, Share Score Card. ASC configured: 12 leaderboards + 10 achievements. Pending: device testing, App Store submission. v2.2.0 planned: Remove Ads IAP.
+v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 device tested (Session 52): All Game Center features verified — 12 leaderboards visible, scores submitted, Galaxy Rank working, 10 achievements visible, GKAccessPoint showing. Share Score Card pending device test (GC was the blocker). Ready for App Store submission. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
@@ -96,8 +96,8 @@ v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 on TestFlight (Session 50-5
 3. ~~v2.1.0: Version bump to 2.1.0 Build 31~~ — **DONE** (Session 51, uploaded to TestFlight)
 4. ~~v2.1.0: App Store Connect leaderboard/achievement setup~~ — **DONE** (Session 51, 12 leaderboards + 10 achievements created via API)
 5. ~~v2.1.0: Fix GC auth — present authenticateHandler viewController~~ — **DONE** (Session 51, Build 32)
-6. v2.1.0: Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)
-7. v2.1.0: App Store submission
+6. ~~v2.1.0: Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)~~ — **DONE** (Session 52, all GC features verified)
+7. v2.1.0: App Store submission (ready)
 8. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---
@@ -135,7 +135,8 @@ v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 on TestFlight (Session 50-5
 - **HUD threshold mismatch RESOLVED** — HUD previously showed V<50 H<30 with actual thresholds V<40 H<25. **Fixed in Build 21** — HUD now reads from `LandingThresholds.platformC` (V<35, H<30).
 - **Unit tests have no integration coverage** — 91 tests all test isolated pure functions. No test simulates a physics collision to verify landing pass/fail decision. This is the test that would have caught the bug.
 - **Scoring rebalanced (Session 48)** — velocity components now use hard thresholds as denominator (smooth curve with HARD partial credit). Subtotal max 2,100, fuel mult 1.0-2.2x, theoretical max 23,100. Fuel consumption reduced. Prior high scores may be lower than new achievable scores.
-- **Device testing in progress** — Haptics and ads verified. Accelerometer fixed. Remaining: thrust vectoring, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
+- **Device testing in progress** — Haptics and ads verified. Accelerometer fixed. Game Center verified (Session 52). Remaining: thrust vectoring, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars, Share Score Card.
+- **VPN blocks Game Center** — VPN (`utun4` interface) blocks DNS for GC data servers. Auth may succeed (cached) but leaderboard/dashboard fetches fail. GKGameCenterViewController shows misleading "Sign in to Game Center" fallback. Always disable VPN during GC testing.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`
 

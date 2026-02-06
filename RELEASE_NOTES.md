@@ -1,5 +1,41 @@
 # Release Notes
 
+## Version 2.1.0 (Build 32)
+**Status:** DEVICE TESTED — Ready for App Store submission
+
+### Overview
+Version 2.1.0 adds Game Center integration and a Share Score Card. Compete on global leaderboards, earn 10 achievements, and share your best landings with friends. Galaxy Rank tracks your total campaign mastery across all 10 levels.
+
+### App Store — What's New (Copy this)
+```
+GAME CENTER UPDATE
+
+• Global leaderboards — compete worldwide on Classic, all 10 campaign levels, and the new Galaxy Rank aggregate
+• 10 achievements — from your first safe landing to mastering all 10 planets
+• Galaxy Rank — your total campaign mastery score, ranked globally
+• Share Score Card — share your landing results as an image
+• Bug fixes and improvements
+
+As always, thank you for your continuous support!
+```
+
+### App Store — Review Team Notes (Copy this)
+```
+This is a skill-based physics rocket landing game.
+Use on-screen buttons to control thrust and rotation and land safely on the platform.
+No account, login, or in-app purchases required.
+
+This build (v2.1.0, Build 32) adds Game Center integration and a Share Score Card feature. Game Center provides global leaderboards (12 total) and achievements (10 total). The Share Score Card renders landing results as an image and presents a native share sheet.
+
+Game Center authentication happens automatically on launch. If the player is not signed in to Game Center, all GC features are hidden and the app functions normally with local-only scores. No new tracking or data collection — Game Center data ("Gameplay Content") is handled entirely by Apple's infrastructure.
+
+Campaign mode has 10 levels with unique environmental mechanics: dust storms (Mars), dense atmosphere drag (Titan), cryogeyser eruptions (Europa), moving platforms (Earth), vertical updrafts (Venus), heat-induced thrust interference (Mercury), rock pillar obstacles (Ganymede), deadly volcanic debris (Io), and sudden wind gusts (Jupiter).
+
+App Tracking Transparency prompt appears on first app launch to request permission before showing personalized ads. Users can toggle between traditional button controls and tilt-based accelerometer controls from the main menu.
+```
+
+---
+
 ## Version 2.0.3 (Build 30)
 **Status:** PUBLISHED (approved 2026-02-06) — Live on App Store
 

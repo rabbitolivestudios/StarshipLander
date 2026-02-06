@@ -96,7 +96,8 @@ struct LeaderboardView: View {
     // MARK: - Game Center Dashboard
 
     private func openGameCenterDashboard() {
-        guard let topVC = GameCenterManager.topViewController() else { return }
+        guard GKLocalPlayer.local.isAuthenticated,
+              let topVC = GameCenterManager.topViewController() else { return }
 
         let gcVC = GKGameCenterViewController(
             leaderboardID: GameCenterManager.LeaderboardID.galaxyRank,

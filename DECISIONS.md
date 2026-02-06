@@ -370,6 +370,22 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
+## [2026-02-06] VPN Blocks Game Center Network Traffic — Root Cause of "Sign in" Issue
+
+**Context:** After fixing the authenticateHandler VC presentation (Build 32), device testing still showed "Sign in to Game Center" when opening GKGameCenterViewController. Diagnostic build (3 dashboard buttons + leaderboard probe + console logging) revealed the issue.
+
+**Root cause:** VPN (visible as `utun4` interface in network error logs) blocked DNS resolution for Game Center data servers. GC auth succeeded (cached/local) and GKAccessPoint bubble appeared, but all data-fetching calls failed with "A server with the specified hostname could not be found."
+
+**Key indicator:** `[GC-DIAG] PROBE ERROR: A server with the specified hostname could not be found.` with `interface: utun4` in NSError details. Meanwhile `[GC-DIAG] DEFAULT LB: classic` succeeded (cached/local data).
+
+**Resolution:** Disable VPN during testing. All 12 leaderboards visible, scores submitted, Galaxy Rank working, 10 achievements visible.
+
+**Lesson:** GKGameCenterViewController shows "Sign in to Game Center" as a misleading fallback when it can't load any GC data — this is NOT necessarily an auth issue. Always check network/VPN first when GC data appears missing despite successful auth.
+
+**Consequences:** Added defensive `GKLocalPlayer.local.isAuthenticated` guard on dashboard presentation. Documented VPN gotcha in MEMORY.md and STATUS.md Known Risks.
+
+---
+
 ## [2026-02-05] Tilt Bands — SAFE/HARD/FAIL Matching Speed Band Philosophy
 **Context:** Tilt had a binary pass/fail gate at 0.05 rad (~2.9°), which was too strict and inconsistent with the 3-band system used for speed (SAFE/HARD/FAIL). Campaign ships spawn at 6.9° tilt, so players must correct before landing — a narrow 2.9° safe zone made this punishing.
 **Options considered:** (1) Raise the binary threshold to ~5°, (2) Add SAFE/HARD/FAIL tilt bands matching the speed band philosophy.

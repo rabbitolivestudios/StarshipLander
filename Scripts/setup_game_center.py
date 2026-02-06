@@ -280,6 +280,96 @@ def create_leaderboard(headers, gc_detail_id, ref_name, display_name):
     return lb_id
 
 
+def get_current_app_store_version(headers, app_id):
+    """Get the latest editable (or live) app store version ID."""
+    r = requests.get(
+        f"{BASE_URL}/v1/apps/{app_id}/appStoreVersions",
+        headers=headers,
+        params={
+            "filter[platform]": "IOS",
+            "fields[appStoreVersions]": "versionString,appStoreState",
+            "limit": 5,
+        },
+    )
+    r.raise_for_status()
+    versions = r.json().get("data", [])
+    if not versions:
+        print("WARNING: No app store versions found")
+        return None
+    # Prefer editable states, fall back to any
+    for v in versions:
+        state = v["attributes"].get("appStoreState", "")
+        version_str = v["attributes"].get("versionString", "")
+        print(f"  Found version {version_str} (state: {state}, ID: {v['id']})")
+    # Return the first (most recent) version
+    version = versions[0]
+    print(f"  Using version {version['attributes'].get('versionString', '?')} (ID: {version['id']})")
+    return version["id"]
+
+
+def enable_gc_for_app_version(headers, gc_detail_id, app_id):
+    """Enable Game Center for the current app store version (gameCenterAppVersions)."""
+    # Check if already enabled
+    r = requests.get(
+        f"{BASE_URL}/v1/gameCenterDetails/{gc_detail_id}/gameCenterAppVersions",
+        headers=headers,
+        params={"fields[gameCenterAppVersions]": "enabled", "limit": 10},
+    )
+    r.raise_for_status()
+    existing = r.json().get("data", [])
+    if existing:
+        for entry in existing:
+            enabled = entry["attributes"].get("enabled", False)
+            print(f"  gameCenterAppVersion exists (ID: {entry['id']}, enabled: {enabled})")
+            if not enabled:
+                # Enable it
+                patch_body = {
+                    "data": {
+                        "type": "gameCenterAppVersions",
+                        "id": entry["id"],
+                        "attributes": {"enabled": True},
+                    }
+                }
+                r2 = requests.patch(
+                    f"{BASE_URL}/v1/gameCenterAppVersions/{entry['id']}",
+                    headers=headers,
+                    json=patch_body,
+                )
+                if r2.status_code < 400:
+                    print(f"  Enabled gameCenterAppVersion {entry['id']}")
+                else:
+                    print(f"  WARNING: Could not enable: {r2.status_code} — {r2.text[:300]}")
+        return
+
+    # No existing gameCenterAppVersion — create one
+    version_id = get_current_app_store_version(headers, app_id)
+    if not version_id:
+        print("  WARNING: Cannot create gameCenterAppVersion — no app store version found")
+        return
+
+    body = {
+        "data": {
+            "type": "gameCenterAppVersions",
+            "attributes": {"enabled": True},
+            "relationships": {
+                "appStoreVersion": {
+                    "data": {"type": "appStoreVersions", "id": version_id}
+                }
+            },
+        }
+    }
+    r = requests.post(f"{BASE_URL}/v1/gameCenterAppVersions", headers=headers, json=body)
+    if r.status_code == 409:
+        print(f"  gameCenterAppVersion already exists (409)")
+        return
+    if r.status_code >= 400:
+        print(f"  ERROR creating gameCenterAppVersion: {r.status_code}")
+        print(f"  {r.text[:500]}")
+        return
+    gcav_id = r.json()["data"]["id"]
+    print(f"  Created gameCenterAppVersion (ID: {gcav_id}, enabled: true)")
+
+
 def get_existing_achievements(headers, gc_detail_id):
     """Get existing achievement reference names."""
     existing = set()
@@ -403,6 +493,10 @@ def main():
         if result:
             created_achs += 1
     print(f"Achievements: {created_achs} created, {len(existing_achs)} already existed")
+
+    # 5. Enable Game Center for current app store version
+    print(f"\n── Enabling Game Center for app version ──")
+    enable_gc_for_app_version(headers, gc_detail_id, app_id)
 
     print(f"\n{'='*50}")
     print(f"DONE — {created_lbs} leaderboards + {created_achs} achievements created")

@@ -177,7 +177,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [2.1.0] - Unreleased (Phase: Community) — CODE COMPLETE
+## [2.1.0] - Unreleased (Phase: Community) — DEVICE TESTED, READY FOR SUBMISSION
 
 ### Added
 - **Game Center Leaderboards**: 12 leaderboards (1 classic + 10 campaign + 1 galaxy_rank aggregate)
