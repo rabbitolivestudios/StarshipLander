@@ -74,7 +74,7 @@ These are **not implemented**. Do not assume otherwise:
 - **Automated testing** — unit tests added (89 XCTest cases across 10 test files covering scoring, models, game state, crash diagnostics, landing evaluation); no UI tests (XCUITest) yet
 - **CI/CD pipeline** — no GitHub Actions or automated builds
 - **Device playtesting partially done** — haptics + ads verified on device via TestFlight. Accelerometer bug fixed in v2.0.2. Classic mode star rating verified on Build 16. Remaining: thrust vectoring feel, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
-- **v2.0.2 awaiting review** — submitted 2026-02-01, replacing v2.0.0 which was never reviewed
+- ~~**v2.0.2 awaiting review**~~ — **APPROVED** 2026-02-03, live on App Store
 
 ---
 
@@ -82,16 +82,16 @@ These are **not implemented**. Do not assume otherwise:
 
 **Phase: Campaign Engagement — v2.0.3 gameplay feedback complete, then v2.1.0 (Community)**
 
-v2.0.2 (Build 16) approved and live on App Store (2026-02-03). v2.0.3 (Build 27 pending) includes all gameplay feedback fixes from Session 46: tightened speed thresholds, Jupiter wind overhaul, Europa ice effect, Titan thrust reduction, Earth platform zones, Mercury shimmer enhancement, all celestial bodies fixed, partial platform landing detection. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.2 (Build 16) approved and live on App Store (2026-02-03). v2.0.3 (Build 28 on TestFlight) includes all gameplay feedback fixes from Session 46 + Europa cryogeysers from Session 47. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. User tests Build 27 on device (all 10 gameplay feedback fixes)
+1. User tests Build 28 on device (Europa cryogeysers + all previous gameplay fixes)
 2. Decide whether to submit v2.0.3 or wait for v2.1.0
-4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
-5. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+3. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
+4. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---
 
