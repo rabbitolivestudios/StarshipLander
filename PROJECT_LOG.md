@@ -485,6 +485,10 @@ This file documents the development history and decisions for the Starship Lande
 - `RocketLanderTests/LevelDefinitionTests.swift` — mechanic name update
 - `RocketLander/Info.plist` — Build 27 → 28
 
+#### Commits:
+- `42d953f` — Replace Europa ice slide with cryogeyser eruptions
+- `167a024` — Bump build number to 28 for TestFlight upload
+
 #### Build Status:
 - Build succeeds, 89/89 tests pass
 
