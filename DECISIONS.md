@@ -361,6 +361,15 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
+## [2026-02-06] Game Center Auth — Must Present authenticateHandler ViewController
+**Context:** Device testing of Build 31 revealed that tapping "View Global Rankings" showed "Sign in to Game Center" despite the player being signed in. The `GKGameCenterViewController` dashboard couldn't complete its auth handshake.
+**Options considered:** (1) Ignore viewController and rely on system-level GC auth, (2) Present the viewController when non-nil, (3) Use GKAccessPoint for all GC interactions.
+**Decision:** Option 2 — when `authenticateHandler` provides a non-nil `viewController`, present it on the topmost VC. Also present `GKGameCenterViewController` from the topmost VC (not root), and anchor it to `galaxy_rank` leaderboard.
+**Why:** The `authenticateHandler`'s `viewController` is Apple's mechanism for completing per-app GC authentication. Dropping it silently prevents the GC handshake even when the device has a Game Center account in Settings. In SwiftUI apps, presenting from `rootViewController` can fail because the root may already have a presented controller.
+**Consequences:** Added `topViewController()` static helper to `GameCenterManager` (walks presentation chain). Auth flow now shows Apple's sign-in dialog when needed. Dashboard opens anchored to Galaxy Rank. Build 32 uploaded to TestFlight with fix.
+
+---
+
 ## [2026-02-05] Tilt Bands — SAFE/HARD/FAIL Matching Speed Band Philosophy
 **Context:** Tilt had a binary pass/fail gate at 0.05 rad (~2.9°), which was too strict and inconsistent with the 3-band system used for speed (SAFE/HARD/FAIL). Campaign ships spawn at 6.9° tilt, so players must correct before landing — a narrow 2.9° safe zone made this punishing.
 **Options considered:** (1) Raise the binary threshold to ~5°, (2) Add SAFE/HARD/FAIL tilt bands matching the speed band philosophy.

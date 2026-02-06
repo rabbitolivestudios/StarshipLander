@@ -201,6 +201,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `ShareHelper.shareImage()`: Native share sheet via UIActivityViewController
   - Share button on game-over screen (only visible on successful landings)
 
+### Fixed
+- **Game Center Auth Completion**: `authenticateHandler`'s `viewController` was silently dropped, preventing per-app GC auth on devices requiring the sign-in dialog. Now presented on the topmost view controller. Without this fix, `GKGameCenterViewController` showed "Sign in to Game Center" even when the device had a Game Center account.
+- **GKGameCenterViewController Presentation**: Previously presented from root VC which could fail silently in SwiftUI's presentation stack. Now walks the VC chain to find the topmost presented controller.
+
 ### Changed
 - **Xcode capabilities**: Added Game Center entitlement (`RocketLander.entitlements`)
 - **GameScene**: Added `campaignState` parameter, `recordAttempt()` call in `startGame()`, GC score submission + achievement check in `successfulLanding()`

@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 30) — live on App Store. v2.1.0 Build 31 on TestFlight (Game Center + Share). |
-| Version Status | **v2.0.3 Build 30 live on App Store** (approved 2026-02-06). **v2.1.0 Build 31 uploaded to TestFlight** — pending device testing. |
+| Current Version | 2.0.3 (Build 30) — live on App Store. v2.1.0 Build 32 on TestFlight (Game Center + Share). |
+| Version Status | **v2.0.3 Build 30 live on App Store** (approved 2026-02-06). **v2.1.0 Build 32 on TestFlight** — GC auth fix applied, pending device testing. |
 | Last Published | v2.0.3 (Build 30) — on App Store (approved 2026-02-06) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -67,7 +67,7 @@ These features are fully implemented, build-verified, and included in v2.0.3:
 
 These are **not implemented**. Do not assume otherwise:
 
-- **Game Center integration** — **CODE COMPLETE** for v2.1.0. GameCenterManager.swift (auth, 12 leaderboards, 10 achievements, Galaxy Rank). Build 31 on TestFlight. App Store Connect configured (12 leaderboards + 10 achievements created via API). Pending: device testing.
+- **Game Center integration** — **CODE COMPLETE** for v2.1.0. GameCenterManager.swift (auth, 12 leaderboards, 10 achievements, Galaxy Rank). Build 32 on TestFlight (Build 31 had GC auth bug — authenticateHandler viewController was dropped). App Store Connect configured (12 leaderboards + 10 achievements created via API). Pending: device testing.
 - **In-App Purchases (IAP)** — planned for v2.2.0 (Monetization phase; StoreKit 2 approach decided, decisions documented)
 - ~~**Campaign per-level leaderboard viewing**~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
 - **iPad support** — iPhone only
@@ -83,9 +83,9 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Community (v2.1.0) — Build 31 on TestFlight, ASC configured, pending device testing**
+**Phase: Community (v2.1.0) — Build 32 on TestFlight, ASC configured, pending device testing**
 
-v2.0.3 (Build 30) live on App Store. v2.1.0 Build 31 uploaded to TestFlight (Session 50-51): Game Center auth, 12 leaderboards (1 classic + 10 campaign + 1 galaxy_rank), 10 achievements, Galaxy Rank on menu/leaderboard/campaign screens, GKAccessPoint, Share Score Card. App Store Connect configured: 12 leaderboards + 10 achievements created via API script. Pending: device testing, App Store submission. v2.2.0 planned: Remove Ads IAP.
+v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 on TestFlight (Session 50-51): Game Center auth (fixed in Build 32 — auth VC now presented), 12 leaderboards, 10 achievements, Galaxy Rank, GKAccessPoint, Share Score Card. ASC configured: 12 leaderboards + 10 achievements. Pending: device testing, App Store submission. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
@@ -95,9 +95,10 @@ v2.0.3 (Build 30) live on App Store. v2.1.0 Build 31 uploaded to TestFlight (Ses
 2. ~~Implement v2.1.0 (Community): Game Center leaderboards, achievements, Share Score Card~~ — **CODE COMPLETE** (Session 50)
 3. ~~v2.1.0: Version bump to 2.1.0 Build 31~~ — **DONE** (Session 51, uploaded to TestFlight)
 4. ~~v2.1.0: App Store Connect leaderboard/achievement setup~~ — **DONE** (Session 51, 12 leaderboards + 10 achievements created via API)
-5. v2.1.0: Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)
-6. v2.1.0: App Store submission
-4. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+5. ~~v2.1.0: Fix GC auth — present authenticateHandler viewController~~ — **DONE** (Session 51, Build 32)
+6. v2.1.0: Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)
+7. v2.1.0: App Store submission
+8. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---
 

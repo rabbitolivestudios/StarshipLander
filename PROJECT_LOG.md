@@ -30,7 +30,7 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | Published (approved 2026-02-03) — Campaign Mode |
 | 2.0.3 | 30 | **PUBLISHED** (approved 2026-02-06) — scoring rebalance + tilt bands + Europa cryogeysers. **Live on App Store.** |
-| 2.1.0 | 31 | **ON TESTFLIGHT** — Game Center + Share Score Card. ASC configured (12 LBs + 10 achievements). Pending device testing. |
+| 2.1.0 | 32 | **ON TESTFLIGHT** — Game Center + Share Score Card. GC auth fix (Build 32). ASC configured. Pending device testing. |
 
 **NEXT STEPS:**
 1. ~~v2.0.3 Build 30 submitted for App Store review~~ — **APPROVED** 2026-02-06, live on App Store
@@ -672,9 +672,9 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-### Session 51 (2026-02-06) - v2.1.0 Build 31 TestFlight + ASC Game Center Setup
+### Session 51 (2026-02-06) - v2.1.0 TestFlight + ASC Setup + GC Auth Fix
 
-**Goal:** Version bump to 2.1.0, upload to TestFlight, create 12 leaderboards + 10 achievements in App Store Connect via API.
+**Goal:** Version bump to 2.1.0, upload to TestFlight, create GC resources in ASC via API, fix GC auth bug found during device testing.
 
 #### Changes Made:
 
@@ -692,32 +692,44 @@ This file documents the development history and decisions for the Starship Lande
    - 10 achievements: eagle_has_landed through master_lander (200 total points)
    - All with en-US localizations
 
+4. **Game Center auth fix** (`GameCenterManager.swift`, `LeaderboardView.swift`): Device testing of Build 31 revealed "View Global Rankings" showed "Sign in to Game Center" despite being signed in.
+   - **Root cause**: `authenticateHandler`'s `viewController` parameter was silently dropped. When non-nil, this VC must be presented to complete per-app GC authentication.
+   - **Fix 1**: Present auth `viewController` on topmost VC when provided
+   - **Fix 2**: Added `topViewController()` helper (walks presentation chain from root)
+   - **Fix 3**: `GKGameCenterViewController` now presented from topmost VC (not root) and anchored to `galaxy_rank` leaderboard
+   - Build 32 uploaded to TestFlight with fix
+
 #### Bug Fixed in Script:
-- **Root cause**: `defaultFormatter` attribute requires a string enum (`"INTEGER"`) not a nested object. The ASC API returned 409 with `ENTITY_ERROR.ATTRIBUTE.TYPE` but the script initially misinterpreted all 409s as "already exists", silently swallowing the actual error. Fixed the attribute format and improved error reporting.
+- `defaultFormatter` attribute requires string enum (`"INTEGER"`) not nested object. Fixed format and improved error reporting.
 
 #### Files Created:
 - `Scripts/setup_game_center.py`
 
-#### Files Modified (previous commit):
-- `RocketLander/Info.plist` — v2.1.0 Build 31
+#### Files Modified:
+- `RocketLander/Info.plist` — v2.1.0, Build 31→32
+- `RocketLander/Models/GameCenterManager.swift` — auth VC presentation, topViewController() helper, UIKit import
+- `RocketLander/Views/LeaderboardView.swift` — topmost VC presenter, galaxy_rank anchor
 
 #### Build Status:
 - Build succeeds, 91/91 tests pass
 
 #### Commits:
 - `3c91c96` — Bump version to 2.1.0 Build 31 for TestFlight
-- (pending) — Add setup_game_center.py script + documentation updates
+- `87125b4` — Add ASC Game Center setup script + session 51 documentation
+- `b7580aa` — Fix Game Center auth: present sign-in VC + topmost presenter (Build 32)
 
 #### Definition of Done:
-- [x] Version bumped to 2.1.0 Build 31
-- [x] Build 31 archived and uploaded to TestFlight
+- [x] Version bumped to 2.1.0 Build 31, then Build 32
+- [x] Build 31 + 32 uploaded to TestFlight
 - [x] setup_game_center.py script created
-- [x] 12 leaderboards created in ASC (verified via API query)
-- [x] 10 achievements created in ASC (verified via API query)
+- [x] 12 leaderboards created in ASC (verified)
+- [x] 10 achievements created in ASC (verified)
 - [x] All localizations (en-US) added
-- [x] Script bug fixed (defaultFormatter format)
+- [x] Script defaultFormatter bug fixed
+- [x] GC auth bug fixed (present authenticateHandler VC)
+- [x] GC dashboard presented from topmost VC
+- [x] Dashboard anchored to galaxy_rank leaderboard
 - [x] All documentation updated
-- [x] Session summary updated
 - [ ] Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)
 
 ---
