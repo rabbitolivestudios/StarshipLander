@@ -24,28 +24,15 @@ As always, thank you for your continuous support!
 
 ### App Store — Review Team Notes (Copy this)
 ```
-This update (v2.0.3, Build 30) is a gameplay tuning and polish release. No new SDKs, frameworks, or permissions were added since v2.0.2 (Build 16, currently live).
+This is a skill-based physics rocket landing game.
+Use on-screen buttons to control thrust and rotation and land safely on the platform.
+No account, login, or in-app purchases required.
 
-Key changes:
-- Scoring formula rebalanced: higher achievable scores, partial credit for near-miss landings
-- Tilt threshold doubled from ~3° to ~6° before crash (more forgiving)
-- Europa level mechanic changed from instant-crash ice to force-based cryogeyser plumes
-- Jupiter gravity and wind behavior adjusted
-- Speed thresholds tightened ~15% for added challenge
-- New Flight Data panel shows detailed landing metrics with color-coded badges
-- 20 randomized crash messages replace the static "CRASH!" text
-- New "How to Play" info sheet accessible from main menu
-- Bug fixes for menu layout, text truncation, and platform edge detection
+This build (v2.0.3, Build 30) includes gameplay tuning improvements over v2.0.2. No new SDKs were added — only balance and polish changes to the campaign mode mechanics.
 
-How to test:
-1. Launch app → main menu shows correctly with "How to Play >" button
-2. Tap "How to Play >" → info sheet opens with controls, platforms, scoring, and campaign info
-3. Play Classic mode → land on any platform → Flight Data panel shows metrics with colored badges
-4. Crash intentionally → randomized crash headline appears (not always "CRASH!")
-5. Play Campaign → Europa (level 4) → blue geyser plumes erupt from surface, pushing rocket upward
-6. Play Campaign → Jupiter (level 10) → wind pushes consistently left-to-right
+Campaign mode has 10 levels with unique environmental mechanics: dust storms (Mars), dense atmosphere drag (Titan), cryogeyser eruptions (Europa), moving platforms (Earth), vertical updrafts (Venus), heat-induced thrust interference (Mercury), rock pillar obstacles (Ganymede), deadly volcanic debris (Io), and sudden wind gusts (Jupiter).
 
-App Tracking Transparency prompt appears on first launch. No account, login, or in-app purchases required.
+App Tracking Transparency prompt appears on first app launch to request permission before showing personalized ads. Users can toggle between traditional button controls and tilt-based accelerometer controls from the main menu.
 ```
 
 ---
