@@ -28,7 +28,7 @@ This file documents the development history and decisions for the Starship Lande
 | 1.1.5 | 11 | Published on App Store - New scoring system + HUD fixes |
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
-| 2.0.2 | 16 | **PUBLISHED** (approved 2026-02-05) — Campaign Mode live on App Store |
+| 2.0.2 | 16 | **PUBLISHED** (approved 2026-02-03) — Campaign Mode live on App Store |
 | 2.0.3 | 27 | v2.0.3 gameplay feedback: tightened speed thresholds (~15% A/B, ~5% C), Jupiter wind+gravity, Europa ice, Titan thrust reduction, Earth platform zones, Mercury shimmer, all celestial bodies fixed, partial platform landing detection, Menu button fix, CENTER badge removed. **Build 27 on TestFlight** (uploaded 2026-02-05). |
 
 **NEXT STEPS:**
