@@ -15,7 +15,7 @@
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
 | Current Version | 2.0.3 (Build 30) — all Build 27 features + Europa cryogeysers + scoring rebalance + tilt bands. |
-| Version Status | Build 30 submitted for App Store review (2026-02-06). v2.0.2 Build 16 live on App Store. |
+| Version Status | Build 30 submitted for App Store review (2026-02-06, awaiting review). v2.0.2 Build 16 live on App Store. |
 | Last Published | v2.0.2 (Build 16) — on App Store (approved 2026-02-03) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
