@@ -76,7 +76,7 @@ Toggle between button and accelerometer controls in the main menu.
 | 1 | Moon | 1.6 | 8.0 | None (tutorial) |
 | 2 | Mars | 2.0 | 9.5 | Light dust wind |
 | 3 | Titan | 2.2 | 10.0 | Dense atmosphere |
-| 4 | Europa | 2.5 | 11.0 | Ice surface |
+| 4 | Europa | 2.5 | 11.0 | Cryogeysers |
 | 5 | Earth | 2.8 | 12.0 | Moving platforms |
 | 6 | Venus | 3.2 | 13.0 | Vertical updrafts |
 | 7 | Mercury | 3.5 | 14.0 | Heat interference |

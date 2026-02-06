@@ -29,10 +29,10 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **PUBLISHED** (approved 2026-02-03) — Campaign Mode live on App Store |
-| 2.0.3 | 27 | v2.0.3 gameplay feedback: tightened speed thresholds (~15% A/B, ~5% C), Jupiter wind+gravity, Europa ice, Titan thrust reduction, Earth platform zones, Mercury shimmer, all celestial bodies fixed, partial platform landing detection, Menu button fix, CENTER badge removed. **Build 27 on TestFlight** (uploaded 2026-02-05). |
+| 2.0.3 | 28 | v2.0.3 gameplay feedback + Europa cryogeysers. **Build 28 on TestFlight** (uploaded 2026-02-05). |
 
 **NEXT STEPS:**
-1. User tests Build 27 on device (all 10 gameplay feedback fixes)
+1. User tests Build 28 on device (Europa cryogeysers + all previous gameplay fixes)
 2. Decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
@@ -464,4 +464,42 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-*Last updated: 2026-02-05 (Session 46)*
+### Session 47 (2026-02-05) - Europa Cryogeysers + Build 28 TestFlight
+
+**Goal:** Replace Europa's punishing ice slide crash (H.Speed > 20 = instant death) with cryogeyser eruptions — disruptive but survivable force-based plumes. Upload Build 28 to TestFlight.
+
+#### Changes Made:
+
+1. **Europa cryogeysers** (`LevelDefinition.swift`, `GameScene.swift`, `GameScene+Effects.swift`): Renamed `.iceSurface` → `.cryogeysers`. 3 fixed geyser positions with staggered active/calm cycling. Upward push force (base 18.0, tapering with height) when rocket is in plume zone. Blue/white/cyan particle columns. Vent markers on surface. Ice shimmer + low friction preserved.
+
+2. **Ice slide crash removed** (`GameScene.swift`): Deleted the H.Speed > 20 crash check in `checkLanding()`.
+
+3. **Test updated** (`LevelDefinitionTests.swift`): `.iceSurface` → `.cryogeysers` in expected mechanics map.
+
+4. **Build 28 uploaded to TestFlight** (`Info.plist`): Build number 27 → 28.
+
+#### Files Modified:
+- `RocketLander/Models/LevelDefinition.swift` — enum rename, description update
+- `RocketLander/GameScene.swift` — geyser state, setup, mechanics, ice crash removal, reset cleanup
+- `RocketLander/GameScene+Effects.swift` — `createCryogeyserEffect()` particle system
+- `RocketLanderTests/LevelDefinitionTests.swift` — mechanic name update
+- `RocketLander/Info.plist` — Build 27 → 28
+
+#### Build Status:
+- Build succeeds, 89/89 tests pass
+
+#### Definition of Done:
+- [x] Ice slide crash removed
+- [x] `.iceSurface` renamed to `.cryogeysers` everywhere
+- [x] 3 geyser positions with active/calm cycling
+- [x] Upward push force in plume zone
+- [x] Blue/white/cyan particle columns
+- [x] Vent markers on surface
+- [x] Ice shimmer + low friction preserved
+- [x] Build succeeds, all 89 tests pass
+- [x] Build 28 uploaded to TestFlight
+- [x] Docs updated (CHANGELOG, STATUS, DECISIONS, PROJECT_LOG)
+
+---
+
+*Last updated: 2026-02-05 (Session 47)*

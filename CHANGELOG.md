@@ -5,9 +5,10 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] — Build 27 on TestFlight (uploaded 2026-02-05)
+## [Unreleased] — Build 28 on TestFlight (uploaded 2026-02-05)
 
 ### Changed
+- **Europa Cryogeysers (Session 47)**: Replaced ice slide crash mechanic (H.Speed > 20 = instant death) with cryogeyser eruptions — intermittent force-based ice/water plumes that push the rocket upward. 3 fixed geyser positions with staggered active/calm cycling (2-3s active, 3-5s calm), blue/white/cyan particle columns, subtle vent markers on surface. Ice shimmer and low platform friction preserved. Disruptive but survivable.
 - **Speed Thresholds Tightened (Session 46)**: Made landings harder across all platforms:
   - Platform A: safe V 80→70, hard V 120→100, safe H 60→50, hard H 100→80 (~15% tighter)
   - Platform B: safe V 55→50, hard V 85→75, safe H 45→40, hard H 75→60 (~15% tighter)
@@ -24,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Menu Button Truncation (Session 46)**: "Menu" button on landing report no longer truncated on smaller screens
-- **Europa Ice Now Affects Gameplay (Session 46)**: Landing with H.Speed > 20 causes crash ("Slid off the ice!") — ice surface requires low horizontal speed to grip
+- ~~**Europa Ice Now Affects Gameplay (Session 46)**~~: Superseded by cryogeysers (Session 47)
 - **Partial Platform Landing Detection (Session 46)**: Both rocket legs (47pt span) must be within platform bounds to land successfully — one leg hanging off now causes crash ("Missed the platform!")
 
 ### Changed
@@ -225,7 +226,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Moon (1.6g), Mars (2.0g), Titan (2.2g), Europa (2.5g), Earth (2.8g)
   - Venus (3.2g), Mercury (3.5g), Ganymede (3.8g), Io (4.2g), Jupiter (4.8g)
   - Gravity increases monotonically by level for progressive difficulty
-  - Special mechanics per level: wind, dense atmosphere, ice surface, moving platform, turbulence, heat shimmer, deep craters, volcanic eruptions, extreme wind
+  - Special mechanics per level: wind, dense atmosphere, cryogeysers, moving platform, turbulence, heat shimmer, deep craters, volcanic eruptions, extreme wind
   - Campaign state persistence via UserDefaults (unlocked levels, stars, scores)
   - Level select grid UI with lock/unlock, star count, best scores
 
