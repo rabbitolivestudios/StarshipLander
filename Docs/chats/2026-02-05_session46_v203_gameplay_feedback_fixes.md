@@ -134,7 +134,10 @@
 ## Commits
 - `81e40c3` — v2.0.3 gameplay feedback fixes — 10 improvements
 - `1c7e645` — Session 46 documentation — v2.0.3 gameplay feedback fixes
+- `e7fea9e` — Update session 46 summary with commit hashes
 - `f7c6d77` — Bump build number to 27 for TestFlight upload
+- `0999c07` — Update docs for Build 27 TestFlight upload
+- `c671035` — Add starship-dashboard to gitignore (unrelated project)
 
 ## Repo Housekeeping
 - [x] Working tree clean
