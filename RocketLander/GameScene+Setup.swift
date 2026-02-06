@@ -615,7 +615,7 @@ extension GameScene {
             platformNode.physicsBody?.categoryBitMask = platformCategory
             platformNode.physicsBody?.contactTestBitMask = rocketCategory
 
-            // Ice surface for Europa
+            // Low friction for Europa (icy world)
             if gameState.currentMode == .campaign && gameState.currentLevelId == 4 {
                 platformNode.physicsBody?.friction = 0.05
             } else {

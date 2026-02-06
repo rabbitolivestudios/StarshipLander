@@ -32,7 +32,7 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **Per-Planet Physics**: Unique gravity (1.6-4.8) and thrust (8.0-18.5) per level
 - **Three Landing Platforms**: Training Zone (1x), Precision Target (2x), Elite Landing (5x) per level
 - **Visual Effects**: Wind streaks, atmosphere haze, ice shimmer, heat distortion, volcanic eruptions
-- **Level Mechanics**: Wind, dense atmosphere, ice surfaces, moving platforms, vertical updrafts (Venus), heat interference (Mercury), deep craters, deadly volcanic debris (Io), sudden gusts (Jupiter)
+- **Level Mechanics**: Wind, dense atmosphere, cryogeysers (Europa), moving platforms, vertical updrafts (Venus), heat interference (Mercury), deep craters, deadly volcanic debris (Io), sudden gusts (Jupiter)
 - **Star Rating**: 1-3 stars per landing based on platform (30 total)
 - **Scoring**: Continuous scoring with fuel (1.0-2.0x) and platform (1x/2x/5x) multipliers, max 20,000. Center precision weighted highest (600pts). HARD landings penalized naturally (velocity components zero out, ~45% subtotal loss) — no explicit multiplier penalty.
 - **Per-Platform Speed Bands + Threshold Enforcement**: `LandingThresholds.swift` — SAFE/HARD/FAIL classification per platform. Thresholds tightened in v2.0.3: Platform A (V≤70/H≤50 safe), B (V≤50/H≤40), C (V≤33/H≤28). `checkLanding()` uses `LandingThresholds.evaluate()` with post-thrust tracked velocities — speed now affects landing success (FAIL = crash).

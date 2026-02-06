@@ -284,7 +284,7 @@ extension GameScene {
         run(SKAction.repeatForever(spawn), withKey: "atmosphereHaze")
     }
 
-    // MARK: - Ice Surface Shimmer (Europa)
+    // MARK: - Ice Shimmer (Europa)
     func createIceShimmer() {
         // Periodic sparkle particles on the lower portion of screen (near platforms)
         let sparkle = SKAction.sequence([
