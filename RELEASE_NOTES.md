@@ -1,5 +1,55 @@
 # Release Notes
 
+## Version 2.0.3 (Build 30)
+**Status:** SUBMITTED FOR REVIEW (2026-02-06)
+
+### Overview
+Version 2.0.3 is a gameplay tuning and polish update. Scoring rebalanced for higher and more rewarding scores, tilt forgiveness doubled, Europa mechanic replaced with cryogeysers, Jupiter overhauled, speed thresholds tightened, and Flight Data panel redesigned with badges.
+
+### App Store — What's New (Copy this)
+```
+GAMEPLAY UPDATE
+
+• Scoring rebalance — scores are higher and more rewarding. HARD landings now earn partial credit instead of zeroing out.
+• Tilt forgiveness — tilt now uses three bands like speed: safe (≤3°), hard (≤6°), crash (>6°). No more instant death at 3°
+• Europa cryogeysers — ice slide crash replaced with erupting ice plumes that push your rocket. Time your descent between eruptions
+• Jupiter overhaul — wind now with stronger gusts, gravity increased
+• Tighter speed thresholds across all platforms for a better challenge
+• HUD-style Flight Data panel with OK/HARD/FAIL badges on every metric
+• How to Play info sheet with full game documentation
+• Other bug fixes
+
+As always, thank you for your continuous support!
+```
+
+### App Store — Review Team Notes (Copy this)
+```
+This update (v2.0.3, Build 30) is a gameplay tuning and polish release. No new SDKs, frameworks, or permissions were added since v2.0.2 (Build 16, currently live).
+
+Key changes:
+- Scoring formula rebalanced: higher achievable scores, partial credit for near-miss landings
+- Tilt threshold doubled from ~3° to ~6° before crash (more forgiving)
+- Europa level mechanic changed from instant-crash ice to force-based cryogeyser plumes
+- Jupiter gravity and wind behavior adjusted
+- Speed thresholds tightened ~15% for added challenge
+- New Flight Data panel shows detailed landing metrics with color-coded badges
+- 20 randomized crash messages replace the static "CRASH!" text
+- New "How to Play" info sheet accessible from main menu
+- Bug fixes for menu layout, text truncation, and platform edge detection
+
+How to test:
+1. Launch app → main menu shows correctly with "How to Play >" button
+2. Tap "How to Play >" → info sheet opens with controls, platforms, scoring, and campaign info
+3. Play Classic mode → land on any platform → Flight Data panel shows metrics with colored badges
+4. Crash intentionally → randomized crash headline appears (not always "CRASH!")
+5. Play Campaign → Europa (level 4) → blue geyser plumes erupt from surface, pushing rocket upward
+6. Play Campaign → Jupiter (level 10) → wind pushes consistently left-to-right
+
+App Tracking Transparency prompt appears on first launch. No account, login, or in-app purchases required.
+```
+
+---
+
 ## Version 2.0.2 (Build 16)
 **Status:** PUBLISHED (approved 2026-02-03) — Campaign Mode live on App Store
 
