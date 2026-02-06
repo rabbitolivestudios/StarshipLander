@@ -318,3 +318,16 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Option 3 — cryogeysers. 3 fixed geyser positions (8%, 34%, 66% screen width) cycle between active (2-3s) and calm (3-5s). Active geysers apply upward force (base 18.0, tapering with height) plus lateral jitter when rocket is within ±30pt horizontally and 180-480pt vertically. Blue/white/cyan particle columns during eruptions. Vent markers on surface. Ice shimmer and low friction preserved.
 **Why:** Inspired by real cryogeysers detected by Hubble on Europa. Creates a timing/positioning challenge that's disruptive but survivable — the player can see where geysers are (vent markers), observe eruption patterns, and time their descent through gaps. Follows the Io volcanic eruption pattern (closest analog) but with force-based disruption instead of deadly contact. Binary speed thresholds aren't fun; environmental hazards with counterplay are.
 **Consequences:** Europa difficulty shifts from "control horizontal speed precisely" to "time your descent between eruptions and avoid plume zones." The `.iceSurface` enum case renamed to `.cryogeysers` (breaking change for any saved `SpecialMechanic` data, but campaign state doesn't persist mechanic enums). Tuning values may need adjustment after device testing.
+
+---
+
+## [2026-02-05] Scoring Rebalance — HARD Partial Credit + Component Boost + Fuel Tuning
+**Context:** After Session 46 tightened speed thresholds ~15% and Session 47 confirmed mechanics work, device testing showed scores rarely exceeded 5,000. Root cause analysis: (1) quadratic penalty curve zeroed velocity components in HARD band, (2) tighter thresholds compressed the scoring curve, (3) fuel multiplier range 1.0-2.0x was narrow.
+**Options considered:** (1) Revert threshold tightening, (2) Change Platform A multiplier, (3) Hybrid: improve scoring formula, boost components, increase fuel multiplier, reduce fuel consumption.
+**Decision:** Option 3 — four-part hybrid scoring improvement:
+  1. Velocity scoring denominator changed from safe to hard threshold — single smooth quadratic curve eliminates the zero-out cliff at safe threshold. HARD landings get meaningful partial credit.
+  2. Soft Landing 500→550, Horizontal 400→450 (subtotal max 2000→2100)
+  3. Fuel multiplier range 1.0-2.0x → 1.0-2.2x (factor 1.0→1.2)
+  4. Fuel consumption reduced: thrust 0.30→0.27%, rotation 0.08→0.07%, accelerometer 0.04→0.035×tilt
+**Why:** User explicitly did not want to change Platform A multiplier. The old system had a cliff: at exactly safe threshold, velocity score = 0; past safe threshold, also 0. Both were punishing. Using hard threshold as denominator creates a smooth curve where safe landings score well AND hard landings still get partial credit, with no discontinuity. Fuel consumption reduction gives ~10% more fuel at landing, amplified by the wider multiplier range.
+**Consequences:** New theoretical max 23,100 (was 20,000). Best achievable (Classic C): 14,331 (was 12,077). Typical gameplay scores should be 15-30% higher. All 89 tests pass. HowToPlayView updated with new values. Perfect score script updated.

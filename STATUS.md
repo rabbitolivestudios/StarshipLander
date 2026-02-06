@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-05 (Session 47)
+> Last reconciled: 2026-02-05 (Session 48)
 
 ---
 
@@ -14,7 +14,7 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 28) — all Build 27 features + Europa cryogeysers replacing ice slide crash. |
+| Current Version | 2.0.3 (Build 28) — all Build 27 features + Europa cryogeysers + scoring rebalance. |
 | Version Status | Build 28 on TestFlight (uploaded 2026-02-05). v2.0.2 Build 16 live on App Store. |
 | Last Published | v2.0.2 (Build 16) — on App Store (approved 2026-02-03) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
@@ -34,7 +34,7 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **Visual Effects**: Wind streaks, atmosphere haze, ice shimmer, heat distortion, volcanic eruptions
 - **Level Mechanics**: Wind, dense atmosphere, cryogeysers (Europa), moving platforms, vertical updrafts (Venus), heat interference (Mercury), deep craters, deadly volcanic debris (Io), sudden gusts (Jupiter)
 - **Star Rating**: 1-3 stars per landing based on platform (30 total)
-- **Scoring**: Continuous scoring with fuel (1.0-2.0x) and platform (1x/2x/5x) multipliers, max 20,000. Center precision weighted highest (600pts). HARD landings penalized naturally (velocity components zero out, ~45% subtotal loss) — no explicit multiplier penalty.
+- **Scoring**: Continuous scoring with fuel (1.0-2.2x) and platform (1x/2x/5x) multipliers, max 23,100. Components: Base(100), Soft Landing(550), Horizontal(450), Center(600), Rotation(250), Approach(150) = 2,100 subtotal. Velocity scoring uses hard threshold as denominator — smooth curve with HARD landing partial credit. Fuel consumption: thrust 0.27%/frame, rotation 0.07%/frame.
 - **Per-Platform Speed Bands + Threshold Enforcement**: `LandingThresholds.swift` — SAFE/HARD/FAIL classification per platform. Thresholds tightened in v2.0.3: Platform A (V≤70/H≤50 safe), B (V≤50/H≤40), C (V≤33/H≤28). `checkLanding()` uses `LandingThresholds.evaluate()` with post-thrust tracked velocities — speed now affects landing success (FAIL = crash).
 - **Partial Platform Landing Detection**: Both rocket legs (47pt span) must be within platform bounds. Landing with one leg hanging off causes crash ("Missed the platform!").
 - **Level-Specific Mechanics Enhanced**: Europa cryogeysers (intermittent upward-pushing ice plumes, replacing ice slide crash), Titan thrust reduction (75% efficiency), Jupiter wind overhaul (left→right with stronger force, gravity 5.2), Mercury enhanced shimmer with rising heat particles.
@@ -57,7 +57,7 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **Unit Tests**: 89 XCTest cases across 10 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data, crash diagnostics, landing evaluation, scoring helper)
 - **Codebase**: Split from 2 monolithic files into 21 organized files
 - **Project Management**: CLAUDE.md, PR template, DECISIONS.md, session logging workflow
-- **Perfect Landing Score Analysis**: Frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations, including campaign reentry state (tilt + drift). Best: Classic C = 12,077 (via left screen wrap). All 33/33 land in SAFE band. Script: `Scripts/calculate_perfect_scores.py`
+- **Perfect Landing Score Analysis**: Frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations, including campaign reentry state (tilt + drift). Best: Classic C = 14,331 (via left screen wrap). All 33/33 land in SAFE band. Script: `Scripts/calculate_perfect_scores.py`
 
 ---
 
@@ -123,11 +123,11 @@ v2.0.2 (Build 16) approved and live on App Store (2026-02-03). v2.0.3 (Build 28 
 ## Known Risks / Watchouts
 
 - **v2.0.2 is the current live version** — approved 2026-02-03, Campaign Mode now on App Store
-- **Build 28 on TestFlight** — uploaded 2026-02-05. Includes all v2.0.3 gameplay feedback fixes from Session 46 + Europa cryogeysers (Session 47). Europa ice slide crash replaced with force-based cryogeyser plumes. Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
+- **Build 28 on TestFlight** — uploaded 2026-02-05. Includes all v2.0.3 gameplay feedback fixes from Session 46 + Europa cryogeysers (Session 47) + scoring rebalance (Session 48). Note: scoring changes not yet in TestFlight build — needs rebuild for new upload. Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
 - **Velocity thresholds were dead code before Build 21** — SpriteKit collision resolution zeroed velocities before `didBegin(contact:)` fired in all builds through Build 18. All prior high scores were achieved under "speed doesn't matter" regime. **RESOLVED in Build 21** with post-thrust tracking and per-platform FAIL thresholds.
 - **HUD threshold mismatch RESOLVED** — HUD previously showed V<50 H<30 with actual thresholds V<40 H<25. **Fixed in Build 21** — HUD now reads from `LandingThresholds.platformC` (V<35, H<30).
 - **Unit tests have no integration coverage** — 65 tests all test isolated pure functions. No test simulates a physics collision to verify landing pass/fail decision. This is the test that would have caught the bug.
-- **Scoring was inflated** — all prior scores used near-zero post-collision velocity inputs, meaning speed components were near-maximum. With per-platform scoring denominators, speed components now scale correctly relative to platform difficulty.
+- **Scoring rebalanced (Session 48)** — velocity components now use hard thresholds as denominator (smooth curve with HARD partial credit). Subtotal max 2,100, fuel mult 1.0-2.2x, theoretical max 23,100. Fuel consumption reduced. Prior high scores may be lower than new achievable scores.
 - **Device testing in progress** — Haptics and ads verified. Accelerometer fixed. Remaining: thrust vectoring, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
 - **App Store description limit** — App Store Connect enforced a ~2,222 character limit (not the documented 4,000)
 - **Git HTTP/2 broken pipe** — large pushes require `git config http.version HTTP/1.1`

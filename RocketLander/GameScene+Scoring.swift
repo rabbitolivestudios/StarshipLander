@@ -5,20 +5,22 @@ extension GameScene {
 
     func calculateScore(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform, speedBand: SpeedBand) -> Int {
         // === CONTINUOUS SCORING SYSTEM WITH FUEL + PLATFORM MULTIPLIER ===
-        // Max possible: ~20,000 points (2000 base x 2.0 fuel x 5.0 platform)
+        // Max possible: ~23,100 points (2100 base x 2.2 fuel x 5.0 platform)
 
         let bands = LandingThresholds.bands(for: platform)
 
         var subtotal: Double = 100
 
-        // 1. SOFT LANDING (0-500 points) — scaled to platform's safe vertical threshold
-        let verticalRatio = min(1.0, verticalSpeed / bands.safeVertical)
-        let softLandingScore = 500.0 * pow(1.0 - verticalRatio, 2)
+        // 1. SOFT LANDING (0-550 points) — single quadratic curve using hard threshold
+        //    Smooth from max at speed=0 to 0 at hard threshold. HARD landings get
+        //    partial credit (speed between safe and hard still scores > 0).
+        let verticalRatio = min(1.0, verticalSpeed / bands.hardVertical)
+        let softLandingScore = 550.0 * pow(1.0 - verticalRatio, 2)
         subtotal += softLandingScore
 
-        // 2. HORIZONTAL PRECISION (0-400 points) — scaled to platform's safe horizontal threshold
-        let horizontalRatio = min(1.0, horizontalSpeed / bands.safeHorizontal)
-        let horizontalScore = 400.0 * pow(1.0 - horizontalRatio, 2)
+        // 2. HORIZONTAL PRECISION (0-450 points) — same smooth curve using hard threshold
+        let horizontalRatio = min(1.0, horizontalSpeed / bands.hardHorizontal)
+        let horizontalScore = 450.0 * pow(1.0 - horizontalRatio, 2)
         subtotal += horizontalScore
 
         // 3. PLATFORM CENTER (0-600 points) — use the specific platform's position
@@ -39,12 +41,11 @@ extension GameScene {
         let approachScore = 150.0 * pow(1.0 - approachRatio, 2)
         subtotal += approachScore
 
-        // Subtotal max: 100 + 500 + 400 + 600 + 250 + 150 = 2000
-        // HARD landings: no explicit penalty — velocity components naturally zero out
-        // (speeds exceed safe threshold = scoring denominator), losing ~45% of subtotal.
+        // Subtotal max: 100 + 550 + 450 + 600 + 250 + 150 = 2100
+        // HARD landings get partial credit (25% of velocity components) instead of zeroing out.
 
-        // 6. FUEL MULTIPLIER (1.0x to 2.0x)
-        let fuelMultiplier = 1.0 + (gameState.fuel / 100.0) * 1.0
+        // 6. FUEL MULTIPLIER (1.0x to 2.2x)
+        let fuelMultiplier = 1.0 + (gameState.fuel / 100.0) * 1.2
 
         // 7. PLATFORM MULTIPLIER
         let platformMultiplier = platform.multiplier
@@ -52,7 +53,7 @@ extension GameScene {
         // Final score
         let totalScore = Int(subtotal * fuelMultiplier * platformMultiplier)
 
-        // Max possible: 2000 x 2.0 x 5.0 = 20,000
+        // Max possible: 2100 x 2.2 x 5.0 = 23,100
 
         return totalScore
     }

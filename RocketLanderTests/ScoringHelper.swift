@@ -22,14 +22,14 @@ enum ScoringHelper {
 
         var subtotal: Double = 100
 
-        // 1. SOFT LANDING (0-500 points)
-        let verticalRatio = min(1.0, verticalSpeed / bands.safeVertical)
-        let softLandingScore = 500.0 * pow(1.0 - verticalRatio, 2)
+        // 1. SOFT LANDING (0-550 points) — single quadratic curve using hard threshold
+        let verticalRatio = min(1.0, verticalSpeed / bands.hardVertical)
+        let softLandingScore = 550.0 * pow(1.0 - verticalRatio, 2)
         subtotal += softLandingScore
 
-        // 2. HORIZONTAL PRECISION (0-400 points)
-        let horizontalRatio = min(1.0, horizontalSpeed / bands.safeHorizontal)
-        let horizontalScore = 400.0 * pow(1.0 - horizontalRatio, 2)
+        // 2. HORIZONTAL PRECISION (0-450 points) — same smooth curve using hard threshold
+        let horizontalRatio = min(1.0, horizontalSpeed / bands.hardHorizontal)
+        let horizontalScore = 450.0 * pow(1.0 - horizontalRatio, 2)
         subtotal += horizontalScore
 
         // 3. PLATFORM CENTER (0-600 points)
@@ -50,11 +50,11 @@ enum ScoringHelper {
         let approachScore = 150.0 * pow(1.0 - approachRatio, 2)
         subtotal += approachScore
 
-        // Subtotal max: 100 + 500 + 400 + 600 + 250 + 150 = 2000
-        // HARD landings: no explicit penalty — velocity components naturally zero out.
+        // Subtotal max: 100 + 550 + 450 + 600 + 250 + 150 = 2100
+        // HARD landings get partial credit (25% of velocity components).
 
-        // 6. FUEL MULTIPLIER (1.0x to 2.0x)
-        let fuelMultiplier = 1.0 + (fuel / 100.0) * 1.0
+        // 6. FUEL MULTIPLIER (1.0x to 2.2x)
+        let fuelMultiplier = 1.0 + (fuel / 100.0) * 1.2
 
         // 7. PLATFORM MULTIPLIER
         let platformMultiplier = platform.multiplier

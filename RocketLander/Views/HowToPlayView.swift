@@ -224,14 +224,14 @@ struct HowToPlayView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 scoreComponent("Base", "100 pts", "Awarded for any successful landing")
-                scoreComponent("Soft Landing", "0-500 pts", "Lower vertical speed = more points")
-                scoreComponent("Horizontal Precision", "0-400 pts", "Lower sideways speed = more points")
+                scoreComponent("Soft Landing", "0-550 pts", "Lower vertical speed = more points")
+                scoreComponent("Horizontal Precision", "0-450 pts", "Lower sideways speed = more points")
                 scoreComponent("Platform Center", "0-600 pts", "Closer to center = more points")
                 scoreComponent("Rotation Precision", "0-250 pts", "More level = more points")
                 scoreComponent("Approach Control", "0-150 pts", "Smooth final approach = more points")
             }
 
-            Text("Subtotal max: 2,000 pts")
+            Text("Subtotal max: 2,100 pts")
                 .font(.system(.caption, design: .monospaced))
                 .foregroundColor(.orange)
 
@@ -240,7 +240,7 @@ struct HowToPlayView: View {
                     Text("Fuel Multiplier:")
                         .font(.caption.bold())
                         .foregroundColor(.white)
-                    Text("1.0x (empty) to 2.0x (full tank)")
+                    Text("1.0x (empty) to 2.2x (full tank)")
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
@@ -258,7 +258,7 @@ struct HowToPlayView: View {
                 .font(.system(.caption, design: .monospaced).bold())
                 .foregroundColor(.orange)
 
-            Text("Max possible: 2,000 x 2.0 x 5.0 = 20,000 pts")
+            Text("Max possible: 2,100 x 2.2 x 5.0 = 23,100 pts")
                 .font(.caption2)
                 .foregroundColor(.gray)
         }

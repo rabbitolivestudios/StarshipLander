@@ -8,17 +8,17 @@ Physics model (matching GameScene.swift + SpriteKit internals):
   Gravity per frame: |g| × 150 / 60 = |g| × 2.5 pts/s
   Thrust: binary on/off, T pts/s per frame when upright.
   Tilt θ: vy += cos(θ)*T, vx += sin(θ)*T*0.85 (net after vectoring)
-  Fuel: 0.3%/thrust frame, 0.08%/rotation frame
+  Fuel: 0.27%/thrust frame, 0.07%/rotation frame
 
   Landing evaluation (per-platform speed bands):
     - rotation <= 0.05 rad (hard gate, all platforms)
     - vertical/horizontal speed checked against platform-specific SAFE/HARD/FAIL bands
     - approach speed is scoring only, NOT a crash gate
 
-  Per-platform thresholds (matching LandingThresholds.swift):
-    Platform A: V_safe=80  V_hard=120  H_safe=60  H_hard=100
-    Platform B: V_safe=55  V_hard=85   H_safe=45  H_hard=75
-    Platform C: V_safe=35  V_hard=55   H_safe=30  H_hard=50
+  Per-platform thresholds (matching LandingThresholds.swift — tightened in v2.0.3):
+    Platform A: V_safe=70  V_hard=100  H_safe=50  H_hard=80
+    Platform B: V_safe=50  V_hard=75   H_safe=40  H_hard=60
+    Platform C: V_safe=33  V_hard=52   H_safe=28  H_hard=48
 
   Screen wrapping: x < -20 → x = screenW + 20; x > screenW + 20 → x = -20
   Velocity preserved through wrap. Going left from start can be shorter to
@@ -48,8 +48,8 @@ FALL_HEIGHT = START_Y - PLATFORM_Y  # 528
 
 WRAP_WIDTH = SCREEN_W + 40         # 433 (from -20 to screenW+20)
 
-FUEL_THRUST = 0.3
-FUEL_ROTATE = 0.08
+FUEL_THRUST = 0.27
+FUEL_ROTATE = 0.07
 
 # Campaign reentry state (applied to all non-Classic levels)
 CAMPAIGN_INITIAL_TILT = 0.12       # ~6.9° left tilt (radians)
@@ -61,11 +61,11 @@ APPROACH_WINDOW = 30
 # Approach speed scoring threshold (not a crash gate)
 APPROACH_SCORING_THRESHOLD = 80.0
 
-# Per-platform speed bands (matching LandingThresholds.swift)
+# Per-platform speed bands (matching LandingThresholds.swift — tightened in v2.0.3)
 PLATFORM_BANDS = {
-    "A": {"v_safe": 80.0, "v_hard": 120.0, "h_safe": 60.0, "h_hard": 100.0},
-    "B": {"v_safe": 55.0, "v_hard": 85.0,  "h_safe": 45.0, "h_hard": 75.0},
-    "C": {"v_safe": 35.0, "v_hard": 55.0,  "h_safe": 30.0, "h_hard": 50.0},
+    "A": {"v_safe": 70.0, "v_hard": 100.0, "h_safe": 50.0, "h_hard": 80.0},
+    "B": {"v_safe": 50.0, "v_hard": 75.0,  "h_safe": 40.0, "h_hard": 60.0},
+    "C": {"v_safe": 33.0, "v_hard": 52.0,  "h_safe": 28.0, "h_hard": 48.0},
 }
 
 
@@ -92,7 +92,7 @@ LEVELS = [
     {"name": "Mercury",  "g": 3.5, "T": 14.0},
     {"name": "Ganymede", "g": 3.8, "T": 15.0},
     {"name": "Io",       "g": 4.2, "T": 16.5},
-    {"name": "Jupiter",  "g": 4.8, "T": 18.5},
+    {"name": "Jupiter",  "g": 5.2, "T": 18.5},
 ]
 
 
@@ -117,30 +117,29 @@ def classify_band(v, h, plat_name):
 def calc_score(v, h, rot, appr, fuel, rx, plat, speed_band="safe"):
     bands = PLATFORM_BANDS[plat["name"]]
     sub = 100.0
-    sub += 500.0 * (1.0 - min(1.0, v / bands["v_safe"])) ** 2
-    sub += 400.0 * (1.0 - min(1.0, h / bands["h_safe"])) ** 2
+    # Velocity components use hard threshold as denominator (smooth curve, HARD partial credit)
+    sub += 550.0 * (1.0 - min(1.0, v / bands["v_hard"])) ** 2
+    sub += 450.0 * (1.0 - min(1.0, h / bands["h_hard"])) ** 2
     cr = min(1.0, abs(rx - plat["x"]) / (plat["w"] / 2.0))
     sub += 600.0 * (1.0 - cr) ** 2
     sub += 250.0 * (1.0 - min(1.0, rot / MAX_SAFE_ROT)) ** 2
     sub += 150.0 * (1.0 - min(1.0, appr / APPROACH_SCORING_THRESHOLD)) ** 2
-    # HARD landings: no explicit penalty — velocity components naturally zero out.
 
-    fm = 1.0 + fuel / 100.0
+    fm = 1.0 + fuel / 100.0 * 1.2
     return int(sub * fm * plat["mult"]), sub, fm
 
 
 def score_detail(v, h, rot, appr, fuel, rx, plat, speed_band="safe"):
     bands = PLATFORM_BANDS[plat["name"]]
     base = 100.0
-    soft = 500.0 * (1.0 - min(1.0, v / bands["v_safe"])) ** 2
-    hz = 400.0 * (1.0 - min(1.0, h / bands["h_safe"])) ** 2
+    soft = 550.0 * (1.0 - min(1.0, v / bands["v_hard"])) ** 2
+    hz = 450.0 * (1.0 - min(1.0, h / bands["h_hard"])) ** 2
     cr = min(1.0, abs(rx - plat["x"]) / (plat["w"] / 2.0))
     ctr = 600.0 * (1.0 - cr) ** 2
     rt = 250.0 * (1.0 - min(1.0, rot / MAX_SAFE_ROT)) ** 2
     ap = 150.0 * (1.0 - min(1.0, appr / APPROACH_SCORING_THRESHOLD)) ** 2
     sub = base + soft + hz + ctr + rt + ap
-    # HARD landings: no explicit penalty — velocity components naturally zero out.
-    fm = 1.0 + fuel / 100.0
+    fm = 1.0 + fuel / 100.0 * 1.2
     return {"base": base, "soft": soft, "horiz": hz, "center": ctr,
             "rot": rt, "approach": ap, "sub": sub, "fm": fm,
             "pm": plat["mult"], "total": int(sub * fm * plat["mult"]),
@@ -188,7 +187,7 @@ def simulate(level, plat, target_desc=35.0, max_tilt=0.40,
 
     Optimization: "perfect landing" = maximum score, which is a trade-off
     between center precision (up to 600 subtotal pts), fuel remaining
-    (1.0-2.0x multiplier on entire subtotal), and other landing quality metrics.
+    (1.0-2.2x multiplier on entire subtotal), and other landing quality metrics.
     Landing off-center but saving fuel can sometimes score higher.
     """
     bands = PLATFORM_BANDS[plat["name"]]

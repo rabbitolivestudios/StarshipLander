@@ -337,7 +337,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             HapticManager.shared.thrustPulse()
 
             DispatchQueue.main.async {
-                self.gameState.fuel = max(0, self.gameState.fuel - 0.3)
+                self.gameState.fuel = max(0, self.gameState.fuel - 0.27)
             }
         } else {
             removeFlames()
@@ -356,7 +356,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     let tiltAmount = accelerometerTilt - (accelerometerTilt > 0 ? deadZone : -deadZone)
                     rocket.physicsBody?.angularVelocity += tiltAmount * sensitivity
 
-                    let fuelConsumption = abs(tiltAmount) * 0.04
+                    let fuelConsumption = abs(tiltAmount) * 0.035
                     DispatchQueue.main.async {
                         self.gameState.fuel = max(0, self.gameState.fuel - fuelConsumption)
                     }
@@ -369,7 +369,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     }
                     rocket.physicsBody?.angularVelocity += rotationPower
                     DispatchQueue.main.async {
-                        self.gameState.fuel = max(0, self.gameState.fuel - 0.08)
+                        self.gameState.fuel = max(0, self.gameState.fuel - 0.07)
                     }
                 }
 
@@ -380,7 +380,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     }
                     rocket.physicsBody?.angularVelocity -= rotationPower
                     DispatchQueue.main.async {
-                        self.gameState.fuel = max(0, self.gameState.fuel - 0.08)
+                        self.gameState.fuel = max(0, self.gameState.fuel - 0.07)
                     }
                 }
             }

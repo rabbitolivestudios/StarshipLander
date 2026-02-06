@@ -29,7 +29,7 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **PUBLISHED** (approved 2026-02-03) — Campaign Mode live on App Store |
-| 2.0.3 | 28 | v2.0.3 gameplay feedback + Europa cryogeysers. **Build 28 on TestFlight** (uploaded 2026-02-05). |
+| 2.0.3 | 28 | v2.0.3 gameplay feedback + Europa cryogeysers + scoring rebalance. **Build 28 on TestFlight** (uploaded 2026-02-05). |
 
 **NEXT STEPS:**
 1. User tests Build 28 on device (Europa cryogeysers + all previous gameplay fixes)
@@ -506,4 +506,45 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-*Last updated: 2026-02-05 (Session 47)*
+### Session 48 (2026-02-05) - Scoring Rebalance
+
+**Goal:** Address low score feedback (rarely >5,000) with comprehensive scoring improvements.
+
+#### Root Cause Analysis:
+- Quadratic penalty curve zeroed velocity components in HARD band (0 pts instead of partial credit)
+- Session 46 tightened thresholds ~15% compressed the scoring range
+- Fuel multiplier range 1.0-2.0x too narrow; fuel consumption too high
+
+#### Changes Made:
+
+1. **Scoring formula overhaul** (`GameScene+Scoring.swift`, `ScoringHelper.swift`):
+   - Velocity scoring denominator changed from safe to hard threshold — single smooth curve, HARD landings get partial credit
+   - Soft Landing: 500→550 pts, Horizontal Precision: 400→450 pts (subtotal max 2000→2100)
+   - Fuel multiplier: 1.0-2.0x → 1.0-2.2x (factor 1.0→1.2)
+   - Theoretical max: 23,100 (was 20,000)
+
+2. **Fuel consumption reduction** (`GameScene.swift`):
+   - Thrust: 0.30→0.27%/frame
+   - Rotation: 0.08→0.07%/frame
+   - Accelerometer: 0.04→0.035×tilt
+
+3. **HowToPlayView updated** (`HowToPlayView.swift`): New component values, subtotal, fuel range, max.
+
+4. **Perfect score script updated** (`Scripts/calculate_perfect_scores.py`): New formula, fuel rates. Best: Classic C = 14,331.
+
+5. **Tests updated** (`ScoringTests.swift`): New theoretical max 23,100, new component values, HARD partial credit tests, discontinuity test.
+
+#### Files Modified:
+- `RocketLander/GameScene+Scoring.swift` — scoring formula
+- `RocketLander/GameScene.swift` — fuel consumption rates
+- `RocketLander/Views/HowToPlayView.swift` — scoring display values
+- `RocketLanderTests/ScoringHelper.swift` — test scoring replica
+- `RocketLanderTests/ScoringTests.swift` — test assertions
+- `Scripts/calculate_perfect_scores.py` — scoring formula + fuel rates
+
+#### Build Status:
+- Build succeeds, 89/89 tests pass
+
+---
+
+*Last updated: 2026-02-05 (Session 48)*

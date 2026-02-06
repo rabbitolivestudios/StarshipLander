@@ -27,7 +27,7 @@ Guide your Starship through a controlled descent and land safely on one of three
 - **HUD Tilt Display**: Real-time tilt angle in degrees with directional color coding
 - **Final Stats Panel**: HUD-style Flight Data with icons, OK/HARD/FAIL badges, 3-color values, and "RAPID UNSCHEDULED DISASSEMBLY" badge on crashes
 - **Campaign Reentry Challenge**: Ships spawn with tilt and drift in Campaign mode
-- **Skill-Based Scoring**: Up to 20,000 points with platform and fuel multipliers
+- **Skill-Based Scoring**: Up to 23,100 points with platform and fuel multipliers
 - **High Score Leaderboard**: Track your top 3 landings
 - **AdMob Integration**: Banner ads with App Tracking Transparency support
 
@@ -44,20 +44,20 @@ Toggle between button and accelerometer controls in the main menu.
 
 ### Scoring System
 
-**Continuous scoring with dual multipliers (Max ~20,000 points)**
+**Continuous scoring with dual multipliers (Max ~23,100 points)**
 
 | Component | Max Points | Description |
 |-----------|------------|-------------|
 | Base | 100 | Successful landing |
-| Soft Landing | 500 | Lower vertical speed = more points |
-| Horizontal Precision | 400 | Less drift = more points |
+| Soft Landing | 550 | Lower vertical speed = more points |
+| Horizontal Precision | 450 | Less drift = more points |
 | Platform Center | 600 | Closer to center = more points |
 | Rotation | 250 | More upright = more points |
 | Approach Control | 150 | Controlled descent = more points |
-| **Subtotal** | **2000** | Before multipliers |
-| **Fuel Multiplier** | **1.0x - 2.0x** | More fuel = higher multiplier |
+| **Subtotal** | **2100** | Before multipliers |
+| **Fuel Multiplier** | **1.0x - 2.2x** | More fuel = higher multiplier |
 | **Platform Multiplier** | **1x / 2x / 5x** | Harder platform = higher multiplier |
-| **Maximum** | **~20,000** | Perfect landing + 100% fuel + Platform C |
+| **Maximum** | **~23,100** | Perfect landing + 100% fuel + Platform C |
 
 **Formula:** `subtotal × fuelMultiplier × platformMultiplier`
 
@@ -82,7 +82,7 @@ Toggle between button and accelerometer controls in the main menu.
 | 7 | Mercury | 3.5 | 14.0 | Heat interference |
 | 8 | Ganymede | 3.8 | 15.0 | Deep craters |
 | 9 | Io | 4.2 | 16.5 | Deadly volcanic debris |
-| 10 | Jupiter | 4.8 | 18.5 | Sudden wind gusts |
+| 10 | Jupiter | 5.2 | 18.5 | Sudden wind gusts |
 
 *Gravity and thrust increase progressively by level. Each planet has a unique thrust feel — higher gravity levels have more powerful but tighter-margin engines. Values are game-balanced for playability, not real-world accurate.*
 
@@ -220,18 +220,19 @@ python3 Scripts/generate_sounds.py
 
 | Platform | V Safe | V Hard | V Fail | H Safe | H Hard | H Fail |
 |----------|--------|--------|--------|--------|--------|--------|
-| A (Training) | ≤80 | ≤120 | >120 | ≤60 | ≤100 | >100 |
-| B (Precision) | ≤55 | ≤85 | >85 | ≤45 | ≤75 | >75 |
-| C (Elite) | ≤35 | ≤55 | >55 | ≤30 | ≤50 | >50 |
+| A (Training) | ≤70 | ≤100 | >100 | ≤50 | ≤80 | >80 |
+| B (Precision) | ≤50 | ≤75 | >75 | ≤40 | ≤60 | >60 |
+| C (Elite) | ≤33 | ≤52 | >52 | ≤28 | ≤48 | >48 |
 
 - Max rotation: 0.05 radians (~3°) — same for all platforms
-- SAFE = full speed score, HARD = speed components zero out (~45% subtotal loss), FAIL = crash
-- HUD displays Platform C safe thresholds (V<35, H<30) as reference
+- Velocity scoring uses hard threshold as denominator — smooth curve from max to 0, HARD landings get partial credit
+- FAIL = crash
+- HUD displays Platform C safe thresholds (V<33, H<28) as reference
 
 ### Fuel Consumption
-- Thrust: 0.3% per frame
-- Rotation (buttons): 0.08% per frame
-- Rotation (accelerometer): scales with tilt intensity
+- Thrust: 0.27% per frame
+- Rotation (buttons): 0.07% per frame
+- Rotation (accelerometer): scales with tilt intensity (0.035 × tilt)
 
 ## App Store
 
