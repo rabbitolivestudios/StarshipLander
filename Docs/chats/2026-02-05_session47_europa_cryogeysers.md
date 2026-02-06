@@ -46,6 +46,8 @@
 ## Commits
 - `42d953f` — Replace Europa ice slide with cryogeyser eruptions
 - `167a024` — Bump build number to 28 for TestFlight upload
+- `28ed08b` — Add session 47 summary
+- `155dade` — Fix stale ice surface references in comments and STATUS
 
 ## Repo Housekeeping
 - [x] Working tree clean
