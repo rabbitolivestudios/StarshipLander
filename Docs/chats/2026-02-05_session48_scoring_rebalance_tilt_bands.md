@@ -21,7 +21,11 @@
 **What:** Build 29 uploaded with scoring rebalance. Build 30 uploaded with tilt bands added.
 **Files:** `Info.plist`
 
-### 4. v2.0.3 Build 30 Submitted for App Store Review
+### 4. DECISIONS.md Updated
+**What:** Added two new decision entries: (1) Scoring Rebalance — HARD Partial Credit + Component Boost + Fuel Tuning, (2) Tilt Bands — SAFE/HARD/FAIL Matching Speed Band Philosophy. Updated the scoring rebalance consequences to reflect tilt band impact on best achievable score.
+**Files:** `DECISIONS.md`
+
+### 5. v2.0.3 Build 30 Submitted for App Store Review
 **What:** Finalized What's New text, review notes, and promotional text. Submitted via App Store Connect on 2026-02-06.
 **Files:** `RELEASE_NOTES.md`
 
