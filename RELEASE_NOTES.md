@@ -1,7 +1,7 @@
 # Release Notes
 
 ## Version 2.0.3 (Build 30)
-**Status:** SUBMITTED FOR REVIEW (2026-02-06)
+**Status:** PUBLISHED (approved 2026-02-06) — Live on App Store
 
 ### Overview
 Version 2.0.3 is a gameplay tuning and polish update. Scoring rebalanced for higher and more rewarding scores, tilt forgiveness doubled, Europa mechanic replaced with cryogeysers, Jupiter overhauled, speed thresholds tightened, and Flight Data panel redesigned with badges.

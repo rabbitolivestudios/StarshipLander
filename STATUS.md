@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-06 (Session 48)
+> Last reconciled: 2026-02-06 (Session 49)
 
 ---
 
@@ -15,8 +15,8 @@
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
 | Current Version | 2.0.3 (Build 30) — all Build 27 features + Europa cryogeysers + scoring rebalance + tilt bands. |
-| Version Status | Build 30 submitted for App Store review (2026-02-06, awaiting review). v2.0.2 Build 16 live on App Store. |
-| Last Published | v2.0.2 (Build 16) — on App Store (approved 2026-02-03) |
+| Version Status | **v2.0.3 Build 30 APPROVED and live on App Store** (approved 2026-02-06). |
+| Last Published | v2.0.3 (Build 30) — on App Store (approved 2026-02-06) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
 | Repo | github.com/rabbitolivestudios/StarshipLander |
@@ -74,24 +74,24 @@ These are **not implemented**. Do not assume otherwise:
 - **Automated testing** — unit tests added (91 XCTest cases across 10 test files covering scoring, models, game state, crash diagnostics, landing evaluation); no UI tests (XCUITest) yet
 - **CI/CD pipeline** — no GitHub Actions or automated builds
 - **Device playtesting partially done** — haptics + ads verified on device via TestFlight. Accelerometer bug fixed in v2.0.2. Classic mode star rating verified on Build 16. Remaining: thrust vectoring feel, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
-- ~~**v2.0.2 awaiting review**~~ — **APPROVED** 2026-02-03, live on App Store
-- **v2.0.3 submitted for review** — Build 30 submitted 2026-02-06, awaiting approval
+- ~~**v2.0.2 awaiting review**~~ — **APPROVED** 2026-02-03
+- ~~**v2.0.3 submitted for review**~~ — **APPROVED** 2026-02-06, live on App Store
 
 ---
 
 ## Current Phase / Focus
 
-**Phase: Campaign Engagement — v2.0.3 gameplay feedback complete, then v2.1.0 (Community)**
+**Phase: Campaign Engagement complete — next: v2.1.0 (Community)**
 
-v2.0.2 (Build 16) approved and live on App Store (2026-02-03). v2.0.3 (Build 30) submitted for App Store review (2026-02-06) — includes all gameplay feedback fixes from Session 46 + Europa cryogeysers from Session 47 + scoring rebalance + tilt bands from Session 48. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.3 (Build 30) approved and live on App Store (2026-02-06). Includes all gameplay feedback fixes from Session 46 + Europa cryogeysers from Session 47 + scoring rebalance + tilt bands from Session 48. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. v2.0.3 Build 30 submitted for App Store review (2026-02-06) — awaiting approval
-3. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
-4. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+1. ~~v2.0.3 Build 30 submitted for App Store review~~ — **APPROVED** 2026-02-06, live on App Store
+2. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
+3. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---
 
@@ -122,8 +122,8 @@ v2.0.2 (Build 16) approved and live on App Store (2026-02-03). v2.0.3 (Build 30)
 
 ## Known Risks / Watchouts
 
-- **v2.0.2 is the current live version** — approved 2026-02-03, Campaign Mode now on App Store
-- **Build 30 submitted for review** — 2026-02-06. Includes all v2.0.3 gameplay feedback fixes from Session 46 + Europa cryogeysers (Session 47) + scoring rebalance + tilt bands (Session 48). Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
+- **v2.0.3 is the current live version** — approved 2026-02-06, scoring rebalance + tilt bands + Europa cryogeysers now on App Store
+- ~~**Build 30 submitted for review**~~ — **APPROVED** 2026-02-06. Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
 - **Velocity thresholds were dead code before Build 21** — SpriteKit collision resolution zeroed velocities before `didBegin(contact:)` fired in all builds through Build 18. All prior high scores were achieved under "speed doesn't matter" regime. **RESOLVED in Build 21** with post-thrust tracking and per-platform FAIL thresholds.
 - **HUD threshold mismatch RESOLVED** — HUD previously showed V<50 H<30 with actual thresholds V<40 H<25. **Fixed in Build 21** — HUD now reads from `LandingThresholds.platformC` (V<35, H<30).
 - **Unit tests have no integration coverage** — 91 tests all test isolated pure functions. No test simulates a physics collision to verify landing pass/fail decision. This is the test that would have caught the bug.

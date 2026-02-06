@@ -258,8 +258,8 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 | Version | Date | Description |
 |---------|------|-------------|
-| 2.0.3 | 2026-02-05 | Per-platform speed + tilt bands, velocity threshold enforcement, scoring rebalance, Europa cryogeysers, HUD-style Flight Data, randomized crash messages (Build 29 on TestFlight) |
-| 2.0.2 | 2026-02-05 | **Live on App Store** — Campaign polish: scoring, thrust vectoring, planet differentiation |
+| 2.0.3 | 2026-02-06 | **Live on App Store** — Scoring rebalance, tilt bands, Europa cryogeysers, HUD-style Flight Data, randomized crash messages |
+| 2.0.2 | 2026-02-03 | Campaign polish: scoring, thrust vectoring, planet differentiation |
 | 2.0.1 | 2026-01-31 | Dedicated leaderboard screen, version label fix |
 | 2.0.0 | 2026-01-30 | Campaign mode, per-planet physics, visual effects |
 | 1.1.5 | 2026-01-16 | New scoring system, HUD fixes, version display |

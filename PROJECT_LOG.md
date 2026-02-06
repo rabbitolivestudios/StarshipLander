@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-05)
+## Current Status (2026-02-06)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -28,12 +28,12 @@ This file documents the development history and decisions for the Starship Lande
 | 1.1.5 | 11 | Published on App Store - New scoring system + HUD fixes |
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
-| 2.0.2 | 16 | **PUBLISHED** (approved 2026-02-03) — Campaign Mode live on App Store |
-| 2.0.3 | 30 | v2.0.3 gameplay feedback + Europa cryogeysers + scoring rebalance + tilt bands. **Build 30 submitted for review** (2026-02-06). |
+| 2.0.2 | 16 | Published (approved 2026-02-03) — Campaign Mode |
+| 2.0.3 | 30 | **PUBLISHED** (approved 2026-02-06) — scoring rebalance + tilt bands + Europa cryogeysers. **Live on App Store.** |
 
 **NEXT STEPS:**
-1. v2.0.3 Build 30 submitted for App Store review (2026-02-06) — awaiting approval
-2. After approval: begin v2.1.0 (Community phase)
+1. ~~v2.0.3 Build 30 submitted for App Store review~~ — **APPROVED** 2026-02-06, live on App Store
+2. Begin v2.1.0 (Community phase)
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -580,4 +580,4 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-*Last updated: 2026-02-06 (Session 48)*
+*Last updated: 2026-02-06 (Session 49)*
