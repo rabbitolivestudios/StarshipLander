@@ -547,6 +547,10 @@ This file documents the development history and decisions for the Starship Lande
 
 7. **Build 29 uploaded to TestFlight** (`Info.plist`): Build number 28→29.
 
+8. **Build 30 bumped and uploaded to TestFlight** (`Info.plist`): Build number 29→30. Tilt band changes included.
+
+9. **v2.0.3 Build 30 submitted for App Store review** (2026-02-06): What's New text, review notes, and promotional text finalized. Submitted via App Store Connect.
+
 #### Files Modified:
 - `RocketLander/GameScene+Scoring.swift` — scoring formula, rotation denominator
 - `RocketLander/GameScene.swift` — fuel consumption rates
@@ -565,6 +569,15 @@ This file documents the development history and decisions for the Starship Lande
 #### Build Status:
 - Build succeeds, 91/91 tests pass (was 89 — net +2 from tilt band tests)
 
+#### Commits:
+- `e1b2d61` — Rebalance scoring: HARD partial credit, component boost, fuel tuning
+- `25cecde` — Bump build number to 29 for TestFlight upload
+- `254bb30` — Add tilt bands (SAFE/HARD/FAIL) matching speed band philosophy
+- `a906b72` — Bump build number to 30 for TestFlight upload
+- `30ab29d` — Update docs for v2.0.3 Build 30 App Store submission
+- `540de65` — Simplify v2.0.3 review notes
+- `b70cdda` — Note v2.0.3 Build 30 submitted for review
+
 ---
 
-*Last updated: 2026-02-05 (Session 48)*
+*Last updated: 2026-02-06 (Session 48)*
