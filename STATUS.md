@@ -68,7 +68,7 @@ These features are fully implemented, build-verified, and included in v2.0.3:
 These are **not implemented**. Do not assume otherwise:
 
 - ~~**Game Center integration**~~ — **DEVICE TESTED** for v2.1.0. All 12 leaderboards visible, scores submitted (Moon 3,323 pts, Galaxy Rank 12,323 pts), Galaxy Rank #1, 10 achievements visible, GKAccessPoint working. Ready for App Store submission. Note: VPN blocks GC network traffic (root cause of initial "Sign in" issue in Session 52).
-- **In-App Purchases (IAP)** — planned for v2.2.0 (Monetization phase; StoreKit 2 approach decided, decisions documented)
+- **In-App Purchases (IAP)** — planned for v2.2.0 (Monetization phase; approach TBD — alternatives to be discussed)
 - ~~**Campaign per-level leaderboard viewing**~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
 - **iPad support** — iPhone only
 - **Landscape orientation** — portrait only
@@ -85,7 +85,7 @@ These are **not implemented**. Do not assume otherwise:
 
 **Phase: Community (v2.1.0) — Submitted for App Store review**
 
-v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 submitted for review (Session 52): All Game Center features device-verified — 12 leaderboards, score submission, Galaxy Rank, 10 achievements, GKAccessPoint. GC leaderboard scores reset before submission. App Store screenshot added (Galaxy Rank caption). v2.2.0 planned: Remove Ads IAP.
+v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 submitted for review (Session 52): All Game Center features device-verified — 12 leaderboards, score submission, Galaxy Rank, 10 achievements, GKAccessPoint. GC leaderboard scores reset before submission. App Store screenshot added (Galaxy Rank caption). v2.2.0 planned: Monetization (approach TBD).
 
 ---
 

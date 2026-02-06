@@ -163,17 +163,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [2.2.0] - Unreleased (Phase: Monetization)
+## [2.2.0] - Unreleased (Phase: Monetization — approach TBD)
 
-### Added
-- **Remove Ads IAP**: One-time non-consumable purchase ("Support Development")
-  - StoreKit 2 with async/await
-  - Hides all banner ads when purchased
-  - Restore Purchases support
-  - Local StoreKit Configuration for testing
-
-### Changed
-- **Xcode capabilities**: Added In-App Purchase entitlement
+_Scope not yet defined. Monetization alternatives to be discussed._
 
 ---
 

@@ -115,4 +115,4 @@
 ## Next Actions
 - [ ] Wait for v2.1.0 App Store review
 - [ ] Test Share Score Card on device (was blocked by GC investigation)
-- [ ] Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+- [ ] Plan v2.2.0 (Monetization): approach TBD — discuss alternatives
