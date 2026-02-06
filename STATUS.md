@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-06 (Session 52)
+> Last reconciled: 2026-02-06 (Session 54)
 
 ---
 
@@ -85,7 +85,7 @@ These are **not implemented**. Do not assume otherwise:
 
 **Phase: Community (v2.1.0) — Submitted for App Store review**
 
-v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 submitted for review (Session 52): All Game Center features device-verified — 12 leaderboards, score submission, Galaxy Rank, 10 achievements, GKAccessPoint. GC leaderboard scores reset before submission. App Store screenshot added (Galaxy Rank caption). v2.2.0 planned: Monetization (approach TBD).
+v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 submitted for review (Session 52): All Game Center features device-verified — 12 leaderboards, score submission, Galaxy Rank, 10 achievements, GKAccessPoint. GC leaderboard scores reset before submission. App Store screenshot added (Galaxy Rank caption). Organic growth plan created (Session 54, `Docs/GROWTH_PLAN.md`): ASO-first strategy, event-driven share triggers, screenshot strategy, Reddit-only social. v2.2.0 planned: Monetization (approach TBD).
 
 ---
 
@@ -98,7 +98,10 @@ v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 submitted for review (Sessi
 5. ~~v2.1.0: Fix GC auth — present authenticateHandler viewController~~ — **DONE** (Session 51, Build 32)
 6. ~~v2.1.0: Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)~~ — **DONE** (Session 52, all GC features verified)
 7. ~~v2.1.0: App Store submission~~ — **SUBMITTED** (Session 52, Build 32)
-8. Plan v2.2.0 (Monetization): approach TBD — will discuss alternatives
+8. ~~Organic growth plan~~ — **DONE** (Session 54, `Docs/GROWTH_PLAN.md`)
+9. When v2.1.0 approved: implement event-driven share triggers (new personal best, achievement, Galaxy Rank improvement) per growth plan
+10. When v2.1.0 approved: create 5 high-converting App Store screenshots per growth plan
+11. Plan v2.2.0 (Monetization): approach TBD — will discuss alternatives
 
 ---
 

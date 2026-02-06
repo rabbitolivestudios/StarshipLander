@@ -39,6 +39,7 @@ If any of these documentation files are missing, create them before implementing
 | Before committing | Run `xcodebuild` to verify the build succeeds. Do not commit broken code. |
 | Ending a session | Create a chat session summary in `Docs/chats/` (mandatory, no exceptions), update `PROJECT_LOG.md`, run repo housekeeping (see section below), commit and push. |
 | Ideas or features discussed but not implemented | Log them in the session summary under "Research / Ideas Discussed" and add to PROJECT_LOG backlog. |
+| Implementing share triggers, ASO copy, or growth hooks | Consult `Docs/GROWTH_PLAN.md` for strategy, positioning, and constraints. |
 | Context lost or new session | Run the full Start of Session Checklist. |
 | Adding any SDK or data flow | Document privacy impact before implementation (see Privacy section). |
 
@@ -95,6 +96,7 @@ Sessions may expire or lose context at any time. These files ensure the project 
 | `RELEASE_NOTES.md` | User-facing release descriptions | App Store copy, marketing text |
 | `DECISIONS.md` | Architectural/design decisions | Why things are the way they are |
 | `README.md` | High-level project truth | Features, structure, how to build |
+| `Docs/GROWTH_PLAN.md` | Organic growth strategy | ASO, screenshots, share triggers, social media, AI division of labor |
 
 **Precedence when sources conflict:** STATUS.md > repo documentation > chat logs.
 
@@ -521,6 +523,7 @@ RocketLander/
   GameScene+Scoring.swift   — Score calculation
   ContentView.swift         — ContentView + MenuView
 Docs/chats/      — Session summaries
+Docs/GROWTH_PLAN.md — Organic growth strategy (ASO, share triggers, screenshots)
 Scripts/         — Python utility scripts
 Screenshots/     — App Store screenshots
 build/           — Build artifacts (ExportOptions.plist)

@@ -143,6 +143,7 @@ StarshipLander/
 │   └── ScoringHelper.swift            # Test-only scoring formula replica
 ├── Docs/
 │   ├── chats/                       # Session summaries (context restoration)
+│   ├── GROWTH_PLAN.md               # Organic growth strategy (ASO, share triggers, screenshots)
 │   └── DIAGNOSTIC_velocity_thresholds.md  # Critical bug analysis (Build 19)
 ├── Screenshots/
 │   ├── v2.0.0/                      # App Store screenshots (1284x2778)
