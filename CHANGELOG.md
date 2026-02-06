@@ -5,7 +5,7 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] — Build 27 (pending upload)
+## [Unreleased] — Build 27 on TestFlight (uploaded 2026-02-05)
 
 ### Changed
 - **Speed Thresholds Tightened (Session 46)**: Made landings harder across all platforms:

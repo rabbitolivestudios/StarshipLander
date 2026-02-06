@@ -29,12 +29,11 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **PUBLISHED** (approved 2026-02-05) — Campaign Mode live on App Store |
-| 2.0.3 | 27 | v2.0.3 gameplay feedback: tightened speed thresholds (~15% A/B, ~5% C), Jupiter wind+gravity, Europa ice, Titan thrust reduction, Earth platform zones, Mercury shimmer, all celestial bodies fixed, partial platform landing detection, Menu button fix, CENTER badge removed. **Pending Build 27 upload**. |
+| 2.0.3 | 27 | v2.0.3 gameplay feedback: tightened speed thresholds (~15% A/B, ~5% C), Jupiter wind+gravity, Europa ice, Titan thrust reduction, Earth platform zones, Mercury shimmer, all celestial bodies fixed, partial platform landing detection, Menu button fix, CENTER badge removed. **Build 27 on TestFlight** (uploaded 2026-02-05). |
 
 **NEXT STEPS:**
-1. Bump build number to 27 and upload to TestFlight
-2. User tests Build 27 on device (all 10 gameplay feedback fixes)
-3. Decide whether to submit v2.0.3 or wait for v2.1.0
+1. User tests Build 27 on device (all 10 gameplay feedback fixes)
+2. Decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -459,7 +458,7 @@ This file documents the development history and decisions for the Starship Lande
 - [x] All 10 feedback items implemented
 - [x] All tests updated and passing
 - [x] Build succeeds
-- [ ] Build 27 uploaded to TestFlight
+- [x] Build 27 uploaded to TestFlight
 - [x] All docs updated
 - [x] Session summary created
 

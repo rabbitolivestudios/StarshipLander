@@ -134,6 +134,7 @@
 ## Commits
 - `81e40c3` — v2.0.3 gameplay feedback fixes — 10 improvements
 - `1c7e645` — Session 46 documentation — v2.0.3 gameplay feedback fixes
+- `f7c6d77` — Bump build number to 27 for TestFlight upload
 
 ## Repo Housekeeping
 - [x] Working tree clean
@@ -142,6 +143,6 @@
 - [x] No secrets or credentials in tracked files
 
 ## Next Actions
-- [ ] Bump build number to 27 and upload to TestFlight
+- [x] Bump build number to 27 and upload to TestFlight
 - [ ] User tests Build 27 on device
 - [ ] Decide whether to submit v2.0.3 or wait for v2.1.0
