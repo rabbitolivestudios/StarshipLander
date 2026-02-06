@@ -153,6 +153,7 @@ StarshipLander/
 │   ├── generate_screenshots.py      # Screenshot generator
 │   ├── caption_screenshots.py       # App Store screenshot captioning
 │   ├── calculate_perfect_scores.py  # Perfect landing score analysis
+│   ├── setup_game_center.py        # ASC API: create GC leaderboards + achievements
 │   ├── app_store_metadata.json      # App Store metadata reference
 │   └── export_chat_transcripts.py   # Claude Code transcript exporter
 ├── .github/

@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-06, Session 50)
+## Current Status (2026-02-06, Session 51)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -30,11 +30,15 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | Published (approved 2026-02-03) — Campaign Mode |
 | 2.0.3 | 30 | **PUBLISHED** (approved 2026-02-06) — scoring rebalance + tilt bands + Europa cryogeysers. **Live on App Store.** |
+| 2.1.0 | 31 | **ON TESTFLIGHT** — Game Center + Share Score Card. ASC configured (12 LBs + 10 achievements). Pending device testing. |
 
 **NEXT STEPS:**
 1. ~~v2.0.3 Build 30 submitted for App Store review~~ — **APPROVED** 2026-02-06, live on App Store
 2. ~~Implement v2.1.0 (Community phase)~~ — **CODE COMPLETE** (Session 50)
-3. v2.1.0: Version bump, App Store Connect leaderboard/achievement setup (manual), device testing, submission
+3. ~~v2.1.0: Version bump + TestFlight upload~~ — **DONE** (Session 51, Build 31)
+4. ~~v2.1.0: App Store Connect configuration~~ — **DONE** (Session 51, 12 leaderboards + 10 achievements via API)
+5. v2.1.0: Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)
+6. v2.1.0: App Store submission
 
 **v2.1.0 — Phase: Community (CODE COMPLETE):**
 - [done] 12 Game Center leaderboards (1 classic + 10 campaign + 1 galaxy_rank)
@@ -42,8 +46,8 @@ This file documents the development history and decisions for the Starship Lande
 - [done] Share Score Card (SwiftUI render + native share sheet)
 - [done] Galaxy Rank on menu/leaderboard/campaign screens
 - [done] GKAccessPoint on menu
-- [pending] Version bump + build number
-- [pending] App Store Connect: create 12 leaderboards + 10 achievements (manual)
+- [done] Version bump to 2.1.0 Build 31, uploaded to TestFlight
+- [done] App Store Connect: 12 leaderboards + 10 achievements created via API script
 - [pending] Device testing (GC auth, score submission, achievements, share card)
 - [pending] App Store submission
 
@@ -668,4 +672,54 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-*Last updated: 2026-02-06 (Session 50)*
+### Session 51 (2026-02-06) - v2.1.0 Build 31 TestFlight + ASC Game Center Setup
+
+**Goal:** Version bump to 2.1.0, upload to TestFlight, create 12 leaderboards + 10 achievements in App Store Connect via API.
+
+#### Changes Made:
+
+1. **Version bump** (`Info.plist`): v2.0.3 Build 30 → v2.1.0 Build 31. Archived and uploaded to TestFlight.
+
+2. **setup_game_center.py (NEW)** (`Scripts/setup_game_center.py`): Python script to create Game Center leaderboards and achievements via App Store Connect REST API.
+   - JWT authentication with ES256 signing
+   - Reads credentials from env vars (ASC_ISSUER_ID, ASC_KEY_ID, ASC_PRIVATE_KEY) or local .p8 files
+   - Creates 12 leaderboards with en-US localizations
+   - Creates 10 achievements with en-US localizations
+   - Idempotent — skips existing resources
+
+3. **App Store Connect configured**: All 12 leaderboards and 10 achievements created successfully via API.
+   - 12 leaderboards: classic, campaign_1-10, galaxy_rank (INTEGER format, BEST_SCORE, DESC sort)
+   - 10 achievements: eagle_has_landed through master_lander (200 total points)
+   - All with en-US localizations
+
+#### Bug Fixed in Script:
+- **Root cause**: `defaultFormatter` attribute requires a string enum (`"INTEGER"`) not a nested object. The ASC API returned 409 with `ENTITY_ERROR.ATTRIBUTE.TYPE` but the script initially misinterpreted all 409s as "already exists", silently swallowing the actual error. Fixed the attribute format and improved error reporting.
+
+#### Files Created:
+- `Scripts/setup_game_center.py`
+
+#### Files Modified (previous commit):
+- `RocketLander/Info.plist` — v2.1.0 Build 31
+
+#### Build Status:
+- Build succeeds, 91/91 tests pass
+
+#### Commits:
+- `3c91c96` — Bump version to 2.1.0 Build 31 for TestFlight
+- (pending) — Add setup_game_center.py script + documentation updates
+
+#### Definition of Done:
+- [x] Version bumped to 2.1.0 Build 31
+- [x] Build 31 archived and uploaded to TestFlight
+- [x] setup_game_center.py script created
+- [x] 12 leaderboards created in ASC (verified via API query)
+- [x] 10 achievements created in ASC (verified via API query)
+- [x] All localizations (en-US) added
+- [x] Script bug fixed (defaultFormatter format)
+- [x] All documentation updated
+- [x] Session summary updated
+- [ ] Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)
+
+---
+
+*Last updated: 2026-02-06 (Session 51)*

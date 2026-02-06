@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-06 (Session 50)
+> Last reconciled: 2026-02-06 (Session 51)
 
 ---
 
@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 30) — live on App Store. v2.1.0 in development (Game Center + Share). |
-| Version Status | **v2.0.3 Build 30 live on App Store** (approved 2026-02-06). **v2.1.0 code complete** (pending version bump + testing). |
+| Current Version | 2.0.3 (Build 30) — live on App Store. v2.1.0 Build 31 on TestFlight (Game Center + Share). |
+| Version Status | **v2.0.3 Build 30 live on App Store** (approved 2026-02-06). **v2.1.0 Build 31 uploaded to TestFlight** — pending device testing. |
 | Last Published | v2.0.3 (Build 30) — on App Store (approved 2026-02-06) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -67,7 +67,7 @@ These features are fully implemented, build-verified, and included in v2.0.3:
 
 These are **not implemented**. Do not assume otherwise:
 
-- **Game Center integration** — **CODE COMPLETE** for v2.1.0. GameCenterManager.swift (auth, 12 leaderboards, 10 achievements, Galaxy Rank). Pending: version bump, App Store Connect configuration, device testing.
+- **Game Center integration** — **CODE COMPLETE** for v2.1.0. GameCenterManager.swift (auth, 12 leaderboards, 10 achievements, Galaxy Rank). Build 31 on TestFlight. App Store Connect configured (12 leaderboards + 10 achievements created via API). Pending: device testing.
 - **In-App Purchases (IAP)** — planned for v2.2.0 (Monetization phase; StoreKit 2 approach decided, decisions documented)
 - ~~**Campaign per-level leaderboard viewing**~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
 - **iPad support** — iPhone only
@@ -83,9 +83,9 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Community (v2.1.0) — code complete, pending testing + submission**
+**Phase: Community (v2.1.0) — Build 31 on TestFlight, ASC configured, pending device testing**
 
-v2.0.3 (Build 30) live on App Store. v2.1.0 code complete (Session 50): Game Center auth, 12 leaderboards (1 classic + 10 campaign + 1 galaxy_rank), 10 achievements, Galaxy Rank on menu/leaderboard/campaign screens, GKAccessPoint, Share Score Card. Pending: version bump, App Store Connect leaderboard/achievement configuration, device testing. v2.2.0 planned: Remove Ads IAP.
+v2.0.3 (Build 30) live on App Store. v2.1.0 Build 31 uploaded to TestFlight (Session 50-51): Game Center auth, 12 leaderboards (1 classic + 10 campaign + 1 galaxy_rank), 10 achievements, Galaxy Rank on menu/leaderboard/campaign screens, GKAccessPoint, Share Score Card. App Store Connect configured: 12 leaderboards + 10 achievements created via API script. Pending: device testing, App Store submission. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
@@ -93,7 +93,10 @@ v2.0.3 (Build 30) live on App Store. v2.1.0 code complete (Session 50): Game Cen
 
 1. ~~v2.0.3 Build 30 submitted for App Store review~~ — **APPROVED** 2026-02-06, live on App Store
 2. ~~Implement v2.1.0 (Community): Game Center leaderboards, achievements, Share Score Card~~ — **CODE COMPLETE** (Session 50)
-3. v2.1.0: Version bump, App Store Connect leaderboard/achievement setup (manual), device testing, submission
+3. ~~v2.1.0: Version bump to 2.1.0 Build 31~~ — **DONE** (Session 51, uploaded to TestFlight)
+4. ~~v2.1.0: App Store Connect leaderboard/achievement setup~~ — **DONE** (Session 51, 12 leaderboards + 10 achievements created via API)
+5. v2.1.0: Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)
+6. v2.1.0: App Store submission
 4. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---

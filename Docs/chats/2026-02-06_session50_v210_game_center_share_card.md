@@ -102,12 +102,13 @@
 - [x] Build succeeds
 - [x] 91/91 tests pass
 - [x] All documentation updated (STATUS, CHANGELOG, DECISIONS, PROJECT_LOG, README, session summary)
-- [ ] Version bump (pending user approval)
-- [ ] App Store Connect: create 12 leaderboards + 10 achievements (manual)
+- [x] Version bump to 2.1.0 Build 31 (Session 51)
+- [x] App Store Connect: 12 leaderboards + 10 achievements created via API (Session 51)
 - [ ] Device testing (GC auth, score submission, achievements, share card)
 
 ## Commits
-- (pending — all changes uncommitted, ready for commit)
+- `0132730` — Implement v2.1.0 Community phase: Game Center + Share Score Card
+- `3c91c96` — Bump version to 2.1.0 Build 31 for TestFlight
 
 ## Repo Housekeeping
 - [x] Working tree has expected changes only (7 modified + 3 new files)
