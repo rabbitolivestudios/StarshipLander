@@ -796,4 +796,30 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-*Last updated: 2026-02-06 (Session 52)*
+### Session 53 (2026-02-06) - GitHub GC Follow-Up: Fix Stale Tags + Reply to Support
+
+**Goal:** Respond to GitHub Support request for sensitive commit SHAs. Audit and fix all stale references on GitHub blocking garbage collection.
+
+#### Changes Made:
+
+1. **Identified sensitive commit SHAs**: Used `.git/filter-repo/commit-map` to find the two old commits containing sensitive data: `17aebc66...` (introduced) and `4c031548...` (removed). Both fully deleted by filter-repo.
+
+2. **Fixed 6 stale remote tags**: All tags (v1.0.0–v1.1.5) on GitHub still pointed to pre-rewrite SHA `67c5802a...`. Deleted and re-pushed all 6 tags. `git push --force` only updates branches, not tags — this was missed in Session 43.
+
+3. **Full reference audit**: Verified no other stale references exist (no PRs, no extra branches, spam issue #1 has no commit refs, 6 releases reference updated tags).
+
+4. **Prepared and sent reply email** to GitHub Support (Collins) with both SHAs, cleanup details, and request to run GC.
+
+#### No code changes. Tag operations only.
+
+#### Definition of Done:
+- [x] Sensitive commit SHAs identified
+- [x] Stale remote tags fixed (6 tags deleted and re-pushed)
+- [x] Full GitHub reference audit completed
+- [x] Reply email sent to GitHub Support
+- [x] All docs updated
+- [x] Session summary created
+
+---
+
+*Last updated: 2026-02-06 (Session 53)*
