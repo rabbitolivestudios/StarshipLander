@@ -1,37 +1,61 @@
 # Release Notes
 
 ## Version 2.1.0 (Build 32)
-**Status:** DEVICE TESTED — Ready for App Store submission
+**Status:** SUBMITTED FOR REVIEW (2026-02-06)
 
 ### Overview
 Version 2.1.0 adds Game Center integration and a Share Score Card. Compete on global leaderboards, earn 10 achievements, and share your best landings with friends. Galaxy Rank tracks your total campaign mastery across all 10 levels.
 
 ### App Store — What's New (Copy this)
 ```
-GAME CENTER UPDATE
+NEW IN v2.1.0 — GAME CENTER
 
-• Global leaderboards — compete worldwide on Classic, all 10 campaign levels, and the new Galaxy Rank aggregate
-• 10 achievements — from your first safe landing to mastering all 10 planets
-• Galaxy Rank — your total campaign mastery score, ranked globally
-• Share Score Card — share your landing results as an image
-• Bug fixes and improvements
+Global leaderboards — compete worldwide in Classic Mode, all 10 campaign levels, and Galaxy Rank
 
-As always, thank you for your continuous support!
+10 achievements — from your first safe landing to mastering every planet
+
+Galaxy Rank — your total campaign mastery score, ranked globally
+
+Share your best landings with score cards
+
+GAMEPLAY UPDATES (v2.0.3)
+
+Scoring rebalance — higher, more rewarding scores
+
+Tilt thresholds — three bands like speed: Safe (≤3°), Hard (≤6°), Crash (>6°)
+
+Europa cryogeysers — erupting ice plumes that push your rocket upward
+
+Jupiter overhaul — stronger gusts and higher gravity
+
+HUD-style Flight Data with OK / HARD / FAIL badges per metric
+
+Tighter speed thresholds for a more skill-driven challenge
+
+CAMPAIGN MODE (v2.0.2)
+
+10 solar system levels — Moon to Jupiter, each with unique gravity and challenges
+
+Three landing platforms per level (1×, 2×, 5× multipliers)
+
+Environmental hazards: dust storms, dense atmospheres, cryogeysers, moving platforms, vertical updrafts, heat interference, rock pillars, volcanic debris, sudden gusts
+
+Star rating system — earn up to 30 stars across the campaign
+
+Haptic feedback, proportional thrust vectoring, and per-level high scores
+
+As always, thank you for your continued support.
 ```
 
 ### App Store — Review Team Notes (Copy this)
 ```
-This is a skill-based physics rocket landing game.
-Use on-screen buttons to control thrust and rotation and land safely on the platform.
-No account, login, or in-app purchases required.
+Starship Lander is a skill-based physics rocket landing game. Players control thrust and rotation using on-screen buttons and must land safely on a platform. No account, login, or in-app purchases are required.
 
-This build (v2.1.0, Build 32) adds Game Center integration and a Share Score Card feature. Game Center provides global leaderboards (12 total) and achievements (10 total). The Share Score Card renders landing results as an image and presents a native share sheet.
+This build (v2.1.0, Build 32) adds Game Center integration and a Share Score Card feature. Game Center provides global leaderboards and achievements. The Share Score Card generates an image of the landing result and opens the native iOS share sheet.
 
-Game Center authentication happens automatically on launch. If the player is not signed in to Game Center, all GC features are hidden and the app functions normally with local-only scores. No new tracking or data collection — Game Center data ("Gameplay Content") is handled entirely by Apple's infrastructure.
+Game Center authentication occurs automatically on launch. If the player is not signed in, all Game Center features are hidden and the game works normally with local scores only. No additional data is collected — all Game Center data ("Gameplay Content") is handled by Apple.
 
-Campaign mode has 10 levels with unique environmental mechanics: dust storms (Mars), dense atmosphere drag (Titan), cryogeyser eruptions (Europa), moving platforms (Earth), vertical updrafts (Venus), heat-induced thrust interference (Mercury), rock pillar obstacles (Ganymede), deadly volcanic debris (Io), and sudden wind gusts (Jupiter).
-
-App Tracking Transparency prompt appears on first app launch to request permission before showing personalized ads. Users can toggle between traditional button controls and tilt-based accelerometer controls from the main menu.
+An App Tracking Transparency prompt appears on first launch before showing personalized ads. Players can choose between button controls and tilt-based controls from the main menu.
 ```
 
 ---

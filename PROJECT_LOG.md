@@ -30,7 +30,7 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | Published (approved 2026-02-03) — Campaign Mode |
 | 2.0.3 | 30 | **PUBLISHED** (approved 2026-02-06) — scoring rebalance + tilt bands + Europa cryogeysers. **Live on App Store.** |
-| 2.1.0 | 32 | **DEVICE TESTED** — Game Center + Share Score Card. All GC features verified (Session 52). Ready for App Store submission. |
+| 2.1.0 | 32 | **SUBMITTED FOR REVIEW** — Game Center + Share Score Card. All GC features device-verified (Session 52). Leaderboard scores reset. Submitted 2026-02-06. |
 
 **NEXT STEPS:**
 1. ~~v2.0.3 Build 30 submitted for App Store review~~ — **APPROVED** 2026-02-06, live on App Store
@@ -38,7 +38,7 @@ This file documents the development history and decisions for the Starship Lande
 3. ~~v2.1.0: Version bump + TestFlight upload~~ — **DONE** (Session 51, Build 31)
 4. ~~v2.1.0: App Store Connect configuration~~ — **DONE** (Session 51, 12 leaderboards + 10 achievements via API)
 5. ~~v2.1.0: Device testing~~ — **DONE** (Session 52, all GC features verified on device)
-6. v2.1.0: App Store submission (ready)
+6. ~~v2.1.0: App Store submission~~ — **SUBMITTED** (Session 52, Build 32, 2026-02-06)
 
 **v2.1.0 — Phase: Community (CODE COMPLETE):**
 - [done] 12 Game Center leaderboards (1 classic + 10 campaign + 1 galaxy_rank)
@@ -49,7 +49,8 @@ This file documents the development history and decisions for the Starship Lande
 - [done] Version bump to 2.1.0 Build 31, uploaded to TestFlight
 - [done] App Store Connect: 12 leaderboards + 10 achievements created via API script
 - [done] Device testing — GC auth, 12 leaderboards, score submission, Galaxy Rank, 10 achievements verified (Session 52). VPN root cause found and documented.
-- [pending] App Store submission
+- [done] Leaderboard scores reset before submission (setup_game_center.py --reset)
+- [done] App Store submission — Build 32 submitted for review 2026-02-06
 
 **v2.2.0 PLANNED — Phase: Monetization (scope locked):**
 - [planned] "Support Development" IAP (remove ads, StoreKit 2)
@@ -734,9 +735,9 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-### Session 52 (2026-02-06) - v2.1.0 Device Testing + VPN Root Cause + App Store Prep
+### Session 52 (2026-02-06) - v2.1.0 Device Testing + VPN Root Cause + App Store Submission
 
-**Goal:** Investigate and resolve "Sign in to Game Center" issue on device. Verify all GC features. Document findings and prepare for App Store submission.
+**Goal:** Investigate and resolve "Sign in to Game Center" issue on device. Verify all GC features. Document findings, reset leaderboard scores, and submit v2.1.0 for App Store review.
 
 #### Investigation & Root Cause:
 
@@ -766,13 +767,29 @@ This file documents the development history and decisions for the Starship Lande
 #### Build Status:
 - Build succeeds, 91/91 tests pass
 
+5. **Leaderboard scores reset**: Ran `setup_game_center.py --reset` to delete all 12 leaderboards and recreate them fresh, clearing test scores (12,323 pts galaxy_rank) before App Store submission.
+
+6. **App Store screenshot**: Created captioned screenshot `Screenshots/v2.1.0/11_galaxy_rank_captioned.png` (1284x2778) with caption "COMPETE GLOBALLY. CLIMB THE GALAXY RANK."
+
+7. **v2.1.0 submitted for App Store review**: Build 32 submitted with comprehensive What's New (covering v2.1.0 + v2.0.3 + v2.0.2), updated review notes, new screenshot, and updated promotional text.
+
+#### Files Modified:
+- `Scripts/setup_game_center.py` — --reset flag, delete_all_leaderboards(), gameCenterAppVersions support
+- `RocketLander/Views/LeaderboardView.swift` — defensive auth guard on dashboard
+- `RELEASE_NOTES.md` — v2.1.0 What's New and review notes
+- `Screenshots/v2.1.0/11_galaxy_rank_captioned.png` — new App Store screenshot
+- All 7 documentation files updated
+
 #### Definition of Done:
 - [x] Root cause identified (VPN blocks GC network)
 - [x] All diagnostic code removed
 - [x] Defensive auth guard added to dashboard presentation
-- [x] Setup script enhanced with gameCenterAppVersions
+- [x] Setup script enhanced with gameCenterAppVersions and --reset
 - [x] GC features verified on device (12 leaderboards, scores, rank, achievements)
-- [x] v2.1.0 release notes prepared
+- [x] Leaderboard scores reset before submission
+- [x] App Store screenshot created (Galaxy Rank caption)
+- [x] v2.1.0 release notes finalized (What's New + review notes)
+- [x] v2.1.0 Build 32 submitted for App Store review
 - [x] All 7 documentation files updated
 - [x] Build succeeds
 - [x] Session summary created

@@ -90,15 +90,21 @@
 - [x] Root cause identified (VPN blocks GC network)
 - [x] All diagnostic code removed
 - [x] Defensive auth guard added to dashboard presentation
-- [x] Setup script enhanced with gameCenterAppVersions
+- [x] Setup script enhanced with gameCenterAppVersions and --reset flag
 - [x] GC features verified on device (12 leaderboards, scores, rank, achievements)
-- [x] v2.1.0 release notes prepared with App Store copy and review notes
+- [x] Leaderboard scores reset before submission (--reset cleared test scores)
+- [x] App Store screenshot created (Galaxy Rank caption, 1284x2778)
+- [x] v2.1.0 release notes finalized (comprehensive What's New covering v2.1.0 + v2.0.3 + v2.0.2)
+- [x] Review team notes updated
+- [x] v2.1.0 Build 32 submitted for App Store review
 - [x] All 7 documentation files updated
 - [x] Build succeeds
 - [x] Session summary created
 
 ## Commits
-- (this commit) — Session 52: GC device testing, VPN root cause, App Store prep
+- `4892b5e` — Session 52: GC device testing verified, VPN root cause found, App Store prep
+- `cca95a5` — Add --reset flag to setup_game_center.py for leaderboard score clearing
+- (this commit) — Note v2.1.0 Build 32 submitted for review
 
 ## Repo Housekeeping
 - [x] Working tree clean after commit
@@ -107,6 +113,6 @@
 - [x] No secrets or credentials in tracked files
 
 ## Next Actions
-- [ ] Submit v2.1.0 to App Store (Build 32 is ready — no new build needed since diagnostic code was only on-device, not in the TestFlight binary)
-- [ ] Note: Build 32 on TestFlight IS clean (diagnostic code was added/removed in the working copy during this session, never committed to a build uploaded to TestFlight)
+- [ ] Wait for v2.1.0 App Store review
 - [ ] Test Share Score Card on device (was blocked by GC investigation)
+- [ ] Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)

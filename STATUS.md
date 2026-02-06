@@ -15,7 +15,7 @@
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
 | Current Version | 2.0.3 (Build 30) — live on App Store. v2.1.0 Build 32 on TestFlight — device tested, ready for App Store submission. |
-| Version Status | **v2.0.3 Build 30 live on App Store** (approved 2026-02-06). **v2.1.0 Build 32 device tested** — GC working (leaderboards, achievements, Galaxy Rank, score submission verified). Ready for App Store submission. |
+| Version Status | **v2.0.3 Build 30 live on App Store** (approved 2026-02-06). **v2.1.0 Build 32 submitted for review** — GC device-tested and verified. Leaderboard scores reset before submission. |
 | Last Published | v2.0.3 (Build 30) — on App Store (approved 2026-02-06) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -83,9 +83,9 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Community (v2.1.0) — Device tested, ready for App Store submission**
+**Phase: Community (v2.1.0) — Submitted for App Store review**
 
-v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 device tested (Session 52): All Game Center features verified — 12 leaderboards visible, scores submitted, Galaxy Rank working, 10 achievements visible, GKAccessPoint showing. Share Score Card pending device test (GC was the blocker). Ready for App Store submission. v2.2.0 planned: Remove Ads IAP.
+v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 submitted for review (Session 52): All Game Center features device-verified — 12 leaderboards, score submission, Galaxy Rank, 10 achievements, GKAccessPoint. GC leaderboard scores reset before submission. App Store screenshot added (Galaxy Rank caption). v2.2.0 planned: Remove Ads IAP.
 
 ---
 
@@ -97,7 +97,7 @@ v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 device tested (Session 52):
 4. ~~v2.1.0: App Store Connect leaderboard/achievement setup~~ — **DONE** (Session 51, 12 leaderboards + 10 achievements created via API)
 5. ~~v2.1.0: Fix GC auth — present authenticateHandler viewController~~ — **DONE** (Session 51, Build 32)
 6. ~~v2.1.0: Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)~~ — **DONE** (Session 52, all GC features verified)
-7. v2.1.0: App Store submission (ready)
+7. ~~v2.1.0: App Store submission~~ — **SUBMITTED** (Session 52, Build 32)
 8. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---
