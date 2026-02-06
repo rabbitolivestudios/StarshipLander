@@ -171,14 +171,14 @@ struct HowToPlayView: View {
                 .padding(.vertical, 6)
                 .padding(.horizontal, 8)
 
-                thresholdRow("A", "80", "120", "60", "100", color: .green)
-                thresholdRow("B", "55", "85", "45", "75", color: .yellow)
-                thresholdRow("C", "35", "55", "30", "50", color: .red)
+                thresholdRow("A", "70", "100", "50", "80", color: .green)
+                thresholdRow("B", "50", "75", "40", "60", color: .yellow)
+                thresholdRow("C", "33", "52", "28", "48", color: .red)
             }
             .background(Color.white.opacity(0.05))
             .cornerRadius(8)
 
-            Text("Rotation must be < 2.9° on all platforms or you crash.")
+            Text("Tilt: ≤2.9° safe (full points), ≤5.7° hard (partial credit), >5.7° crash.")
                 .font(.caption2)
                 .foregroundColor(.gray)
         }

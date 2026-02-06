@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 28) — all Build 27 features + Europa cryogeysers + scoring rebalance. |
-| Version Status | Build 28 on TestFlight (uploaded 2026-02-05). v2.0.2 Build 16 live on App Store. |
+| Current Version | 2.0.3 (Build 29) — all Build 27 features + Europa cryogeysers + scoring rebalance + tilt bands. |
+| Version Status | Build 29 on TestFlight (uploaded 2026-02-05). v2.0.2 Build 16 live on App Store. |
 | Last Published | v2.0.2 (Build 16) — on App Store (approved 2026-02-03) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -35,7 +35,7 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **Level Mechanics**: Wind, dense atmosphere, cryogeysers (Europa), moving platforms, vertical updrafts (Venus), heat interference (Mercury), deep craters, deadly volcanic debris (Io), sudden gusts (Jupiter)
 - **Star Rating**: 1-3 stars per landing based on platform (30 total)
 - **Scoring**: Continuous scoring with fuel (1.0-2.2x) and platform (1x/2x/5x) multipliers, max 23,100. Components: Base(100), Soft Landing(550), Horizontal(450), Center(600), Rotation(250), Approach(150) = 2,100 subtotal. Velocity scoring uses hard threshold as denominator — smooth curve with HARD landing partial credit. Fuel consumption: thrust 0.27%/frame, rotation 0.07%/frame.
-- **Per-Platform Speed Bands + Threshold Enforcement**: `LandingThresholds.swift` — SAFE/HARD/FAIL classification per platform. Thresholds tightened in v2.0.3: Platform A (V≤70/H≤50 safe), B (V≤50/H≤40), C (V≤33/H≤28). `checkLanding()` uses `LandingThresholds.evaluate()` with post-thrust tracked velocities — speed now affects landing success (FAIL = crash).
+- **Per-Platform Speed Bands + Threshold Enforcement**: `LandingThresholds.swift` — SAFE/HARD/FAIL classification per platform. Thresholds tightened in v2.0.3: Platform A (V≤70/H≤50 safe), B (V≤50/H≤40), C (V≤33/H≤28). Tilt bands: ≤2.9° safe, ≤5.7° hard, >5.7° crash. `checkLanding()` uses `LandingThresholds.evaluate()` with post-thrust tracked velocities — speed and tilt now affect landing success (FAIL = crash).
 - **Partial Platform Landing Detection**: Both rocket legs (47pt span) must be within platform bounds. Landing with one leg hanging off causes crash ("Missed the platform!").
 - **Level-Specific Mechanics Enhanced**: Europa cryogeysers (intermittent upward-pushing ice plumes, replacing ice slide crash), Titan thrust reduction (75% efficiency), Jupiter wind overhaul (left→right with stronger force, gravity 5.2), Mercury enhanced shimmer with rising heat particles.
 - **Celestial Bodies**: All 10 levels show astronomically-correct bodies visible from landing location (Earth from Moon, Saturn with rings from Titan, Jupiter with bands from Europa/Ganymede/Io, Sun with glow/corona from Mercury/Venus/Mars, Moon with craters from Earth, Europa from Jupiter).
@@ -54,10 +54,10 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **16-Bit Sound Effects**: Thrust, rotation, landing, crash audio
 - **App Store Screenshots**: 10 screenshots at 1284x2778, uploaded
 - **How to Play Info Sheet**: Rich game documentation accessible from menu — covers Controls, Landing Platforms, Speed Bands, Scoring formula, and Campaign (all 10 levels). Adapts to button/accelerometer setting.
-- **Unit Tests**: 89 XCTest cases across 10 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data, crash diagnostics, landing evaluation, scoring helper)
+- **Unit Tests**: 91 XCTest cases across 10 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data, crash diagnostics, landing evaluation, scoring helper)
 - **Codebase**: Split from 2 monolithic files into 21 organized files
 - **Project Management**: CLAUDE.md, PR template, DECISIONS.md, session logging workflow
-- **Perfect Landing Score Analysis**: Frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations, including campaign reentry state (tilt + drift). Best: Classic C = 14,331 (via left screen wrap). All 33/33 land in SAFE band. Script: `Scripts/calculate_perfect_scores.py`
+- **Perfect Landing Score Analysis**: Frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations, including campaign reentry state (tilt + drift). Best: Classic C = 14,504 (via left screen wrap). All 33/33 land in SAFE band. Tilt bands: SAFE ≤2.9°, HARD ≤5.7°, FAIL >5.7°. Script: `Scripts/calculate_perfect_scores.py`
 
 ---
 
@@ -82,13 +82,13 @@ These are **not implemented**. Do not assume otherwise:
 
 **Phase: Campaign Engagement — v2.0.3 gameplay feedback complete, then v2.1.0 (Community)**
 
-v2.0.2 (Build 16) approved and live on App Store (2026-02-03). v2.0.3 (Build 28 on TestFlight) includes all gameplay feedback fixes from Session 46 + Europa cryogeysers from Session 47. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.2 (Build 16) approved and live on App Store (2026-02-03). v2.0.3 (Build 29 on TestFlight) includes all gameplay feedback fixes from Session 46 + Europa cryogeysers from Session 47 + scoring rebalance + tilt bands from Session 48. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. User tests Build 28 on device (Europa cryogeysers + all previous gameplay fixes)
+1. User tests Build 29 on device (scoring rebalance + tilt bands + Europa cryogeysers + all previous gameplay fixes)
 2. Decide whether to submit v2.0.3 or wait for v2.1.0
 3. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
 4. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
@@ -123,7 +123,7 @@ v2.0.2 (Build 16) approved and live on App Store (2026-02-03). v2.0.3 (Build 28 
 ## Known Risks / Watchouts
 
 - **v2.0.2 is the current live version** — approved 2026-02-03, Campaign Mode now on App Store
-- **Build 28 on TestFlight** — uploaded 2026-02-05. Includes all v2.0.3 gameplay feedback fixes from Session 46 + Europa cryogeysers (Session 47) + scoring rebalance (Session 48). Note: scoring changes not yet in TestFlight build — needs rebuild for new upload. Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
+- **Build 29 on TestFlight** — uploaded 2026-02-05. Includes all v2.0.3 gameplay feedback fixes from Session 46 + Europa cryogeysers (Session 47) + scoring rebalance + tilt bands (Session 48). Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
 - **Velocity thresholds were dead code before Build 21** — SpriteKit collision resolution zeroed velocities before `didBegin(contact:)` fired in all builds through Build 18. All prior high scores were achieved under "speed doesn't matter" regime. **RESOLVED in Build 21** with post-thrust tracking and per-platform FAIL thresholds.
 - **HUD threshold mismatch RESOLVED** — HUD previously showed V<50 H<30 with actual thresholds V<40 H<25. **Fixed in Build 21** — HUD now reads from `LandingThresholds.platformC` (V<35, H<30).
 - **Unit tests have no integration coverage** — 65 tests all test isolated pure functions. No test simulates a physics collision to verify landing pass/fail decision. This is the test that would have caught the bug.

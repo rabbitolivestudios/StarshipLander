@@ -11,7 +11,7 @@ Physics model (matching GameScene.swift + SpriteKit internals):
   Fuel: 0.27%/thrust frame, 0.07%/rotation frame
 
   Landing evaluation (per-platform speed bands):
-    - rotation <= 0.05 rad (hard gate, all platforms)
+    - rotation: ≤0.05 safe, ≤0.10 hard (partial credit), >0.10 crash
     - vertical/horizontal speed checked against platform-specific SAFE/HARD/FAIL bands
     - approach speed is scoring only, NOT a crash gate
 
@@ -55,7 +55,9 @@ FUEL_ROTATE = 0.07
 CAMPAIGN_INITIAL_TILT = 0.12       # ~6.9° left tilt (radians)
 CAMPAIGN_INITIAL_HSPEED = 15.0     # rightward drift (pts/s)
 
-MAX_SAFE_ROT = 0.05
+SAFE_TILT = 0.05   # ~2.9° — full rotation score
+HARD_TILT = 0.10   # ~5.7° — partial credit, >HARD_TILT = crash
+MAX_SAFE_ROT = HARD_TILT  # scoring denominator
 APPROACH_WINDOW = 30
 
 # Approach speed scoring threshold (not a crash gate)

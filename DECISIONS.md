@@ -330,4 +330,13 @@ This file records key technical and design decisions, including context, alterna
   3. Fuel multiplier range 1.0-2.0x → 1.0-2.2x (factor 1.0→1.2)
   4. Fuel consumption reduced: thrust 0.30→0.27%, rotation 0.08→0.07%, accelerometer 0.04→0.035×tilt
 **Why:** User explicitly did not want to change Platform A multiplier. The old system had a cliff: at exactly safe threshold, velocity score = 0; past safe threshold, also 0. Both were punishing. Using hard threshold as denominator creates a smooth curve where safe landings score well AND hard landings still get partial credit, with no discontinuity. Fuel consumption reduction gives ~10% more fuel at landing, amplified by the wider multiplier range.
-**Consequences:** New theoretical max 23,100 (was 20,000). Best achievable (Classic C): 14,331 (was 12,077). Typical gameplay scores should be 15-30% higher. All 89 tests pass. HowToPlayView updated with new values. Perfect score script updated.
+**Consequences:** New theoretical max 23,100 (was 20,000). Best achievable (Classic C): 14,504 (was 12,077). Typical gameplay scores should be 15-30% higher. All 91 tests pass. HowToPlayView updated with new values. Perfect score script updated.
+
+---
+
+## [2026-02-05] Tilt Bands — SAFE/HARD/FAIL Matching Speed Band Philosophy
+**Context:** Tilt had a binary pass/fail gate at 0.05 rad (~2.9°), which was too strict and inconsistent with the 3-band system used for speed (SAFE/HARD/FAIL). Campaign ships spawn at 6.9° tilt, so players must correct before landing — a narrow 2.9° safe zone made this punishing.
+**Options considered:** (1) Raise the binary threshold to ~5°, (2) Add SAFE/HARD/FAIL tilt bands matching the speed band philosophy.
+**Decision:** Option 2 — three tilt bands: SAFE ≤0.05 rad (~2.9°), HARD ≤0.10 rad (~5.7°), FAIL >0.10 rad. Tilt band participates in overall landing band calculation (worst of V/H/tilt wins). Rotation scoring uses hardTilt (0.10) as denominator for smooth curve.
+**Why:** Consistency with speed bands. Players now get partial credit for "good enough" tilt instead of binary crash. Doubles the survivable tilt range. The HARD tilt feedback (yellow HUD, reduced score) still signals "you should do better" without instant death.
+**Consequences:** Survivable tilt range doubled (2.9° → 5.7°). Rotation scoring denominator widened (0.05 → 0.10), giving more partial credit. Best achievable score increased slightly (Classic C: 14,331 → 14,504) because rotation scoring is more generous at small angles. 91 tests pass (was 89 — net +2 from splitting 2 binary rotation tests into 4 tilt band tests + 1 classification test, minus 2 old tests). HUD tilt color now shows green/yellow/red for safe/hard/fail. Crash message updated: "Land under 6°" (was 3°). HowToPlayView updated with tilt band explanation.

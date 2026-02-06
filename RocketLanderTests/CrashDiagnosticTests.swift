@@ -93,7 +93,7 @@ final class CrashDiagnosticTests: XCTestCase {
         let inputs: [(CGFloat, CGFloat, CGFloat, CGFloat, LandingPlatform?, Bool)] = [
             (150, 110, 0.15, 100, .a, false),
             (20, 10, 0.02, 30, .b, true),
-            (90, 80, 0.08, 90, .c, false),
+            (90, 80, 0.12, 90, .c, false),
         ]
 
         for (vSpeed, hSpeed, rot, aSpeed, plat, terrain) in inputs {

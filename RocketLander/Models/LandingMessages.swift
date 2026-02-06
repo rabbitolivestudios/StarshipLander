@@ -84,9 +84,9 @@ struct LandingMessages {
 
         let tiltDegrees = rotation * 180 / .pi
 
-        if rotation > LandingThresholds.maxRotation {
+        if rotation > LandingThresholds.hardTilt {
             causes.append((.tiltTooHigh,
-                "Tilt too high (\(String(format: "%.1f", tiltDegrees))°). Land under 3°."))
+                "Tilt too high (\(String(format: "%.1f", tiltDegrees))°). Land under 6°."))
         }
         if verticalSpeed > bands.hardVertical {
             causes.append((.verticalTooFast,

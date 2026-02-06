@@ -29,10 +29,10 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **PUBLISHED** (approved 2026-02-03) — Campaign Mode live on App Store |
-| 2.0.3 | 28 | v2.0.3 gameplay feedback + Europa cryogeysers + scoring rebalance. **Build 28 on TestFlight** (uploaded 2026-02-05). |
+| 2.0.3 | 29 | v2.0.3 gameplay feedback + Europa cryogeysers + scoring rebalance + tilt bands. **Build 29 on TestFlight** (uploaded 2026-02-05). |
 
 **NEXT STEPS:**
-1. User tests Build 28 on device (Europa cryogeysers + all previous gameplay fixes)
+1. User tests Build 29 on device (scoring rebalance + tilt bands + Europa cryogeysers + all previous gameplay fixes)
 2. Decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
@@ -506,11 +506,11 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-### Session 48 (2026-02-05) - Scoring Rebalance
+### Session 48 (2026-02-05) - Scoring Rebalance + Tilt Bands
 
-**Goal:** Address low score feedback (rarely >5,000) with comprehensive scoring improvements.
+**Goal:** Address low score feedback (rarely >5,000) with comprehensive scoring improvements. Add tilt bands (SAFE/HARD/FAIL) matching speed band philosophy.
 
-#### Root Cause Analysis:
+#### Root Cause Analysis (Scoring):
 - Quadratic penalty curve zeroed velocity components in HARD band (0 pts instead of partial credit)
 - Session 46 tightened thresholds ~15% compressed the scoring range
 - Fuel multiplier range 1.0-2.0x too narrow; fuel consumption too high
@@ -528,22 +528,42 @@ This file documents the development history and decisions for the Starship Lande
    - Rotation: 0.08→0.07%/frame
    - Accelerometer: 0.04→0.035×tilt
 
-3. **HowToPlayView updated** (`HowToPlayView.swift`): New component values, subtotal, fuel range, max.
+3. **Tilt bands** (`LandingThresholds.swift`, `GameScene+Scoring.swift`, `ScoringHelper.swift`, `GameOverView.swift`, `HUDViews.swift`, `LandingMessages.swift`, `HowToPlayView.swift`):
+   - SAFE ≤0.05 rad (~2.9°), HARD ≤0.10 rad (~5.7°), FAIL >0.10 rad
+   - Tilt band participates in overall landing band (worst of V/H/tilt wins)
+   - Rotation scoring uses hardTilt (0.10) as denominator
+   - HUD tilt color: green/yellow/red for safe/hard/fail
+   - Crash message: "Land under 6°" (was 3°)
+   - GameOverView tilt band uses `LandingThresholds.tiltBand()`
 
-4. **Perfect score script updated** (`Scripts/calculate_perfect_scores.py`): New formula, fuel rates. Best: Classic C = 14,331.
+4. **HowToPlayView updated** (`HowToPlayView.swift`): New component values, subtotal, fuel range, max. Updated speed band thresholds to v2.0.3 values. Added tilt band explanation.
 
-5. **Tests updated** (`ScoringTests.swift`): New theoretical max 23,100, new component values, HARD partial credit tests, discontinuity test.
+5. **Perfect score script updated** (`Scripts/calculate_perfect_scores.py`): New formula, fuel rates, tilt thresholds. Best: Classic C = 14,504.
+
+6. **Tests updated** (`ScoringTests.swift`, `LandingEvaluationTests.swift`, `CrashDiagnosticTests.swift`):
+   - ScoringTests: New theoretical max 23,100, new component values, HARD partial credit tests, discontinuity test
+   - LandingEvaluationTests: 2 binary rotation tests → 4 tilt band tests + 1 classification test
+   - CrashDiagnosticTests: Updated rotation value in determinism test (0.08→0.12, since 0.08 is now HARD not crash)
+
+7. **Build 29 uploaded to TestFlight** (`Info.plist`): Build number 28→29.
 
 #### Files Modified:
-- `RocketLander/GameScene+Scoring.swift` — scoring formula
+- `RocketLander/GameScene+Scoring.swift` — scoring formula, rotation denominator
 - `RocketLander/GameScene.swift` — fuel consumption rates
-- `RocketLander/Views/HowToPlayView.swift` — scoring display values
+- `RocketLander/Models/LandingThresholds.swift` — tilt bands (safeTilt, hardTilt, tiltBand(), evaluate())
+- `RocketLander/Models/LandingMessages.swift` — crash threshold hardTilt, "Land under 6°"
+- `RocketLander/Views/GameOverView.swift` — tiltBand uses LandingThresholds.tiltBand()
+- `RocketLander/Views/HUDViews.swift` — hardTiltDegrees, 3-color tiltColor
+- `RocketLander/Views/HowToPlayView.swift` — scoring values, speed band thresholds, tilt band explanation
 - `RocketLanderTests/ScoringHelper.swift` — test scoring replica
 - `RocketLanderTests/ScoringTests.swift` — test assertions
-- `Scripts/calculate_perfect_scores.py` — scoring formula + fuel rates
+- `RocketLanderTests/LandingEvaluationTests.swift` — tilt band tests
+- `RocketLanderTests/CrashDiagnosticTests.swift` — determinism test rotation value
+- `Scripts/calculate_perfect_scores.py` — scoring formula, fuel rates, tilt thresholds
+- `RocketLander/Info.plist` — Build 28→29
 
 #### Build Status:
-- Build succeeds, 89/89 tests pass
+- Build succeeds, 91/91 tests pass (was 89 — net +2 from tilt band tests)
 
 ---
 

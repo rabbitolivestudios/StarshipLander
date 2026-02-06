@@ -134,7 +134,7 @@ StarshipLander/
 │   ├── GameStateTests.swift           # Game state management (3 tests)
 │   ├── LandingPlatformTests.swift     # Platform data verification (5 tests)
 │   ├── CrashDiagnosticTests.swift     # Crash classification + determinism (14 tests)
-│   ├── LandingEvaluationTests.swift   # Per-platform speed band tests (20 tests)
+│   ├── LandingEvaluationTests.swift   # Per-platform speed + tilt band tests (20 tests)
 │   └── ScoringHelper.swift            # Test-only scoring formula replica
 ├── Docs/
 │   ├── chats/                       # Session summaries (context restoration)
@@ -224,9 +224,16 @@ python3 Scripts/generate_sounds.py
 | B (Precision) | ≤50 | ≤75 | >75 | ≤40 | ≤60 | >60 |
 | C (Elite) | ≤33 | ≤52 | >52 | ≤28 | ≤48 | >48 |
 
-- Max rotation: 0.05 radians (~3°) — same for all platforms
-- Velocity scoring uses hard threshold as denominator — smooth curve from max to 0, HARD landings get partial credit
-- FAIL = crash
+**Tilt Bands (all platforms):**
+
+| Band | Threshold | Effect |
+|------|-----------|--------|
+| SAFE | ≤0.05 rad (~2.9°) | Full rotation score |
+| HARD | ≤0.10 rad (~5.7°) | Partial credit, landing succeeds |
+| FAIL | >0.10 rad (~5.7°) | Crash |
+
+- Velocity and rotation scoring use hard threshold as denominator — smooth curve from max to 0, HARD landings get partial credit
+- FAIL (speed or tilt) = crash
 - HUD displays Platform C safe thresholds (V<33, H<28) as reference
 
 ### Fuel Consumption
@@ -251,7 +258,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 | Version | Date | Description |
 |---------|------|-------------|
-| 2.0.3 | 2026-02-03 | Per-platform speed bands, velocity threshold enforcement, scoring overhaul, HUD-style Flight Data, randomized crash messages, high score fix (Build 26 on TestFlight) |
+| 2.0.3 | 2026-02-05 | Per-platform speed + tilt bands, velocity threshold enforcement, scoring rebalance, Europa cryogeysers, HUD-style Flight Data, randomized crash messages (Build 29 on TestFlight) |
 | 2.0.2 | 2026-02-05 | **Live on App Store** — Campaign polish: scoring, thrust vectoring, planet differentiation |
 | 2.0.1 | 2026-01-31 | Dedicated leaderboard screen, version label fix |
 | 2.0.0 | 2026-01-30 | Campaign mode, per-planet physics, visual effects |

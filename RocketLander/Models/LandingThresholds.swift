@@ -33,8 +33,13 @@ struct PlatformBands {
 
 enum LandingThresholds {
 
-    // Hard gate — all platforms
-    static let maxRotation: CGFloat = 0.05  // ~2.9°
+    // Tilt bands — all platforms (safe/hard/fail like speed bands)
+    static let safeTilt: CGFloat = 0.05     // ~2.9° — full rotation score
+    static let hardTilt: CGFloat = 0.10     // ~5.7° — partial credit, landing succeeds
+    // > hardTilt = crash (FAIL)
+
+    // Legacy accessor (used by HUD, crash messages, scoring)
+    static let maxRotation: CGFloat = hardTilt
 
     // Approach speed — scoring/messaging only, NOT a crash gate
     static let approachSpeedScoringThreshold: CGFloat = 80.0
@@ -81,6 +86,14 @@ enum LandingThresholds {
         return .fail
     }
 
+    // MARK: - Tilt Band Classification
+
+    static func tiltBand(_ rotation: CGFloat) -> SpeedBand {
+        if rotation <= safeTilt { return .safe }
+        if rotation <= hardTilt { return .hard }
+        return .fail
+    }
+
     // MARK: - Pure Landing Evaluation
 
     static func evaluate(
@@ -89,13 +102,14 @@ enum LandingThresholds {
         rotation: CGFloat,
         platform: LandingPlatform
     ) -> LandingResult {
-        let rotationFailed = rotation > maxRotation
+        let tBand = tiltBand(rotation)
+        let rotationFailed = tBand == .fail
 
         let vBand = verticalBand(verticalSpeed, platform: platform)
         let hBand = horizontalBand(horizontalSpeed, platform: platform)
 
         // Worst band wins (higher = worse)
-        let overallBand = max(vBand, hBand)
+        let overallBand = max(vBand, max(hBand, tBand))
 
         if rotationFailed || overallBand == .fail {
             return LandingResult(

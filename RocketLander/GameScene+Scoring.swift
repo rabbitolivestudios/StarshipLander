@@ -31,8 +31,8 @@ extension GameScene {
         let centerScore = 600.0 * pow(1.0 - centerRatio, 2)
         subtotal += centerScore
 
-        // 4. ROTATION PRECISION (0-250 points)
-        let rotationRatio = min(1.0, Double(rotation) / LandingThresholds.maxRotation)
+        // 4. ROTATION PRECISION (0-250 points) — smooth curve using hard tilt threshold
+        let rotationRatio = min(1.0, Double(rotation) / LandingThresholds.hardTilt)
         let rotationScore = 250.0 * pow(1.0 - rotationRatio, 2)
         subtotal += rotationScore
 

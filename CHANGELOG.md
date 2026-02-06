@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Velocity scoring denominator changed from safe to hard threshold — smooth curve with HARD landing partial credit (no more zero-out cliff)
   - Fuel multiplier range: 1.0-2.0x → 1.0-2.2x
   - Fuel consumption reduced: thrust 0.30→0.27%/frame, rotation 0.08→0.07%/frame, accelerometer 0.04→0.035×tilt
+  - **Tilt bands**: Tilt now uses SAFE/HARD/FAIL bands like speed (≤2.9° safe, ≤5.7° hard with partial credit, >5.7° crash). Doubles survivable tilt range. Rotation scoring uses hard tilt as denominator.
   - New theoretical max: 23,100 (was 20,000). Typical scores +15-30% across all scenarios.
 - **Europa Cryogeysers (Session 47)**: Replaced ice slide crash mechanic (H.Speed > 20 = instant death) with cryogeyser eruptions — intermittent force-based ice/water plumes that push the rocket upward. 3 fixed geyser positions with staggered active/calm cycling (2-3s active, 3-5s calm), blue/white/cyan particle columns, subtle vent markers on surface. Ice shimmer and low platform friction preserved. Disruptive but survivable.
 - **Speed Thresholds Tightened (Session 46)**: Made landings harder across all platforms:
@@ -85,7 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - LandingEvaluationTests: per-platform speed band classification, boundaries, composites (20 tests)
   - ScoringHelper: test-only scoring formula replica
 - **Per-Platform Speed Bands + Threshold Enforcement**: `LandingThresholds.swift` — single source of truth for SAFE/HARD/FAIL speed thresholds per platform. Platform A (V≤80/H≤60 safe), B (V≤55/H≤45), C (V≤35/H≤30). `checkLanding()` rewritten to use `LandingThresholds.evaluate()` with post-thrust tracked velocities — speed now affects landing success for the first time (exceeding FAIL threshold = crash). HUD updated to show Platform C safe values (V<35, H<30). Old hardcoded V<40/H<25 constants removed.
-- **Perfect Landing Score Analysis**: `Scripts/calculate_perfect_scores.py` — frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Models exact SpriteKit physics (gravity, thrust, fuel, screen wrapping, campaign reentry state). Best: Classic C = 14,331 via left screen wrap.
+- **Perfect Landing Score Analysis**: `Scripts/calculate_perfect_scores.py` — frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations. Models exact SpriteKit physics (gravity, thrust, fuel, screen wrapping, campaign reentry state). Best: Classic C = 14,504 via left screen wrap.
 
 ### Changed
 - **Removed explicit HARD landing penalty**: The 0.4× subtotal multiplier for HARD landings has been removed. Superseded by smooth curve scoring in Session 48 — velocity components now use hard threshold as denominator, giving HARD landings partial credit.

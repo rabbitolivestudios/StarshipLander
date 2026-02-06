@@ -10,12 +10,9 @@ struct FinalStatsView: View {
     let platform: LandingPlatform?
     let speedBand: SpeedBand
 
-    private var maxSafeRotationDeg: Double {
-        LandingThresholds.maxRotation * 180 / .pi
-    }
-
     private var tiltBand: SpeedBand {
-        tiltDegrees <= maxSafeRotationDeg ? .safe : .fail
+        let rotation = tiltDegrees * .pi / 180
+        return LandingThresholds.tiltBand(rotation)
     }
 
     private var vBand: SpeedBand {

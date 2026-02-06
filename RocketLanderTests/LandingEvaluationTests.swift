@@ -3,28 +3,48 @@ import XCTest
 
 final class LandingEvaluationTests: XCTestCase {
 
-    // MARK: - Rotation Gate Tests
+    // MARK: - Tilt Band Tests
 
-    func testRotationFailure() {
-        // Rotation 0.06 should fail on any platform
-        for platform in LandingPlatform.allCases {
-            let result = LandingThresholds.evaluate(
-                verticalSpeed: 10, horizontalSpeed: 5,
-                rotation: 0.06, platform: platform
-            )
-            XCTAssertFalse(result.success, "Rotation 0.06 should fail on \(platform.rawValue)")
-            XCTAssertTrue(result.rotationFailed, "rotationFailed should be true")
-        }
-    }
-
-    func testRotationPass() {
-        // Rotation 0.04 should pass (speed-dependent for overall result)
+    func testTiltSafe() {
+        // Rotation 0.04 (≤0.05 safe) should pass with safe band
         let result = LandingThresholds.evaluate(
             verticalSpeed: 10, horizontalSpeed: 5,
             rotation: 0.04, platform: .a
         )
         XCTAssertTrue(result.success)
         XCTAssertFalse(result.rotationFailed)
+        XCTAssertEqual(result.speedBand, .safe)
+    }
+
+    func testTiltHard() {
+        // Rotation 0.07 (>0.05, ≤0.10) should pass with hard band
+        let result = LandingThresholds.evaluate(
+            verticalSpeed: 10, horizontalSpeed: 5,
+            rotation: 0.07, platform: .a
+        )
+        XCTAssertTrue(result.success, "Rotation 0.07 should succeed (HARD tilt)")
+        XCTAssertFalse(result.rotationFailed)
+        XCTAssertEqual(result.speedBand, .hard)
+    }
+
+    func testTiltFail() {
+        // Rotation 0.11 (>0.10 hard) should fail on any platform
+        for platform in LandingPlatform.allCases {
+            let result = LandingThresholds.evaluate(
+                verticalSpeed: 10, horizontalSpeed: 5,
+                rotation: 0.11, platform: platform
+            )
+            XCTAssertFalse(result.success, "Rotation 0.11 should fail on \(platform.rawValue)")
+            XCTAssertTrue(result.rotationFailed, "rotationFailed should be true")
+        }
+    }
+
+    func testTiltBandClassification() {
+        XCTAssertEqual(LandingThresholds.tiltBand(0.04), .safe)
+        XCTAssertEqual(LandingThresholds.tiltBand(0.05), .safe)
+        XCTAssertEqual(LandingThresholds.tiltBand(0.06), .hard)
+        XCTAssertEqual(LandingThresholds.tiltBand(0.10), .hard)
+        XCTAssertEqual(LandingThresholds.tiltBand(0.11), .fail)
     }
 
     // MARK: - Platform A Band Tests
@@ -168,10 +188,10 @@ final class LandingEvaluationTests: XCTestCase {
     }
 
     func testRotationOverridesSpeed() {
-        // Rotation fail + speed safe → fail, rotationFailed=true
+        // Rotation fail (>0.10) + speed safe → fail, rotationFailed=true
         let result = LandingThresholds.evaluate(
             verticalSpeed: 10, horizontalSpeed: 5,
-            rotation: 0.10, platform: .a
+            rotation: 0.15, platform: .a
         )
         XCTAssertFalse(result.success)
         XCTAssertTrue(result.rotationFailed)

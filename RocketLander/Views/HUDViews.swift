@@ -223,7 +223,11 @@ struct VelocityHUDView: View {
     }
 
     private var safeTiltDegrees: CGFloat {
-        LandingThresholds.maxRotation * 180 / .pi
+        LandingThresholds.safeTilt * 180 / .pi
+    }
+
+    private var hardTiltDegrees: CGFloat {
+        LandingThresholds.hardTilt * 180 / .pi
     }
 
     var verticalColor: Color {
@@ -248,7 +252,7 @@ struct VelocityHUDView: View {
 
     var tiltColor: Color {
         if tiltDegrees <= safeTiltDegrees { return .green }
-        if tiltDegrees <= safeTiltDegrees * 2 { return .yellow }
-        return displayTiltAngle > 0 ? .cyan : .orange
+        if tiltDegrees <= hardTiltDegrees { return .yellow }
+        return .red
     }
 }
