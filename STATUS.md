@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-03 (Session 45)
+> Last reconciled: 2026-02-05 (Session 46)
 
 ---
 
@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 26) — per-platform speed bands, velocity threshold enforcement, removed HARD penalty, menu ad fix, text truncation fixes, How to Play info sheet, build hygiene improvements, HUD-style Flight Data panel, randomized crash messages, high score sheet fix. |
-| Version Status | Build 26 on TestFlight (uploaded 2026-02-03). v2.0.2 Build 16 live on App Store. |
+| Current Version | 2.0.3 (Build 27 pending) — all Build 26 features + gameplay feedback fixes: tightened speed thresholds (~15% A/B, ~5% C), Jupiter wind+gravity, Europa ice effect, Titan thrust reduction, Earth platform zones, Mercury shimmer enhancement, all celestial bodies fixed, partial platform landing detection, Menu button fix, CENTER badge removed. |
+| Version Status | Build 27 pending upload. v2.0.2 Build 16 live on App Store. |
 | Last Published | v2.0.2 (Build 16) — on App Store (approved 2026-02-05) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -35,7 +35,10 @@ These features are fully implemented, build-verified, and included in v2.0.2:
 - **Level Mechanics**: Wind, dense atmosphere, ice surfaces, moving platforms, vertical updrafts (Venus), heat interference (Mercury), deep craters, deadly volcanic debris (Io), sudden gusts (Jupiter)
 - **Star Rating**: 1-3 stars per landing based on platform (30 total)
 - **Scoring**: Continuous scoring with fuel (1.0-2.0x) and platform (1x/2x/5x) multipliers, max 20,000. Center precision weighted highest (600pts). HARD landings penalized naturally (velocity components zero out, ~45% subtotal loss) — no explicit multiplier penalty.
-- **Per-Platform Speed Bands + Threshold Enforcement**: `LandingThresholds.swift` — SAFE/HARD/FAIL classification per platform with platform-specific thresholds. `checkLanding()` uses `LandingThresholds.evaluate()` with post-thrust tracked velocities — speed now affects landing success (FAIL = crash). HUD shows Platform C safe values (V<35, H<30). Scoring denominators match safe thresholds.
+- **Per-Platform Speed Bands + Threshold Enforcement**: `LandingThresholds.swift` — SAFE/HARD/FAIL classification per platform. Thresholds tightened in v2.0.3: Platform A (V≤70/H≤50 safe), B (V≤50/H≤40), C (V≤33/H≤28). `checkLanding()` uses `LandingThresholds.evaluate()` with post-thrust tracked velocities — speed now affects landing success (FAIL = crash).
+- **Partial Platform Landing Detection**: Both rocket legs (47pt span) must be within platform bounds. Landing with one leg hanging off causes crash ("Missed the platform!").
+- **Level-Specific Mechanics Enhanced**: Europa ice (H.Speed > 20 = slide off crash), Titan thrust reduction (75% efficiency), Jupiter wind overhaul (left→right with stronger force, gravity 5.2), Mercury enhanced shimmer with rising heat particles.
+- **Celestial Bodies**: All 10 levels show astronomically-correct bodies visible from landing location (Earth from Moon, Saturn with rings from Titan, Jupiter with bands from Europa/Ganymede/Io, Sun with glow/corona from Mercury/Venus/Mars, Moon with craters from Earth, Europa from Jupiter).
 - **Haptic Feedback**: Thrust, rotation, landing, crash
 - **Dual Controls**: Button and accelerometer (tilt) modes
 - **Landing Messages**: Contextual success feedback; deterministic cause-based crash diagnostics with actual failure values
@@ -77,18 +80,19 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Campaign Engagement — v2.0.3 scoring & threshold overhaul complete, then v2.1.0 (Community)**
+**Phase: Campaign Engagement — v2.0.3 gameplay feedback complete, then v2.1.0 (Community)**
 
-v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 26) uploaded to TestFlight on 2026-02-03 — includes all changes through Session 45 (per-platform speed bands, velocity threshold enforcement, removed HARD penalty, scoring overhaul, text truncation fixes, menu ad restructure, code housekeeping, How to Play info sheet, menu layout fix, build hygiene improvements, HUD-style Flight Data panel, randomized crash messages, high score sheet fix). v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.2 (Build 16) approved and live on App Store (2026-02-05). v2.0.3 (Build 27 pending) includes all gameplay feedback fixes from Session 46: tightened speed thresholds, Jupiter wind overhaul, Europa ice effect, Titan thrust reduction, Earth platform zones, Mercury shimmer enhancement, all celestial bodies fixed, partial platform landing detection. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. User tests Build 26 on device via TestFlight (Flight Data badges, crash messages, high score sheet)
-2. Decide whether to submit v2.0.3 or wait for v2.1.0
-3. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
-4. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+1. Bump build number to 27 and upload to TestFlight
+2. User tests Build 27 on device (all 10 gameplay feedback fixes)
+3. Decide whether to submit v2.0.3 or wait for v2.1.0
+4. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
+5. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---
 
@@ -120,7 +124,7 @@ v2.0.2 (Build 16) submitted for App Store Review on 2026-02-01. v2.0.3 (Build 26
 ## Known Risks / Watchouts
 
 - **v2.0.2 is the current live version** — approved 2026-02-05, Campaign Mode now on App Store
-- **Build 26** — includes all v2.0.3 changes through Session 45 (text truncation fix, menu ad restructure, code housekeeping, How to Play info sheet, menu layout fix, build hygiene improvements, HUD-style Flight Data panel, randomized crash messages, high score sheet fix). Uploaded to TestFlight 2026-02-03. Pending device testing. Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
+- **Build 27 pending** — includes all v2.0.3 gameplay feedback fixes from Session 46. Changes: speed thresholds tightened (~15% A/B, ~5% C), Jupiter wind+gravity overhaul, Europa ice effect (H.Speed > 20 = crash), Titan thrust reduction (75% efficiency), Earth platform zones, Mercury shimmer + particles, all celestial bodies fixed, partial platform landing detection (leg span check). Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
 - **Velocity thresholds were dead code before Build 21** — SpriteKit collision resolution zeroed velocities before `didBegin(contact:)` fired in all builds through Build 18. All prior high scores were achieved under "speed doesn't matter" regime. **RESOLVED in Build 21** with post-thrust tracking and per-platform FAIL thresholds.
 - **HUD threshold mismatch RESOLVED** — HUD previously showed V<50 H<30 with actual thresholds V<40 H<25. **Fixed in Build 21** — HUD now reads from `LandingThresholds.platformC` (V<35, H<30).
 - **Unit tests have no integration coverage** — 65 tests all test isolated pure functions. No test simulates a physics collision to verify landing pass/fail decision. This is the test that would have caught the bug.

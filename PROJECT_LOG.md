@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-03)
+## Current Status (2026-02-05)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -29,11 +29,12 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | **PUBLISHED** (approved 2026-02-05) — Campaign Mode live on App Store |
-| 2.0.3 | 26 | Per-platform speed bands + velocity threshold enforcement + removed HARD penalty + scoring overhaul + text truncation fix + menu ad restructure + code housekeeping + build hygiene improvements + HUD-style Flight Data panel + randomized crash messages + high score sheet fix. **Build 26 on TestFlight** (uploaded 2026-02-03). Pending device testing. |
+| 2.0.3 | 27 | v2.0.3 gameplay feedback: tightened speed thresholds (~15% A/B, ~5% C), Jupiter wind+gravity, Europa ice, Titan thrust reduction, Earth platform zones, Mercury shimmer, all celestial bodies fixed, partial platform landing detection, Menu button fix, CENTER badge removed. **Pending Build 27 upload**. |
 
 **NEXT STEPS:**
-1. User tests Build 26 on device via TestFlight (Flight Data badges, crash messages, high score sheet)
-2. Decide whether to submit v2.0.3 or wait for v2.1.0
+1. Bump build number to 27 and upload to TestFlight
+2. User tests Build 27 on device (all 10 gameplay feedback fixes)
+3. Decide whether to submit v2.0.3 or wait for v2.1.0
 
 **v2.1.0 PLANNED — Phase: Community (scope locked):**
 - [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
@@ -414,4 +415,54 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-*Last updated: 2026-02-03 (Session 45)*
+---
+
+### Session 46 (2026-02-05) - v2.0.3 Gameplay Feedback Fixes
+
+**Goal:** Process 10 user feedback items on v2.0.3 Build 26, implement all fixes for gameplay issues, celestial bodies, level mechanics, and UI.
+
+#### Changes Made:
+
+1. **Menu Button Truncation Fix** (`GameOverView.swift`): Reduced horizontal padding, added `.fixedSize()`.
+
+2. **CENTER Badge Removal** (`GameOverView.swift`): CENTER row now shows value only without OK/HARD/FAIL badge.
+
+3. **Speed Threshold Tightening** (`LandingThresholds.swift`): Tightened all thresholds ~15% for A/B, ~5% for C. Updated all 18 `LandingEvaluationTests` to match new values.
+
+4. **Jupiter Wind Overhaul** (`GameScene.swift`, `GameScene+Effects.swift`, `LevelDefinition.swift`): Wind always pushes left→right with stronger force (base 20.0), ambient wind during calm, gravity increased from -4.8 to -5.2, particles reversed direction.
+
+5. **Europa Ice Effect** (`GameScene.swift`): H.Speed > 20 causes crash ("Slid off the ice!").
+
+6. **Titan Thrust Reduction** (`GameScene.swift`): Thrust reduced to 75% efficiency (replaces drag damping which made it easier).
+
+7. **Earth Platform Collision Fix** (`GameScene.swift`): Zone-based movement — B stays in 5%-50%, C stays in 55%-95%, eliminates startup collision.
+
+8. **Mercury Heat Shimmer** (`GameScene.swift`, `GameScene+Effects.swift`, `LevelDefinition.swift`): Increased perturbation wobble, added rising heat particles, fixed celestial body to sunLarge.
+
+9. **Celestial Body Corrections** (`LevelDefinition.swift`, `GameScene+Setup.swift`): All 10 levels now show astronomically-correct celestial bodies (Earth from Moon, Saturn with rings from Titan, Jupiter with bands from moons, Sun with glow from inner planets, etc.). Added `addSunFeatures()` for Sun rendering.
+
+10. **Partial Platform Landing Detection** (`GameScene.swift`): Both legs (47pt span) must be within platform bounds to land successfully.
+
+#### Files Modified:
+- `RocketLander/Views/GameOverView.swift` — Menu button, CENTER badge
+- `RocketLander/Models/LandingThresholds.swift` — Tightened thresholds
+- `RocketLander/Models/LevelDefinition.swift` — Celestial bodies, Jupiter gravity, Titan description
+- `RocketLander/GameScene.swift` — Europa ice, Titan thrust, Earth platforms, Mercury shimmer, partial landing
+- `RocketLander/GameScene+Effects.swift` — Jupiter particles, Mercury particles
+- `RocketLander/GameScene+Setup.swift` — Sun features, celestial body rendering
+- `RocketLanderTests/LandingEvaluationTests.swift` — Updated 18 tests for new thresholds
+
+#### Build Status:
+- Build succeeds, 89/89 tests pass (18 LandingEvaluationTests updated for new thresholds)
+
+#### Definition of Done:
+- [x] All 10 feedback items implemented
+- [x] All tests updated and passing
+- [x] Build succeeds
+- [ ] Build 27 uploaded to TestFlight
+- [x] All docs updated
+- [x] Session summary created
+
+---
+
+*Last updated: 2026-02-05 (Session 46)*

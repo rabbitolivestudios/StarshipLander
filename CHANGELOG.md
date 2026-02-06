@@ -5,7 +5,27 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] — Build 26 on TestFlight (uploaded 2026-02-03)
+## [Unreleased] — Build 27 (pending upload)
+
+### Changed
+- **Speed Thresholds Tightened (Session 46)**: Made landings harder across all platforms:
+  - Platform A: safe V 80→70, hard V 120→100, safe H 60→50, hard H 100→80 (~15% tighter)
+  - Platform B: safe V 55→50, hard V 85→75, safe H 45→40, hard H 75→60 (~15% tighter)
+  - Platform C: safe V 35→33, hard V 55→52, safe H 30→28, hard H 50→48 (~5% tighter)
+- **Jupiter Difficulty Increase (Session 46)**: Wind now pushes left→right exclusively with stronger force (base 20.0), ambient wind during calm periods, gravity increased from -4.8 to -5.2
+- **Titan Thrust Reduction (Session 46)**: Dense atmosphere now reduces thrust to 75% efficiency instead of applying drag damping (makes it harder, not easier)
+- **Mercury Heat Shimmer Enhanced (Session 46)**: Increased thrust perturbation wobble, added rising heat distortion particle effect
+- **All Celestial Bodies Fixed (Session 46)**: Astronomically-correct bodies visible from each landing location:
+  - Moon → Earth, Mars → sunSmall, Titan → Saturn (with rings), Europa → Jupiter (with bands)
+  - Earth → Moon (with craters), Venus → sunMedium, Mercury → sunLarge (with glow/corona)
+  - Ganymede → Jupiter, Io → Jupiter, Jupiter → europaSmall
+- **Earth Platform Movement (Session 46)**: Zone-based collision avoidance — Platform B stays in 5%-50% zone, Platform C stays in 55%-95% zone, eliminating startup collision
+- **CENTER Badge Removed (Session 46)**: Flight Data panel CENTER row now shows value only without OK/HARD/FAIL badge
+
+### Fixed
+- **Menu Button Truncation (Session 46)**: "Menu" button on landing report no longer truncated on smaller screens
+- **Europa Ice Now Affects Gameplay (Session 46)**: Landing with H.Speed > 20 causes crash ("Slid off the ice!") — ice surface requires low horizontal speed to grip
+- **Partial Platform Landing Detection (Session 46)**: Both rocket legs (47pt span) must be within platform bounds to land successfully — one leg hanging off now causes crash ("Missed the platform!")
 
 ### Changed
 - **Flight Data Panel Redesign (Session 45)**: Complete rewrite of `FinalStatsView` with HUD-style design language:
