@@ -4,6 +4,10 @@ Create Game Center leaderboards and achievements via App Store Connect API.
 
 Usage:
     ASC_ISSUER_ID=<issuer-id> python3 Scripts/setup_game_center.py
+    ASC_ISSUER_ID=<issuer-id> python3 Scripts/setup_game_center.py --reset
+
+Flags:
+    --reset   Delete all existing leaderboards and recreate them (clears scores)
 
 Reads API key from ~/.appstoreconnect/private_keys/AuthKey_*.p8
 """
@@ -202,8 +206,8 @@ def get_or_create_gc_detail(headers, app_id):
 
 
 def get_existing_leaderboards(headers, gc_detail_id):
-    """Get existing leaderboard reference names."""
-    existing = set()
+    """Get existing leaderboard reference names. Returns dict of vendorIdentifier -> resource ID."""
+    existing = {}
     url = f"{BASE_URL}/v1/gameCenterDetails/{gc_detail_id}/gameCenterLeaderboards"
     params = {"fields[gameCenterLeaderboards]": "referenceName,vendorIdentifier", "limit": 50}
     r = requests.get(url, headers=headers, params=params)
@@ -211,8 +215,28 @@ def get_existing_leaderboards(headers, gc_detail_id):
     for item in r.json().get("data", []):
         vid = item["attributes"].get("vendorIdentifier", "")
         if vid:
-            existing.add(vid)
+            existing[vid] = item["id"]
     return existing
+
+
+def delete_all_leaderboards(headers, gc_detail_id):
+    """Delete all existing leaderboards (clears all scores)."""
+    existing = get_existing_leaderboards(headers, gc_detail_id)
+    if not existing:
+        print("  No leaderboards to delete")
+        return 0
+    deleted = 0
+    for vid, resource_id in existing.items():
+        r = requests.delete(
+            f"{BASE_URL}/v1/gameCenterLeaderboards/{resource_id}",
+            headers=headers,
+        )
+        if r.status_code < 400:
+            print(f"  Deleted leaderboard '{vid}' (ID: {resource_id})")
+            deleted += 1
+        else:
+            print(f"  ERROR deleting '{vid}': {r.status_code} — {r.text[:200]}")
+    return deleted
 
 
 def create_leaderboard(headers, gc_detail_id, ref_name, display_name):
@@ -467,6 +491,12 @@ def main():
     gc_detail_id = get_or_create_gc_detail(headers, app_id)
 
     # 3. Create leaderboards
+    # 3a. If --reset, delete all leaderboards first
+    if "--reset" in sys.argv:
+        print(f"\n── RESETTING: Deleting all leaderboards (clears scores) ──")
+        deleted = delete_all_leaderboards(headers, gc_detail_id)
+        print(f"Deleted {deleted} leaderboards")
+
     existing_lbs = get_existing_leaderboards(headers, gc_detail_id)
     print(f"\n── Creating {len(LEADERBOARDS)} leaderboards ──")
     created_lbs = 0
