@@ -1,4 +1,5 @@
 import SwiftUI
+import GameKit
 
 struct ContentView: View {
     @State private var showingGame = false
@@ -7,6 +8,7 @@ struct ContentView: View {
     @StateObject private var highScoreManager = HighScoreManager()
     @StateObject private var campaignState = CampaignState()
     @StateObject private var gameState = GameState()
+    @StateObject private var gameCenterManager = GameCenterManager.shared
 
     var body: some View {
         ZStack {
@@ -22,21 +24,24 @@ struct ContentView: View {
                 GameContainerView(
                     showingGame: $showingGame,
                     highScoreManager: highScoreManager,
-                    campaignState: campaignState
+                    campaignState: campaignState,
+                    gameCenterManager: gameCenterManager
                 )
                 .environmentObject(gameState)
             } else if showingLeaderboard {
                 LeaderboardView(
                     showingLeaderboard: $showingLeaderboard,
                     highScoreManager: highScoreManager,
-                    campaignState: campaignState
+                    campaignState: campaignState,
+                    gameCenterManager: gameCenterManager
                 )
             } else if showingLevelSelect {
                 LevelSelectView(
                     showingGame: $showingGame,
                     campaignState: campaignState,
                     gameState: gameState,
-                    showingLevelSelect: $showingLevelSelect
+                    showingLevelSelect: $showingLevelSelect,
+                    gameCenterManager: gameCenterManager
                 )
             } else {
                 MenuView(
@@ -45,11 +50,15 @@ struct ContentView: View {
                     showingLeaderboard: $showingLeaderboard,
                     highScoreManager: highScoreManager,
                     campaignState: campaignState,
-                    gameState: gameState
+                    gameState: gameState,
+                    gameCenterManager: gameCenterManager
                 )
             }
         }
         .preferredColorScheme(.dark)
+        .onAppear {
+            gameCenterManager.authenticate()
+        }
     }
 }
 
@@ -60,6 +69,7 @@ struct MenuView: View {
     @ObservedObject var highScoreManager: HighScoreManager
     @ObservedObject var campaignState: CampaignState
     @ObservedObject var gameState: GameState
+    @ObservedObject var gameCenterManager: GameCenterManager
     @State private var showingHowToPlay = false
 
     var body: some View {
@@ -151,6 +161,29 @@ struct MenuView: View {
                     Text("\(campaignState.totalStars)/30 Stars")
                         .font(.subheadline.bold())
                         .foregroundColor(.yellow)
+                }
+            }
+
+            // Galaxy Rank badge — visible when player has completed at least 1 campaign level and GC is available
+            if campaignState.totalStars > 0 && gameCenterManager.isAuthenticated {
+                if let rank = gameCenterManager.galaxyRank {
+                    HStack(spacing: 4) {
+                        Image(systemName: "globe.americas.fill")
+                            .font(.caption2)
+                            .foregroundColor(.cyan)
+                        Text("Galaxy Rank: #\(rank)")
+                            .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                            .foregroundColor(.cyan)
+                    }
+                }
+            } else if campaignState.totalStars > 0 && !gameCenterManager.isAuthenticated {
+                HStack(spacing: 4) {
+                    Image(systemName: "globe.americas.fill")
+                        .font(.caption2)
+                        .foregroundColor(.gray)
+                    Text("Galaxy Rank: — (Sign in to compete globally)")
+                        .font(.system(size: 10))
+                        .foregroundColor(.gray)
                 }
             }
 
@@ -260,6 +293,16 @@ struct MenuView: View {
                 .foregroundColor(.gray.opacity(0.5))
                 .padding(.trailing, 16)
                 .padding(.top, 8)
+        }
+        .onAppear {
+            gameCenterManager.fetchGalaxyRank()
+            if gameCenterManager.isAuthenticated {
+                GKAccessPoint.shared.location = .topLeading
+                GKAccessPoint.shared.isActive = true
+            }
+        }
+        .onDisappear {
+            GKAccessPoint.shared.isActive = false
         }
     }
 }

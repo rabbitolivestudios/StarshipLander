@@ -511,8 +511,8 @@ Credentials, secrets, and private keys must NEVER be handled through Claude Code
 
 ```
 RocketLander/
-  Models/        — GameState, HighScoreManager, LandingPlatform, LandingMessages, LandingThresholds, LevelDefinition, CampaignState
-  Views/         — GameContainerView, GameOverView, HUDViews, ControlViews, ShapeViews, LeaderboardView, HowToPlayView, LevelSelectView
+  Models/        — GameState, HighScoreManager, LandingPlatform, LandingMessages, LandingThresholds, LevelDefinition, CampaignState, GameCenterManager
+  Views/         — GameContainerView, GameOverView, HUDViews, ControlViews, ShapeViews, LeaderboardView, HowToPlayView, LevelSelectView, ShareScoreCardView
   Haptics/       — HapticManager
   GameScene.swift           — Core update loop, physics, collision
   GameScene+Setup.swift     — Scene setup, terrain, platforms

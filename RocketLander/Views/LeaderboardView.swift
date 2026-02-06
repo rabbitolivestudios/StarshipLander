@@ -1,9 +1,11 @@
 import SwiftUI
+import GameKit
 
 struct LeaderboardView: View {
     @Binding var showingLeaderboard: Bool
     @ObservedObject var highScoreManager: HighScoreManager
     @ObservedObject var campaignState: CampaignState
+    @ObservedObject var gameCenterManager: GameCenterManager
 
     var body: some View {
         VStack(spacing: 16) {
@@ -35,6 +37,46 @@ struct LeaderboardView: View {
 
             ScrollView {
                 VStack(spacing: 16) {
+                    // Galaxy Rank header
+                    if gameCenterManager.isAuthenticated {
+                        VStack(spacing: 6) {
+                            Text("Galaxy Rank reflects your total campaign mastery.")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.center)
+
+                            if let rank = gameCenterManager.galaxyRank {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "globe.americas.fill")
+                                        .foregroundColor(.cyan)
+                                    Text("Galaxy Rank: #\(rank)")
+                                        .font(.system(size: 13, weight: .bold, design: .monospaced))
+                                        .foregroundColor(.cyan)
+                                    if gameCenterManager.galaxyScore > 0 {
+                                        Text("(\(gameCenterManager.galaxyScore) pts)")
+                                            .font(.system(size: 11, design: .monospaced))
+                                            .foregroundColor(.cyan.opacity(0.7))
+                                    }
+                                }
+                            }
+
+                            // View Global Rankings button
+                            Button(action: openGameCenterDashboard) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "gamecontroller.fill")
+                                    Text("View Global Rankings")
+                                }
+                                .font(.caption.bold())
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.purple.opacity(0.4))
+                                .cornerRadius(8)
+                            }
+                        }
+                        .padding(.bottom, 4)
+                    }
+
                     // MARK: - Classic Mode Section
                     classicSection
 
@@ -49,6 +91,17 @@ struct LeaderboardView: View {
             }
         }
         .padding(.top)
+    }
+
+    // MARK: - Game Center Dashboard
+
+    private func openGameCenterDashboard() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootVC = windowScene.windows.first?.rootViewController else { return }
+
+        let gcVC = GKGameCenterViewController(state: .leaderboards)
+        gcVC.gameCenterDelegate = GKDismissHandler.shared
+        rootVC.present(gcVC, animated: true)
     }
 
     // MARK: - Classic Mode Card
@@ -190,5 +243,13 @@ struct LeaderboardView: View {
             }
         }
         .padding(.horizontal, 4)
+    }
+}
+
+// MARK: - GKGameCenterControllerDelegate handler
+class GKDismissHandler: NSObject, GKGameCenterControllerDelegate {
+    static let shared = GKDismissHandler()
+    func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
+        gameCenterViewController.dismiss(animated: true)
     }
 }

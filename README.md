@@ -5,7 +5,7 @@ A physics-based rocket landing game for iOS, inspired by SpaceX Starship landing
 **Version:** 2.0.3
 **Platform:** iOS 15.0+
 **Language:** Swift 5.0
-**Frameworks:** SwiftUI, SpriteKit, CoreMotion
+**Frameworks:** SwiftUI, SpriteKit, CoreMotion, GameKit
 **Developer:** Rabbit Olive Studios
 
 ## Game Overview
@@ -29,6 +29,8 @@ Guide your Starship through a controlled descent and land safely on one of three
 - **Campaign Reentry Challenge**: Ships spawn with tilt and drift in Campaign mode
 - **Skill-Based Scoring**: Up to 23,100 points with platform and fuel multipliers
 - **High Score Leaderboard**: Track your top 3 landings
+- **Game Center Integration**: 12 leaderboards, 10 achievements, Galaxy Rank aggregate
+- **Share Score Card**: Generate and share landing results as images via native share sheet
 - **AdMob Integration**: Banner ads with App Tracking Transparency support
 
 ### Controls
@@ -100,6 +102,7 @@ StarshipLander/
 │   ├── GameScene+Scoring.swift      # Score calculation, platform detection
 │   ├── BannerAdView.swift           # AdMob banner integration
 │   ├── Info.plist                   # App configuration
+│   ├── RocketLander.entitlements    # Game Center capability
 │   ├── Models/
 │   │   ├── GameState.swift          # ObservableObject game state
 │   │   ├── HighScoreManager.swift   # High score persistence
@@ -107,7 +110,8 @@ StarshipLander/
 │   │   ├── LandingMessages.swift    # Success messages + deterministic crash diagnostics
 │   │   ├── LandingThresholds.swift  # Per-platform speed bands (SAFE/HARD/FAIL)
 │   │   ├── LevelDefinition.swift    # 10 campaign level definitions
-│   │   └── CampaignState.swift      # Campaign progress persistence
+│   │   ├── CampaignState.swift      # Campaign progress persistence
+│   │   └── GameCenterManager.swift  # Game Center auth, leaderboards, achievements
 │   ├── Views/
 │   │   ├── GameContainerView.swift  # Game container + SpriteKit bridge
 │   │   ├── GameOverView.swift       # Game over screen with stars + final stats panel
@@ -116,7 +120,8 @@ StarshipLander/
 │   │   ├── ShapeViews.swift         # Rocket illustration shapes
 │   │   ├── LeaderboardView.swift     # Dedicated leaderboard screen
 │   │   ├── HowToPlayView.swift      # How to Play info sheet
-│   │   └── LevelSelectView.swift    # Campaign level grid
+│   │   ├── LevelSelectView.swift    # Campaign level grid
+│   │   └── ShareScoreCardView.swift # Share score card rendering + share helper
 │   ├── Haptics/
 │   │   └── HapticManager.swift      # Haptic feedback manager
 │   ├── Assets.xcassets/             # App icons and colors

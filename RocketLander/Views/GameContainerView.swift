@@ -6,12 +6,13 @@ struct GameContainerView: View {
     @Binding var showingGame: Bool
     @ObservedObject var highScoreManager: HighScoreManager
     @ObservedObject var campaignState: CampaignState
+    @ObservedObject var gameCenterManager: GameCenterManager
     @EnvironmentObject var gameState: GameState
 
     var body: some View {
         ZStack {
             // Game scene
-            GameSceneView(gameState: gameState)
+            GameSceneView(gameState: gameState, campaignState: campaignState)
                 .ignoresSafeArea()
                 .allowsHitTesting(!gameState.gameOver)
 
@@ -50,13 +51,14 @@ struct GameContainerView: View {
 // MARK: - SpriteKit Bridge
 struct GameSceneView: UIViewRepresentable {
     let gameState: GameState
+    let campaignState: CampaignState
 
     func makeUIView(context: Context) -> SKView {
         let view = SKView()
         view.ignoresSiblingOrder = true
         view.allowsTransparency = true
 
-        let scene = GameScene(gameState: gameState)
+        let scene = GameScene(gameState: gameState, campaignState: campaignState)
         scene.scaleMode = .resizeFill
         view.presentScene(scene)
 

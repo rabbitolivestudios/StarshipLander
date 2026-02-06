@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-06)
+## Current Status (2026-02-06, Session 50)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -33,12 +33,19 @@ This file documents the development history and decisions for the Starship Lande
 
 **NEXT STEPS:**
 1. ~~v2.0.3 Build 30 submitted for App Store review~~ — **APPROVED** 2026-02-06, live on App Store
-2. Begin v2.1.0 (Community phase)
+2. ~~Implement v2.1.0 (Community phase)~~ — **CODE COMPLETE** (Session 50)
+3. v2.1.0: Version bump, App Store Connect leaderboard/achievement setup (manual), device testing, submission
 
-**v2.1.0 PLANNED — Phase: Community (scope locked):**
-- [planned] 11 Game Center leaderboards (1 classic + 10 campaign)
-- [planned] 10 Game Center achievements
-- [planned] Share Score Card (SwiftUI render + native share sheet)
+**v2.1.0 — Phase: Community (CODE COMPLETE):**
+- [done] 12 Game Center leaderboards (1 classic + 10 campaign + 1 galaxy_rank)
+- [done] 10 Game Center achievements
+- [done] Share Score Card (SwiftUI render + native share sheet)
+- [done] Galaxy Rank on menu/leaderboard/campaign screens
+- [done] GKAccessPoint on menu
+- [pending] Version bump + build number
+- [pending] App Store Connect: create 12 leaderboards + 10 achievements (manual)
+- [pending] Device testing (GC auth, score submission, achievements, share card)
+- [pending] App Store submission
 
 **v2.2.0 PLANNED — Phase: Monetization (scope locked):**
 - [planned] "Support Development" IAP (remove ads, StoreKit 2)
@@ -580,4 +587,85 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-*Last updated: 2026-02-06 (Session 49)*
+### Session 49 (2026-02-06) - v2.0.3 Build 30 Approved
+
+**Goal:** Note approval of v2.0.3 Build 30.
+
+#### Changes Made:
+- Updated documentation to note Build 30 approved and live on App Store (2026-02-06).
+
+#### Commits:
+- `2d70294` — Note v2.0.3 Build 30 approved and live on App Store
+
+---
+
+### Session 50 (2026-02-06) - v2.1.0 Community Phase Implementation
+
+**Goal:** Implement v2.1.0 Community phase: Game Center integration (auth, 12 leaderboards, 10 achievements, Galaxy Rank) and Share Score Card.
+
+#### Changes Made:
+
+1. **GameCenterManager.swift (NEW)** — 283 lines. ObservableObject + singleton. Auth, 12 leaderboard IDs, score submission (fire-and-forget), Galaxy Rank fetch/display, 10 achievement checks, persistent tracking state (safePlatformCLevels, attemptsByLevel via UserDefaults).
+
+2. **RocketLander.entitlements (NEW)** — Game Center capability.
+
+3. **ShareScoreCardView.swift (NEW)** — 148 lines. SwiftUI card rendering (320pt, dark gradient, orange border). ShareHelper with ImageRenderer (iOS 16+) / UIHostingController snapshot (iOS 15). Native share sheet.
+
+4. **ContentView.swift** — Added gameCenterManager StateObject, `.onAppear { authenticate() }`, passed to all child views. MenuView: Galaxy Rank badge, GKAccessPoint show/hide, fetchGalaxyRank on appear.
+
+5. **GameContainerView.swift** — Added campaignState and gameCenterManager params, passed campaignState through to GameScene.
+
+6. **GameScene.swift** — Added campaignState property, updated init. recordAttempt() in startGame(). GC score submission + achievement check in successfulLanding().
+
+7. **LeaderboardView.swift** — Added gameCenterManager param, Galaxy Rank header, "View Global Rankings" button (GKGameCenterViewController), GKDismissHandler class.
+
+8. **LevelSelectView.swift** — Added gameCenterManager param, Galaxy Rank explanation section after level grid.
+
+9. **GameOverView.swift** — Share button (landing only), shareScoreCard() method building ShareScoreCardView from gameState.
+
+10. **project.pbxproj** — Added GameCenterManager.swift, ShareScoreCardView.swift, RocketLander.entitlements, CODE_SIGN_ENTITLEMENTS.
+
+#### Files Created:
+- `RocketLander/Models/GameCenterManager.swift`
+- `RocketLander/Views/ShareScoreCardView.swift`
+- `RocketLander/RocketLander.entitlements`
+
+#### Files Modified:
+- `RocketLander/ContentView.swift`
+- `RocketLander/GameScene.swift`
+- `RocketLander/Views/GameContainerView.swift`
+- `RocketLander/Views/LeaderboardView.swift`
+- `RocketLander/Views/LevelSelectView.swift`
+- `RocketLander/Views/GameOverView.swift`
+- `RocketLander.xcodeproj/project.pbxproj`
+
+#### Build Status:
+- Build succeeds, 91/91 tests pass
+
+#### Key Decisions:
+- Galaxy Rank uses 12th leaderboard (galaxy_rank) = sum of best scores across 10 campaign levels
+- Achievement checks use composite landing band (worst of V/H/tilt) not speedBand alone
+- Tilt checks use radians internally (e.g., 2.0° = 2.0 × π/180)
+- First Try Perfection is campaign-only, tracked via attemptsByLevel
+- GC auth is non-intrusive — features hidden when not signed in
+- Singleton pattern on GameCenterManager needed for fire-and-forget calls from GameScene
+
+#### Definition of Done:
+- [x] GameCenterManager with auth, leaderboards, achievements
+- [x] 12 leaderboard IDs defined
+- [x] 10 achievement IDs and check logic
+- [x] Galaxy Rank on 3 UI layers (menu, campaign, leaderboard)
+- [x] GKAccessPoint on menu
+- [x] Share Score Card rendering + native share sheet
+- [x] Share button on game-over (landing only)
+- [x] Build succeeds
+- [x] 91/91 tests pass
+- [x] All documentation updated
+- [x] Session summary created
+- [ ] Version bump (pending user approval)
+- [ ] App Store Connect configuration (manual)
+- [ ] Device testing
+
+---
+
+*Last updated: 2026-02-06 (Session 50)*

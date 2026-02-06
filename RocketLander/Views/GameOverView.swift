@@ -324,6 +324,25 @@ struct GameOverView: View {
 
     // MARK: - Action Buttons
     private var actionButtons: some View {
+        VStack(spacing: 10) {
+        HStack(spacing: 10) {
+            // Share button (only on successful landing)
+            if gameState.landed {
+                Button(action: shareScoreCard) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "square.and.arrow.up")
+                        Text("Share")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 12)
+                    .background(Color.blue.opacity(0.5))
+                    .cornerRadius(10)
+                    .fixedSize(horizontal: true, vertical: false)
+                }
+            }
+        }
         HStack(spacing: 10) {
             Button(action: {
                 showingGame = false
@@ -392,8 +411,31 @@ struct GameOverView: View {
             }
         }
     }
+    }
 
     // MARK: - Actions
+
+    private func shareScoreCard() {
+        let card = ShareScoreCardView(
+            mode: gameState.currentMode,
+            levelName: gameState.currentMode == .campaign
+                ? (LevelDefinition.levels.first { $0.id == gameState.currentLevelId }?.name ?? "Level \(gameState.currentLevelId)")
+                : "Classic",
+            stars: gameState.starsEarned,
+            score: gameState.score,
+            platformLabel: gameState.landedPlatform?.label ?? "",
+            speedBand: gameState.landingSpeedBand,
+            tiltDegrees: abs(Double(gameState.finalTiltAngle)) * 180 / .pi,
+            verticalSpeed: gameState.finalVerticalSpeed,
+            horizontalSpeed: gameState.finalHorizontalSpeed,
+            fuel: gameState.finalFuel,
+            distanceFromCenter: gameState.finalDistanceFromCenter
+        )
+        if let image = ShareHelper.renderScoreCard(card) {
+            ShareHelper.shareImage(image)
+        }
+    }
+
     private func saveScore() {
         let name = playerName.trimmingCharacters(in: .whitespaces)
         guard !name.isEmpty else { return }

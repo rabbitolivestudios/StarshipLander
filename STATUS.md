@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-06 (Session 49)
+> Last reconciled: 2026-02-06 (Session 50)
 
 ---
 
@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 30) — all Build 27 features + Europa cryogeysers + scoring rebalance + tilt bands. |
-| Version Status | **v2.0.3 Build 30 APPROVED and live on App Store** (approved 2026-02-06). |
+| Current Version | 2.0.3 (Build 30) — live on App Store. v2.1.0 in development (Game Center + Share). |
+| Version Status | **v2.0.3 Build 30 live on App Store** (approved 2026-02-06). **v2.1.0 code complete** (pending version bump + testing). |
 | Last Published | v2.0.3 (Build 30) — on App Store (approved 2026-02-06) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -56,6 +56,8 @@ These features are fully implemented, build-verified, and included in v2.0.3:
 - **How to Play Info Sheet**: Rich game documentation accessible from menu — covers Controls, Landing Platforms, Speed Bands, Scoring formula, and Campaign (all 10 levels). Adapts to button/accelerometer setting.
 - **Unit Tests**: 91 XCTest cases across 10 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data, crash diagnostics, landing evaluation, scoring helper)
 - **Codebase**: Split from 2 monolithic files into 21 organized files
+- **Game Center Integration (v2.1.0 code complete)**: `GameCenterManager.swift` — automatic auth with graceful fallback, 12 leaderboards (1 classic + 10 campaign + 1 galaxy_rank aggregate), 10 achievements (skill + progression), Galaxy Rank on menu/leaderboard/campaign screens, GKAccessPoint on menu, fire-and-forget score submission, idempotent achievement reporting, persistent tracking state (UserDefaults). Game Center entitlement added.
+- **Share Score Card (v2.1.0 code complete)**: `ShareScoreCardView.swift` — SwiftUI-rendered dark gradient card with game logo, mode/level, stars, score, platform+band badge, flight data. `ShareHelper` with `ImageRenderer` (iOS 16+) / `UIHostingController` snapshot (iOS 15) rendering. Native share sheet via `UIActivityViewController`. Share button on game-over screen (landing only).
 - **Project Management**: CLAUDE.md, PR template, DECISIONS.md, session logging workflow
 - **Perfect Landing Score Analysis**: Frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations, including campaign reentry state (tilt + drift). Best: Classic C = 14,504 (via left screen wrap). All 33/33 land in SAFE band. Tilt bands: SAFE ≤2.9°, HARD ≤5.7°, FAIL >5.7°. Script: `Scripts/calculate_perfect_scores.py`
 
@@ -65,7 +67,7 @@ These features are fully implemented, build-verified, and included in v2.0.3:
 
 These are **not implemented**. Do not assume otherwise:
 
-- **Game Center integration** — planned for v2.1.0 (Community phase; research complete, decisions documented)
+- **Game Center integration** — **CODE COMPLETE** for v2.1.0. GameCenterManager.swift (auth, 12 leaderboards, 10 achievements, Galaxy Rank). Pending: version bump, App Store Connect configuration, device testing.
 - **In-App Purchases (IAP)** — planned for v2.2.0 (Monetization phase; StoreKit 2 approach decided, decisions documented)
 - ~~**Campaign per-level leaderboard viewing**~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
 - **iPad support** — iPhone only
@@ -81,17 +83,18 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Campaign Engagement complete — next: v2.1.0 (Community)**
+**Phase: Community (v2.1.0) — code complete, pending testing + submission**
 
-v2.0.3 (Build 30) approved and live on App Store (2026-02-06). Includes all gameplay feedback fixes from Session 46 + Europa cryogeysers from Session 47 + scoring rebalance + tilt bands from Session 48. v2.1.0 planned: Game Center leaderboards + achievements, Share Score Card. v2.2.0 planned: Remove Ads IAP.
+v2.0.3 (Build 30) live on App Store. v2.1.0 code complete (Session 50): Game Center auth, 12 leaderboards (1 classic + 10 campaign + 1 galaxy_rank), 10 achievements, Galaxy Rank on menu/leaderboard/campaign screens, GKAccessPoint, Share Score Card. Pending: version bump, App Store Connect leaderboard/achievement configuration, device testing. v2.2.0 planned: Remove Ads IAP.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
 1. ~~v2.0.3 Build 30 submitted for App Store review~~ — **APPROVED** 2026-02-06, live on App Store
-2. Implement v2.1.0 (Community): Game Center leaderboards (11), achievements (10), Share Score Card
-3. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
+2. ~~Implement v2.1.0 (Community): Game Center leaderboards, achievements, Share Score Card~~ — **CODE COMPLETE** (Session 50)
+3. v2.1.0: Version bump, App Store Connect leaderboard/achievement setup (manual), device testing, submission
+4. Implement v2.2.0 (Monetization): Remove Ads IAP (StoreKit 2)
 
 ---
 

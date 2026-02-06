@@ -334,6 +334,33 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
+## [2026-02-06] v2.1.0 Game Center Implementation — Singleton + Fire-and-Forget
+**Context:** v2.1.0 adds Game Center auth, 12 leaderboards, 10 achievements, Galaxy Rank, and Share Score Card. GameScene (SpriteKit) has no SwiftUI environment access, so it cannot use `@EnvironmentObject` to reach the Game Center manager.
+**Options considered:** (1) Pass GameCenterManager through init chain, (2) ObservableObject + singleton hybrid, (3) NotificationCenter-based decoupling.
+**Decision:** Option 2 — `GameCenterManager.shared` singleton for fire-and-forget calls from GameScene. Also `@ObservedObject` in SwiftUI views for reactive UI updates (Galaxy Rank, auth state).
+**Why:** GameScene needs to call `submitScore()`, `checkAchievements()`, and `recordAttempt()` from within SpriteKit callbacks. Singleton avoids threading `GameCenterManager` through UIViewRepresentable and SpriteKit scene init. SwiftUI views get the same instance via `@ObservedObject`.
+**Consequences:** Global mutable state (singleton). Acceptable because GC manager is inherently global (one GKLocalPlayer per device). All published properties are MainActor-safe. Achievement tracking data (safePlatformCLevels, attemptsByLevel) persisted to UserDefaults key "gcAchievementTracking".
+
+---
+
+## [2026-02-06] Galaxy Rank — 12th Aggregate Leaderboard
+**Context:** Players want a single competitive ranking across all campaign levels. Individual per-level leaderboards don't capture total campaign mastery.
+**Options considered:** (1) Client-side only display (sum of local bests), (2) Dedicated aggregate leaderboard on Game Center, (3) Derived ranking from per-level leaderboards.
+**Decision:** Option 2 — dedicated `galaxy_rank` leaderboard. Score = sum of best scores across all 10 campaign levels. Recalculated and submitted after each campaign landing.
+**Why:** Game Center has no built-in aggregate leaderboard feature. A dedicated leaderboard enables global ranking that persists even if local data is lost. Recalculating on each landing ensures it stays current.
+**Consequences:** 12 total leaderboards (not 11). Galaxy Rank displayed in 3 layers: campaign screen (understanding), menu badge (motivation), leaderboard header (competition). Only meaningful for players who complete multiple campaign levels.
+
+---
+
+## [2026-02-06] Achievement Composite Band — Worst of V/H/Tilt
+**Context:** Achievements requiring "SAFE landing" need a clear definition. `speedBand` in GameState only reflects the vertical speed band. A landing could have SAFE vertical but HARD horizontal.
+**Options considered:** (1) Use speedBand alone, (2) Use composite band (worst of V/H/tilt), (3) Check each component individually per achievement.
+**Decision:** Option 2 — composite band from `LandingThresholds.evaluate()` (worst of vertical, horizontal, and tilt bands). All "SAFE landing" achievements use this.
+**Why:** Consistency with the landing outcome displayed to the player. The composite band is what determines SAFE/HARD/FAIL in the Flight Data panel. Using a different definition for achievements would be confusing.
+**Consequences:** Harder to earn SAFE achievements (must be safe on ALL three axes). Tilt ≤2.9°, vertical and horizontal within platform-specific safe thresholds. This is intentional — achievements should reflect genuine mastery.
+
+---
+
 ## [2026-02-05] Tilt Bands — SAFE/HARD/FAIL Matching Speed Band Philosophy
 **Context:** Tilt had a binary pass/fail gate at 0.05 rad (~2.9°), which was too strict and inconsistent with the 3-band system used for speed (SAFE/HARD/FAIL). Campaign ships spawn at 6.9° tilt, so players must correct before landing — a narrow 2.9° safe zone made this punishing.
 **Options considered:** (1) Raise the binary threshold to ~5°, (2) Add SAFE/HARD/FAIL tilt bands matching the speed band philosophy.

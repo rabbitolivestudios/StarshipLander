@@ -12,6 +12,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     // MARK: - Properties (accessible to extensions)
     var gameState: GameState
+    var campaignState: CampaignState
     var rocket: SKNode!
     var flame: SKEmitterNode?
     var platforms: [SKShapeNode] = []
@@ -70,11 +71,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     // MARK: - Init
 
-    init(gameState: GameState) {
+    init(gameState: GameState, campaignState: CampaignState) {
         self.gameState = gameState
+        self.campaignState = campaignState
         super.init(size: .zero)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -184,6 +187,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             hasStarted = true
             rocket.physicsBody?.isDynamic = true
             applyCampaignReentryState()
+            GameCenterManager.shared.recordAttempt(mode: gameState.currentMode, levelId: gameState.currentLevelId)
         }
     }
 
@@ -709,6 +713,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.gameState.starsEarned = platform.stars
             self.gameState.landingMessage = message
             self.gameState.landingSpeedBand = speedBand
+
+            // Game Center: submit score
+            if self.gameState.currentMode == .campaign {
+                GameCenterManager.shared.submitCampaignScore(totalScore, levelId: self.gameState.currentLevelId, campaignState: self.campaignState)
+            } else {
+                GameCenterManager.shared.submitClassicScore(totalScore)
+            }
+
+            // Game Center: check achievements
+            GameCenterManager.shared.checkAchievements(
+                compositeBand: speedBand,
+                platform: platform,
+                fuel: self.gameState.fuel,
+                tilt: rotation,
+                mode: self.gameState.currentMode,
+                levelId: self.gameState.currentLevelId,
+                campaignState: self.campaignState
+            )
         }
 
         createSuccessEffect()

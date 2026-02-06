@@ -177,25 +177,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [2.1.0] - Unreleased (Phase: Community)
+## [2.1.0] - Unreleased (Phase: Community) — CODE COMPLETE
 
 ### Added
-- **Game Center Leaderboards**: 11 leaderboards (1 classic + 10 campaign levels)
-  - Automatic authentication on launch with graceful fallback
-  - Score submission after each successful landing (best score only)
-  - GKAccessPoint on menu for native Game Center dashboard
-  - Local/Game Center toggle in LeaderboardView
-- **Game Center Achievements**: 10 achievements tracking player progression
-  - First Star, Precision Landing, Elite Landing, Fuel Master, Precision Pilot
-  - Triple Elite, Planet Conquered, First Try Perfection, Solar System Elite, Master Lander
-  - Idempotent unlocking — safe to report multiple times
-- **Share Score Card**: Generate and share landing results
-  - SwiftUI-rendered score card (mode, stars, platform, score)
-  - Native iOS share sheet (UIActivityViewController)
-  - Compatible with Messages, WhatsApp, Instagram, Save to Photos
+- **Game Center Leaderboards**: 12 leaderboards (1 classic + 10 campaign + 1 galaxy_rank aggregate)
+  - `GameCenterManager.swift`: ObservableObject + singleton pattern
+  - Automatic authentication on launch with graceful fallback (GC features hidden when not signed in)
+  - Fire-and-forget score submission after each successful landing via `GKLeaderboard.submitScore()`
+  - Galaxy Rank = sum of best scores across all 10 campaign levels, submitted to aggregate leaderboard
+  - Galaxy Rank displayed on menu (badge), campaign screen (explanation), and leaderboard screen (header)
+  - GKAccessPoint on menu for native Game Center dashboard access
+  - "View Global Rankings" button in LeaderboardView opens `GKGameCenterViewController`
+- **Game Center Achievements**: 10 achievements tracking player progression and skill
+  - Eagle Has Landed (any SAFE landing), Precision Landing (SAFE on B), Elite Landing (SAFE on C)
+  - Fuel Master (≥65% fuel), Precision Pilot (SAFE C with ≤2°tilt, campaign), Triple Elite (SAFE C on 3+ campaign levels)
+  - Planet Conquered (3 stars on a campaign level), First Try Perfection (SAFE C first attempt, campaign)
+  - Solar System Elite (30 total stars), Master Lander (SAFE C on all 10 campaign levels)
+  - Persistent tracking: `safePlatformCLevels` (Set<Int>) and `attemptsByLevel` ([Int:Int]) saved to UserDefaults
+  - Idempotent unlocking — safe to report multiple times, `showsCompletionBanner = true`
+- **Share Score Card**: Generate and share landing results as an image
+  - `ShareScoreCardView.swift`: 320pt dark gradient card with game logo, mode/level, stars, score, platform+band badge, flight data
+  - `ShareHelper.renderScoreCard()`: ImageRenderer (iOS 16+) with UIHostingController snapshot fallback (iOS 15)
+  - `ShareHelper.shareImage()`: Native share sheet via UIActivityViewController
+  - Share button on game-over screen (only visible on successful landings)
 
 ### Changed
-- **Xcode capabilities**: Added Game Center entitlement
+- **Xcode capabilities**: Added Game Center entitlement (`RocketLander.entitlements`)
+- **GameScene**: Added `campaignState` parameter, `recordAttempt()` call in `startGame()`, GC score submission + achievement check in `successfulLanding()`
+- **GameContainerView**: Passes `campaignState` and `gameCenterManager` through to GameScene
+- **ContentView/MenuView**: Galaxy Rank badge, GKAccessPoint management, `fetchGalaxyRank()` on appear
+- **LeaderboardView**: Galaxy Rank header, "View Global Rankings" button, `GKDismissHandler`
+- **LevelSelectView**: Galaxy Rank explanation section after level grid
 - **App Privacy**: Added "Gameplay Content" declaration for Game Center
 
 ---

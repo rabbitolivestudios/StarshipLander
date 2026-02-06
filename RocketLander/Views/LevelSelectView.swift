@@ -5,6 +5,7 @@ struct LevelSelectView: View {
     @ObservedObject var campaignState: CampaignState
     @ObservedObject var gameState: GameState
     @Binding var showingLevelSelect: Bool
+    @ObservedObject var gameCenterManager: GameCenterManager
 
     let columns = [
         GridItem(.flexible()),
@@ -42,19 +43,51 @@ struct LevelSelectView: View {
 
             // Level Grid
             ScrollView {
-                LazyVGrid(columns: columns, spacing: 12) {
-                    ForEach(LevelDefinition.levels, id: \.id) { level in
-                        LevelCardView(
-                            level: level,
-                            isUnlocked: campaignState.isUnlocked(level.id),
-                            stars: campaignState.bestStars(for: level.id),
-                            bestScore: campaignState.bestScore(for: level.id)
-                        ) {
-                            gameState.currentMode = .campaign
-                            gameState.currentLevelId = level.id
-                            gameState.reset()
-                            showingGame = true
+                VStack(spacing: 12) {
+                    LazyVGrid(columns: columns, spacing: 12) {
+                        ForEach(LevelDefinition.levels, id: \.id) { level in
+                            LevelCardView(
+                                level: level,
+                                isUnlocked: campaignState.isUnlocked(level.id),
+                                stars: campaignState.bestStars(for: level.id),
+                                bestScore: campaignState.bestScore(for: level.id)
+                            ) {
+                                gameState.currentMode = .campaign
+                                gameState.currentLevelId = level.id
+                                gameState.reset()
+                                showingGame = true
+                            }
                         }
+                    }
+
+                    // Galaxy Rank explanation
+                    if gameCenterManager.isAuthenticated {
+                        VStack(spacing: 6) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "globe.americas.fill")
+                                    .foregroundColor(.cyan)
+                                Text("GALAXY RANK")
+                                    .font(.caption.bold())
+                                    .foregroundColor(.cyan)
+                            }
+                            Text("Galaxy Rank is based on your best score on each campaign planet.")
+                                .font(.caption2)
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.center)
+                            if let rank = gameCenterManager.galaxyRank {
+                                Text("Rank #\(rank) • \(gameCenterManager.galaxyScore) pts")
+                                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                                    .foregroundColor(.cyan)
+                            }
+                        }
+                        .padding(12)
+                        .background(Color.white.opacity(0.05))
+                        .cornerRadius(10)
+                    } else {
+                        Text("Sign in to Game Center to see your global rank.")
+                            .font(.caption2)
+                            .foregroundColor(.gray.opacity(0.6))
+                            .padding(.top, 4)
                     }
                 }
                 .padding(.horizontal)
