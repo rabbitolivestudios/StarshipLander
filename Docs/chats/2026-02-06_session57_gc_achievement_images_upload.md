@@ -74,7 +74,7 @@
 - [ ] Manual ASC step: submit v2.1.1 Build 33 for App Store review
 
 ## Commits
-- (pending — will be committed with documentation updates)
+- `224b0a7` — Add achievement icons and upload to ASC for Game Center fix
 
 ## Repo Housekeeping
 - [x] Working tree clean after commit (new files staged)
