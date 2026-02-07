@@ -83,9 +83,9 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Community (v2.1.1) — Uploaded, achievement images uploaded, ready for submission**
+**Phase: Community (v2.1.1) — Submitted for App Store review**
 
-v2.1.0 (Build 32) live on App Store (approved 2026-02-06). v2.1.1 Build 33 uploaded to App Store Connect. **Game Center fix in progress**: GC resources were created via API but never included in an App Store submission (TestFlight masks this). Achievement images now uploaded (10/10) via API. **Remaining manual step**: add 12 leaderboards + 10 achievements to v2.1.1 draft submission in ASC, then submit for review. Share card redesign with crash sharing, compact colored stats, App Store link. Organic growth plan created (Session 54, `Docs/GROWTH_PLAN.md`). v2.2.0 planned: Monetization (approach TBD).
+v2.1.0 (Build 32) live on App Store (approved 2026-02-06). **v2.1.1 Build 33 submitted for App Store review** (2026-02-06). Includes: share card redesign (crash sharing, compact colored stats, App Store link) + Game Center fix (12 leaderboard releases, 10 achievement releases, 10 achievement icons). All 22 GC resources bundled with app version submission. v2.2.0 planned: Monetization (approach TBD).
 
 ---
 
@@ -96,7 +96,10 @@ v2.1.0 (Build 32) live on App Store (approved 2026-02-06). v2.1.1 Build 33 uploa
 3. ~~v2.1.1: Version bump to Build 33~~ — **DONE** (Session 56)
 4. ~~v2.1.1: Archive, upload to TestFlight~~ — **DONE** (Session 56, Build 33 uploaded to App Store Connect)
 5. ~~Achievement images uploaded to ASC~~ — **DONE** (Session 57, 10/10 images uploaded via API)
-6. v2.1.1: **Add GC resources to draft submission in ASC** (manual step), then submit for App Store review
+6. ~~GC releases created~~ — **DONE** (Session 57, 12 LB + 10 achievement releases via --create-releases)
+7. ~~All 22 GC resources visible on v2.1.1 version page~~ — **DONE**
+8. ~~App Store description + What's New updated~~ — **DONE** (Session 57)
+9. ~~v2.1.1: Submit for App Store review~~ — **SUBMITTED** 2026-02-06
 7. Implement event-driven share triggers (new personal best, achievement, Galaxy Rank improvement) per growth plan
 8. Create 5 high-converting App Store screenshots per growth plan
 9. Plan v2.2.0 (Monetization): approach TBD — will discuss alternatives
@@ -131,7 +134,8 @@ v2.1.0 (Build 32) live on App Store (approved 2026-02-06). v2.1.1 Build 33 uploa
 ## Known Risks / Watchouts
 
 - **v2.1.0 is the current live version** — approved 2026-02-06, Game Center + Share Score Card now on App Store
-- **Game Center resources NOT live on App Store** — GC resources were created via API and have images, but were never included in an App Store version submission. They work on TestFlight (draft resources accessible) but NOT on App Store builds. Must be added to v2.1.1 draft submission in ASC before submitting for review.
+- **Game Center resources NOT yet live on App Store** — GC resources have images, releases, and are visible on v2.1.1 version page. Awaiting submission for review. After v2.1.1 approval, GC will be functional on App Store builds.
+- **ASC draft deletion removes releases** — if a draft submission is deleted in ASC, all associated `gameCenterLeaderboardReleases` and `gameCenterAchievementReleases` are also deleted. Must re-run `setup_game_center.py --create-releases` before creating a new draft.
 - ~~**Build 32 submitted for review**~~ — **APPROVED** 2026-02-06
 - **Velocity thresholds were dead code before Build 21** — SpriteKit collision resolution zeroed velocities before `didBegin(contact:)` fired in all builds through Build 18. All prior high scores were achieved under "speed doesn't matter" regime. **RESOLVED in Build 21** with post-thrust tracking and per-platform FAIL thresholds.
 - **HUD threshold mismatch RESOLVED** — HUD previously showed V<50 H<30 with actual thresholds V<40 H<25. **Fixed in Build 21** — HUD now reads from `LandingThresholds.platformC` (V<35, H<30).

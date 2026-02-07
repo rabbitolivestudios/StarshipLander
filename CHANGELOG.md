@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Share button enabled on both landing and crash game-over screens
   - `LandingMessages.shortCrashCause()`: Compact cause string for crash cards
 
+### Fixed
+- **Game Center Integration**: GC leaderboards and achievements were not visible on App Store builds (only worked on TestFlight). Root cause: resources were created via API but missing "release" resources (`gameCenterLeaderboardReleases` / `gameCenterAchievementReleases`) needed to attach them to an app version submission. Fixed by adding `--create-releases` flag to `setup_game_center.py` and uploading 10 achievement icons.
+
+### Added
+- **Achievement Icons**: 10 programmatically generated 1024x1024 PNG achievement icons (`Scripts/generate_achievement_icons.py`). Badge/emblem style with unique colors per achievement.
+
 ---
 
 ## [2.0.3] — Build 30 PUBLISHED (approved 2026-02-06)

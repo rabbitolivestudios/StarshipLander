@@ -6,10 +6,12 @@ Usage:
     ASC_ISSUER_ID=<issuer-id> python3 Scripts/setup_game_center.py
     ASC_ISSUER_ID=<issuer-id> python3 Scripts/setup_game_center.py --reset
     ASC_ISSUER_ID=<issuer-id> python3 Scripts/setup_game_center.py --upload-images
+    ASC_ISSUER_ID=<issuer-id> python3 Scripts/setup_game_center.py --create-releases
 
 Flags:
-    --reset           Delete all existing leaderboards and recreate them (clears scores)
-    --upload-images   Upload achievement images from Screenshots/achievements/
+    --reset            Delete all existing leaderboards and recreate them (clears scores)
+    --upload-images    Upload achievement images from Screenshots/achievements/
+    --create-releases  Create release resources to attach leaderboards + achievements to app version
 
 Reads API key from ~/.appstoreconnect/private_keys/AuthKey_*.p8
 """
@@ -413,8 +415,8 @@ def enable_gc_for_app_version(headers, gc_detail_id, app_id):
 
 
 def get_existing_achievements(headers, gc_detail_id):
-    """Get existing achievement reference names. Returns set of vendorIdentifier."""
-    existing = set()
+    """Get existing achievement reference names. Returns dict of vendorIdentifier -> resource ID."""
+    existing = {}
     url = f"{BASE_URL}/v1/gameCenterDetails/{gc_detail_id}/gameCenterAchievements"
     params = {"fields[gameCenterAchievements]": "referenceName,vendorIdentifier", "limit": 50}
     r = requests.get(url, headers=headers, params=params)
@@ -422,7 +424,7 @@ def get_existing_achievements(headers, gc_detail_id):
     for item in r.json().get("data", []):
         vid = item["attributes"].get("vendorIdentifier", "")
         if vid:
-            existing.add(vid)
+            existing[vid] = item["id"]
     return existing
 
 
@@ -546,6 +548,60 @@ def upload_achievement_image(headers, localization_id, image_path, ref_name):
         return False
 
     print(f"  Uploaded image for '{ref_name}' ({file_size} bytes)")
+    return True
+
+
+def create_leaderboard_release(headers, gc_detail_id, leaderboard_id, ref_name):
+    """Create a leaderboard release — attaches the leaderboard to the GC detail for submission."""
+    body = {
+        "data": {
+            "type": "gameCenterLeaderboardReleases",
+            "relationships": {
+                "gameCenterDetail": {
+                    "data": {"type": "gameCenterDetails", "id": gc_detail_id}
+                },
+                "gameCenterLeaderboard": {
+                    "data": {"type": "gameCenterLeaderboards", "id": leaderboard_id}
+                },
+            },
+        }
+    }
+    r = requests.post(f"{BASE_URL}/v1/gameCenterLeaderboardReleases", headers=headers, json=body)
+    if r.status_code == 409:
+        print(f"  Release for '{ref_name}' already exists — OK")
+        return True
+    if r.status_code >= 400:
+        print(f"  ERROR creating release for '{ref_name}': {r.status_code}")
+        print(f"  {r.text[:500]}")
+        return False
+    print(f"  Created release for '{ref_name}'")
+    return True
+
+
+def create_achievement_release(headers, gc_detail_id, achievement_id, ref_name):
+    """Create an achievement release — attaches the achievement to the GC detail for submission."""
+    body = {
+        "data": {
+            "type": "gameCenterAchievementReleases",
+            "relationships": {
+                "gameCenterDetail": {
+                    "data": {"type": "gameCenterDetails", "id": gc_detail_id}
+                },
+                "gameCenterAchievement": {
+                    "data": {"type": "gameCenterAchievements", "id": achievement_id}
+                },
+            },
+        }
+    }
+    r = requests.post(f"{BASE_URL}/v1/gameCenterAchievementReleases", headers=headers, json=body)
+    if r.status_code == 409:
+        print(f"  Release for '{ref_name}' already exists — OK")
+        return True
+    if r.status_code >= 400:
+        print(f"  ERROR creating release for '{ref_name}': {r.status_code}")
+        print(f"  {r.text[:500]}")
+        return False
+    print(f"  Created release for '{ref_name}'")
     return True
 
 
@@ -685,7 +741,27 @@ def main():
                 uploaded += 1
         print(f"Images: {uploaded}/{len(ACHIEVEMENTS)} uploaded")
 
-    # 6. Enable Game Center for current app store version
+    # 6. Create releases (if --create-releases)
+    if "--create-releases" in sys.argv:
+        # Re-fetch to get all IDs (including pre-existing ones)
+        all_lbs = get_existing_leaderboards(headers, gc_detail_id)
+        all_achs = get_existing_achievements(headers, gc_detail_id)
+
+        print(f"\n── Creating leaderboard releases ({len(all_lbs)} leaderboards) ──")
+        lb_releases = 0
+        for ref, lb_id in all_lbs.items():
+            if create_leaderboard_release(headers, gc_detail_id, lb_id, ref):
+                lb_releases += 1
+        print(f"Leaderboard releases: {lb_releases}/{len(all_lbs)}")
+
+        print(f"\n── Creating achievement releases ({len(all_achs)} achievements) ──")
+        ach_releases = 0
+        for ref, ach_id in all_achs.items():
+            if create_achievement_release(headers, gc_detail_id, ach_id, ref):
+                ach_releases += 1
+        print(f"Achievement releases: {ach_releases}/{len(all_achs)}")
+
+    # 7. Enable Game Center for current app store version
     print(f"\n── Enabling Game Center for app version ──")
     enable_gc_for_app_version(headers, gc_detail_id, app_id)
 

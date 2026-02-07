@@ -386,19 +386,32 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
-## [2026-02-06] Game Center Resources Must Be Included in App Version Submission
+## [2026-02-06] Game Center ASC Submission — Full Pipeline (Releases Required)
 
 **Context:** v2.1.0 was approved and live on App Store, but Game Center leaderboards and achievements showed as empty on the device. All 12 leaderboards and 10 achievements were created via ASC API and showed "Ready to Submit" status in ASC.
 
-**Root Cause:** Creating GC resources via API is necessary but not sufficient. They must be explicitly added to an App Store version submission and reviewed by Apple. TestFlight masks this issue because it can access draft ("Ready to Submit") GC resources — App Store builds cannot.
+**Root Causes (4):**
+1. GC resources created via API but never included in an App Store version submission. TestFlight masks this — it can access draft resources, App Store builds cannot.
+2. Achievements missing required images for their localizations.
+3. Setup script had no image upload capability.
+4. **Setup script was missing the critical "release" step** — `gameCenterLeaderboardReleases` and `gameCenterAchievementReleases` are required to attach resources to the `gameCenterDetail` for an app version. Without releases, resources exist but cannot be submitted.
 
-**Options considered:** (1) Manual ASC upload of images and submission, (2) Scripted image upload + manual submission.
+**Full ASC Game Center Pipeline (6 steps):**
+1. Create `gameCenterDetail` (bridge between app and GC)
+2. Create leaderboards + achievements with localizations + images
+3. Test on TestFlight (draft resources accessible)
+4. **Create releases** (`gameCenterLeaderboardReleases` + `gameCenterAchievementReleases`)
+5. Enable `gameCenterAppVersions` (GC checkbox on version page)
+6. Submit for review bundled with an app version (first time: MUST bundle with app version)
 
-**Decision:** Option 2 — generated 10 achievement icons programmatically (Python Pillow, `Scripts/generate_achievement_icons.py`), uploaded all 10 images via enhanced `setup_game_center.py --upload-images`, then manual ASC step to add resources to v2.1.1 submission.
+**Decision:** Scripted approach for all steps. `setup_game_center.py` now supports `--upload-images` and `--create-releases` flags. Achievement icons generated programmatically via `generate_achievement_icons.py`.
 
-**Why:** Scripted approach is faster for 10 images and reproducible. Programmatic icons ensure consistent style. Manual submission step is unavoidable (ASC doesn't expose submission inclusion via API).
+**Critical Gotchas:**
+- Deleting a draft submission in ASC **also deletes all associated releases**. Must re-run `--create-releases` after deleting a draft.
+- First-time GC submissions cannot be standalone — they must ride along with an app version submission.
+- Version page only shows GC resources (Placares/Conquistas sections) after releases are created.
 
-**Consequences:** Achievement images are now uploaded. GC resources must be added to the v2.1.1 draft submission in ASC and submitted for review. After approval, GC will be functional on App Store builds. Future GC resource additions should follow this same workflow: create → upload images → include in submission.
+**Consequences:** Future GC resource additions must follow the full 6-step pipeline. The `--create-releases` flag must always be run before submission. If a draft is deleted, releases must be recreated.
 
 ---
 

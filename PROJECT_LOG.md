@@ -31,14 +31,16 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.2 | 16 | Published (approved 2026-02-03) — Campaign Mode |
 | 2.0.3 | 30 | Published (approved 2026-02-06) — scoring rebalance + tilt bands + Europa cryogeysers |
 | 2.1.0 | 32 | **PUBLISHED** (approved 2026-02-06) — Game Center + Share Score Card. **Live on App Store.** |
-| 2.1.1 | 33 | **UPLOADED TO APP STORE CONNECT** — Share card redesign + GC achievement images uploaded (10/10). **Manual step required**: add GC resources to draft submission in ASC, then submit for review. |
+| 2.1.1 | 33 | **SUBMITTED FOR REVIEW** (2026-02-06) — Share card redesign + GC fix (12 LB releases, 10 achievement releases, 10 icons). All 22 GC resources bundled with app version. |
 
 **NEXT STEPS:**
 1. ~~v2.1.0: App Store submission~~ — **APPROVED** 2026-02-06, live on App Store
 2. ~~Share Score Card redesign~~ — **DONE** (Session 55)
 3. ~~v2.1.1: Version bump + upload~~ — **DONE** (Session 56, Build 33)
 4. ~~Achievement images uploaded~~ — **DONE** (Session 57, 10/10 via API)
-5. v2.1.1: **Add GC resources to draft submission in ASC** (manual), then submit for review
+5. ~~GC releases created + visible on version page~~ — **DONE** (Session 57)
+6. ~~App Store description + What's New updated~~ — **DONE** (Session 57)
+7. ~~v2.1.1: Submit for App Store review~~ — **SUBMITTED** 2026-02-06
 6. Implement event-driven share triggers per growth plan
 7. Create 5 high-converting App Store screenshots per growth plan
 8. Plan v2.2.0 (Monetization): approach TBD
@@ -993,14 +995,32 @@ Game Center resources were created via API but never included in an App Store ve
 - Programmatic icon generation (Python Pillow) over design tools for reproducibility
 - API upload over manual for efficiency (10 images)
 
+#### Additional Work (after context restore):
+
+5. **GC release resources created** (`Scripts/setup_game_center.py`):
+   - Added `--create-releases` flag with `create_leaderboard_release()` and `create_achievement_release()`
+   - Root cause: setup script was missing the "release" step — without releases, resources can't be submitted
+   - 12/12 leaderboard releases + 10/10 achievement releases created
+   - Learned: deleting a draft submission in ASC also deletes all releases — must re-create after deletion
+   - `get_existing_achievements()` changed from set to dict (vendorIdentifier -> resource ID)
+
+6. **App Store copy updated**:
+   - Description: added COMPETE GLOBALLY section, corrected max score 20,000→23,100
+   - What's New: v2.1.1 share card + GC fix, v2.1.0 GC, v2.0.3 gameplay, v2.0.2 campaign
+   - Review notes verified
+
 #### Definition of Done:
-- [x] Root cause analysis complete
+- [x] Root cause analysis complete (4 root causes)
 - [x] 10 achievement icons generated
 - [x] 10/10 images uploaded to ASC via API
+- [x] 12/12 leaderboard releases created
+- [x] 10/10 achievement releases created
+- [x] All 22 GC resources visible on v2.1.1 version page
+- [x] App Store description updated
+- [x] What's New updated
 - [x] All documentation updated
 - [x] Session summary created
-- [ ] Manual ASC step: add GC resources to v2.1.1 submission
-- [ ] Submit v2.1.1 for App Store review
+- [ ] Submit v2.1.1 for App Store review (pending user action in ASC)
 
 ---
 
