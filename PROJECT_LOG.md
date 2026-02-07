@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-06, Session 56)
+## Current Status (2026-02-06, Session 57)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -31,16 +31,17 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.2 | 16 | Published (approved 2026-02-03) — Campaign Mode |
 | 2.0.3 | 30 | Published (approved 2026-02-06) — scoring rebalance + tilt bands + Europa cryogeysers |
 | 2.1.0 | 32 | **PUBLISHED** (approved 2026-02-06) — Game Center + Share Score Card. **Live on App Store.** |
-| 2.1.1 | 33 | **UPLOADED TO APP STORE CONNECT** — Share card redesign (crash sharing, compact colored stats, App Store link). Ready for submission. |
+| 2.1.1 | 33 | **UPLOADED TO APP STORE CONNECT** — Share card redesign + GC achievement images uploaded (10/10). **Manual step required**: add GC resources to draft submission in ASC, then submit for review. |
 
 **NEXT STEPS:**
 1. ~~v2.1.0: App Store submission~~ — **APPROVED** 2026-02-06, live on App Store
 2. ~~Share Score Card redesign~~ — **DONE** (Session 55)
 3. ~~v2.1.1: Version bump + upload~~ — **DONE** (Session 56, Build 33)
-4. v2.1.1: Submit for App Store review
-5. Implement event-driven share triggers per growth plan
-6. Create 5 high-converting App Store screenshots per growth plan
-7. Plan v2.2.0 (Monetization): approach TBD
+4. ~~Achievement images uploaded~~ — **DONE** (Session 57, 10/10 via API)
+5. v2.1.1: **Add GC resources to draft submission in ASC** (manual), then submit for review
+6. Implement event-driven share triggers per growth plan
+7. Create 5 high-converting App Store screenshots per growth plan
+8. Plan v2.2.0 (Monetization): approach TBD
 
 **v2.1.0 — Phase: Community (CODE COMPLETE):**
 - [done] 12 Game Center leaderboards (1 classic + 10 campaign + 1 galaxy_rank)
@@ -959,4 +960,48 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-*Last updated: 2026-02-06 (Session 56)*
+### Session 57 (2026-02-06) - Game Center Achievement Images + ASC Upload
+
+**Goal:** Diagnose why Game Center is not working on live v2.1.0, create achievement icons, upload images to ASC.
+
+#### Root Cause Analysis:
+Game Center resources were created via API but never included in an App Store version submission. TestFlight can access "Ready to Submit" resources, but App Store builds cannot. Additionally, achievements were missing required images for their localizations.
+
+#### Changes Made:
+
+1. **Achievement icon generation script** (`Scripts/generate_achievement_icons.py` — NEW): Generates 10 1024x1024 PNG achievement icons using Python Pillow. Badge/emblem style with metallic ring, colored gradients, geometric symbols. Two design iterations (contrast fixes, Solar System Elite redesign with 3 stars + "30").
+
+2. **Achievement images** (`Screenshots/achievements/` — NEW, 10 files): eagle_has_landed, precision_landing, elite_landing, fuel_master, precision_pilot, triple_elite, planet_conquered, first_try_perfection, solar_system_elite, master_lander.
+
+3. **Setup script enhanced** (`Scripts/setup_game_center.py`):
+   - Added `--upload-images` flag with `get_achievement_localizations()` and `upload_achievement_image()` (3-step ASC API: reserve, upload binary, commit)
+   - PEM key reformatting for single-line keys (extract base64, re-wrap at 64 chars)
+   - 401 error handling with diagnostic output
+   - All 10/10 images uploaded successfully
+
+#### Files Created:
+- `Scripts/generate_achievement_icons.py`
+- `Screenshots/achievements/*.png` (10 files)
+
+#### Files Modified:
+- `Scripts/setup_game_center.py` — image upload, PEM fix, 401 handling
+
+#### Build Status:
+- No app code changes — script and asset changes only
+
+#### Key Decisions:
+- Programmatic icon generation (Python Pillow) over design tools for reproducibility
+- API upload over manual for efficiency (10 images)
+
+#### Definition of Done:
+- [x] Root cause analysis complete
+- [x] 10 achievement icons generated
+- [x] 10/10 images uploaded to ASC via API
+- [x] All documentation updated
+- [x] Session summary created
+- [ ] Manual ASC step: add GC resources to v2.1.1 submission
+- [ ] Submit v2.1.1 for App Store review
+
+---
+
+*Last updated: 2026-02-06 (Session 57)*

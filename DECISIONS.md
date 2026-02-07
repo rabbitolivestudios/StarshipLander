@@ -386,6 +386,22 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
+## [2026-02-06] Game Center Resources Must Be Included in App Version Submission
+
+**Context:** v2.1.0 was approved and live on App Store, but Game Center leaderboards and achievements showed as empty on the device. All 12 leaderboards and 10 achievements were created via ASC API and showed "Ready to Submit" status in ASC.
+
+**Root Cause:** Creating GC resources via API is necessary but not sufficient. They must be explicitly added to an App Store version submission and reviewed by Apple. TestFlight masks this issue because it can access draft ("Ready to Submit") GC resources — App Store builds cannot.
+
+**Options considered:** (1) Manual ASC upload of images and submission, (2) Scripted image upload + manual submission.
+
+**Decision:** Option 2 — generated 10 achievement icons programmatically (Python Pillow, `Scripts/generate_achievement_icons.py`), uploaded all 10 images via enhanced `setup_game_center.py --upload-images`, then manual ASC step to add resources to v2.1.1 submission.
+
+**Why:** Scripted approach is faster for 10 images and reproducible. Programmatic icons ensure consistent style. Manual submission step is unavoidable (ASC doesn't expose submission inclusion via API).
+
+**Consequences:** Achievement images are now uploaded. GC resources must be added to the v2.1.1 draft submission in ASC and submitted for review. After approval, GC will be functional on App Store builds. Future GC resource additions should follow this same workflow: create → upload images → include in submission.
+
+---
+
 ## [2026-02-05] Tilt Bands — SAFE/HARD/FAIL Matching Speed Band Philosophy
 **Context:** Tilt had a binary pass/fail gate at 0.05 rad (~2.9°), which was too strict and inconsistent with the 3-band system used for speed (SAFE/HARD/FAIL). Campaign ships spawn at 6.9° tilt, so players must correct before landing — a narrow 2.9° safe zone made this punishing.
 **Options considered:** (1) Raise the binary threshold to ~5°, (2) Add SAFE/HARD/FAIL tilt bands matching the speed band philosophy.

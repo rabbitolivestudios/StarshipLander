@@ -147,14 +147,16 @@ StarshipLander/
 │   └── DIAGNOSTIC_velocity_thresholds.md  # Critical bug analysis (Build 19)
 ├── Screenshots/
 │   ├── v2.0.0/                      # App Store screenshots (1284x2778)
-│   └── v2.0.3-bugs/                 # Bug evidence from v2.0.3 device testing
+│   ├── v2.0.3-bugs/                 # Bug evidence from v2.0.3 device testing
+│   └── achievements/                # Achievement icons (1024x1024 PNG)
 ├── Scripts/
 │   ├── generate_sounds.py           # Sound effect generator
 │   ├── generate_icon.py             # App icon generator
 │   ├── generate_screenshots.py      # Screenshot generator
 │   ├── caption_screenshots.py       # App Store screenshot captioning
 │   ├── calculate_perfect_scores.py  # Perfect landing score analysis
-│   ├── setup_game_center.py        # ASC API: create GC leaderboards + achievements
+│   ├── setup_game_center.py        # ASC API: create GC leaderboards + achievements + upload images
+│   ├── generate_achievement_icons.py # Achievement icon generator (Pillow)
 │   ├── app_store_metadata.json      # App Store metadata reference
 │   └── export_chat_transcripts.py   # Claude Code transcript exporter
 ├── .github/

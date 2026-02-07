@@ -5,9 +5,11 @@ Create Game Center leaderboards and achievements via App Store Connect API.
 Usage:
     ASC_ISSUER_ID=<issuer-id> python3 Scripts/setup_game_center.py
     ASC_ISSUER_ID=<issuer-id> python3 Scripts/setup_game_center.py --reset
+    ASC_ISSUER_ID=<issuer-id> python3 Scripts/setup_game_center.py --upload-images
 
 Flags:
-    --reset   Delete all existing leaderboards and recreate them (clears scores)
+    --reset           Delete all existing leaderboards and recreate them (clears scores)
+    --upload-images   Upload achievement images from Screenshots/achievements/
 
 Reads API key from ~/.appstoreconnect/private_keys/AuthKey_*.p8
 """
@@ -114,6 +116,16 @@ def find_api_key():
         # Restore newlines if escaped
         if "\\n" in private_key and "\n" not in private_key:
             private_key = private_key.replace("\\n", "\n")
+        # Handle single-line PEM: extract base64, re-wrap at 64 chars
+        if "-----BEGIN PRIVATE KEY-----" in private_key and private_key.count("\n") < 4:
+            # Strip headers and whitespace to get raw base64
+            body = private_key
+            body = body.replace("-----BEGIN PRIVATE KEY-----", "")
+            body = body.replace("-----END PRIVATE KEY-----", "")
+            body = body.replace("\n", "").replace("\r", "").replace(" ", "")
+            # Re-wrap at 64 characters per line (PEM standard)
+            lines = [body[i:i+64] for i in range(0, len(body), 64)]
+            private_key = "-----BEGIN PRIVATE KEY-----\n" + "\n".join(lines) + "\n-----END PRIVATE KEY-----\n"
         return key_id, private_key
 
     # Fall back to .p8 file on disk
@@ -158,6 +170,12 @@ def get_app_id(headers):
         headers=headers,
         params={"filter[bundleId]": BUNDLE_ID, "fields[apps]": "bundleId,name"},
     )
+    if r.status_code == 401:
+        print(f"ERROR: 401 Unauthorized")
+        print(f"  Response: {r.text[:500]}")
+        print(f"  Check: Is your API key active in ASC? Is the Issuer ID correct?")
+        print(f"  Manage keys at: https://appstoreconnect.apple.com/access/integrations/api")
+        sys.exit(1)
     r.raise_for_status()
     data = r.json()["data"]
     if not data:
@@ -395,7 +413,7 @@ def enable_gc_for_app_version(headers, gc_detail_id, app_id):
 
 
 def get_existing_achievements(headers, gc_detail_id):
-    """Get existing achievement reference names."""
+    """Get existing achievement reference names. Returns set of vendorIdentifier."""
     existing = set()
     url = f"{BASE_URL}/v1/gameCenterDetails/{gc_detail_id}/gameCenterAchievements"
     params = {"fields[gameCenterAchievements]": "referenceName,vendorIdentifier", "limit": 50}
@@ -406,6 +424,129 @@ def get_existing_achievements(headers, gc_detail_id):
         if vid:
             existing.add(vid)
     return existing
+
+
+def get_achievement_localizations(headers, gc_detail_id):
+    """Get achievement localization IDs keyed by vendorIdentifier.
+    Returns dict: { vendorIdentifier: localization_id }
+    """
+    # First get all achievements with their IDs
+    url = f"{BASE_URL}/v1/gameCenterDetails/{gc_detail_id}/gameCenterAchievements"
+    params = {"fields[gameCenterAchievements]": "referenceName,vendorIdentifier", "limit": 50}
+    r = requests.get(url, headers=headers, params=params)
+    r.raise_for_status()
+
+    result = {}
+    for item in r.json().get("data", []):
+        vid = item["attributes"].get("vendorIdentifier", "")
+        ach_id = item["id"]
+        if not vid:
+            continue
+
+        # Get localizations for this achievement
+        loc_url = f"{BASE_URL}/v1/gameCenterAchievements/{ach_id}/localizations"
+        loc_params = {"fields[gameCenterAchievementLocalizations]": "locale", "limit": 10}
+        r2 = requests.get(loc_url, headers=headers, params=loc_params)
+        if r2.status_code >= 400:
+            print(f"  WARNING: Could not fetch localizations for '{vid}': {r2.status_code}")
+            continue
+        for loc in r2.json().get("data", []):
+            locale = loc["attributes"].get("locale", "")
+            if locale == "en-US":
+                result[vid] = loc["id"]
+                break
+
+    return result
+
+
+def upload_achievement_image(headers, localization_id, image_path, ref_name):
+    """Upload an achievement image via ASC API (3-step: reserve, upload, commit)."""
+
+    file_size = os.path.getsize(image_path)
+    file_name = os.path.basename(image_path)
+
+    # Step 1: Reserve the image upload
+    reserve_body = {
+        "data": {
+            "type": "gameCenterAchievementImages",
+            "attributes": {
+                "fileName": file_name,
+                "fileSize": file_size,
+            },
+            "relationships": {
+                "gameCenterAchievementLocalization": {
+                    "data": {
+                        "type": "gameCenterAchievementLocalizations",
+                        "id": localization_id,
+                    }
+                }
+            },
+        }
+    }
+
+    r = requests.post(
+        f"{BASE_URL}/v1/gameCenterAchievementImages",
+        headers=headers,
+        json=reserve_body,
+    )
+    if r.status_code >= 400:
+        print(f"  ERROR reserving image for '{ref_name}': {r.status_code}")
+        print(f"  {r.text[:500]}")
+        return False
+
+    response_data = r.json()["data"]
+    image_id = response_data["id"]
+    upload_ops = response_data["attributes"].get("uploadOperations", [])
+
+    if not upload_ops:
+        print(f"  ERROR: No upload operations returned for '{ref_name}'")
+        return False
+
+    # Step 2: Upload binary data
+    with open(image_path, "rb") as f:
+        file_data = f.read()
+
+    for op in upload_ops:
+        method = op["method"]
+        url = op["url"]
+        op_headers = {h["name"]: h["value"] for h in op.get("requestHeaders", [])}
+        offset = op.get("offset", 0)
+        length = op.get("length", file_size)
+
+        chunk = file_data[offset:offset + length]
+
+        if method == "PUT":
+            r2 = requests.put(url, headers=op_headers, data=chunk)
+        else:
+            r2 = requests.request(method, url, headers=op_headers, data=chunk)
+
+        if r2.status_code >= 400:
+            print(f"  ERROR uploading chunk for '{ref_name}': {r2.status_code}")
+            print(f"  {r2.text[:300]}")
+            return False
+
+    # Step 3: Commit the upload
+    commit_body = {
+        "data": {
+            "type": "gameCenterAchievementImages",
+            "id": image_id,
+            "attributes": {
+                "uploaded": True,
+            },
+        }
+    }
+    r3 = requests.patch(
+        f"{BASE_URL}/v1/gameCenterAchievementImages/{image_id}",
+        headers=headers,
+        json=commit_body,
+    )
+    if r3.status_code >= 400:
+        print(f"  ERROR committing image for '{ref_name}': {r3.status_code}")
+        print(f"  {r3.text[:300]}")
+        return False
+
+    print(f"  Uploaded image for '{ref_name}' ({file_size} bytes)")
+    return True
 
 
 def create_achievement(headers, gc_detail_id, ref_name, display_name, description, points):
@@ -524,7 +665,27 @@ def main():
             created_achs += 1
     print(f"Achievements: {created_achs} created, {len(existing_achs)} already existed")
 
-    # 5. Enable Game Center for current app store version
+    # 5. Upload achievement images (if --upload-images)
+    if "--upload-images" in sys.argv:
+        IMAGE_DIR = "Screenshots/achievements"
+        print(f"\n── Uploading achievement images from {IMAGE_DIR}/ ──")
+        loc_map = get_achievement_localizations(headers, gc_detail_id)
+        uploaded = 0
+        for ach in ACHIEVEMENTS:
+            ref = ach["ref"]
+            image_path = os.path.join(IMAGE_DIR, f"{ref}.png")
+            if not os.path.exists(image_path):
+                print(f"  SKIP '{ref}': no image at {image_path}")
+                continue
+            loc_id = loc_map.get(ref)
+            if not loc_id:
+                print(f"  SKIP '{ref}': no en-US localization found in ASC")
+                continue
+            if upload_achievement_image(headers, loc_id, image_path, ref):
+                uploaded += 1
+        print(f"Images: {uploaded}/{len(ACHIEVEMENTS)} uploaded")
+
+    # 6. Enable Game Center for current app store version
     print(f"\n── Enabling Game Center for app version ──")
     enable_gc_for_app_version(headers, gc_detail_id, app_id)
 
