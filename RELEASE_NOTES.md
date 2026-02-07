@@ -1,48 +1,24 @@
 # Release Notes
 
-## Version 2.1.0 (Build 32)
-**Status:** SUBMITTED FOR REVIEW (2026-02-06)
+## Version 2.1.1 (Build 33)
+**Status:** READY FOR SUBMISSION
 
 ### Overview
-Version 2.1.0 adds Game Center integration and a Share Score Card. Compete on global leaderboards, earn 10 achievements, and share your best landings with friends. Galaxy Rank tracks your total campaign mastery across all 10 levels.
+Version 2.1.1 redesigns the Share Score Card with crash sharing, compact colored stats, and App Store branding. Crash game-over screens now have a share button, and the card uses a poster-style layout instead of a telemetry dump.
 
 ### App Store — What's New (Copy this)
 ```
-NEW IN v2.1.0 — GAME CENTER
+SHARE CARD REDESIGN
 
-Global leaderboards — compete worldwide in Classic Mode, all 10 campaign levels, and Galaxy Rank
+Share your crashes too — "RAPID UNSCHEDULED DISASSEMBLY" cards are now shareable
 
-10 achievements — from your first safe landing to mastering every planet
+Redesigned score cards — clean poster layout with colored stats
 
-Galaxy Rank — your total campaign mastery score, ranked globally
+Stats colored by landing band — green (safe), yellow (hard), red (fail)
 
-Share your best landings with score cards
+Crash cards show cause with values (e.g., "V.Speed (547 m/s)")
 
-GAMEPLAY UPDATES (v2.0.3)
-
-Scoring rebalance — higher, more rewarding scores
-
-Tilt thresholds — three bands like speed: Safe (≤3°), Hard (≤6°), Crash (>6°)
-
-Europa cryogeysers — erupting ice plumes that push your rocket upward
-
-Jupiter overhaul — stronger gusts and higher gravity
-
-HUD-style Flight Data with OK / HARD / FAIL badges per metric
-
-Tighter speed thresholds for a more skill-driven challenge
-
-CAMPAIGN MODE (v2.0.2)
-
-10 solar system levels — Moon to Jupiter, each with unique gravity and challenges
-
-Three landing platforms per level (1×, 2×, 5× multipliers)
-
-Environmental hazards: dust storms, dense atmospheres, cryogeysers, moving platforms, vertical updrafts, heat interference, rock pillars, volcanic debris, sudden gusts
-
-Star rating system — earn up to 30 stars across the campaign
-
-Haptic feedback, proportional thrust vectoring, and per-level high scores
+App Store link included for easy sharing
 
 As always, thank you for your continued support.
 ```
@@ -51,12 +27,20 @@ As always, thank you for your continued support.
 ```
 Starship Lander is a skill-based physics rocket landing game. Players control thrust and rotation using on-screen buttons and must land safely on a platform. No account, login, or in-app purchases are required.
 
-This build (v2.1.0, Build 32) adds Game Center integration and a Share Score Card feature. Game Center provides global leaderboards and achievements. The Share Score Card generates an image of the landing result and opens the native iOS share sheet.
+This build (v2.1.1, Build 33) redesigns the Share Score Card feature from v2.1.0. The share card now has two variants (landing and crash) with compact colored stats and an App Store link. No new SDKs or data collection — share uses the native iOS share sheet.
 
 Game Center authentication occurs automatically on launch. If the player is not signed in, all Game Center features are hidden and the game works normally with local scores only. No additional data is collected — all Game Center data ("Gameplay Content") is handled by Apple.
 
 An App Tracking Transparency prompt appears on first launch before showing personalized ads. Players can choose between button controls and tilt-based controls from the main menu.
 ```
+
+---
+
+## Version 2.1.0 (Build 32)
+**Status:** PUBLISHED (approved 2026-02-06) — Live on App Store
+
+### Overview
+Version 2.1.0 adds Game Center integration and a Share Score Card. Compete on global leaderboards, earn 10 achievements, and share your best landings with friends. Galaxy Rank tracks your total campaign mastery across all 10 levels.
 
 ---
 

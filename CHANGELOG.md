@@ -5,6 +5,19 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] — Build 33 (Phase: Community)
+
+### Changed
+- **Share Score Card Redesign**: Complete redesign of share card with two layout variants:
+  - **Landing card**: Score hero, stars, mode/level, platform+band badge, compact colored stats row (V/H/Fuel with green/yellow/red band colors)
+  - **Crash card**: Crash headline hero (from pool of 20), CRASH badge (red), "Cause: ..." diagnostic line with value and unit (m/s)
+  - Stats values colored by band using `LandingThresholds` (same source of truth as HUD)
+  - App Store footer on card image, App Store URL in share text payload
+  - Share button enabled on both landing and crash game-over screens
+  - `LandingMessages.shortCrashCause()`: Compact cause string for crash cards
+
+---
+
 ## [2.0.3] — Build 30 PUBLISHED (approved 2026-02-06)
 
 ### Changed
@@ -169,7 +182,7 @@ _Scope not yet defined. Monetization alternatives to be discussed._
 
 ---
 
-## [2.1.0] - Unreleased (Phase: Community) — SUBMITTED FOR REVIEW (2026-02-06)
+## [2.1.0] - Build 32 PUBLISHED (approved 2026-02-06) — (Phase: Community)
 
 ### Added
 - **Game Center Leaderboards**: 12 leaderboards (1 classic + 10 campaign + 1 galaxy_rank aggregate)
@@ -509,6 +522,8 @@ _Scope not yet defined. Monetization alternatives to be discussed._
 
 | Version | Date       | Highlights                                    |
 |---------|------------|-----------------------------------------------|
+| 2.1.1   | 2026-02-06 | Share card redesign: crash sharing, compact colored stats, App Store link |
+| 2.1.0   | 2026-02-06 | Game Center: 12 leaderboards, 10 achievements, Galaxy Rank, share card |
 | 2.0.3   | 2026-02-01 | Campaign engagement: reentry state, tilt HUD, flight stats, crash diagnostics |
 | 2.0.2   | 2026-01-31 | Campaign polish: scoring, thrust vectoring, planet differentiation |
 | 2.0.1   | 2026-01-31 | Dedicated leaderboard screen, version label fix |

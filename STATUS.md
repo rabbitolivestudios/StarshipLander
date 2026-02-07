@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-06 (Session 55)
+> Last reconciled: 2026-02-06 (Session 56)
 
 ---
 
@@ -14,9 +14,9 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | 2.0.3 (Build 30) — live on App Store. v2.1.0 Build 32 on TestFlight — device tested, ready for App Store submission. |
-| Version Status | **v2.0.3 Build 30 live on App Store** (approved 2026-02-06). **v2.1.0 Build 32 submitted for review** — GC device-tested and verified. Leaderboard scores reset before submission. |
-| Last Published | v2.0.3 (Build 30) — on App Store (approved 2026-02-06) |
+| Current Version | **v2.1.0 (Build 32) live on App Store** (approved 2026-02-06). v2.1.1 Build 33 ready for submission — share card redesign. |
+| Version Status | **v2.1.0 Build 32 live on App Store** (approved 2026-02-06). **v2.1.1 Build 33 version bumped** — share card redesign with crash sharing, compact colored stats, App Store link. |
+| Last Published | v2.1.0 (Build 32) — on App Store (approved 2026-02-06) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
 | Repo | github.com/rabbitolivestudios/StarshipLander |
@@ -67,7 +67,7 @@ These features are fully implemented, build-verified, and included in v2.0.3:
 
 These are **not implemented**. Do not assume otherwise:
 
-- ~~**Game Center integration**~~ — **DEVICE TESTED** for v2.1.0. All 12 leaderboards visible, scores submitted (Moon 3,323 pts, Galaxy Rank 12,323 pts), Galaxy Rank #1, 10 achievements visible, GKAccessPoint working. Ready for App Store submission. Note: VPN blocks GC network traffic (root cause of initial "Sign in" issue in Session 52).
+- ~~**Game Center integration**~~ — **PUBLISHED** in v2.1.0 (approved 2026-02-06). All 12 leaderboards, 10 achievements, Galaxy Rank, GKAccessPoint live on App Store.
 - **In-App Purchases (IAP)** — planned for v2.2.0 (Monetization phase; approach TBD — alternatives to be discussed)
 - ~~**Campaign per-level leaderboard viewing**~~ — **DONE in v2.0.1** (dedicated leaderboard screen)
 - **iPad support** — iPhone only
@@ -77,31 +77,27 @@ These are **not implemented**. Do not assume otherwise:
 - **CI/CD pipeline** — no GitHub Actions or automated builds
 - **Device playtesting partially done** — haptics + ads verified on device via TestFlight. Accelerometer bug fixed in v2.0.2. Classic mode star rating verified on Build 16. Remaining: thrust vectoring feel, Venus/Jupiter/Mercury/Io mechanics, scoring feel, backward-compat leaderboard stars.
 - ~~**v2.0.2 awaiting review**~~ — **APPROVED** 2026-02-03
-- ~~**v2.0.3 submitted for review**~~ — **APPROVED** 2026-02-06, live on App Store
+- ~~**v2.1.0 submitted for review**~~ — **APPROVED** 2026-02-06, live on App Store
 
 ---
 
 ## Current Phase / Focus
 
-**Phase: Community (v2.1.0) — Submitted for App Store review**
+**Phase: Community (v2.1.1) — Ready for submission**
 
-v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 submitted for review (Session 52): All Game Center features device-verified — 12 leaderboards, score submission, Galaxy Rank, 10 achievements, GKAccessPoint. GC leaderboard scores reset before submission. App Store screenshot added (Galaxy Rank caption). Organic growth plan created (Session 54, `Docs/GROWTH_PLAN.md`): ASO-first strategy, event-driven share triggers, screenshot strategy, Reddit-only social. v2.2.0 planned: Monetization (approach TBD).
+v2.1.0 (Build 32) live on App Store (approved 2026-02-06). v2.1.1 Build 33 version bumped — share card redesign with crash sharing, compact colored stats, App Store link. Organic growth plan created (Session 54, `Docs/GROWTH_PLAN.md`): ASO-first strategy, event-driven share triggers, screenshot strategy, Reddit-only social. v2.2.0 planned: Monetization (approach TBD).
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. ~~v2.0.3 Build 30 submitted for App Store review~~ — **APPROVED** 2026-02-06, live on App Store
-2. ~~Implement v2.1.0 (Community): Game Center leaderboards, achievements, Share Score Card~~ — **CODE COMPLETE** (Session 50)
-3. ~~v2.1.0: Version bump to 2.1.0 Build 31~~ — **DONE** (Session 51, uploaded to TestFlight)
-4. ~~v2.1.0: App Store Connect leaderboard/achievement setup~~ — **DONE** (Session 51, 12 leaderboards + 10 achievements created via API)
-5. ~~v2.1.0: Fix GC auth — present authenticateHandler viewController~~ — **DONE** (Session 51, Build 32)
-6. ~~v2.1.0: Device testing (GC auth, score submission, achievements, Galaxy Rank, share card)~~ — **DONE** (Session 52, all GC features verified)
-7. ~~v2.1.0: App Store submission~~ — **SUBMITTED** (Session 52, Build 32)
-8. ~~Organic growth plan~~ — **DONE** (Session 54, `Docs/GROWTH_PLAN.md`)
-9. When v2.1.0 approved: implement event-driven share triggers (new personal best, achievement, Galaxy Rank improvement) per growth plan
-10. When v2.1.0 approved: create 5 high-converting App Store screenshots per growth plan
-11. Plan v2.2.0 (Monetization): approach TBD — will discuss alternatives
+1. ~~v2.1.0: App Store submission~~ — **APPROVED** 2026-02-06, live on App Store
+2. ~~Share Score Card redesign~~ — **DONE** (Session 55, crash sharing + compact stats + App Store link)
+3. ~~v2.1.1: Version bump to Build 33~~ — **DONE** (Session 56)
+4. v2.1.1: Archive, upload to TestFlight, submit for review
+5. Implement event-driven share triggers (new personal best, achievement, Galaxy Rank improvement) per growth plan
+6. Create 5 high-converting App Store screenshots per growth plan
+7. Plan v2.2.0 (Monetization): approach TBD — will discuss alternatives
 
 ---
 
@@ -132,8 +128,8 @@ v2.0.3 (Build 30) live on App Store. v2.1.0 Build 32 submitted for review (Sessi
 
 ## Known Risks / Watchouts
 
-- **v2.0.3 is the current live version** — approved 2026-02-06, scoring rebalance + tilt bands + Europa cryogeysers now on App Store
-- ~~**Build 30 submitted for review**~~ — **APPROVED** 2026-02-06. Historical context: `Docs/DIAGNOSTIC_velocity_thresholds.md`
+- **v2.1.0 is the current live version** — approved 2026-02-06, Game Center + Share Score Card now on App Store
+- ~~**Build 32 submitted for review**~~ — **APPROVED** 2026-02-06
 - **Velocity thresholds were dead code before Build 21** — SpriteKit collision resolution zeroed velocities before `didBegin(contact:)` fired in all builds through Build 18. All prior high scores were achieved under "speed doesn't matter" regime. **RESOLVED in Build 21** with post-thrust tracking and per-platform FAIL thresholds.
 - **HUD threshold mismatch RESOLVED** — HUD previously showed V<50 H<30 with actual thresholds V<40 H<25. **Fixed in Build 21** — HUD now reads from `LandingThresholds.platformC` (V<35, H<30).
 - **Unit tests have no integration coverage** — 91 tests all test isolated pure functions. No test simulates a physics collision to verify landing pass/fail decision. This is the test that would have caught the bug.

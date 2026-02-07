@@ -2,7 +2,7 @@
 
 A physics-based rocket landing game for iOS, inspired by SpaceX Starship landings.
 
-**Version:** 2.0.3
+**Version:** 2.1.1
 **Platform:** iOS 15.0+
 **Language:** Swift 5.0
 **Frameworks:** SwiftUI, SpriteKit, CoreMotion, GameKit
@@ -265,7 +265,9 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 | Version | Date | Description |
 |---------|------|-------------|
-| 2.0.3 | 2026-02-06 | **Live on App Store** — Scoring rebalance, tilt bands, Europa cryogeysers, HUD-style Flight Data, randomized crash messages |
+| 2.1.1 | 2026-02-06 | Share card redesign: crash sharing, compact colored stats, App Store link |
+| 2.1.0 | 2026-02-06 | **Live on App Store** — Game Center: 12 leaderboards, 10 achievements, Galaxy Rank, share card |
+| 2.0.3 | 2026-02-06 | Scoring rebalance, tilt bands, Europa cryogeysers, HUD-style Flight Data, randomized crash messages |
 | 2.0.2 | 2026-02-03 | Campaign polish: scoring, thrust vectoring, planet differentiation |
 | 2.0.1 | 2026-01-31 | Dedicated leaderboard screen, version label fix |
 | 2.0.0 | 2026-01-30 | Campaign mode, per-planet physics, visual effects |
