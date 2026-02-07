@@ -1,7 +1,7 @@
 # Release Notes
 
 ## Version 2.1.1 (Build 33)
-**Status:** READY FOR SUBMISSION
+**Status:** UPLOADED TO APP STORE CONNECT — Ready for submission
 
 ### Overview
 Version 2.1.1 redesigns the Share Score Card with crash sharing, compact colored stats, and App Store branding. Crash game-over screens now have a share button, and the card uses a poster-style layout instead of a telemetry dump.

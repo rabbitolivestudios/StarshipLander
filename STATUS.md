@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | **v2.1.0 (Build 32) live on App Store** (approved 2026-02-06). v2.1.1 Build 33 ready for submission — share card redesign. |
-| Version Status | **v2.1.0 Build 32 live on App Store** (approved 2026-02-06). **v2.1.1 Build 33 version bumped** — share card redesign with crash sharing, compact colored stats, App Store link. |
+| Current Version | **v2.1.0 (Build 32) live on App Store** (approved 2026-02-06). v2.1.1 Build 33 uploaded to TestFlight — share card redesign. |
+| Version Status | **v2.1.0 Build 32 live on App Store** (approved 2026-02-06). **v2.1.1 Build 33 uploaded to App Store Connect** — share card redesign with crash sharing, compact colored stats, App Store link. Ready for submission. |
 | Last Published | v2.1.0 (Build 32) — on App Store (approved 2026-02-06) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -83,9 +83,9 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Community (v2.1.1) — Ready for submission**
+**Phase: Community (v2.1.1) — Uploaded, ready for submission**
 
-v2.1.0 (Build 32) live on App Store (approved 2026-02-06). v2.1.1 Build 33 version bumped — share card redesign with crash sharing, compact colored stats, App Store link. Organic growth plan created (Session 54, `Docs/GROWTH_PLAN.md`): ASO-first strategy, event-driven share triggers, screenshot strategy, Reddit-only social. v2.2.0 planned: Monetization (approach TBD).
+v2.1.0 (Build 32) live on App Store (approved 2026-02-06). v2.1.1 Build 33 archived, uploaded to App Store Connect, ready for submission. Share card redesign with crash sharing, compact colored stats, App Store link. Organic growth plan created (Session 54, `Docs/GROWTH_PLAN.md`): ASO-first strategy, event-driven share triggers, screenshot strategy, Reddit-only social. v2.2.0 planned: Monetization (approach TBD).
 
 ---
 
@@ -94,10 +94,11 @@ v2.1.0 (Build 32) live on App Store (approved 2026-02-06). v2.1.1 Build 33 versi
 1. ~~v2.1.0: App Store submission~~ — **APPROVED** 2026-02-06, live on App Store
 2. ~~Share Score Card redesign~~ — **DONE** (Session 55, crash sharing + compact stats + App Store link)
 3. ~~v2.1.1: Version bump to Build 33~~ — **DONE** (Session 56)
-4. v2.1.1: Archive, upload to TestFlight, submit for review
-5. Implement event-driven share triggers (new personal best, achievement, Galaxy Rank improvement) per growth plan
-6. Create 5 high-converting App Store screenshots per growth plan
-7. Plan v2.2.0 (Monetization): approach TBD — will discuss alternatives
+4. ~~v2.1.1: Archive, upload to TestFlight~~ — **DONE** (Session 56, Build 33 uploaded to App Store Connect)
+5. v2.1.1: Submit for App Store review
+6. Implement event-driven share triggers (new personal best, achievement, Galaxy Rank improvement) per growth plan
+7. Create 5 high-converting App Store screenshots per growth plan
+8. Plan v2.2.0 (Monetization): approach TBD — will discuss alternatives
 
 ---
 

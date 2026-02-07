@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-06, Session 52)
+## Current Status (2026-02-06, Session 56)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -29,16 +29,18 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.0 | 12 | ~~SUBMITTED FOR REVIEW~~ — replaced by v2.0.2 (never reviewed after 2 days) |
 | 2.0.1 | 13 | Dedicated leaderboard screen, version label fix |
 | 2.0.2 | 16 | Published (approved 2026-02-03) — Campaign Mode |
-| 2.0.3 | 30 | **PUBLISHED** (approved 2026-02-06) — scoring rebalance + tilt bands + Europa cryogeysers. **Live on App Store.** |
-| 2.1.0 | 32 | **SUBMITTED FOR REVIEW** — Game Center + Share Score Card. All GC features device-verified (Session 52). Leaderboard scores reset. Submitted 2026-02-06. |
+| 2.0.3 | 30 | Published (approved 2026-02-06) — scoring rebalance + tilt bands + Europa cryogeysers |
+| 2.1.0 | 32 | **PUBLISHED** (approved 2026-02-06) — Game Center + Share Score Card. **Live on App Store.** |
+| 2.1.1 | 33 | **UPLOADED TO APP STORE CONNECT** — Share card redesign (crash sharing, compact colored stats, App Store link). Ready for submission. |
 
 **NEXT STEPS:**
-1. ~~v2.0.3 Build 30 submitted for App Store review~~ — **APPROVED** 2026-02-06, live on App Store
-2. ~~Implement v2.1.0 (Community phase)~~ — **CODE COMPLETE** (Session 50)
-3. ~~v2.1.0: Version bump + TestFlight upload~~ — **DONE** (Session 51, Build 31)
-4. ~~v2.1.0: App Store Connect configuration~~ — **DONE** (Session 51, 12 leaderboards + 10 achievements via API)
-5. ~~v2.1.0: Device testing~~ — **DONE** (Session 52, all GC features verified on device)
-6. ~~v2.1.0: App Store submission~~ — **SUBMITTED** (Session 52, Build 32, 2026-02-06)
+1. ~~v2.1.0: App Store submission~~ — **APPROVED** 2026-02-06, live on App Store
+2. ~~Share Score Card redesign~~ — **DONE** (Session 55)
+3. ~~v2.1.1: Version bump + upload~~ — **DONE** (Session 56, Build 33)
+4. v2.1.1: Submit for App Store review
+5. Implement event-driven share triggers per growth plan
+6. Create 5 high-converting App Store screenshots per growth plan
+7. Plan v2.2.0 (Monetization): approach TBD
 
 **v2.1.0 — Phase: Community (CODE COMPLETE):**
 - [done] 12 Game Center leaderboards (1 classic + 10 campaign + 1 galaxy_rank)
@@ -918,4 +920,43 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-*Last updated: 2026-02-06 (Session 55)*
+### Session 56 (2026-02-06) - v2.1.1 Build 33 Version Bump + Upload
+
+**Goal:** Bump version to v2.1.1 Build 33 (share card redesign), archive, and upload to App Store Connect. v2.1.0 approved by Apple.
+
+#### Changes Made:
+
+1. **v2.1.0 approved**: Apple approved v2.1.0 Build 32 for distribution (2026-02-06). Game Center + Share Score Card now live on App Store.
+
+2. **Version bump** (`Info.plist`): v2.1.0 Build 32 → v2.1.1 Build 33.
+
+3. **Build 33 archived and uploaded**: Archive succeeded, exported via `ExportOptions.plist` (app-store-connect method), uploaded to App Store Connect. dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless, expected).
+
+4. **Documentation updated**: STATUS.md, CHANGELOG.md, RELEASE_NOTES.md, README.md, PROJECT_LOG.md all updated to reflect v2.1.0 approval and v2.1.1 upload.
+
+#### Files Modified:
+- `RocketLander/Info.plist` — v2.1.1 Build 33
+- `STATUS.md` — version status, phase, next tasks
+- `CHANGELOG.md` — v2.1.1 entry, v2.1.0 marked published
+- `RELEASE_NOTES.md` — v2.1.1 section, v2.1.0 marked published
+- `README.md` — version, history table
+- `PROJECT_LOG.md` — current status table, session entry
+
+#### Build Status:
+- Build succeeds, 91/91 tests pass
+- Archive succeeded
+- Upload succeeded (App Store Connect processing)
+
+#### Commits:
+- `2c43aac` — Bump to v2.1.1 Build 33: share card redesign
+
+#### Definition of Done:
+- [x] v2.1.0 approval noted in all docs
+- [x] Version bumped to v2.1.1 Build 33
+- [x] Build 33 archived and uploaded to App Store Connect
+- [x] All documentation updated (7-file sweep)
+- [x] Session summary created
+
+---
+
+*Last updated: 2026-02-06 (Session 56)*
