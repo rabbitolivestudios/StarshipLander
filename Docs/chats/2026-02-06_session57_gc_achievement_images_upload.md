@@ -108,7 +108,7 @@
 ## Commits
 - `224b0a7` — Add achievement icons and upload to ASC for Game Center fix
 - `83884a6` — Update session 57 summary with commit hash
-- (pending) — GC releases, updated docs, App Store copy
+- `c1f67e1` — Add GC releases to setup script, update docs for v2.1.1 submission
 
 ## Repo Housekeeping
 - [x] .gitignore up to date
