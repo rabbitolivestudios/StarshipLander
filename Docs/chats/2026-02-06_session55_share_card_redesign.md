@@ -76,7 +76,7 @@
 - [x] All docs updated
 
 ## Commits
-- (pending)
+- `00cce8d` — Redesign Share Score Card: crash sharing, compact stats, App Store link
 
 ## Repo Housekeeping
 - [x] Working tree clean (only expected changes)
