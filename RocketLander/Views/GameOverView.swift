@@ -326,21 +326,18 @@ struct GameOverView: View {
     private var actionButtons: some View {
         VStack(spacing: 10) {
         HStack(spacing: 10) {
-            // Share button (only on successful landing)
-            if gameState.landed {
-                Button(action: shareScoreCard) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "square.and.arrow.up")
-                        Text("Share")
-                    }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 12)
-                    .background(Color.blue.opacity(0.5))
-                    .cornerRadius(10)
-                    .fixedSize(horizontal: true, vertical: false)
+            Button(action: shareScoreCard) {
+                HStack(spacing: 4) {
+                    Image(systemName: "square.and.arrow.up")
+                    Text("Share")
                 }
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 12)
+                .background(Color.blue.opacity(0.5))
+                .cornerRadius(10)
+                .fixedSize(horizontal: true, vertical: false)
             }
         }
         HStack(spacing: 10) {
@@ -416,23 +413,46 @@ struct GameOverView: View {
     // MARK: - Actions
 
     private func shareScoreCard() {
+        let levelName = gameState.currentMode == .campaign
+            ? (LevelDefinition.levels.first { $0.id == gameState.currentLevelId }?.name ?? "Level \(gameState.currentLevelId)")
+            : "Classic"
+
+        let crashCause: String
+        if !gameState.landed {
+            let hitTerrain = gameState.crashDiagnosticPrimary.contains("Missed")
+                || gameState.crashDiagnosticPrimary.contains("platform")
+            crashCause = LandingMessages.shortCrashCause(
+                verticalSpeed: gameState.finalVerticalSpeed,
+                horizontalSpeed: gameState.finalHorizontalSpeed,
+                rotation: abs(gameState.finalTiltAngle),
+                platform: gameState.landedPlatform,
+                hitTerrain: hitTerrain
+            )
+        } else {
+            crashCause = ""
+        }
+
         let card = ShareScoreCardView(
+            isLanded: gameState.landed,
             mode: gameState.currentMode,
-            levelName: gameState.currentMode == .campaign
-                ? (LevelDefinition.levels.first { $0.id == gameState.currentLevelId }?.name ?? "Level \(gameState.currentLevelId)")
-                : "Classic",
+            levelName: levelName,
             stars: gameState.starsEarned,
             score: gameState.score,
             platformLabel: gameState.landedPlatform?.label ?? "",
-            speedBand: gameState.landingSpeedBand,
-            tiltDegrees: abs(Double(gameState.finalTiltAngle)) * 180 / .pi,
+            speedBand: gameState.landed ? gameState.landingSpeedBand : .fail,
             verticalSpeed: gameState.finalVerticalSpeed,
             horizontalSpeed: gameState.finalHorizontalSpeed,
             fuel: gameState.finalFuel,
-            distanceFromCenter: gameState.finalDistanceFromCenter
+            platform: gameState.landedPlatform,
+            crashHeadline: gameState.landed ? "" : crashMessage,
+            crashCauseLine: crashCause
         )
+
         if let image = ShareHelper.renderScoreCard(card) {
-            ShareHelper.shareImage(image)
+            let shareText = gameState.landed
+                ? "I scored \(gameState.score) in Starship Lander! \(ShareHelper.appStoreURL)"
+                : "\(crashMessage) \(ShareHelper.appStoreURL)"
+            ShareHelper.shareImage(image, text: shareText)
         }
     }
 

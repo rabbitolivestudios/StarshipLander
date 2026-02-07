@@ -864,4 +864,58 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-*Last updated: 2026-02-06 (Session 54)*
+### Session 55 (2026-02-06) - Share Score Card Redesign: Crash Sharing + Compact Stats
+
+**Goal:** Redesign the Share Score Card per growth plan: add crash card variant, replace 5-row stats dump with compact colored stats row, add App Store link, enable sharing on crashes.
+
+#### Changes Made:
+
+1. **LandingMessages.swift** — Added `shortCrashCause()` static function (~20 lines). Returns compact cause strings: "Tilt (18.4°)", "V.Speed (547 m/s)", "H.Speed (89 m/s)", "Missed Platform", or "Ship Lost". Same priority logic as `diagnosticCrashMessage()`.
+
+2. **ShareScoreCardView.swift** — Complete redesign with two variants via `isLanded` conditional:
+   - **Landing card**: "STARSHIP LANDER" header → score hero (large mono) → stars → mode/level → platform+band badge → divider → compact stats row (V/H/Fuel with green/yellow/red band colors) → App Store footer
+   - **Crash card**: "STARSHIP LANDER" header → crash headline hero (red) → mode/level → CRASH badge (red) → divider → "Cause: ..." diagnostic → App Store footer
+   - Crash card border is red instead of orange
+   - Removed old 5-row stats dump, `tiltDegrees`, `distanceFromCenter` parameters
+   - Added `platform` parameter for band-aware stat coloring
+   - `ShareHelper.shareImage()` now accepts text payload with App Store URL
+   - `ShareHelper.appStoreURL` constant added
+   - Footer legibility improved (semibold + higher opacity)
+
+3. **GameOverView.swift** — Two changes:
+   - Share button now visible on both landing AND crash game-over screens
+   - `shareScoreCard()` rewritten to build either variant, passing crash headline and compact cause
+   - Share text: "I scored X in Starship Lander! <URL>" or "<CRASH HEADLINE> <URL>"
+
+#### Files Modified:
+- `RocketLander/Models/LandingMessages.swift` — `shortCrashCause()` added
+- `RocketLander/Views/ShareScoreCardView.swift` — complete redesign
+- `RocketLander/Views/GameOverView.swift` — crash sharing enabled, data flow updated
+
+#### Build Status:
+- Build succeeds, 91/91 tests pass
+- Tested on iPhone 16 Pro simulator — both landing and crash cards verified
+
+#### Key Decisions:
+- Single `ShareScoreCardView` with `isLanded` conditional (two variants share ~70% layout)
+- Compact stats row: V, H, Fuel only — no tilt or center (poster, not telemetry)
+- Crash diagnostic uses units: "V.Speed (547 m/s)"
+- Stats values colored by band (green/yellow/red) matching HUD design language
+- `hitTerrain` inferred from `crashDiagnosticPrimary` text — avoids GameState model changes
+- App Store URL: https://apps.apple.com/us/app/starship-lander/id6757563869
+
+#### Definition of Done:
+- [x] Crash share card implemented with headline hero + cause diagnostic
+- [x] Landing share card redesigned with compact colored stats
+- [x] Share button enabled on both landing and crash
+- [x] App Store link on card image + URL in share text payload
+- [x] Crash diagnostic values include units (m/s)
+- [x] Stats values colored by speed/fuel band
+- [x] Footer legibility improved
+- [x] Build succeeds, 91/91 tests pass
+- [x] Simulator tested (landing + crash cards)
+- [x] All 7 documentation files verified
+
+---
+
+*Last updated: 2026-02-06 (Session 55)*

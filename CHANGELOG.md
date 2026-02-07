@@ -187,11 +187,15 @@ _Scope not yet defined. Monetization alternatives to be discussed._
   - Solar System Elite (30 total stars), Master Lander (SAFE C on all 10 campaign levels)
   - Persistent tracking: `safePlatformCLevels` (Set<Int>) and `attemptsByLevel` ([Int:Int]) saved to UserDefaults
   - Idempotent unlocking — safe to report multiple times, `showsCompletionBanner = true`
-- **Share Score Card**: Generate and share landing results as an image
-  - `ShareScoreCardView.swift`: 320pt dark gradient card with game logo, mode/level, stars, score, platform+band badge, flight data
+- **Share Score Card**: Generate and share landing/crash results as an image
+  - `ShareScoreCardView.swift`: 320pt dark gradient card with two variants:
+    - **Landing card**: Score hero, stars, mode/level, platform+band badge, compact colored stats row (V/H/Fuel with green/yellow/red band colors)
+    - **Crash card**: Crash headline hero (from pool of 20), CRASH badge (red), "Cause: ..." diagnostic line with value and unit
   - `ShareHelper.renderScoreCard()`: ImageRenderer (iOS 16+) with UIHostingController snapshot fallback (iOS 15)
-  - `ShareHelper.shareImage()`: Native share sheet via UIActivityViewController
-  - Share button on game-over screen (only visible on successful landings)
+  - `ShareHelper.shareImage()`: Native share sheet with image + text payload containing App Store URL
+  - `LandingMessages.shortCrashCause()`: Compact cause string for crash cards (same priority logic as full diagnostics)
+  - Share button on game-over screen (both landing and crash)
+  - "Starship Lander on the App Store" footer on card image
 
 ### Fixed
 - **Game Center Auth Completion**: `authenticateHandler`'s `viewController` was silently dropped, preventing per-app GC auth on devices requiring the sign-in dialog. Now presented on the topmost view controller. Without this fix, `GKGameCenterViewController` showed "Sign in to Game Center" even when the device had a Game Center account.

@@ -120,4 +120,31 @@ struct LandingMessages {
 
         return CrashDiagnostic(primaryMessage: primary, secondaryHint: secondary)
     }
+
+    // MARK: - Short Crash Cause (Share Card)
+
+    /// Returns a compact cause label for crash share cards.
+    /// Format: "Tilt (18.4°)" or "V.Speed (245)" or "H.Speed (89)"
+    static func shortCrashCause(
+        verticalSpeed: CGFloat,
+        horizontalSpeed: CGFloat,
+        rotation: CGFloat,
+        platform: LandingPlatform?,
+        hitTerrain: Bool
+    ) -> String {
+        let targetPlatform = platform ?? .c
+        let bands = LandingThresholds.bands(for: targetPlatform)
+        let tiltDegrees = rotation * 180 / .pi
+
+        if rotation > LandingThresholds.hardTilt {
+            return "Tilt (\(String(format: "%.1f", tiltDegrees))°)"
+        }
+        if verticalSpeed > bands.hardVertical {
+            return "V.Speed (\(String(format: "%.0f", verticalSpeed)) m/s)"
+        }
+        if horizontalSpeed > bands.hardHorizontal {
+            return "H.Speed (\(String(format: "%.0f", horizontalSpeed)) m/s)"
+        }
+        return hitTerrain ? "Missed Platform" : "Ship Lost"
+    }
 }

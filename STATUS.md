@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-06 (Session 54)
+> Last reconciled: 2026-02-06 (Session 55)
 
 ---
 
@@ -57,7 +57,7 @@ These features are fully implemented, build-verified, and included in v2.0.3:
 - **Unit Tests**: 91 XCTest cases across 10 test files (scoring formula, high scores, campaign state, level definitions, landing messages, game state, platform data, crash diagnostics, landing evaluation, scoring helper)
 - **Codebase**: Split from 2 monolithic files into 21 organized files
 - **Game Center Integration (v2.1.0 code complete)**: `GameCenterManager.swift` — automatic auth with graceful fallback, 12 leaderboards (1 classic + 10 campaign + 1 galaxy_rank aggregate), 10 achievements (skill + progression), Galaxy Rank on menu/leaderboard/campaign screens, GKAccessPoint on menu, fire-and-forget score submission, idempotent achievement reporting, persistent tracking state (UserDefaults). Game Center entitlement added.
-- **Share Score Card (v2.1.0 code complete)**: `ShareScoreCardView.swift` — SwiftUI-rendered dark gradient card with game logo, mode/level, stars, score, platform+band badge, flight data. `ShareHelper` with `ImageRenderer` (iOS 16+) / `UIHostingController` snapshot (iOS 15) rendering. Native share sheet via `UIActivityViewController`. Share button on game-over screen (landing only).
+- **Share Score Card (v2.1.0 code complete)**: `ShareScoreCardView.swift` — SwiftUI-rendered dark gradient card with two variants: Landing (score hero, stars, platform+band badge, compact colored stats row V/H/Fuel) and Crash (headline hero, CRASH badge, "Cause: ..." diagnostic). `ShareHelper` with `ImageRenderer` (iOS 16+) / `UIHostingController` snapshot (iOS 15) rendering. Native share sheet via `UIActivityViewController` with image + text payload (App Store URL). Share button on game-over screen (both landing and crash).
 - **Project Management**: CLAUDE.md, PR template, DECISIONS.md, session logging workflow
 - **Perfect Landing Score Analysis**: Frame-by-frame physics simulation computing maximum achievable scores for all 33 level/platform combinations, including campaign reentry state (tilt + drift). Best: Classic C = 14,504 (via left screen wrap). All 33/33 land in SAFE band. Tilt bands: SAFE ≤2.9°, HARD ≤5.7°, FAIL >5.7°. Script: `Scripts/calculate_perfect_scores.py`
 
