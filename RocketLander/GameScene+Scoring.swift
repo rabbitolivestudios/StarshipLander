@@ -3,9 +3,9 @@ import SpriteKit
 // MARK: - Scoring Logic
 extension GameScene {
 
-    func calculateScore(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform, speedBand: SpeedBand) -> Int {
+    func calculateScore(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform, speedBand: SpeedBand, elapsedTime: TimeInterval = 0) -> Int {
         // === CONTINUOUS SCORING SYSTEM WITH FUEL + PLATFORM MULTIPLIER ===
-        // Max possible: ~23,100 points (2100 base x 2.2 fuel x 5.0 platform)
+        // Max possible: ~23,100 points (2100 base x 2.2 fuel x 5.0 platform) + up to 500 time bonus
 
         let bands = LandingThresholds.bands(for: platform)
 
@@ -50,10 +50,21 @@ extension GameScene {
         // 7. PLATFORM MULTIPLIER
         let platformMultiplier = platform.multiplier
 
-        // Final score
-        let totalScore = Int(subtotal * fuelMultiplier * platformMultiplier)
+        // Final score (before time bonus)
+        var totalScore = Int(subtotal * fuelMultiplier * platformMultiplier)
 
         // Max possible: 2100 x 2.2 x 5.0 = 23,100
+
+        // 8. TIME BONUS (0-500 points) — daily challenge timed missions only
+        //    Proportional to remaining time: (remainingSeconds / totalSeconds) × 500
+        //    Only applies when challenge has a maxTime constraint and player lands within the limit.
+        if gameState.currentMode == .dailyChallenge,
+           let timeLimit = DailyChallenge.timeLimitSeconds,
+           elapsedTime > 0 && elapsedTime < Double(timeLimit) {
+            let remainingRatio = (Double(timeLimit) - elapsedTime) / Double(timeLimit)
+            let timeBonus = Int(remainingRatio * 500.0)
+            totalScore += timeBonus
+        }
 
         return totalScore
     }

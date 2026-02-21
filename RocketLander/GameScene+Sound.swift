@@ -40,4 +40,8 @@ extension GameScene {
     func playExplosionSound() {
         run(SKAction.playSoundFileNamed("explosion.wav", waitForCompletion: false))
     }
+
+    func playChallengeFailSound() {
+        run(SKAction.playSoundFileNamed("challenge_fail.wav", waitForCompletion: false))
+    }
 }

@@ -5,6 +5,12 @@ import Combine
 enum GameMode: String, Codable {
     case classic
     case campaign
+    case dailyChallenge
+
+    /// Whether this mode uses LevelDefinition (gravity, terrain, hazards, etc.)
+    var usesLevelDefinition: Bool {
+        self == .campaign || self == .dailyChallenge
+    }
 }
 
 // MARK: - Game State
@@ -47,15 +53,41 @@ class GameState: ObservableObject {
     @Published var currentMode: GameMode = .classic
     @Published var currentLevelId: Int = 1
 
+    // Daily Challenge
+    @Published var dailyChallengeTargetPlatform: LandingPlatform? = nil
+    @Published var dailyChallengeSuccess: Bool = false
+    @Published var elapsedTime: TimeInterval = 0
+
     // Settings
     @Published var useAccelerometer: Bool {
         didSet {
             UserDefaults.standard.set(useAccelerometer, forKey: "useAccelerometer")
         }
     }
+    @Published var soundEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(soundEnabled, forKey: "soundEnabled")
+        }
+    }
+    @Published var hapticsEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(hapticsEnabled, forKey: "hapticsEnabled")
+        }
+    }
 
     init() {
         self.useAccelerometer = UserDefaults.standard.bool(forKey: "useAccelerometer")
+        // Default to true if key hasn't been set yet
+        if UserDefaults.standard.object(forKey: "soundEnabled") == nil {
+            self.soundEnabled = true
+        } else {
+            self.soundEnabled = UserDefaults.standard.bool(forKey: "soundEnabled")
+        }
+        if UserDefaults.standard.object(forKey: "hapticsEnabled") == nil {
+            self.hapticsEnabled = true
+        } else {
+            self.hapticsEnabled = UserDefaults.standard.bool(forKey: "hapticsEnabled")
+        }
     }
 
     func reset() {
@@ -82,5 +114,9 @@ class GameState: ObservableObject {
         finalDistanceFromCenter = nil
         crashDiagnosticPrimary = ""
         crashDiagnosticSecondary = ""
+        dailyChallengeSuccess = false
+        elapsedTime = 0
+        // Note: dailyChallengeTargetPlatform is NOT reset here — it persists
+        // across retries, same as currentMode and currentLevelId.
     }
 }

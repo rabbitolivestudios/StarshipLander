@@ -36,6 +36,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var recentVelocities: [CGFloat] = []
     let velocityHistorySize = 30
 
+    // Elapsed time tracking (for timed daily challenges)
+    private var gameStartTime: TimeInterval = 0
+
     // Pre-contact tracking (for end-of-run snapshot — always reflects last update frame)
     private var lastTrackedVerticalSpeed: CGFloat = 0
     private var lastTrackedHorizontalSpeed: CGFloat = 0
@@ -89,7 +92,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Set gravity based on mode
         let gravity: CGFloat
-        if gameState.currentMode == .campaign,
+        if gameState.currentMode.usesLevelDefinition,
            let level = LevelDefinition.level(for: gameState.currentLevelId) {
             gravity = level.gravity
         } else {
@@ -132,6 +135,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setupScene() {
         guard size.width > 0 && size.height > 0 else { return }
 
+        GameCenterManager.shared.clearLastLeaderboardRank()
         createStarfield()
         createCelestialBody()
         createTerrain()
@@ -158,8 +162,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         lastTrackedHorizontalSpeed = 0
         lastTrackedTilt = 0
 
-        // Apply visual reentry state for campaign (tilt only — velocity applied on start)
-        if gameState.currentMode == .campaign {
+        // Apply visual reentry state for level-based modes (tilt only — velocity applied on start)
+        if gameState.currentMode.usesLevelDefinition {
             rocket.zRotation = CampaignReentryState.initialTilt
             gameState.tiltAngle = CampaignReentryState.initialTilt
             lastTrackedTilt = CampaignReentryState.initialTilt
@@ -169,16 +173,64 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         wasRotatingLeft = false
         wasRotatingRight = false
 
-        // Set gravity for campaign levels
-        if gameState.currentMode == .campaign,
+        // Set gravity for level-based modes
+        if gameState.currentMode.usesLevelDefinition,
            let level = LevelDefinition.level(for: gameState.currentLevelId) {
             physicsWorld.gravity = CGVector(dx: 0, dy: level.gravity)
 
-            // Start level-specific effects
+            // Start level-specific effects (full hazards for daily challenge)
             startLevelEffects(level)
         } else {
             physicsWorld.gravity = CGVector(dx: 0, dy: -2.0)
         }
+
+        // Highlight target platform for daily challenge
+        if gameState.currentMode == .dailyChallenge,
+           let target = gameState.dailyChallengeTargetPlatform {
+            highlightTargetPlatform(target)
+        }
+    }
+
+    // MARK: - Daily Challenge Target Highlight
+
+    private func highlightTargetPlatform(_ target: LandingPlatform) {
+        // Find the platform node matching the target
+        guard let platformIndex = LandingPlatform.allCases.firstIndex(of: target),
+              platformIndex < platforms.count else { return }
+        let platformNode = platforms[platformIndex]
+
+        // Pulsing gold ring around target platform
+        let ring = SKShapeNode(rectOf: CGSize(width: target.width + 16, height: 32), cornerRadius: 6)
+        ring.strokeColor = SKColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 0.8)
+        ring.fillColor = .clear
+        ring.lineWidth = 2
+        ring.glowWidth = 4
+        ring.position = CGPoint(x: 0, y: 0)
+        ring.zPosition = 5
+        ring.name = "targetRing"
+
+        let pulse = SKAction.sequence([
+            SKAction.fadeAlpha(to: 0.3, duration: 0.8),
+            SKAction.fadeAlpha(to: 1.0, duration: 0.8)
+        ])
+        ring.run(SKAction.repeatForever(pulse))
+        platformNode.addChild(ring)
+
+        // "TARGET" label above platform
+        let label = SKLabelNode(text: "TARGET")
+        label.fontSize = 11
+        label.fontName = "Orbitron"
+        label.fontColor = SKColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0)
+        label.position = CGPoint(x: 0, y: 24)
+        label.zPosition = 5
+        label.name = "targetLabel"
+
+        let labelPulse = SKAction.sequence([
+            SKAction.fadeAlpha(to: 0.4, duration: 1.0),
+            SKAction.fadeAlpha(to: 1.0, duration: 1.0)
+        ])
+        label.run(SKAction.repeatForever(labelPulse))
+        platformNode.addChild(label)
     }
 
     func startGame() {
@@ -192,7 +244,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     private func applyCampaignReentryState() {
-        guard gameState.currentMode == .campaign else { return }
+        guard gameState.currentMode.usesLevelDefinition else { return }
         rocket.zRotation = CampaignReentryState.initialTilt
         rocket.physicsBody?.velocity = CGVector(
             dx: CampaignReentryState.initialHorizontalSpeed,
@@ -271,6 +323,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Auto-start
         if !hasStarted && (gameState.isThrusting || gameState.isRotatingLeft || gameState.isRotatingRight) {
             hasStarted = true
+            gameStartTime = currentTime
             rocket.physicsBody?.isDynamic = true
             applyCampaignReentryState()
         }
@@ -279,6 +332,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         let dt = lastUpdateTime > 0 ? currentTime - lastUpdateTime : 0
         lastUpdateTime = currentTime
+
+        // Update elapsed time for live timer display (used by timed daily challenges)
+        if gameStartTime > 0 {
+            gameState.elapsedTime = currentTime - gameStartTime
+        }
 
         // Check for reset
         if gameState.shouldReset {
@@ -304,9 +362,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if gameState.isThrusting && gameState.fuel > 0 {
             guard var velocity = rocket.physicsBody?.velocity else { return }
 
-            // Per-level thrust in campaign, fixed 12.0 in classic
+            // Per-level thrust in level-based modes, fixed 12.0 in classic
             var thrustPower: CGFloat
-            if gameState.currentMode == .campaign,
+            if gameState.currentMode.usesLevelDefinition,
                let level = LevelDefinition.level(for: gameState.currentLevelId) {
                 thrustPower = level.thrustPower
 
@@ -437,7 +495,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: - Campaign Mechanics
 
     private func applyCampaignMechanics(dt: TimeInterval, currentTime: TimeInterval) {
-        guard gameState.currentMode == .campaign,
+        guard gameState.currentMode.usesLevelDefinition,
               let level = LevelDefinition.level(for: gameState.currentLevelId) else { return }
 
         switch level.specialMechanic {
@@ -693,8 +751,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         removeFlames()
         stopThrustSound()
 
-        playSuccessSound()
+        // For Daily Challenge, defer sound until we know if challenge passed or failed
+        let isDailyChallenge = gameState.currentMode == .dailyChallenge
+        if !isDailyChallenge {
+            playSuccessSound()
+        }
         HapticManager.shared.landingSuccess()
+
+        let elapsed = self.lastUpdateTime - self.gameStartTime
 
         let totalScore = calculateScore(
             verticalSpeed: verticalSpeed,
@@ -702,7 +766,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             rotation: rotation,
             approachSpeed: approachSpeed,
             platform: platform,
-            speedBand: speedBand
+            speedBand: speedBand,
+            elapsedTime: elapsed
         )
 
         let message = LandingMessages.successMessage(platform: platform, score: totalScore, speedBand: speedBand)
@@ -713,11 +778,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.gameState.starsEarned = platform.stars
             self.gameState.landingMessage = message
             self.gameState.landingSpeedBand = speedBand
+            self.gameState.elapsedTime = elapsed
 
             // Game Center: submit score
-            if self.gameState.currentMode == .campaign {
+            switch self.gameState.currentMode {
+            case .campaign:
                 GameCenterManager.shared.submitCampaignScore(totalScore, levelId: self.gameState.currentLevelId, campaignState: self.campaignState)
-            } else {
+            case .dailyChallenge:
+                // Evaluate challenge constraints
+                let challengeSuccess = DailyChallenge.evaluate(
+                    platform: platform,
+                    tiltRadians: rotation,
+                    verticalSpeed: verticalSpeed,
+                    horizontalSpeed: horizontalSpeed,
+                    fuel: self.gameState.fuel,
+                    elapsedTime: elapsed
+                )
+                self.gameState.dailyChallengeSuccess = challengeSuccess
+                // Play appropriate sound based on challenge result
+                if challengeSuccess {
+                    self.playSuccessSound()
+                    GameCenterManager.shared.submitDailyChallengeScore(totalScore)
+                    let playerName = GameCenterManager.shared.localPlayerName
+                    DailyChallenge.recordScore(totalScore, success: true, playerName: playerName)
+                    BlueStarManager.shared.recordDailyChallengeCompletion()
+                } else {
+                    self.playChallengeFailSound()
+                }
+            case .classic:
                 GameCenterManager.shared.submitClassicScore(totalScore)
             }
 

@@ -25,7 +25,7 @@ struct LevelSelectView: View {
                 Spacer()
 
                 Text("CAMPAIGN")
-                    .font(.title2.bold())
+                    .font(.custom("Orbitron", size: 20).weight(.bold))
                     .foregroundColor(.white)
 
                 Spacer()
@@ -35,7 +35,7 @@ struct LevelSelectView: View {
                     Image(systemName: "star.fill")
                         .foregroundColor(.yellow)
                     Text("\(campaignState.totalStars)/30")
-                        .font(.headline)
+                        .font(.custom("Orbitron", size: 14).weight(.bold))
                         .foregroundColor(.yellow)
                 }
             }
@@ -67,7 +67,7 @@ struct LevelSelectView: View {
                                 Image(systemName: "globe.americas.fill")
                                     .foregroundColor(.cyan)
                                 Text("GALAXY RANK")
-                                    .font(.caption.bold())
+                                    .font(.custom("Orbitron", size: 11).weight(.bold))
                                     .foregroundColor(.cyan)
                             }
                             Text("Galaxy Rank is based on your best score on each campaign planet.")
@@ -125,7 +125,7 @@ struct LevelCardView: View {
                 }
 
                 Text(level.name.uppercased())
-                    .font(.caption.bold())
+                    .font(.custom("Orbitron", size: 10).weight(.bold))
                     .foregroundColor(isUnlocked ? .orange : .gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -146,7 +146,7 @@ struct LevelCardView: View {
 
                 // Description
                 Text(level.description)
-                    .font(.system(size: 9))
+                    .font(.custom("Orbitron", size: 8).weight(.regular))
                     .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .lineLimit(2)

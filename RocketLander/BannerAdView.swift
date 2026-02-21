@@ -6,8 +6,10 @@ struct AdConfig {
     // Test ID for development, real ID for production
     #if DEBUG
     static let bannerAdUnitID = "ca-app-pub-3940256099942544/2934735716"  // Google's test banner ID
+    static let interstitialAdUnitID = "ca-app-pub-3940256099942544/4411468910"  // Google's test interstitial ID
     #else
     static let bannerAdUnitID = "ca-app-pub-3801339388353505/4009394081"  // Production banner
+    static let interstitialAdUnitID = "ca-app-pub-3801339388353505/8269147180"  // Production interstitial
     #endif
 }
 

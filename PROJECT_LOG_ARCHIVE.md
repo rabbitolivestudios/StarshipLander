@@ -1,6 +1,6 @@
 # Starship Lander — Project Log Archive
 
-> **Archived sessions from PROJECT_LOG.md.** Sessions 1-35 (2026-01-07 through 2026-02-01).
+> **Archived sessions from PROJECT_LOG.md.** Sessions 1-48 (2026-01-07 through 2026-02-05).
 > Moved here to keep PROJECT_LOG.md under size limits.
 >
 > For current project state, see `PROJECT_LOG.md`. For authoritative snapshot, see `STATUS.md`.
@@ -10,7 +10,7 @@
 
 ## Project History Summary
 
-Key milestones from Sessions 1-35:
+Key milestones from Sessions 1-48:
 
 - **Sessions 1-3 (Jan 7-8)**: Initial development, v1.0 submission. Core SpriteKit physics, thrust/rotation controls, fuel system, terrain generation, high scores.
 - **Sessions 4-6 (Jan 8-10)**: AdMob integration, ATT prompt (v1.0 rejected for missing ATT, fixed in v1.1).
@@ -24,6 +24,17 @@ Key milestones from Sessions 1-35:
 - **Session 32 (Feb 1)**: v2.0.3 campaign engagement — reentry state, tilt HUD, flight stats panel, deterministic crash diagnostics.
 - **Sessions 33-34 (Feb 1)**: CRITICAL discovery — velocity thresholds were dead code since initial commit. SpriteKit zeros velocities before collision callback. All prior builds accepted any-speed landings.
 - **Session 35 (Feb 1)**: Scoring overhaul — per-platform speed bands (SAFE/HARD/FAIL), removed explicit HARD penalty (natural velocity loss is the penalty), post-thrust velocity tracking, HUD threshold fix. Build 21 uploaded to TestFlight.
+- **Session 36 (Feb 1)**: Menu ad banner clipping fix, Build 22 uploaded.
+- **Session 37 (Feb 1)**: Code housekeeping — removed dead code, fixed imports, deleted stale files. Tests 90→89.
+- **Session 38 (Feb 2)**: Device testing bug fixes — text truncation, menu ad moved outside ScrollView.
+- **Sessions 39-41 (Feb 2)**: Build 23-24 TestFlight uploads. How To Play info sheet replacing inline section.
+- **Session 42 (Feb 2)**: Build hygiene — .gitignore hardened, prints wrapped in DEBUG, ATT optimized, player name capped.
+- **Session 43 (Feb 2)**: Documentation cleanup, credential protection guardrails added to CLAUDE.md, git history cleanup.
+- **Session 44 (Feb 2)**: Build 25 TestFlight upload.
+- **Session 45 (Feb 3)**: Flight Data panel HUD-style redesign, randomized crash headlines (20 messages), PROJECT_LOG archiving workflow established. Build 26.
+- **Session 46 (Feb 5)**: v2.0.3 gameplay feedback — 10 fixes including speed threshold tightening, Jupiter wind overhaul, Europa ice effect, celestial body corrections. Build 27.
+- **Session 47 (Feb 5)**: Europa cryogeysers replacing punishing ice slide. Build 28.
+- **Session 48 (Feb 5)**: Scoring rebalance (HARD partial credit, component boost, fuel tuning), tilt bands (SAFE/HARD/FAIL). Tests 89→91. Build 30 submitted for App Store.
 
 ---
 
@@ -1412,5 +1423,469 @@ Key findings:
 - [x] DECISIONS.md entry added
 - [x] All docs updated (CHANGELOG, STATUS, PROJECT_LOG, README)
 - [x] Session summary created
+
+---
+
+### Session 36 (2026-02-01) - Fix Menu Ad Banner Clipping + Build 22 Upload
+
+**Goal:** Fix the banner ad on the menu screen being clipped by the home indicator safe area. Correct stale documentation. Upload Build 22 to TestFlight with all v2.0.3 changes including menu ad fix.
+
+**What Changed:**
+- Added `.padding(.bottom, 16)` to `BannerAdContainer()` in `MenuView` (`ContentView.swift` line 260)
+- The ad was the last item in the ScrollView's VStack with no bottom padding, causing it to be clipped by the home indicator on iPhones without a home button
+- `GameContainerView.swift` already had `.padding(.bottom, 5)` on its banner ad; menu needed more clearance due to ScrollView behavior
+- Corrected stale documentation that incorrectly described velocity threshold enforcement as "pending" (it was implemented in Build 21, commit `1698220`)
+- Bumped build number 21 → 22 in Info.plist
+- Archived, exported, and uploaded Build 22 to TestFlight (includes menu ad fix + all Build 21 changes)
+
+**Files Modified:**
+- `RocketLander/ContentView.swift` — added bottom padding to BannerAdContainer
+- `RocketLander/Info.plist` — build number 21 → 22
+- `DECISIONS.md` — changed velocity threshold entry from PENDING to RESOLVED
+- `STATUS.md`, `PROJECT_LOG.md`, `CHANGELOG.md` — corrected stale references, updated build info
+
+**Key Decisions:**
+- Used 16pt padding (vs 5pt in gameplay) because the menu ScrollView needs more clearance when scrolled to the bottom
+
+#### Definition of Done:
+- [x] Banner ad fully visible when scrolled to bottom on iPhone 16 Pro
+- [x] Build succeeds
+- [x] 90/90 tests pass
+- [x] Build 22 archived, exported, and uploaded to TestFlight
+- [x] All stale "pending" references corrected
+- [x] All docs updated with accurate build info
+- [x] Session summary created
+
+---
+
+### Session 37 (2026-02-01) - Code Housekeeping Pass
+
+**Goal:** Remove dead code, fix imports, delete stale files. No behavior changes, no refactors, no features, no version bump.
+
+#### Changes Made:
+
+1. **Removed dead code (6 items)**:
+   - `leftFlame`/`rightFlame` unused properties from `GameScene.swift` (always nil)
+   - `crashMessage()`, `crashMessages`, `crashNudges` from `LandingMessages.swift` (legacy, replaced by `diagnosticCrashMessage()`)
+   - `crashNudge` property from `GameState.swift` and its assignments in `GameScene.swift`
+   - `getTopScore()` from `HighScoreManager.swift` (zero callers)
+   - `Triangle` shape from `ShapeViews.swift` (zero references)
+   - Unused `CrashCause` enum cases `terrainCollision` and `outOfBounds` + `CaseIterable` conformance
+
+2. **Fixed imports (3 files)**:
+   - `GameScene.swift`: `import SwiftUI` → `import Combine`
+   - `GameState.swift`: `import SwiftUI` → `import Foundation` + `import Combine`
+   - `HighScoreManager.swift`: `import SwiftUI` → `import Foundation` + `import Combine`
+   - `ContentView.swift`: removed unused `import SpriteKit`
+
+3. **Deleted stale file**: `SETUP.txt` (referenced nonexistent scripts/tools from initial scaffolding)
+
+4. **Updated tests**:
+   - Removed `testCrashMessageStructure` from `LandingMessagesTests.swift` (tested deleted function)
+   - Removed checks for deleted arrays from `testAllMessageArraysNonEmpty`
+   - Removed `crashNudge` references from `GameStateTests.swift`
+   - Test count: 90 → 89 (1 test removed for deleted function)
+
+#### Files Modified:
+- `RocketLander/GameScene.swift` — removed leftFlame/rightFlame, crashNudge assignments, fixed import
+- `RocketLander/Models/LandingMessages.swift` — removed crashMessage(), crashMessages, crashNudges, unused enum cases
+- `RocketLander/Models/GameState.swift` — removed crashNudge, fixed import
+- `RocketLander/Models/HighScoreManager.swift` — removed getTopScore(), fixed import
+- `RocketLander/Views/ShapeViews.swift` — removed Triangle
+- `RocketLander/ContentView.swift` — removed unused import SpriteKit
+- `RocketLanderTests/LandingMessagesTests.swift` — removed test for deleted function, updated array checks
+- `RocketLanderTests/GameStateTests.swift` — removed crashNudge references
+
+#### Files Deleted:
+- `SETUP.txt`
+
+#### Build Status:
+- Build succeeds, 89/89 tests pass
+- 9 files changed, 284 deletions total
+
+#### Commits:
+- `75169bf` — Code housekeeping: remove dead code, fix imports, delete stale file
+
+#### Definition of Done:
+- [x] All dead code identified and removed
+- [x] Unused imports fixed
+- [x] Stale files deleted
+- [x] Tests updated to match removals
+- [x] Build succeeds, all 89 tests pass
+- [x] No behavior changes
+- [x] All 7 documentation files verified and updated
+- [x] Session summary created
+- [x] Repo housekeeping checklist completed
+
+---
+
+### Session 38 (2026-02-02) - Build 22 Device Testing Bug Fixes
+
+**Goal:** Fix two bugs found during Build 22 device testing on iPhone 16: (1) landing/crash messages truncated, (2) menu ad banner still clipped despite Session 36 padding fix.
+
+#### Changes Made:
+
+1. **GameOverView Text Truncation Fix (`GameOverView.swift`)**:
+   - Landing success message: added `.multilineTextAlignment(.center)` + `.fixedSize(horizontal: false, vertical: true)` so long messages wrap instead of truncating
+   - Crash primary diagnostic: added `.fixedSize(horizontal: false, vertical: true)` (already had `.multilineTextAlignment(.center)`)
+   - Crash secondary diagnostic: added `.fixedSize(horizontal: false, vertical: true)` (already had `.multilineTextAlignment(.center)`)
+   - Wrapped body VStack in ScrollView for vertical overflow protection when content is tall (landing + new high score scenario)
+
+2. **Menu Ad Banner Clipping Fix (Improved) (`ContentView.swift`)**:
+   - Previous fix (16pt bottom padding, Session 36) was insufficient — banner still clipped on device
+   - Restructured MenuView: moved `BannerAdContainer()` outside ScrollView into a `VStack(spacing: 0)` wrapper
+   - Ad now pinned at bottom of screen where SwiftUI safe area layout naturally keeps it above the home indicator
+   - Verified on iPhone 16 Pro simulator — ad fully visible
+
+#### Files Modified:
+- `RocketLander/Views/GameOverView.swift` — text wrapping fixes + ScrollView wrapper
+- `RocketLander/ContentView.swift` — menu ad moved outside ScrollView
+
+#### Build Status:
+- Build succeeds, 89/89 tests pass
+- Fix B verified on simulator (screenshot saved to `Screenshots/v2.0.3-bugs/fix_b_menu_ad_verified.png`)
+- Fix A requires device testing (user will test on TestFlight)
+
+#### Definition of Done:
+- [x] Fix A: text wrapping modifiers applied to 3 text elements
+- [x] Fix A: GameOverView body wrapped in ScrollView for overflow protection
+- [x] Fix B: BannerAdContainer moved outside ScrollView
+- [x] Fix B: verified on iPhone 16 Pro simulator — ad fully visible
+- [x] Build succeeds
+- [x] 89/89 tests pass
+- [ ] Fix A: verified on device (pending TestFlight Build 23)
+- [ ] Build 23 uploaded to TestFlight
+- [x] All docs updated
+
+---
+
+### Session 39 (2026-02-02) - Build 23 Upload to TestFlight
+
+**Goal:** Archive and upload Build 23 to TestFlight for device testing of Session 38 bug fixes. Previous session's archive/export failed due to Keychain access issues in Tailscale SSH session.
+
+#### Changes Made:
+
+1. **CLI Authentication Setup**:
+   - Configured CLI authentication for headless uploads
+   - Enables `xcodebuild -exportArchive` over SSH/Tailscale without Keychain access
+
+2. **Build 23 Archived and Uploaded**:
+   - Archive succeeded: v2.0.3 Build 23 (already bumped in Session 38)
+   - Export + upload via CLI authentication — bypasses Keychain entirely
+   - Build 23 confirmed processing and visible on TestFlight
+   - dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless, same as always)
+
+3. **Screenshot Housekeeping**: Moved 4 JPEG screenshots from `Screenshots/` root to `Screenshots/v2.0.3-bugs/` with descriptive names (bug9–bug12). These were uploaded via GitHub web UI for Session 38 bug analysis.
+
+4. **Credentials Rotated**: Credentials rotated after upload.
+
+#### No app code changes. Screenshot renames only.
+
+#### Definition of Done:
+- [x] Build 23 archived (v2.0.3)
+- [x] Build 23 exported and uploaded to App Store Connect
+- [x] Build 23 visible on TestFlight
+- [x] Credentials rotated after use
+- [x] Bug screenshots organized into v2.0.3-bugs with descriptive names
+- [x] All docs updated
+- [x] Session summary created
+
+---
+
+### Session 40 (2026-02-02) - Menu Layout Fix + How To Play Info Sheet
+
+**Goal:** Fix menu overflow issue where content (~700pt) exceeded most iPhone screens and the banner ad covered the bottom section. Replace the inline HOW TO PLAY section with a rich info sheet.
+
+#### Changes Made:
+
+1. **Menu Layout Fix (`ContentView.swift`)**:
+   - Removed the inline "HOW TO PLAY" section (VStack with 3 Label items, ~85pt)
+   - Replaced with a "How to Play >" text button (~22pt) — saves ~79pt of vertical space
+   - Added `@State private var showingHowToPlay` state variable
+   - Added `.sheet(isPresented:)` modifier presenting `HowToPlayView`
+   - Added `.padding(.bottom, 60)` to ScrollView content to clear the banner ad on devices that still need scrolling
+   - Menu now fits without scrolling on iPhone 12 mini (731pt) and larger
+
+2. **How to Play Info Sheet (`Views/HowToPlayView.swift` — new file)**:
+   - Scrollable SwiftUI sheet with dark theme matching the app
+   - 5 sections with orange accent headers:
+     - **Controls**: Thrust, Rotate (adapts to button/accelerometer setting), Land
+     - **Landing Platforms**: Table showing A/B/C with names, widths, multipliers, stars, colors
+     - **Speed Bands**: SAFE/HARD/FAIL explanation + per-platform threshold table (V and H)
+     - **Scoring**: All 6 components with max points, fuel multiplier (1.0-2.0x), platform multiplier (1x/2x/5x), formula, max 20,000
+     - **Campaign**: All 10 levels with gravity and special mechanic (reads from `LevelDefinition.levels`)
+   - Dismiss button (X) at top right
+
+3. **Project File (`project.pbxproj`)**:
+   - Added `HowToPlayView.swift` file reference, build file, Views group entry, and Sources build phase entry
+
+#### Files Created:
+- `RocketLander/Views/HowToPlayView.swift`
+
+#### Files Modified:
+- `RocketLander/ContentView.swift` — removed HOW TO PLAY, added button + sheet + padding
+- `RocketLander.xcodeproj/project.pbxproj` — added new file to project
+
+#### Build Status:
+- Build succeeds on iPhone 16 Pro simulator
+- 89/89 tests pass (no logic changes)
+- Menu layout verified on simulator — fits without scrolling
+
+#### Commits:
+- `edf13e1` — Session 40: Replace inline HOW TO PLAY with rich info sheet
+- `37a0fa8` — Bump build number to 24 for TestFlight upload
+- `4c03154` — Remove API key from repo — moved to ~/.appstoreconnect/private_keys/
+
+---
+
+### Session 41 (2026-02-02) - Build 24 TestFlight Upload
+
+**Goal:** Commit Session 40 changes, archive Build 24, and upload to TestFlight for device testing.
+
+#### Changes Made:
+
+1. **Committed Session 40 work**: Menu layout fix (How to Play info sheet replacing inline section), HowToPlayView.swift, screenshot housekeeping, all documentation updates.
+
+2. **Build 24 archived and uploaded to TestFlight**: Bumped build number 23 → 24. Archived and uploaded via CLI authentication. dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless).
+
+#### No app code changes (build bump only).
+
+#### Commits:
+- `edf13e1` — Session 40: Replace inline HOW TO PLAY with rich info sheet
+- `37a0fa8` — Bump build number to 24 for TestFlight upload
+- `4c03154` — Update CLI authentication setup
+
+---
+
+### Session 42 (2026-02-02) - Code Quality & Build Hygiene
+
+**Goal:** Review codebase for build hygiene improvements. Harden .gitignore, clean up debug output and legacy files.
+
+#### Changes Made:
+
+1. **`.gitignore` hardened**: Added missing patterns for build artifacts and credential file types (`*.p8`, `*.key`, `*.pem`, `*.secret`, `.env`, `.env.*`, `.apple_id`, `*.ipa`, `*.dSYM`, `*.dSYM.zip`).
+
+2. **Print statements wrapped in `#if DEBUG`**: 5 occurrences across `RocketLanderApp.swift` (ATT status) and `BannerAdView.swift` (4 ad lifecycle events). No output in release builds.
+
+3. **Player name length limit**: Added `.onChange` modifier to TextField in `GameOverView.swift` to cap at 20 characters.
+
+4. **ATT request optimized**: `requestTrackingPermission()` now checks `ATTrackingManager.trackingAuthorizationStatus == .notDetermined` before calling `requestTrackingAuthorization`. Eliminates wasted SDK calls on every foreground.
+
+5. **Legacy Podfile deleted**: Project uses SPM exclusively. Podfile was confusing artifact.
+
+#### No version bump. Build 24 unchanged (code-only changes, no behavioral impact in release builds).
+
+#### Commits:
+- `15a059e` — Code quality improvements — harden .gitignore, wrap prints in DEBUG, optimize ATT, cap player name
+
+---
+
+### Session 43 (2026-02-02) - Documentation Cleanup & Credential Protection Guardrails
+
+**Goal:** Clean up documentation across all project files. Add credential protection guardrails to CLAUDE.md. Clean git history of narrative references.
+
+#### Changes Made:
+
+1. **Documentation cleanup (10 files)**: Reviewed and cleaned all session summaries and project documentation. Simplified authentication workflow descriptions, neutralized verbose narratives, and ensured consistent language.
+
+2. **Credential & Secret Protection (CLAUDE.md)**: Added mandatory section with 6 hard rules: refuse credentials, never write to files, pre-commit scans, safe authentication patterns, and accidental share handling.
+
+3. **Git history cleanup**: 7 passes of `git-filter-repo` (4 `--replace-text` + 3 `--message-callback`) to neutralize ~30 narrative phrases across all historical commits.
+
+#### No app code changes. Documentation only.
+
+#### Commits:
+- `523f00b` — Documentation cleanup and add credential protection guardrails
+
+---
+
+### Session 44 (2026-02-02) - Build 25 TestFlight Upload
+
+**Goal:** Bump build number to 25 and upload to TestFlight so the TestFlight build matches the current source (which includes Session 42 build hygiene changes and Session 43 documentation cleanup).
+
+#### Changes Made:
+
+1. **Build number bumped 24 → 25** (`Info.plist`): Aligns TestFlight build with current source code.
+
+2. **Build 25 archived and uploaded to TestFlight**: Uploaded via Xcode Organizer GUI. dSYM warnings for GoogleMobileAds/UserMessagingPlatform (harmless, same as always).
+
+#### No app code changes (build bump only).
+
+#### Commits:
+- `31c371a` — Bump build number to 25 for TestFlight upload
+
+---
+
+### Session 45 (2026-02-03) - Flight Data Panel Redesign & Crash Messages
+
+**Goal:** Redesign Flight Data panel to match HUD design language. Add randomized crash headline easter eggs.
+
+#### Changes Made:
+
+1. **FinalStatsView HUD-style redesign** (`GameOverView.swift`): Complete rewrite with SF Symbol icons, OK/HARD/FAIL badge pills, 3-color value system, gray dividers, centered header. Band logic per metric (tilt safe/fail, speeds via LandingThresholds, fuel >20%/>0%/0%, center <20pt/<30pt/>=30pt). "HARD LANDING" / "RAPID UNSCHEDULED DISASSEMBLY" badges at bottom. Applied to both landing and crash game-over screens.
+
+2. **Randomized crash headlines** (`GameOverView.swift`): Pool of 20 messages replacing static "CRASH!" text. SpaceX references, space mission quotes, Kerbal vibes, dry humor. Randomized each game over via `@State` property.
+
+3. **High score sheet fix** (`GameOverView.swift`): Added `onChange` listeners for `gameState.score` and `gameState.landed` to handle race condition where `onAppear` fired before state propagated.
+
+4. **GameContainerView overlay restructure** (`GameContainerView.swift`): Moved `GameOverView` from HUD VStack to ZStack root for proper full-screen layering.
+
+5. **Build 26 uploaded to TestFlight** (`Info.plist`): Build number 25 → 26. Archived and uploaded via CLI.
+
+6. **PROJECT_LOG archiving** (`PROJECT_LOG.md`, `PROJECT_LOG_ARCHIVE.md`, `CLAUDE.md`, `STATUS.md`, `README.md`): Moved sessions 1-35 to archive (1,768 → 410 lines). Archive includes project history summary. Archiving rules embedded in CLAUDE.md. Session start checklist updated.
+
+#### Commits:
+- `3b5934c` — Redesign Flight Data panel with HUD-style layout and randomized crash messages
+- `21ac776` — Bump build number to 26 for TestFlight upload
+- `a5a95be` — Add session 45 documentation — Flight Data redesign and crash messages
+- `d850a26` — Archive PROJECT_LOG sessions 1-35 and establish archiving workflow
+- `67d1ee6` — Finalize session 45 documentation — add archiving work to summaries
+- `fc21e40` — Add bug screenshots for game-over overlay scroll issue (Build 25)
+
+---
+
+---
+
+### Session 46 (2026-02-05) - v2.0.3 Gameplay Feedback Fixes
+
+**Goal:** Process 10 user feedback items on v2.0.3 Build 26, implement all fixes for gameplay issues, celestial bodies, level mechanics, and UI.
+
+#### Changes Made:
+
+1. **Menu Button Truncation Fix** (`GameOverView.swift`): Reduced horizontal padding, added `.fixedSize()`.
+
+2. **CENTER Badge Removal** (`GameOverView.swift`): CENTER row now shows value only without OK/HARD/FAIL badge.
+
+3. **Speed Threshold Tightening** (`LandingThresholds.swift`): Tightened all thresholds ~15% for A/B, ~5% for C. Updated all 18 `LandingEvaluationTests` to match new values.
+
+4. **Jupiter Wind Overhaul** (`GameScene.swift`, `GameScene+Effects.swift`, `LevelDefinition.swift`): Wind always pushes left→right with stronger force (base 20.0), ambient wind during calm, gravity increased from -4.8 to -5.2, particles reversed direction.
+
+5. **Europa Ice Effect** (`GameScene.swift`): H.Speed > 20 causes crash ("Slid off the ice!").
+
+6. **Titan Thrust Reduction** (`GameScene.swift`): Thrust reduced to 75% efficiency (replaces drag damping which made it easier).
+
+7. **Earth Platform Collision Fix** (`GameScene.swift`): Zone-based movement — B stays in 5%-50%, C stays in 55%-95%, eliminates startup collision.
+
+8. **Mercury Heat Shimmer** (`GameScene.swift`, `GameScene+Effects.swift`, `LevelDefinition.swift`): Increased perturbation wobble, added rising heat particles, fixed celestial body to sunLarge.
+
+9. **Celestial Body Corrections** (`LevelDefinition.swift`, `GameScene+Setup.swift`): All 10 levels now show astronomically-correct celestial bodies (Earth from Moon, Saturn with rings from Titan, Jupiter with bands from moons, Sun with glow from inner planets, etc.). Added `addSunFeatures()` for Sun rendering.
+
+10. **Partial Platform Landing Detection** (`GameScene.swift`): Both legs (47pt span) must be within platform bounds to land successfully.
+
+#### Files Modified:
+- `RocketLander/Views/GameOverView.swift` — Menu button, CENTER badge
+- `RocketLander/Models/LandingThresholds.swift` — Tightened thresholds
+- `RocketLander/Models/LevelDefinition.swift` — Celestial bodies, Jupiter gravity, Titan description
+- `RocketLander/GameScene.swift` — Europa ice, Titan thrust, Earth platforms, Mercury shimmer, partial landing
+- `RocketLander/GameScene+Effects.swift` — Jupiter particles, Mercury particles
+- `RocketLander/GameScene+Setup.swift` — Sun features, celestial body rendering
+- `RocketLanderTests/LandingEvaluationTests.swift` — Updated 18 tests for new thresholds
+
+#### Build Status:
+- Build succeeds, 89/89 tests pass (18 LandingEvaluationTests updated for new thresholds)
+
+---
+
+### Session 47 (2026-02-05) - Europa Cryogeysers + Build 28 TestFlight
+
+**Goal:** Replace Europa's punishing ice slide crash (H.Speed > 20 = instant death) with cryogeyser eruptions — disruptive but survivable force-based plumes. Upload Build 28 to TestFlight.
+
+#### Changes Made:
+
+1. **Europa cryogeysers** (`LevelDefinition.swift`, `GameScene.swift`, `GameScene+Effects.swift`): Renamed `.iceSurface` → `.cryogeysers`. 3 fixed geyser positions with staggered active/calm cycling. Upward push force (base 18.0, tapering with height) when rocket is in plume zone. Blue/white/cyan particle columns. Vent markers on surface. Ice shimmer + low friction preserved.
+
+2. **Ice slide crash removed** (`GameScene.swift`): Deleted the H.Speed > 20 crash check in `checkLanding()`.
+
+3. **Test updated** (`LevelDefinitionTests.swift`): `.iceSurface` → `.cryogeysers` in expected mechanics map.
+
+4. **Build 28 uploaded to TestFlight** (`Info.plist`): Build number 27 → 28.
+
+#### Files Modified:
+- `RocketLander/Models/LevelDefinition.swift` — enum rename, description update
+- `RocketLander/GameScene.swift` — geyser state, setup, mechanics, ice crash removal, reset cleanup
+- `RocketLander/GameScene+Effects.swift` — `createCryogeyserEffect()` particle system
+- `RocketLanderTests/LevelDefinitionTests.swift` — mechanic name update
+- `RocketLander/Info.plist` — Build 27 → 28
+
+#### Commits:
+- `42d953f` — Replace Europa ice slide with cryogeyser eruptions
+- `167a024` — Bump build number to 28 for TestFlight upload
+
+#### Build Status:
+- Build succeeds, 89/89 tests pass
+
+---
+
+### Session 48 (2026-02-05) - Scoring Rebalance + Tilt Bands
+
+**Goal:** Address low score feedback (rarely >5,000) with comprehensive scoring improvements. Add tilt bands (SAFE/HARD/FAIL) matching speed band philosophy.
+
+#### Root Cause Analysis (Scoring):
+- Quadratic penalty curve zeroed velocity components in HARD band (0 pts instead of partial credit)
+- Session 46 tightened thresholds ~15% compressed the scoring range
+- Fuel multiplier range 1.0-2.0x too narrow; fuel consumption too high
+
+#### Changes Made:
+
+1. **Scoring formula overhaul** (`GameScene+Scoring.swift`, `ScoringHelper.swift`):
+   - Velocity scoring denominator changed from safe to hard threshold — single smooth curve, HARD landings get partial credit
+   - Soft Landing: 500→550 pts, Horizontal Precision: 400→450 pts (subtotal max 2000→2100)
+   - Fuel multiplier: 1.0-2.0x → 1.0-2.2x (factor 1.0→1.2)
+   - Theoretical max: 23,100 (was 20,000)
+
+2. **Fuel consumption reduction** (`GameScene.swift`):
+   - Thrust: 0.30→0.27%/frame
+   - Rotation: 0.08→0.07%/frame
+   - Accelerometer: 0.04→0.035×tilt
+
+3. **Tilt bands** (`LandingThresholds.swift`, `GameScene+Scoring.swift`, `ScoringHelper.swift`, `GameOverView.swift`, `HUDViews.swift`, `LandingMessages.swift`, `HowToPlayView.swift`):
+   - SAFE ≤0.05 rad (~2.9°), HARD ≤0.10 rad (~5.7°), FAIL >0.10 rad
+   - Tilt band participates in overall landing band (worst of V/H/tilt wins)
+   - Rotation scoring uses hardTilt (0.10) as denominator
+   - HUD tilt color: green/yellow/red for safe/hard/fail
+   - Crash message: "Land under 6°" (was 3°)
+   - GameOverView tilt band uses `LandingThresholds.tiltBand()`
+
+4. **HowToPlayView updated** (`HowToPlayView.swift`): New component values, subtotal, fuel range, max. Updated speed band thresholds to v2.0.3 values. Added tilt band explanation.
+
+5. **Perfect score script updated** (`Scripts/calculate_perfect_scores.py`): New formula, fuel rates, tilt thresholds. Best: Classic C = 14,504.
+
+6. **Tests updated** (`ScoringTests.swift`, `LandingEvaluationTests.swift`, `CrashDiagnosticTests.swift`):
+   - ScoringTests: New theoretical max 23,100, new component values, HARD partial credit tests, discontinuity test
+   - LandingEvaluationTests: 2 binary rotation tests → 4 tilt band tests + 1 classification test
+   - CrashDiagnosticTests: Updated rotation value in determinism test (0.08→0.12, since 0.08 is now HARD not crash)
+
+7. **Build 29 uploaded to TestFlight** (`Info.plist`): Build number 28→29.
+
+8. **Build 30 bumped and uploaded to TestFlight** (`Info.plist`): Build number 29→30. Tilt band changes included.
+
+9. **v2.0.3 Build 30 submitted for App Store review** (2026-02-06): What's New text, review notes, and promotional text finalized. Submitted via App Store Connect.
+
+#### Files Modified:
+- `RocketLander/GameScene+Scoring.swift` — scoring formula, rotation denominator
+- `RocketLander/GameScene.swift` — fuel consumption rates
+- `RocketLander/Models/LandingThresholds.swift` — tilt bands (safeTilt, hardTilt, tiltBand(), evaluate())
+- `RocketLander/Models/LandingMessages.swift` — crash threshold hardTilt, "Land under 6°"
+- `RocketLander/Views/GameOverView.swift` — tiltBand uses LandingThresholds.tiltBand()
+- `RocketLander/Views/HUDViews.swift` — hardTiltDegrees, 3-color tiltColor
+- `RocketLander/Views/HowToPlayView.swift` — scoring values, speed band thresholds, tilt band explanation
+- `RocketLanderTests/ScoringHelper.swift` — test scoring replica
+- `RocketLanderTests/ScoringTests.swift` — test assertions
+- `RocketLanderTests/LandingEvaluationTests.swift` — tilt band tests
+- `RocketLanderTests/CrashDiagnosticTests.swift` — determinism test rotation value
+- `Scripts/calculate_perfect_scores.py` — scoring formula, fuel rates, tilt thresholds
+- `RocketLander/Info.plist` — Build 28→29
+
+#### Build Status:
+- Build succeeds, 91/91 tests pass (was 89 — net +2 from tilt band tests)
+
+#### Commits:
+- `e1b2d61` — Rebalance scoring: HARD partial credit, component boost, fuel tuning
+- `25cecde` — Bump build number to 29 for TestFlight upload
+- `254bb30` — Add tilt bands (SAFE/HARD/FAIL) matching speed band philosophy
+- `a906b72` — Bump build number to 30 for TestFlight upload
+- `30ab29d` — Update docs for v2.0.3 Build 30 App Store submission
+- `540de65` — Simplify v2.0.3 review notes
+- `b70cdda` — Note v2.0.3 Build 30 submitted for review
 
 ---

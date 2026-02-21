@@ -61,7 +61,7 @@ struct ControlButton: View {
                 Image(systemName: systemImage)
                     .font(.title2)
                 Text(label)
-                    .font(.caption.bold())
+                    .font(.custom("Orbitron", size: 10).weight(.bold))
             }
             .foregroundColor(.white)
         }
@@ -103,7 +103,7 @@ struct ThrustButton: View {
                 Image(systemName: "flame.fill")
                     .font(.title2)
                 Text("THRUST")
-                    .font(.caption.bold())
+                    .font(.custom("Orbitron", size: 10).weight(.bold))
             }
             .foregroundColor(.white)
         }

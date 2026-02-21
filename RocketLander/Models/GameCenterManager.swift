@@ -10,6 +10,7 @@ class GameCenterManager: ObservableObject {
     @Published var localPlayerName = ""
     @Published var galaxyRank: Int?
     @Published var galaxyScore: Int = 0
+    @Published var lastLeaderboardRank: Int?
 
     // Achievement tracking (persisted to UserDefaults)
     var safePlatformCLevels: Set<Int> = []
@@ -23,6 +24,7 @@ class GameCenterManager: ObservableObject {
         static let classic = "classic"
         static func campaign(_ levelId: Int) -> String { "campaign_\(levelId)" }
         static let galaxyRank = "galaxy_rank"
+        static let dailyChallenge = "daily_challenge"
     }
 
     // MARK: - Achievement IDs
@@ -106,6 +108,16 @@ class GameCenterManager: ObservableObject {
 
     func submitClassicScore(_ score: Int) {
         submitScore(score, leaderboardID: LeaderboardID.classic)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.fetchLeaderboardRank(leaderboardID: LeaderboardID.classic)
+        }
+    }
+
+    func submitDailyChallengeScore(_ score: Int) {
+        submitScore(score, leaderboardID: LeaderboardID.dailyChallenge)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.fetchLeaderboardRank(leaderboardID: LeaderboardID.dailyChallenge)
+        }
     }
 
     func submitCampaignScore(_ score: Int, levelId: Int, campaignState: CampaignState) {
@@ -126,9 +138,11 @@ class GameCenterManager: ObservableObject {
         galaxyScore = totalScore
         submitScore(totalScore, leaderboardID: LeaderboardID.galaxyRank)
 
-        // Refresh rank after submission
+        // Refresh ranks after submission
+        let campaignLeaderboardID = LeaderboardID.campaign(levelId)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             self?.fetchGalaxyRank()
+            self?.fetchLeaderboardRank(leaderboardID: campaignLeaderboardID)
         }
     }
 
@@ -160,6 +174,64 @@ class GameCenterManager: ObservableObject {
                         self.galaxyRank = entry.rank
                         self.galaxyScore = entry.score
                     }
+                }
+            }
+        }
+    }
+
+    // MARK: - Per-Leaderboard Rank Fetch
+
+    func fetchLeaderboardRank(leaderboardID: String) {
+        guard isAuthenticated else { return }
+
+        GKLeaderboard.loadLeaderboards(IDs: [leaderboardID]) { [weak self] leaderboards, error in
+            guard let leaderboard = leaderboards?.first, error == nil else {
+                #if DEBUG
+                if let error = error {
+                    print("GC leaderboard rank fetch error (\(leaderboardID)): \(error.localizedDescription)")
+                }
+                #endif
+                return
+            }
+
+            leaderboard.loadEntries(for: [GKLocalPlayer.local], timeScope: .allTime) { [weak self] localEntry, entries, error in
+                DispatchQueue.main.async {
+                    guard let self = self else { return }
+                    if let error = error {
+                        #if DEBUG
+                        print("GC loadEntries error (\(leaderboardID)): \(error.localizedDescription)")
+                        #endif
+                        return
+                    }
+                    self.lastLeaderboardRank = localEntry?.rank
+                }
+            }
+        }
+    }
+
+    func clearLastLeaderboardRank() {
+        lastLeaderboardRank = nil
+    }
+
+    // MARK: - Daily Challenge Top Entry
+
+    /// Fetch the #1 player for today's daily challenge leaderboard.
+    func fetchDailyTopEntry(completion: @escaping (String?, Int?) -> Void) {
+        guard isAuthenticated else { completion(nil, nil); return }
+
+        GKLeaderboard.loadLeaderboards(IDs: [LeaderboardID.dailyChallenge]) { leaderboards, error in
+            guard let leaderboard = leaderboards?.first, error == nil else {
+                DispatchQueue.main.async { completion(nil, nil) }
+                return
+            }
+
+            leaderboard.loadEntries(for: .global, timeScope: .today, range: NSRange(location: 1, length: 1)) { _, entries, _, error in
+                DispatchQueue.main.async {
+                    guard error == nil, let topEntry = entries?.first else {
+                        completion(nil, nil)
+                        return
+                    }
+                    completion(topEntry.player.displayName, topEntry.score)
                 }
             }
         }

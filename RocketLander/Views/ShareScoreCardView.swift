@@ -28,7 +28,7 @@ struct ShareScoreCardView: View {
         VStack(spacing: 12) {
             // 1. Header — always
             Text("STARSHIP LANDER")
-                .font(.system(size: 14, weight: .black, design: .rounded))
+                .font(.custom("Orbitron", size: 13).weight(.black))
                 .foregroundColor(.orange)
                 .padding(.top, 4)
 
@@ -49,7 +49,7 @@ struct ShareScoreCardView: View {
                 }
             } else {
                 Text(crashHeadline)
-                    .font(.system(size: crashHeadline.count > 25 ? 16 : 20, weight: .black, design: .monospaced))
+                    .font(.custom("Orbitron", size: crashHeadline.count > 25 ? 13 : 17).weight(.black))
                     .foregroundColor(.red)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
@@ -58,18 +58,18 @@ struct ShareScoreCardView: View {
 
             // 3. Mode + level — always
             Text(mode == .campaign ? "Campaign — \(levelName)" : "Classic Mode")
-                .font(.system(size: 12, weight: .bold))
+                .font(.custom("Orbitron", size: 11).weight(.bold))
                 .foregroundColor(.white.opacity(0.8))
 
             // 4. Badge — conditional
             if isLanded {
                 HStack(spacing: 8) {
                     Text(platformLabel)
-                        .font(.system(size: 11, weight: .bold))
+                        .font(.custom("Orbitron", size: 10).weight(.bold))
                         .foregroundColor(.gray)
 
                     Text(speedBand == .safe ? "SAFE" : "HARD")
-                        .font(.system(size: 10, weight: .bold))
+                        .font(.custom("Orbitron", size: 9).weight(.bold))
                         .foregroundColor(speedBand == .safe ? .green : .yellow)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 2)
@@ -78,7 +78,7 @@ struct ShareScoreCardView: View {
                 }
             } else {
                 Text("CRASH")
-                    .font(.system(size: 12, weight: .black, design: .monospaced))
+                    .font(.custom("Orbitron", size: 11).weight(.black))
                     .foregroundColor(.red)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 4)

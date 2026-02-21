@@ -415,6 +415,75 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
+## [2026-02-20] Daily Challenge — Rich Constraint System Over Simple Level/Platform Cycling
+
+**Context:** Initial daily challenge design was `dayOfYear % 10` for level + `dayOfYear % 3` for platform — just cycling through level+platform combos. User feedback: "make daily challenges complex and more difficult (but not impossible). Add tilt/h. speed/v. speed/fuel challenges, different planet/platform landings, timed challenges, combination of some of those."
+**Options considered:** (1) Keep simple cycling with minor variations, (2) Hand-crafted templates with typed constraints, (3) Procedurally generated challenges from constraint pool.
+**Decision:** Option 2 — 20 hand-crafted `ChallengeSpec` templates. `ChallengeConstraint` enum with 6 typed cases: `.landOnPlatform`, `.maxTilt`, `.maxVerticalSpeed`, `.maxHorizontalSpeed`, `.minFuel`, `.maxTime`. Each template combines 1-3 constraints at difficulty 1-5 across all 10 planets. Cycling via `dayOfYear % 20`.
+**Why:** Hand-crafted templates ensure balanced difficulty curves — easy planets can get harder constraints while hard planets get simpler ones. Typed constraints enable: per-constraint evaluation, per-constraint display in briefing and results, and future extensibility. Procedural generation would need guardrails against impossible combos.
+**Consequences:** 20 challenges means a 20-day repeat cycle. Constraints have `isMet()`, `label`, `icon`, and `actualValue()` for display. `DailyChallenge.evaluate()` checks all constraints; `evaluateDetailed()` returns per-constraint pass/fail with actual values. Elapsed time tracking required in GameScene for `.maxTime` constraint.
+
+---
+
+## [2026-02-20] Blue Star Currency — Earn-Only With Future Spending TBD
+
+**Context:** User's son suggested adding "blue stars" as a reward currency for daily challenge completion. Campaign star milestones (10/20/30) also award blue stars as one-time bonuses.
+**Options considered:** (1) Blue stars as cosmetic reward only, (2) Blue stars as spendable currency (unlock skins, modes), (3) Blue stars as earn-only with spending deferred.
+**Decision:** Option 3 — earn-only for v2.2.0. `BlueStarManager` tracks blue stars, streak, and claimed milestones. Spending mechanism deferred to future version.
+**Why:** Earning mechanics (daily challenge + streaks + milestones) create daily engagement loops now. Spending can be designed later when there's enough content to spend on (skins, custom challenges, etc.). Implementing both at once would delay the retention features.
+**Consequences:** Players accumulate blue stars with no spending outlet. The count is displayed on menu and game-over. Future version must add spending to avoid "what are these for?" frustration. Reward values: daily +1, 5-day streak +3 bonus, milestones 10→10, 20→50, 30→150 (total possible one-time: 210 + daily earnings).
+
+---
+
+## [2026-02-20] Interstitial Ads — Every 3 Attempts, Never Blocking
+
+**Context:** Banner-only ad revenue is $0.49 total over 90 days. Need higher-value ad format without destroying gameplay experience.
+**Options considered:** (1) Rewarded video ads (opt-in for blue stars), (2) Interstitial ads on every game over, (3) Interstitial ads every N attempts on Retry/Next Level only.
+**Decision:** Option 3 — interstitial every 3rd Retry/Next Level tap. Menu button never triggers an ad. If ad fails to load, silently skip and proceed. Preload next ad after dismissal.
+**Why:** Every-game interstitials would be too aggressive for a game with short sessions. 3-attempt cadence means ~33% of replays see an ad. Tying to Retry/Next Level (not Menu) means players who stop playing aren't punished. Silent skip on failure ensures gameplay is never blocked by ad infrastructure.
+**Consequences:** Ad revenue should be significantly higher than banners alone. Users who play 3+ games per session see interstitials. Production ad unit ID still needs to be created in AdMob console.
+
+---
+
+## [2026-02-20] Daily Challenge Briefing Screen — Dedicated Pre-Challenge View
+
+**Context:** User noted: "Maybe we need a second screen after Daily Challenge is selected that clearly explains what the Daily Challenge success is, and on that screen we can show Global Today's best."
+**Options considered:** (1) Show challenge info in an alert/popup, (2) Show info inline on menu, (3) Dedicated briefing screen between menu and game.
+**Decision:** Option 3 — `DailyChallengeBriefingView` as a dedicated full-screen view. Shows challenge title, difficulty stars, planet info, briefing text, objectives list with icons, global today's best from Game Center, local best, streak info, and blue star reward preview. "Launch" button starts the challenge.
+**Why:** Daily challenges have complex multi-constraint objectives that need clear presentation. A briefing screen builds anticipation and ensures players understand what they're trying to achieve. The global "today's best" adds competitive motivation before the attempt.
+**Consequences:** One extra tap to start daily challenge (Menu → Briefing → Game). `fetchDailyTopEntry()` added to GameCenterManager for global top player. The briefing screen is the daily challenge's "storefront" — it should make players excited to attempt.
+
+---
+
+## [2026-02-21] Auto-Computed Difficulty — Replace Manual Difficulty Assignments
+
+**Context:** Initial 20 templates had manual `difficulty: Int` in each `ChallengeSpec`. When expanding to 75 templates, manual difficulty was error-prone — "Speed Run" (Moon, 25s, Platform A) was rated 2 stars but was trivially easy. Needed consistent, reproducible difficulty ratings.
+**Options considered:** (1) Manually review and fix all 75 ratings, (2) Auto-compute difficulty from constraint properties.
+**Decision:** Option 2 — computed `difficulty` property on `ChallengeSpec`. Scoring factors: planet gravity/hazards (0.0-4.0), number of constraints (0.8 per extra), constraint tightness per type, platform requirement, time pressure with planet-aware scoring (Moon/Mars time × 0.5, Titan × 0.7).
+**Why:** Reproducible, consistent, self-updating. Adding a new template automatically gets the right difficulty. Planet-aware time scoring recognizes that 15 seconds on Moon is easier than 15 seconds on Jupiter.
+**Consequences:** Removed `difficulty:` parameter from all 75 templates. Distribution: 7/10/23/22/13 across 1-5 stars. "Speed Run" reduced from 25s to 15s and now rates 2 stars correctly. Thresholds: <1.0=1★, <2.2=2★, <3.8=3★, <5.5=4★, ≥5.5=5★.
+
+---
+
+## [2026-02-21] Challenge Failure UX — Distinct from Crash and Success
+
+**Context:** When landing on the wrong platform in a daily challenge, the game showed green checkmark, success music, "you made it" text alongside "CHALLENGE FAILED" — contradictory signals.
+**Options considered:** (1) Treat challenge failure as a crash, (2) Treat as success with small "failed" note, (3) Create distinct "partial success" state.
+**Decision:** Option 3 — distinct challenge failure UX: orange warning triangle icon (not green checkmark), "LANDED — BUT CHALLENGE FAILED" message in orange, orange border (not green), and sad trombone sound (`challenge_fail.wav`) instead of success fanfare. Score is NOT saved to daily best and NOT submitted to Game Center leaderboard.
+**Why:** The landing itself succeeded (physics-wise) but the challenge objective wasn't met. Neither crash visuals (too negative — they did land) nor success visuals (too positive — they didn't meet the challenge) are appropriate. Orange = warning/partial is the right semantic.
+**Consequences:** New sound file (`challenge_fail.wav`) generated via `generate_sounds.py`. `isDCFailed` computed property in GameOverView gates all visual changes. Score gating ensures only genuine challenge completions appear on leaderboards and local bests.
+
+---
+
+## [2026-02-21] Production Interstitial Ad Unit — AdMob Configuration
+
+**Context:** Interstitial ad code was implemented with Google test ID in DEBUG and placeholder in RELEASE.
+**Decision:** Created "Game Over Interstitial" ad unit in AdMob console. Production ID: `ca-app-pub-3801339388353505/8269147180`. Both ad types enabled (text/image/rich media + video). Frequency capping disabled (code handles frequency). eCPM floor: Google optimized, all prices.
+**Why:** Maximize fill rate for a new ad unit with no traffic history. Code-side frequency (every 3rd attempt) is sufficient — no need for AdMob-side capping.
+**Consequences:** No privacy impact — uses existing Google Mobile Ads SDK already declared. New ad units take up to 1 hour to start serving.
+
+---
+
 ## [2026-02-05] Tilt Bands — SAFE/HARD/FAIL Matching Speed Band Philosophy
 **Context:** Tilt had a binary pass/fail gate at 0.05 rad (~2.9°), which was too strict and inconsistent with the 3-band system used for speed (SAFE/HARD/FAIL). Campaign ships spawn at 6.9° tilt, so players must correct before landing — a narrow 2.9° safe zone made this punishing.
 **Options considered:** (1) Raise the binary threshold to ~5°, (2) Add SAFE/HARD/FAIL tilt bands matching the speed band philosophy.

@@ -2,7 +2,7 @@
 
 A physics-based rocket landing game for iOS, inspired by SpaceX Starship landings.
 
-**Version:** 2.1.1
+**Version:** 2.2.0
 **Platform:** iOS 15.0+
 **Language:** Swift 5.0
 **Frameworks:** SwiftUI, SpriteKit, CoreMotion, GameKit
@@ -29,9 +29,11 @@ Guide your Starship through a controlled descent and land safely on one of three
 - **Campaign Reentry Challenge**: Ships spawn with tilt and drift in Campaign mode
 - **Skill-Based Scoring**: Up to 23,100 points with platform and fuel multipliers
 - **High Score Leaderboard**: Track your top 3 landings
-- **Game Center Integration**: 12 leaderboards, 10 achievements, Galaxy Rank aggregate
+- **Game Center Integration**: 13 leaderboards (classic + 10 campaign + galaxy_rank + daily_challenge), 10 achievements, Galaxy Rank aggregate
 - **Share Score Card**: Generate and share landing results as images via native share sheet
-- **AdMob Integration**: Banner ads with App Tracking Transparency support
+- **Daily Challenge**: New challenge every day, same worldwide. 75 rotating templates with 6 constraint types across all 10 planets. Auto-computed difficulty (1-5★). Countdown timer for timed challenges with time bonus scoring. Pre-challenge briefing screen. See [Daily Challenge Catalog](#daily-challenge-catalog) for full list.
+- **Blue Star Currency**: Earn through daily challenges (+1), streaks (+3 bonus at 5 days), and campaign milestones (10/20/30 stars)
+- **AdMob Integration**: Banner + interstitial ads with App Tracking Transparency support
 
 ### Controls
 
@@ -100,7 +102,8 @@ StarshipLander/
 │   ├── GameScene+Effects.swift      # Explosions, flames, visual effects
 │   ├── GameScene+Sound.swift        # All sound methods
 │   ├── GameScene+Scoring.swift      # Score calculation, platform detection
-│   ├── BannerAdView.swift           # AdMob banner integration
+│   ├── BannerAdView.swift           # AdMob banner + ad config
+│   ├── InterstitialAdManager.swift  # Interstitial ads (every 3 attempts)
 │   ├── Info.plist                   # App configuration
 │   ├── RocketLander.entitlements    # Game Center capability
 │   ├── Models/
@@ -111,7 +114,9 @@ StarshipLander/
 │   │   ├── LandingThresholds.swift  # Per-platform speed bands (SAFE/HARD/FAIL)
 │   │   ├── LevelDefinition.swift    # 10 campaign level definitions
 │   │   ├── CampaignState.swift      # Campaign progress persistence
-│   │   └── GameCenterManager.swift  # Game Center auth, leaderboards, achievements
+│   │   ├── GameCenterManager.swift  # Game Center auth, leaderboards, achievements
+│   │   ├── BlueStarManager.swift    # Blue star currency (daily challenge + milestone rewards)
+│   │   └── DailyChallenge.swift     # Daily challenge spec, constraints, templates
 │   ├── Views/
 │   │   ├── GameContainerView.swift  # Game container + SpriteKit bridge
 │   │   ├── GameOverView.swift       # Game over screen with stars + final stats panel
@@ -121,7 +126,8 @@ StarshipLander/
 │   │   ├── LeaderboardView.swift     # Dedicated leaderboard screen
 │   │   ├── HowToPlayView.swift      # How to Play info sheet
 │   │   ├── LevelSelectView.swift    # Campaign level grid
-│   │   └── ShareScoreCardView.swift # Share score card rendering + share helper
+│   │   ├── ShareScoreCardView.swift # Share score card rendering + share helper
+│   │   └── DailyChallengeBriefingView.swift # Pre-challenge briefing screen
 │   ├── Haptics/
 │   │   └── HapticManager.swift      # Haptic feedback manager
 │   ├── Assets.xcassets/             # App icons and colors
@@ -250,6 +256,164 @@ python3 Scripts/generate_sounds.py
 - Rotation (buttons): 0.07% per frame
 - Rotation (accelerometer): scales with tilt intensity (0.035 × tilt)
 
+## Daily Challenge Catalog
+
+75 unique challenges rotating on a deterministic daily cycle (`dayOfYear % 75`). Every player worldwide gets the same challenge each day. Difficulty is auto-computed based on planet gravity/hazards, number of constraints, constraint tightness, platform requirement, and time pressure (planet-aware).
+
+<details>
+<summary><strong>1★ Very Easy (7 challenges)</strong></summary>
+
+| # | Title | Planet | Objectives |
+|--:|-------|--------|------------|
+| 0 | Target Practice | Moon | Platform B |
+| 1 | Easy Does It | Moon | V.Speed < 50 |
+| 2 | Stay Level | Moon | Tilt < 3° |
+| 3 | Steady Approach | Mars | H.Speed < 25 |
+| 4 | Fuel Saver | Moon | Fuel > 40% |
+| 5 | Feather Touch | Mars | V.Speed < 45 |
+| 10 | Quick Drop | Mars | Time < 20s |
+
+</details>
+
+<details>
+<summary><strong>2★ Easy (10 challenges)</strong></summary>
+
+| # | Title | Planet | Objectives |
+|--:|-------|--------|------------|
+| 6 | Steady Hands | Titan | Tilt < 2.5° |
+| 7 | Fuel Miser | Moon | Fuel > 50% |
+| 8 | Speed Run | Moon | Time < 15s, Platform A |
+| 9 | Zero Drift | Mars | H.Speed < 18 |
+| 11 | Titan Target | Titan | Platform B |
+| 12 | Moon Elite | Moon | Platform C |
+| 13 | Smooth Operator | Mars | V.Speed < 40, Tilt < 3° |
+| 14 | Dense Efficiency | Titan | Fuel > 45% |
+| 22 | Ice Level | Europa | Tilt < 2° |
+| 28 | Titan Express | Titan | Time < 22s |
+
+</details>
+
+<details>
+<summary><strong>3★ Moderate (23 challenges)</strong></summary>
+
+| # | Title | Planet | Objectives |
+|--:|-------|--------|------------|
+| 15 | Precision Descent | Europa | Platform C |
+| 16 | Whisper Landing | Earth | V.Speed < 35, H.Speed < 25 |
+| 17 | Fuel Master | Venus | Fuel > 40% |
+| 18 | Razor's Edge | Mercury | Platform B |
+| 19 | Lightning Strike | Europa | Time < 22s, Platform B |
+| 20 | Hover Expert | Titan | V.Speed < 40, Fuel > 35% |
+| 21 | Speed Demon | Earth | Time < 18s |
+| 23 | Barge Hunter | Earth | Platform B, V.Speed < 40 |
+| 24 | Venus Calm | Venus | Tilt < 2.5°, V.Speed < 45 |
+| 26 | Mars Bullseye | Mars | Platform C, Tilt < 2.5° |
+| 27 | Europa Thrift | Europa | Fuel > 35%, Platform B |
+| 29 | Efficient Barge | Earth | Fuel > 40% |
+| 30 | Venus Target | Venus | Platform B |
+| 31 | Mercury Reserve | Mercury | Fuel > 35% |
+| 32 | Moon Sprint | Moon | Time < 18s, Platform C |
+| 33 | Geyser Dodge | Europa | V.Speed < 38, Tilt < 2.5° |
+| 34 | Mars Rush | Mars | Time < 18s, Platform B |
+| 35 | Titan Elite | Titan | Platform C, Fuel > 30% |
+| 37 | Mercury Dash | Mercury | Time < 20s |
+| 38 | Venus Feather | Venus | V.Speed < 42 |
+| 39 | Mars Balance | Mars | Fuel > 45%, V.Speed < 42 |
+| 42 | Conservation | Io | Fuel > 30% |
+| 48 | Crater Sprint | Ganymede | Time < 20s |
+
+</details>
+
+<details>
+<summary><strong>4★ Hard (22 challenges)</strong></summary>
+
+| # | Title | Planet | Objectives |
+|--:|-------|--------|------------|
+| 25 | Mercury Crawl | Mercury | V.Speed < 40, H.Speed < 22 |
+| 36 | Barge Surgeon | Earth | Tilt < 2°, H.Speed < 20 |
+| 40 | Elite Touch | Ganymede | Platform C, Tilt < 3° |
+| 41 | Gentle Giant | Jupiter | V.Speed < 50 |
+| 43 | Total Control | Venus | Tilt < 2°, H.Speed < 20 |
+| 44 | Crater Glide | Ganymede | V.Speed < 38, Fuel > 30% |
+| 45 | Io Precision | Io | Platform B, Tilt < 2.5° |
+| 46 | Jupiter Target | Jupiter | Platform B |
+| 47 | Mercury Elite | Mercury | Platform C, V.Speed < 40 |
+| 49 | Io Whisper | Io | V.Speed < 45, H.Speed < 25 |
+| 50 | Venus Elite | Venus | Platform C, Fuel > 30% |
+| 51 | Wind Walker | Jupiter | H.Speed < 25 |
+| 52 | Ganymede Thrift | Ganymede | Platform B, Fuel > 35% |
+| 53 | Io Blitz | Io | Time < 20s, Platform A |
+| 54 | Mercury Surgeon | Mercury | Tilt < 1.5°, V.Speed < 38 |
+| 55 | Barge Blitz | Earth | Platform C, Time < 18s |
+| 56 | Europa Triple | Europa | Platform C, V.Speed < 35, Fuel > 25% |
+| 57 | Venus Sprint | Venus | Time < 18s, V.Speed < 42 |
+| 58 | Volcanic Elite | Io | Platform C |
+| 59 | Jupiter Steady | Jupiter | Tilt < 3°, Fuel > 20% |
+| 71 | Jupiter Express | Jupiter | Time < 18s |
+| 73 | Venus Lightning | Venus | Time < 16s, Platform B |
+
+</details>
+
+<details>
+<summary><strong>5★ Expert (13 challenges)</strong></summary>
+
+| # | Title | Planet | Objectives |
+|--:|-------|--------|------------|
+| 60 | Absolute Precision | Ganymede | Platform C, V.Speed < 35, Tilt < 2° |
+| 61 | Impossible Landing | Jupiter | Platform C, Fuel > 25% |
+| 62 | Io Masterclass | Io | Platform C, Tilt < 2°, Fuel > 25% |
+| 63 | Jupiter Surgeon | Jupiter | V.Speed < 40, H.Speed < 20, Tilt < 2.5° |
+| 64 | Crater Blitz | Ganymede | Platform C, Time < 18s |
+| 65 | Io Rush | Io | Platform B, V.Speed < 38, Time < 20s |
+| 66 | Storm Rider | Jupiter | Platform B, V.Speed < 42, Fuel > 20% |
+| 67 | Mercury Perfection | Mercury | Platform C, Tilt < 1.5°, V.Speed < 35 |
+| 68 | Venus Mastery | Venus | Platform C, Tilt < 2°, Fuel > 30% |
+| 69 | Barge Perfect | Earth | Platform C, V.Speed < 30, H.Speed < 18 |
+| 70 | Io Zen | Io | Fuel > 35%, V.Speed < 40, Tilt < 2° |
+| 72 | Ganymede Triple | Ganymede | Platform C, Fuel > 30%, Tilt < 2° |
+| 74 | The Final Test | Jupiter | Platform C, V.Speed < 40, Tilt < 2° |
+
+</details>
+
+### Difficulty Distribution
+
+| Difficulty | Count | % of Total |
+|-----------|------:|----------:|
+| 1★ Very Easy | 7 | 9% |
+| 2★ Easy | 10 | 13% |
+| 3★ Moderate | 23 | 31% |
+| 4★ Hard | 22 | 29% |
+| 5★ Expert | 13 | 17% |
+| **Total** | **75** | **100%** |
+
+### Planet Distribution
+
+| Planet | Count |
+|--------|------:|
+| Moon | 8 |
+| Mars | 8 |
+| Titan | 6 |
+| Europa | 6 |
+| Earth | 7 |
+| Venus | 9 |
+| Mercury | 7 |
+| Ganymede | 7 |
+| Io | 8 |
+| Jupiter | 9 |
+
+### Constraint Type Usage
+
+| Constraint | Appearances |
+|-----------|----------:|
+| Platform | 36 |
+| V.Speed | 26 |
+| H.Speed | 10 |
+| Tilt | 21 |
+| Fuel | 22 |
+| Time | 16 |
+
+---
+
 ## App Store
 
 **Available on the App Store**: [Starship Lander](https://apps.apple.com/app/starship-lander/id6740857083)
@@ -267,6 +431,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 2.2.0 | In Development | Daily Challenge, Blue Stars, interstitial ads, global rank on game-over |
 | 2.1.1 | 2026-02-06 | Share card redesign: crash sharing, compact colored stats, App Store link |
 | 2.1.0 | 2026-02-06 | **Live on App Store** — Game Center: 12 leaderboards, 10 achievements, Galaxy Rank, share card |
 | 2.0.3 | 2026-02-06 | Scoring rebalance, tilt bands, Europa cryogeysers, HUD-style Flight Data, randomized crash messages |

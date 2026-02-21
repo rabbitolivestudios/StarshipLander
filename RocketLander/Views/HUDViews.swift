@@ -8,11 +8,11 @@ struct TopHUDView: View {
     var body: some View {
         VStack(spacing: 10) {
             ZStack(alignment: .top) {
-                // Level name centered (campaign mode only)
-                if gameState.currentMode == .campaign,
+                // Level name centered (campaign + daily challenge)
+                if (gameState.currentMode == .campaign || gameState.currentMode == .dailyChallenge),
                    let level = LevelDefinition.level(for: gameState.currentLevelId) {
                     Text(level.name.uppercased())
-                        .font(.headline)
+                        .font(.custom("Orbitron", size: 14).weight(.semibold))
                         .foregroundColor(.white)
                         .shadow(color: .black, radius: 2)
                         .frame(maxWidth: .infinity)
@@ -56,6 +56,16 @@ struct TopHUDView: View {
                         .frame(width: 80, height: 6)
                     }
                 }
+            }
+
+            // Countdown timer for timed daily challenges
+            if gameState.currentMode == .dailyChallenge,
+               let timeLimit = DailyChallenge.timeLimitSeconds {
+                DailyChallengeTimerView(
+                    elapsedTime: gameState.elapsedTime,
+                    timeLimitSeconds: timeLimit,
+                    hasStarted: gameState.elapsedTime > 0
+                )
             }
 
             // Velocity HUD at top
@@ -102,7 +112,7 @@ struct VelocityHUDView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("VERT")
-                        .font(.system(size: 9, weight: .medium))
+                        .font(.custom("Orbitron", size: 8).weight(.medium))
                         .foregroundColor(.gray)
 
                     Text(String(format: "%.0f", displayVertical))
@@ -115,7 +125,7 @@ struct VelocityHUDView: View {
                 Spacer()
 
                 Text(displayVertical <= hudBands.safeVertical ? "OK" : "HIGH")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.custom("Orbitron", size: 9).weight(.bold))
                     .foregroundColor(verticalColor)
                     .lineLimit(1)
                     .fixedSize()
@@ -135,7 +145,7 @@ struct VelocityHUDView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("HORIZ")
-                        .font(.system(size: 9, weight: .medium))
+                        .font(.custom("Orbitron", size: 8).weight(.medium))
                         .foregroundColor(.gray)
 
                     Text(String(format: "%.0f", displayHorizontal))
@@ -148,7 +158,7 @@ struct VelocityHUDView: View {
                 Spacer()
 
                 Text(displayHorizontal <= hudBands.safeHorizontal ? "OK" : "HIGH")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.custom("Orbitron", size: 9).weight(.bold))
                     .foregroundColor(horizontalColor)
                     .lineLimit(1)
                     .fixedSize()
@@ -168,7 +178,7 @@ struct VelocityHUDView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("TILT")
-                        .font(.system(size: 9, weight: .medium))
+                        .font(.custom("Orbitron", size: 8).weight(.medium))
                         .foregroundColor(.gray)
 
                     HStack(spacing: 2) {
@@ -189,7 +199,7 @@ struct VelocityHUDView: View {
                 Spacer()
 
                 Text(tiltDegrees <= safeTiltDegrees ? "OK" : "HIGH")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.custom("Orbitron", size: 9).weight(.bold))
                     .foregroundColor(tiltColor)
                     .lineLimit(1)
                     .fixedSize()
@@ -205,7 +215,7 @@ struct VelocityHUDView: View {
             // Safe landing thresholds (Platform C reference)
             HStack {
                 Text("SAFE:")
-                    .font(.system(size: 9, weight: .medium))
+                    .font(.custom("Orbitron", size: 8).weight(.medium))
                     .foregroundColor(.gray)
                 Text("V<\(Int(hudBands.safeVertical)) H<\(Int(hudBands.safeHorizontal)) T<3°")
                     .font(.system(size: 9, weight: .medium, design: .monospaced))
@@ -254,5 +264,67 @@ struct VelocityHUDView: View {
         if tiltDegrees <= safeTiltDegrees { return .green }
         if tiltDegrees <= hardTiltDegrees { return .yellow }
         return .red
+    }
+}
+
+// MARK: - Daily Challenge Countdown Timer
+struct DailyChallengeTimerView: View {
+    let elapsedTime: TimeInterval
+    let timeLimitSeconds: Int
+    let hasStarted: Bool
+
+    private var remainingTime: TimeInterval {
+        max(0, Double(timeLimitSeconds) - elapsedTime)
+    }
+
+    private var timerColor: Color {
+        if remainingTime <= 5 { return .red }
+        if remainingTime <= 10 { return .yellow }
+        return .cyan
+    }
+
+    private var progress: CGFloat {
+        guard timeLimitSeconds > 0 else { return 1.0 }
+        return CGFloat(remainingTime / Double(timeLimitSeconds))
+    }
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "timer")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(timerColor)
+
+            if hasStarted {
+                Text(String(format: "%.1fs", remainingTime))
+                    .font(.custom("Orbitron", size: 18).weight(.bold))
+                    .foregroundColor(timerColor)
+                    .frame(width: 75, alignment: .leading)
+            } else {
+                Text("\(timeLimitSeconds)s")
+                    .font(.custom("Orbitron", size: 18).weight(.bold))
+                    .foregroundColor(.cyan.opacity(0.6))
+                    .frame(width: 75, alignment: .leading)
+            }
+
+            // Progress bar
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(Color.gray.opacity(0.3))
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(timerColor)
+                        .frame(width: geo.size.width * progress)
+                }
+            }
+            .frame(width: 60, height: 6)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(Color.black.opacity(0.7))
+        .cornerRadius(8)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(timerColor.opacity(0.4), lineWidth: 1)
+        )
     }
 }

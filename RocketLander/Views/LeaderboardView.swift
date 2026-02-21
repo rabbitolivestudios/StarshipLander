@@ -24,7 +24,7 @@ struct LeaderboardView: View {
                 Spacer()
 
                 Text("LEADERBOARD")
-                    .font(.title2.bold())
+                    .font(.custom("Orbitron", size: 20).weight(.bold))
                     .foregroundColor(.white)
 
                 Spacer()
@@ -41,7 +41,7 @@ struct LeaderboardView: View {
                     if gameCenterManager.isAuthenticated {
                         VStack(spacing: 6) {
                             Text("Galaxy Rank reflects your total campaign mastery.")
-                                .font(.caption)
+                                .font(.custom("Orbitron", size: 10).weight(.regular))
                                 .foregroundColor(.gray)
                                 .multilineTextAlignment(.center)
 
@@ -66,7 +66,7 @@ struct LeaderboardView: View {
                                     Image(systemName: "gamecontroller.fill")
                                     Text("View Global Rankings")
                                 }
-                                .font(.caption.bold())
+                                .font(.custom("Orbitron", size: 11).weight(.bold))
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
@@ -116,7 +116,7 @@ struct LeaderboardView: View {
                 Image(systemName: "flame.fill")
                     .foregroundColor(.orange)
                 Text("CLASSIC MODE")
-                    .font(.caption.bold())
+                    .font(.custom("Orbitron", size: 11).weight(.bold))
                     .foregroundColor(.orange)
                 Spacer()
             }
@@ -144,7 +144,7 @@ struct LeaderboardView: View {
     private var campaignHeader: some View {
         HStack {
             Text("CAMPAIGN MISSIONS")
-                .font(.caption.bold())
+                .font(.custom("Orbitron", size: 11).weight(.bold))
                 .foregroundColor(.white)
             Spacer()
             HStack(spacing: 4) {
@@ -173,7 +173,7 @@ struct LeaderboardView: View {
                     .foregroundColor(isUnlocked ? .white : .gray)
 
                 Text(level.name.uppercased())
-                    .font(.caption.bold())
+                    .font(.custom("Orbitron", size: 11).weight(.bold))
                     .foregroundColor(isUnlocked ? .orange : .gray)
 
                 Spacer()
@@ -224,7 +224,7 @@ struct LeaderboardView: View {
                 .frame(width: 25, alignment: .leading)
 
             Text(name)
-                .font(.subheadline.bold())
+                .font(.custom("Orbitron", size: 13).weight(.bold))
                 .foregroundColor(score != nil ? (rank == 1 ? .yellow : .white) : .gray.opacity(0.4))
                 .lineLimit(1)
 

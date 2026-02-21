@@ -226,6 +226,60 @@ def generate_explosion():
 
     return final
 
+def generate_challenge_fail():
+    """Generate 16-bit 'sad trombone' womp-womp for challenge failure.
+    Two descending triangle wave notes with vibrato for that trombone wobble."""
+
+    all_samples = []
+
+    # Note 1: Bb4 (~466 Hz), 300ms — the "womp"
+    note1_dur = 0.3
+    note1_samples = int(SAMPLE_RATE * note1_dur)
+    note1 = []
+    for i in range(note1_samples):
+        t = i / SAMPLE_RATE
+        # Vibrato: slight pitch wobble at ~5Hz, ±8Hz depth
+        vibrato = 8.0 * math.sin(2 * math.pi * 5.0 * t)
+        freq = 466.0 + vibrato
+        period = SAMPLE_RATE / freq
+        # Triangle wave
+        pos = (i % period) / period
+        if pos < 0.5:
+            sample = 0.45 * (4 * pos - 1)
+        else:
+            sample = 0.45 * (3 - 4 * pos)
+        note1.append(sample)
+    note1 = apply_envelope(note1, attack=0.01, decay=0.05, sustain=0.8, release=0.1)
+    all_samples.extend(note1)
+
+    # Short gap (50ms)
+    all_samples.extend([0.0] * int(0.05 * SAMPLE_RATE))
+
+    # Note 2: E4 (~330 Hz), 500ms — the "woooomp" (lower, longer, sadder)
+    note2_dur = 0.5
+    note2_samples = int(SAMPLE_RATE * note2_dur)
+    note2 = []
+    for i in range(note2_samples):
+        t = i / SAMPLE_RATE
+        t_ratio = i / note2_samples
+        # Vibrato: wider wobble on the second note, ~5Hz, ±12Hz
+        vibrato = 12.0 * math.sin(2 * math.pi * 5.0 * t)
+        # Slight pitch bend down over the note (330 -> 310 Hz)
+        freq = 330.0 - (20.0 * t_ratio) + vibrato
+        period = SAMPLE_RATE / freq
+        # Triangle wave
+        pos = (i % period) / period
+        if pos < 0.5:
+            sample = 0.45 * (4 * pos - 1)
+        else:
+            sample = 0.45 * (3 - 4 * pos)
+        note2.append(sample)
+    note2 = apply_envelope(note2, attack=0.01, decay=0.08, sustain=0.7, release=0.25)
+    all_samples.extend(note2)
+
+    return all_samples
+
+
 def main():
     # Create output directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -253,6 +307,11 @@ def main():
     print("  - explosion.wav")
     explosion_samples = generate_explosion()
     create_wav(os.path.join(output_dir, 'explosion.wav'), explosion_samples)
+
+    # Generate challenge fail sound (sad trombone)
+    print("  - challenge_fail.wav")
+    challenge_fail_samples = generate_challenge_fail()
+    create_wav(os.path.join(output_dir, 'challenge_fail.wav'), challenge_fail_samples)
 
     print(f"\nSound files created in: {output_dir}")
     print("\nTo add to Xcode project:")

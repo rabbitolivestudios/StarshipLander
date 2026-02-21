@@ -182,9 +182,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [2.2.0] - Unreleased (Phase: Monetization — approach TBD)
+## [2.2.0] - Build 34 (Phase: Retention + Monetization)
 
-_Scope not yet defined. Monetization alternatives to be discussed._
+### Added
+- **Daily Challenge System**: A new challenge every day, the same for all players worldwide. 75 rotating templates with rich constraint types:
+  - 6 constraint types: target platform, max tilt, max vertical speed, max horizontal speed, min fuel, time limit
+  - Challenges combine multiple constraints and rotate across all 10 planets
+  - Auto-computed difficulty (1-5 stars) based on planet gravity/hazards, constraint count/tightness, platform requirement, and time pressure (planet-aware scoring)
+  - Deterministic cycling via `dayOfYear % 75` — same challenge worldwide each day
+  - Pre-challenge briefing screen (`DailyChallengeBriefingView`) with: objectives, planet info, difficulty stars, global today's best (from GC), local best, streak info, blue star reward preview
+  - Per-constraint pass/fail breakdown on game-over screen with actual values
+  - Countdown timer for timed challenges with time bonus scoring
+  - Challenge failure UX: distinct from crash — orange warning icon, "LANDED — BUT CHALLENGE FAILED" message, sad trombone sound (`challenge_fail.wav`)
+  - Daily Challenge leaderboard on Game Center (`daily_challenge`)
+  - `DailyChallenge.evaluate()` and `evaluateDetailed()` for constraint checking
+- **Blue Star Currency** (`BlueStarManager.swift`): Special currency earned through skill and dedication
+  - Daily challenge completion: +1 blue star
+  - 5-day streak bonus: +3 blue stars
+  - Campaign star milestones: 10 stars → +10 blue, 20 stars → +50 blue, 30 stars → +150 blue
+  - Singleton with UserDefaults persistence, idempotent reward claiming
+  - Displayed on menu (next to campaign stars) and game-over screens
+- **Interstitial Ads** (`InterstitialAdManager.swift`): Revenue diversification beyond banners
+  - Shows interstitial every 3rd Retry/Next Level tap
+  - Never blocks gameplay — silently skips on ad load failure
+  - Test ID in DEBUG, production ID in RELEASE (`ca-app-pub-3801339388353505/8269147180`)
+  - Uses existing `topViewController()` for presentation
+- **Global Rank on Game-Over**: Per-leaderboard rank displayed ~1-2s after each landing
+  - `lastLeaderboardRank` published property in GameCenterManager
+  - `fetchLeaderboardRank(leaderboardID:)` called after score submission with 1s delay
+  - Works for classic, campaign, and daily challenge modes
+  - `clearLastLeaderboardRank()` prevents stale rank carryover between games
+- **Elapsed Time Tracking**: `gameStartTime` in GameScene, `elapsedTime` in GameState. Used for time-limited daily challenges. Timer starts when `hasStarted` flips to true in update loop.
+
+### Changed
+- **Menu Modernized**: Sci-fi title typography (`.monospaced` with wide tracking and gradients), footer toolbar row (Settings | How to Play | version) replacing lone gear icon and separate version overlay. Settings moved to bottom sheet via gear icon. Blue star count displayed next to campaign stars. Streak counter shown below play buttons.
+- **How To Play Expanded**: Two new sections — Daily Challenge (explains 6 constraint types with teal icons) and Blue Stars (explains 5 earning methods with milestone details)
+- **Daily Challenge button**: Teal-colored button on menu between Classic and Campaign. Opens briefing screen instead of launching directly.
+- **GameState**: Added `.dailyChallenge` game mode, `dailyChallengeTargetPlatform`, `dailyChallengeSuccess`, `elapsedTime` properties
+- **GameScene**: Daily challenge mode loads level physics/hazards, evaluates constraints on landing, triggers blue star rewards on success
+- **GameScene+Setup**: Daily challenge uses same planet rendering as campaign mode
+- **GameCenterManager**: Added `submitDailyChallengeScore()`, `fetchDailyTopEntry()`, `fetchLeaderboardRank()`, `clearLastLeaderboardRank()`
+- **GameOverView**: Constraint breakdown display, blue star reward display, campaign milestone display, interstitial ad trigger on Retry/Next Level
+- **GameContainerView**: Passes `BlueStarManager.shared` to GameOverView
+- **BannerAdView**: Added interstitial ad unit ID to `AdConfig` (production ID configured)
+- **Fonts**: Added Orbitron font family for timer and challenge UI elements
+- **GameScene+Sound**: Added `playChallengeFailSound()` for sad trombone on challenge failure
+- **Scripts/generate_sounds.py**: Added `generate_challenge_fail()` — 16-bit sad trombone with vibrato
+
+### Privacy Impact
+- No new SDKs — uses existing Google Mobile Ads SDK for interstitial ads
+- No new data collection — interstitial ads use same AdMob framework already declared
+- No ATT changes — existing prompt covers all ad formats
+- No new App Privacy declarations needed
 
 ---
 
@@ -528,6 +577,7 @@ _Scope not yet defined. Monetization alternatives to be discussed._
 
 | Version | Date       | Highlights                                    |
 |---------|------------|-----------------------------------------------|
+| 2.2.0   | Build 34   | Daily Challenge (75 templates), Blue Stars, interstitial ads, global rank, challenge failure UX |
 | 2.1.1   | 2026-02-06 | Share card redesign: crash sharing, compact colored stats, App Store link |
 | 2.1.0   | 2026-02-06 | Game Center: 12 leaderboards, 10 achievements, Galaxy Rank, share card |
 | 2.0.3   | 2026-02-01 | Campaign engagement: reentry state, tilt HUD, flight stats, crash diagnostics |

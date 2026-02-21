@@ -17,6 +17,7 @@
 		A1000007 /* rotate.wav in Resources */ = {isa = PBXBuildFile; fileRef = A2000008 /* rotate.wav */; };
 		A1000008 /* land_success.wav in Resources */ = {isa = PBXBuildFile; fileRef = A2000009 /* land_success.wav */; };
 		A1000009 /* explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = A2000010 /* explosion.wav */; };
+		A100000A /* challenge_fail.wav in Resources */ = {isa = PBXBuildFile; fileRef = A2000011 /* challenge_fail.wav */; };
 		C2000001 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000001 /* GameState.swift */; };
 		C2000002 /* HighScoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000002 /* HighScoreManager.swift */; };
 		C2000003 /* LandingPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000003 /* LandingPlatform.swift */; };
@@ -39,6 +40,7 @@
 		C2000020 /* HowToPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000020 /* HowToPlayView.swift */; };
 		GC000001 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = GC100001 /* GameCenterManager.swift */; };
 		SC000001 /* ShareScoreCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SC100001 /* ShareScoreCardView.swift */; };
+		DB000001 /* DailyChallengeBriefingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB100001 /* DailyChallengeBriefingView.swift */; };
 		T2000001 /* ScoringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000001 /* ScoringTests.swift */; };
 		T2000002 /* HighScoreManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000002 /* HighScoreManagerTests.swift */; };
 		T2000003 /* CampaignStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000003 /* CampaignStateTests.swift */; };
@@ -49,6 +51,10 @@
 		T2000007 /* LandingPlatformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000007 /* LandingPlatformTests.swift */; };
 		T2000008 /* ScoringHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000008 /* ScoringHelper.swift */; };
 		T2000010 /* LandingEvaluationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1000010 /* LandingEvaluationTests.swift */; };
+		IA000001 /* InterstitialAdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = IA100001 /* InterstitialAdManager.swift */; };
+		DC000001 /* DailyChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC100001 /* DailyChallenge.swift */; };
+		BS000001 /* BlueStarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BS100001 /* BlueStarManager.swift */; };
+		FT000001 /* Orbitron-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FT100001 /* Orbitron-VariableFont_wght.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +78,7 @@
 		A2000008 /* rotate.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = rotate.wav; sourceTree = "<group>"; };
 		A2000009 /* land_success.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = land_success.wav; sourceTree = "<group>"; };
 		A2000010 /* explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = explosion.wav; sourceTree = "<group>"; };
+		A2000011 /* challenge_fail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = challenge_fail.wav; sourceTree = "<group>"; };
 		A3000001 /* RocketLander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RocketLander.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1000001 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		C1000002 /* HighScoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoreManager.swift; sourceTree = "<group>"; };
@@ -96,6 +103,11 @@
 		GC100001 /* GameCenterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterManager.swift; sourceTree = "<group>"; };
 		GC100002 /* RocketLander.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RocketLander.entitlements; sourceTree = "<group>"; };
 		SC100001 /* ShareScoreCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareScoreCardView.swift; sourceTree = "<group>"; };
+		DB100001 /* DailyChallengeBriefingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyChallengeBriefingView.swift; sourceTree = "<group>"; };
+		IA100001 /* InterstitialAdManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterstitialAdManager.swift; sourceTree = "<group>"; };
+		DC100001 /* DailyChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyChallenge.swift; sourceTree = "<group>"; };
+		BS100001 /* BlueStarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueStarManager.swift; sourceTree = "<group>"; };
+		FT100001 /* Orbitron-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Orbitron-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		T1000001 /* ScoringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringTests.swift; sourceTree = "<group>"; };
 		T1000002 /* HighScoreManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoreManagerTests.swift; sourceTree = "<group>"; };
 		T1000003 /* CampaignStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignStateTests.swift; sourceTree = "<group>"; };
@@ -148,6 +160,7 @@
 				C1000016 /* GameScene+Sound.swift */,
 				C1000017 /* GameScene+Scoring.swift */,
 				A2000004 /* BannerAdView.swift */,
+				IA100001 /* InterstitialAdManager.swift */,
 				C3000001 /* Models */,
 				C3000002 /* Views */,
 				C3000003 /* Haptics */,
@@ -155,6 +168,7 @@
 				A2000006 /* Info.plist */,
 				GC100002 /* RocketLander.entitlements */,
 				A5000004 /* Sounds */,
+				FT200001 /* Fonts */,
 			);
 			path = RocketLander;
 			sourceTree = "<group>";
@@ -175,8 +189,17 @@
 				A2000008 /* rotate.wav */,
 				A2000009 /* land_success.wav */,
 				A2000010 /* explosion.wav */,
+				A2000011 /* challenge_fail.wav */,
 			);
 			path = Sounds;
+			sourceTree = "<group>";
+		};
+		FT200001 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				FT100001 /* Orbitron-VariableFont_wght.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		C3000001 /* Models */ = {
@@ -190,6 +213,8 @@
 				C1000006 /* CampaignState.swift */,
 				C1000019 /* LandingThresholds.swift */,
 				GC100001 /* GameCenterManager.swift */,
+				DC100001 /* DailyChallenge.swift */,
+				BS100001 /* BlueStarManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -206,6 +231,7 @@
 				C1000018 /* LeaderboardView.swift */,
 				C1000020 /* HowToPlayView.swift */,
 				SC100001 /* ShareScoreCardView.swift */,
+				DB100001 /* DailyChallengeBriefingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -327,6 +353,8 @@
 				A1000007 /* rotate.wav in Resources */,
 				A1000008 /* land_success.wav in Resources */,
 				A1000009 /* explosion.wav in Resources */,
+				A100000A /* challenge_fail.wav in Resources */,
+				FT000001 /* Orbitron-VariableFont_wght.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +398,10 @@
 				C2000020 /* HowToPlayView.swift in Sources */,
 				GC000001 /* GameCenterManager.swift in Sources */,
 				SC000001 /* ShareScoreCardView.swift in Sources */,
+				DB000001 /* DailyChallengeBriefingView.swift in Sources */,
+				IA000001 /* InterstitialAdManager.swift in Sources */,
+				DC000001 /* DailyChallenge.swift in Sources */,
+				BS000001 /* BlueStarManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

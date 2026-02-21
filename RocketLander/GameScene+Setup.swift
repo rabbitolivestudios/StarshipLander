@@ -37,7 +37,7 @@ extension GameScene {
         let posY: CGFloat
         var planetName = "Moon"
 
-        if gameState.currentMode == .campaign,
+        if gameState.currentMode.usesLevelDefinition,
            let level = LevelDefinition.level(for: gameState.currentLevelId) {
             celestial = level.celestialBody
             planetName = level.name
@@ -416,7 +416,7 @@ extension GameScene {
 
             // Deep craters for Ganymede: raise terrain at screen edges
             // (Rock pillars between platforms are added separately in addGanymedeRocks)
-            if gameState.currentMode == .campaign && gameState.currentLevelId == 8 {
+            if gameState.currentMode.usesLevelDefinition && gameState.currentLevelId == 8 {
                 let leftWallEnd: CGFloat = 40
                 let rightWallStart: CGFloat = size.width - 50
                 let wallHeight: CGFloat = 350
@@ -456,7 +456,7 @@ extension GameScene {
         let fillColor: SKColor
         let strokeColor: SKColor
 
-        if gameState.currentMode == .campaign,
+        if gameState.currentMode.usesLevelDefinition,
            let level = LevelDefinition.level(for: gameState.currentLevelId) {
             fillColor = level.terrainColor
             strokeColor = level.terrainStrokeColor
@@ -486,7 +486,7 @@ extension GameScene {
         addChild(terrain)
 
         // For Ganymede (deep craters), add terrain physics + rock pillars
-        if gameState.currentMode == .campaign && gameState.currentLevelId == 8 {
+        if gameState.currentMode.usesLevelDefinition && gameState.currentLevelId == 8 {
             addTerrainPhysics(heights: heights, segmentWidth: segmentWidth)
             addGanymedeRocks()
         }
@@ -616,7 +616,7 @@ extension GameScene {
             platformNode.physicsBody?.contactTestBitMask = rocketCategory
 
             // Low friction for Europa (icy world)
-            if gameState.currentMode == .campaign && gameState.currentLevelId == 4 {
+            if gameState.currentMode.usesLevelDefinition && gameState.currentLevelId == 4 {
                 platformNode.physicsBody?.friction = 0.05
             } else {
                 platformNode.physicsBody?.friction = 0.8
@@ -665,14 +665,14 @@ extension GameScene {
             // Platform label below
             let label = SKLabelNode(text: "\(platformDef.label)")
             label.fontSize = 10
-            label.fontName = "Helvetica-Bold"
+            label.fontName = "Orbitron"
             label.fontColor = platformDef.lightColor
             label.position = CGPoint(x: 0, y: -32)
             platformNode.addChild(label)
 
             let multiplierLabel = SKLabelNode(text: "\(Int(platformDef.multiplier))x")
             multiplierLabel.fontSize = 12
-            multiplierLabel.fontName = "Helvetica-Bold"
+            multiplierLabel.fontName = "Orbitron"
             multiplierLabel.fontColor = SKColor.white
             multiplierLabel.position = CGPoint(x: 0, y: -44)
             platformNode.addChild(multiplierLabel)

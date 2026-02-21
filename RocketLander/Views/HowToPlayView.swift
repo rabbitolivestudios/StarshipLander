@@ -13,7 +13,7 @@ struct HowToPlayView: View {
                 // Header bar
                 HStack {
                     Text("How to Play")
-                        .font(.title2.bold())
+                        .font(.custom("Orbitron", size: 20).weight(.bold))
                         .foregroundColor(.white)
                     Spacer()
                     Button(action: { dismiss() }) {
@@ -31,6 +31,8 @@ struct HowToPlayView: View {
                         speedBandsSection
                         scoringSection
                         campaignSection
+                        dailyChallengeSection
+                        blueStarsSection
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 40)
@@ -336,6 +338,96 @@ struct HowToPlayView: View {
         }
         .padding(.vertical, 5)
         .padding(.horizontal, 8)
+    }
+
+    // MARK: - Daily Challenge
+
+    private var dailyChallengeSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionHeader("Daily Challenge")
+
+            Text("A new challenge every day, the same for all players worldwide. Each challenge sets specific objectives you must meet in a single landing.")
+                .font(.caption)
+                .foregroundColor(.gray)
+
+            VStack(alignment: .leading, spacing: 6) {
+                constraintRow(icon: "scope", label: "Target Platform", detail: "Land on a specific platform (A, B, or C)")
+                constraintRow(icon: "rotate.right", label: "Max Tilt", detail: "Keep your tilt angle below the limit")
+                constraintRow(icon: "arrow.down", label: "Max V. Speed", detail: "Touch down below a vertical speed limit")
+                constraintRow(icon: "arrow.left.arrow.right", label: "Max H. Speed", detail: "Control your horizontal drift")
+                constraintRow(icon: "fuelpump.fill", label: "Min Fuel", detail: "Land with enough fuel remaining")
+                constraintRow(icon: "timer", label: "Time Limit", detail: "Complete the landing within a time limit")
+            }
+
+            Text("Challenges combine multiple objectives and rotate across all 10 planets. Difficulty ranges from 1 to 5 stars.")
+                .font(.caption)
+                .foregroundColor(.gray)
+        }
+    }
+
+    private func constraintRow(icon: String, label: String, detail: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 11))
+                .foregroundColor(.teal)
+                .frame(width: 20)
+                .padding(.top, 1)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(label)
+                    .font(.caption.bold())
+                    .foregroundColor(.white)
+                Text(detail)
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+            }
+        }
+    }
+
+    // MARK: - Blue Stars
+
+    private var blueStarsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionHeader("Blue Stars")
+
+            HStack(spacing: 6) {
+                Image(systemName: "star.fill")
+                    .font(.caption)
+                    .foregroundColor(.cyan)
+                Text("Blue Stars are a special currency earned through skill and dedication.")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                rewardRow(title: "Daily Challenge", detail: "+1 Blue Star for completing a daily challenge", icon: "calendar.badge.clock", color: .teal)
+                rewardRow(title: "5-Day Streak", detail: "+3 bonus Blue Stars for 5 consecutive days", icon: "flame.fill", color: .orange)
+                rewardRow(title: "10 Campaign Stars", detail: "+10 Blue Stars milestone", icon: "star.fill", color: .yellow)
+                rewardRow(title: "20 Campaign Stars", detail: "+50 Blue Stars milestone", icon: "star.fill", color: .yellow)
+                rewardRow(title: "30 Campaign Stars", detail: "+150 Blue Stars milestone", icon: "star.fill", color: .yellow)
+            }
+
+            Text("Campaign milestones are one-time rewards. Daily challenges and streaks can be earned every day.")
+                .font(.caption2)
+                .foregroundColor(.gray)
+        }
+    }
+
+    private func rewardRow(title: String, detail: String, icon: String, color: Color) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 11))
+                .foregroundColor(color)
+                .frame(width: 20)
+                .padding(.top, 1)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title)
+                    .font(.caption.bold())
+                    .foregroundColor(.white)
+                Text(detail)
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+            }
+        }
     }
 
     // MARK: - Helpers

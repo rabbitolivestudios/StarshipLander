@@ -38,7 +38,9 @@ struct GameContainerView: View {
                     gameState: gameState,
                     showingGame: $showingGame,
                     highScoreManager: highScoreManager,
-                    campaignState: campaignState
+                    campaignState: campaignState,
+                    gameCenterManager: gameCenterManager,
+                    blueStarManager: BlueStarManager.shared
                 )
                 .transition(.scale.combined(with: .opacity))
                 .padding(.bottom, 60) // clear the banner ad
