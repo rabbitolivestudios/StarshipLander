@@ -68,12 +68,12 @@ User also asked about "playable ads" (interactive mini-games in ads). These are 
 - [x] Production interstitial ad ID configured
 - [x] 7-file documentation sweep complete
 - [x] plan.md deleted
-- [ ] Build verification
-- [ ] Git commit and push
-- [ ] Archive + upload to TestFlight
+- [x] Build verification (BUILD SUCCEEDED)
+- [x] Git commit and push (`e6cbac8`)
+- [x] Archive + upload to TestFlight (Build 34 uploaded, EXPORT SUCCEEDED)
 
 ## Commits
-- (pending — will be updated after commit)
+- `e6cbac8` — v2.2.0: Daily Challenge, Blue Stars, Interstitial Ads, Global Rank
 
 ## Repo Housekeeping
 - [x] Working tree clean (plan.md deleted, no stale untracked files)
@@ -82,9 +82,7 @@ User also asked about "playable ads" (interactive mini-games in ads). These are 
 - [x] No secrets or credentials in tracked files
 
 ## Next Actions
-- [ ] Build verification (xcodebuild)
-- [ ] Git commit and push all v2.2.0 changes
-- [ ] Archive Build 34 and upload to TestFlight
 - [ ] Create `daily_challenge` leaderboard in ASC (before App Store submission)
-- [ ] Device testing of all v2.2.0 features
+- [ ] Device testing of all v2.2.0 features on TestFlight
 - [ ] ASO, screenshots, App Store preparation
+- [ ] Submit v2.2.0 for App Store review

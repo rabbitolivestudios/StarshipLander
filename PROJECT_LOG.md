@@ -662,17 +662,20 @@ Game Center resources were created via API but never included in an App Store ve
 - `STATUS.md`, `CHANGELOG.md`, `README.md`, `DECISIONS.md`, `RELEASE_NOTES.md`, `PROJECT_LOG.md`
 
 #### Build Status:
-- Pending build verification
+- Build succeeds, archive succeeds, export + upload succeeds
+
+#### Commits:
+- `e6cbac8` — v2.2.0: Daily Challenge, Blue Stars, Interstitial Ads, Global Rank
 
 #### Definition of Done:
 - [x] TEMP override reverted
 - [x] Production interstitial ID configured
 - [x] 7-file documentation sweep complete
 - [x] plan.md deleted
-- [ ] Build succeeds
-- [ ] Git commit and push
-- [ ] Archive + upload to TestFlight
-- [ ] Session summary created
+- [x] Build succeeds
+- [x] Git commit and push (`e6cbac8`)
+- [x] Archive + upload to TestFlight (Build 34)
+- [x] Session summary created
 
 ---
 
