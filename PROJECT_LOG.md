@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-21, Session 59)
+## Current Status (2026-02-21, Session 60)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -29,30 +29,31 @@ This file documents the development history and decisions for the Starship Lande
 | 2.0.3 | 30 | Published (approved 2026-02-06) — scoring rebalance + tilt bands + Europa cryogeysers |
 | 2.1.0 | 32 | **PUBLISHED** (approved 2026-02-06) — Game Center + Share Score Card. **Live on App Store.** |
 | 2.1.1 | 33 | **SUBMITTED FOR REVIEW** (2026-02-06) — Share card redesign + GC fix |
-| 2.2.0 | 34 | **COMMITTED** — pending TestFlight upload + device testing |
+| 2.2.0 | 34 | Build 34 on TestFlight — initial v2.2.0 upload |
+| 2.2.0 | 35 | **UPLOADING TO TESTFLIGHT** — bug fixes (menu layout, ad frequency, thrust multi-touch) |
 
 **NEXT STEPS:**
-1. **v2.2.0: Archive + upload Build 34 to TestFlight**
-2. **v2.2.0: Device/simulator testing** — daily challenge flow, interstitial ads, blue star rewards, menu layout
-3. **v2.2.0: Create `daily_challenge` leaderboard in ASC** — needed before App Store submission
-4. **v2.2.0: Submit for App Store review**
-5. Implement event-driven share triggers per growth plan
-6. Create 5 high-converting App Store screenshots per growth plan
+1. **v2.2.0: Device testing of Build 35** — verify menu layout fix, interstitial cadence, thrust multi-touch, daily challenge flow, blue star rewards
+2. **v2.2.0: Create `daily_challenge` leaderboard in ASC** — needed before App Store submission
+3. **v2.2.0: Submit for App Store review**
+4. Implement event-driven share triggers per growth plan
+5. Create 5 high-converting App Store screenshots per growth plan
 
-**v2.2.0 — Phase: Retention + Monetization (CODE COMPLETE, pending testing):**
+**v2.2.0 — Phase: Retention + Monetization (Build 35 with bug fixes):**
 - [done] Daily Challenge System (75 templates, 6 constraint types, auto-computed difficulty, deterministic cycling)
 - [done] Daily Challenge Briefing Screen (planet info, objectives, difficulty, GC top score, streak)
 - [done] Blue Star Currency (daily challenge +1, streak bonus +3, campaign milestones)
-- [done] Interstitial Ads (every 3rd Retry/Next Level, never blocking)
+- [done] Interstitial Ads (every 7th Retry/Next Level, never blocking, text/image only)
 - [done] Global Rank on game-over screen (per-leaderboard rank ~1s after score submission)
-- [done] Modernized Menu (sci-fi typography, footer toolbar, blue star count, streak display)
+- [done] Modernized Menu (sci-fi typography, footer pinned above ad, blue star count, streak display)
 - [done] How To Play expanded (Daily Challenge + Blue Stars sections)
 - [done] Elapsed time tracking (for time-limited daily challenges)
 - [done] Production interstitial ad unit ID (ca-app-pub-3801339388353505/8269147180)
 - [done] 75 templates with auto-computed difficulty (expanded from 20)
 - [done] Challenge failure UX (orange warning, sad trombone)
-- [pending] Archive + upload Build 34 to TestFlight
-- [pending] Device testing
+- [done] Menu layout overlap fix (footer moved outside ScrollView)
+- [done] Multi-touch thrust stuck fix (onLongPressGesture replacing DragGesture)
+- [pending] Device testing of Build 35
 - [pending] `daily_challenge` leaderboard in ASC
 
 **BACKLOG (v2.3+):**
@@ -679,4 +680,47 @@ Game Center resources were created via API but never included in an App Store ve
 
 ---
 
-*Last updated: 2026-02-21 (Session 59)*
+### Session 60 (2026-02-21) - v2.2.0 Build 35 TestFlight Bug Fixes
+
+**Goal:** Fix three bugs found during TestFlight testing of Build 34: menu layout overlap, interstitial ad frequency/duration, and multi-touch thrust stuck.
+
+#### Changes Made:
+
+1. **Menu layout overlap fix** (`ContentView.swift`): Footer toolbar (gear + help icons) was inside the ScrollView, hidden behind the banner ad and play buttons. Moved footer HStack outside ScrollView, pinned between scroll content and BannerAdContainer. Reduced bottom padding from 60px to 16px.
+
+2. **Interstitial ad frequency** (`InterstitialAdManager.swift`): Reduced frequency from every 3rd to every 7th Retry/Next Level tap. Previous cadence was too aggressive for short game sessions.
+
+3. **Interstitial ad duration** (AdMob console — manual): Disabled video ad format in AdMob console. Video interstitials (15-30s) were too long. Now text/image/rich media only.
+
+4. **Multi-touch thrust stuck** (`ControlViews.swift`): `DragGesture(minimumDistance: 0)` on ThrustButton and ControlButton caused thrust to get stuck when a second finger tapped the same button. Second finger's `onEnded` fired and set `isPressed = false` while first finger was still down. Replaced with `onLongPressGesture(minimumDuration: .infinity, pressing:, perform:)` which correctly tracks a single touch lifecycle.
+
+5. **Build number bump** (`Info.plist`): 34 → 35.
+
+#### Files Modified:
+- `RocketLander/ContentView.swift` — footer moved outside ScrollView
+- `RocketLander/InterstitialAdManager.swift` — frequency 3 → 7
+- `RocketLander/Views/ControlViews.swift` — DragGesture → onLongPressGesture on ThrustButton and ControlButton
+- `RocketLander/Info.plist` — Build 34 → 35
+
+#### Build Status:
+- Build succeeds
+
+#### Key Decisions:
+- Interstitial frequency 7 (not 5 or 10) — balance between revenue and UX
+- Disable video ads for now — can re-enable when user base grows
+- `onLongPressGesture(minimumDuration: .infinity)` — prevents long-press completion, works as pure press-and-hold
+
+#### Definition of Done:
+- [x] Menu layout overlap fixed
+- [x] Interstitial frequency changed to 7
+- [x] Multi-touch thrust stuck fixed
+- [x] Build number bumped to 35
+- [x] Build succeeds
+- [ ] Git commit and push
+- [ ] Archive + upload to TestFlight (Build 35)
+- [ ] All documentation updated
+- [ ] Session summary created
+
+---
+
+*Last updated: 2026-02-21 (Session 60)*

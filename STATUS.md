@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-02-21 (Session 59)
+> Last reconciled: 2026-02-21 (Session 60)
 
 ---
 
@@ -15,7 +15,7 @@
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
 | Current Version | **v2.1.0 (Build 32) live on App Store** (approved 2026-02-06). v2.1.1 Build 33 submitted for review. |
-| Version Status | **v2.1.0 Build 32 live on App Store** (approved 2026-02-06). **v2.1.1 Build 33 submitted for App Store review** (2026-02-06). **v2.2.0 Build 34** — code complete, committed, pending TestFlight testing. |
+| Version Status | **v2.1.0 Build 32 live on App Store** (approved 2026-02-06). **v2.1.1 Build 33 submitted for App Store review** (2026-02-06). **v2.2.0 Build 35** — TestFlight bug fixes (layout, ad frequency, thrust multi-touch), uploading to TestFlight. |
 | Last Published | v2.1.0 (Build 32) — on App Store (approved 2026-02-06) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -34,8 +34,8 @@ These features are fully implemented, build-verified, and included in the curren
 - **Daily Challenge System**: 75 rotating challenge templates with rich constraint types (target platform, max tilt, max V/H speed, min fuel, time limit). Deterministic `dayOfYear % 75` cycling. Same challenge worldwide. Auto-computed difficulty 1-5 stars based on planet gravity/hazards, constraint count/tightness, time pressure. Pre-challenge briefing screen (`DailyChallengeBriefingView`) showing objectives, planet info, difficulty, global today's best (from Game Center), local best, streak info, and blue star reward preview. Challenge evaluation with per-constraint pass/fail breakdown on game-over. Distinct challenge failure UX (orange warning icon, "LANDED — BUT CHALLENGE FAILED" message, sad trombone sound) when landing but missing challenge criteria. Countdown timer with time bonus scoring for timed challenges. Daily Challenge leaderboard on Game Center.
 - **Blue Star Currency**: `BlueStarManager.swift` — singleton with UserDefaults persistence. Earn blue stars through: daily challenge completion (+1), 5-day streak bonus (+3), campaign star milestones (10→+10, 20→+50, 30→+150). Idempotent reward claiming. Displayed on menu and game-over screens.
 - **Global Rank on Game-Over Screen**: Per-leaderboard rank displayed after each landing (`lastLeaderboardRank` in GameCenterManager). Fetches rank ~1s after score submission. Works for classic, campaign, and daily challenge modes.
-- **Interstitial Ads**: `InterstitialAdManager.swift` — shows ad every 3rd Retry/Next Level tap. Never blocks gameplay on ad failure. Test ID in DEBUG, production ID (`ca-app-pub-3801339388353505/8269147180`) in RELEASE. Uses existing `topViewController()` for presentation.
-- **Modernized Menu**: Sci-fi title typography (monospaced, wide tracking, gradient). Footer toolbar (Settings | How to Play | version). Settings moved to gear sheet. Blue star count on menu. Streak display.
+- **Interstitial Ads**: `InterstitialAdManager.swift` — shows ad every 7th Retry/Next Level tap. Never blocks gameplay on ad failure. Test ID in DEBUG, production ID (`ca-app-pub-3801339388353505/8269147180`) in RELEASE. Video ads disabled in AdMob console (text/image only). Uses existing `topViewController()` for presentation.
+- **Modernized Menu**: Sci-fi title typography (monospaced, wide tracking, gradient). Footer toolbar (Settings | How to Play) pinned above banner ad. Settings moved to gear sheet. Blue star count on menu. Streak display.
 - **How To Play Expanded**: Added Daily Challenge section (6 constraint types explained) and Blue Stars section (5 earning methods documented).
 - **Elapsed Time Tracking**: `gameStartTime` in GameScene, `elapsedTime` in GameState. Used for time-limited daily challenges.
 
@@ -46,7 +46,7 @@ These features are fully implemented, build-verified, and included in the curren
 These are **not implemented**. Do not assume otherwise:
 
 - ~~**Game Center integration**~~ — **PUBLISHED** in v2.1.0
-- **v2.2.0 submission** — Build 34 committed, needs TestFlight testing and App Store submission
+- **v2.2.0 submission** — Build 35 with bug fixes, needs TestFlight testing and App Store submission
 - **`daily_challenge` leaderboard in App Store Connect** — must create via ASC API or console before v2.2.0 App Store submission
 - **In-App Purchases (IAP)** — deferred (was planned for v2.2.0 Monetization, replaced by interstitial ads + blue stars)
 - **iPad support** — iPhone only
@@ -59,16 +59,15 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Retention + Monetization (v2.2.0) — Build 34 Committed, Pending TestFlight Testing**
+**Phase: Retention + Monetization (v2.2.0) — Build 35 Uploading to TestFlight**
 
-v2.2.0 adds three pillars: (1) Daily Challenge system with 75 templates, auto-computed difficulty, countdown timer, and blue star rewards for daily retention, (2) Interstitial ads every 3 attempts for monetization, (3) Global rank on game-over for competition visibility. Menu modernized with sci-fi typography and integrated footer. How To Play updated. Challenge failure UX distinguishes "landed but failed challenge" from crashes.
+v2.2.0 adds three pillars: (1) Daily Challenge system with 75 templates, auto-computed difficulty, countdown timer, and blue star rewards for daily retention, (2) Interstitial ads every 7 attempts for monetization, (3) Global rank on game-over for competition visibility. Menu modernized with sci-fi typography and pinned footer. How To Play updated. Challenge failure UX distinguishes "landed but failed challenge" from crashes. Build 35 fixes TestFlight bugs: menu layout overlap, interstitial ad frequency/duration, and multi-touch thrust stuck.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. **v2.2.0: Archive + upload Build 34 to TestFlight**
-2. **v2.2.0: Device/simulator testing** — verify daily challenge flow, interstitial ads, blue star rewards, menu layout, How To Play
+1. **v2.2.0: Device testing of Build 35** — verify menu layout fix, interstitial cadence, thrust multi-touch, daily challenge flow, blue star rewards
 3. **v2.2.0: Create `daily_challenge` leaderboard in ASC** — needed before App Store submission
 4. **v2.2.0: Submit for App Store review** — after testing + ASC leaderboard setup
 6. Implement event-driven share triggers per growth plan
@@ -105,7 +104,7 @@ v2.2.0 adds three pillars: (1) Daily Challenge system with 75 templates, auto-co
 
 - **v2.1.0 is the current live version** — approved 2026-02-06
 - **v2.1.1 submitted for review** — share card redesign + GC fix
-- **v2.2.0 Build 34 committed but untested** — daily challenge flow, interstitial ads, blue star rewards, menu changes all need device testing
+- **v2.2.0 Build 35 on TestFlight** — bug fixes applied (menu layout, ad frequency, thrust multi-touch), needs device testing
 - **`daily_challenge` leaderboard doesn't exist in ASC yet** — score submissions will silently fail until created
 - **Blue star currency has no spending mechanism yet** — earn-only for now, spending TBD in future version
 - **VPN blocks Game Center** — always disable VPN during GC testing

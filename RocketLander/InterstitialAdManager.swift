@@ -13,7 +13,7 @@ class InterstitialAdManager: NSObject {
     private var pendingAction: (() -> Void)?
 
     /// How many attempts between interstitial ads
-    private let frequency = 3
+    private let frequency = 7
 
     override init() {
         super.init()

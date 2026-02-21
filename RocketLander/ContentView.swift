@@ -360,26 +360,25 @@ struct MenuView: View {
             .cornerRadius(18)
             .frame(maxWidth: 300)
 
-            // Settings + How to Play below buttons
-            HStack(spacing: 24) {
-                Button(action: { showingSettings = true }) {
-                    Image(systemName: "gearshape.fill")
-                        .font(.system(size: 20))
-                        .foregroundColor(.gray.opacity(0.5))
-                }
-
-                Button(action: { showingHowToPlay = true }) {
-                    Image(systemName: "questionmark.circle")
-                        .font(.system(size: 20))
-                        .foregroundColor(.gray.opacity(0.5))
-                }
-            }
-            .padding(.top, 4)
-
         }
         .padding(.horizontal)
-        .padding(.bottom, 60)
+        .padding(.bottom, 16)
         }
+        // Settings + How to Play pinned above ad
+        HStack(spacing: 24) {
+            Button(action: { showingSettings = true }) {
+                Image(systemName: "gearshape.fill")
+                    .font(.system(size: 20))
+                    .foregroundColor(.gray.opacity(0.5))
+            }
+
+            Button(action: { showingHowToPlay = true }) {
+                Image(systemName: "questionmark.circle")
+                    .font(.system(size: 20))
+                    .foregroundColor(.gray.opacity(0.5))
+            }
+        }
+        .padding(.vertical, 8)
         BannerAdContainer()
         }
         .sheet(isPresented: $showingHowToPlay) {

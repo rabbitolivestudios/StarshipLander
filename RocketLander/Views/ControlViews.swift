@@ -65,17 +65,9 @@ struct ControlButton: View {
             }
             .foregroundColor(.white)
         }
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    if !isPressed {
-                        isPressed = true
-                    }
-                }
-                .onEnded { _ in
-                    isPressed = false
-                }
-        )
+        .onLongPressGesture(minimumDuration: .infinity, pressing: { pressing in
+            isPressed = pressing
+        }, perform: {})
     }
 }
 
@@ -109,16 +101,12 @@ struct ThrustButton: View {
         }
         .frame(maxWidth: .infinity)
         .opacity(fuel > 0 ? 1.0 : 0.5)
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    if !isPressed && fuel > 0 {
-                        isPressed = true
-                    }
-                }
-                .onEnded { _ in
-                    isPressed = false
-                }
-        )
+        .onLongPressGesture(minimumDuration: .infinity, pressing: { pressing in
+            if pressing && fuel > 0 {
+                isPressed = true
+            } else {
+                isPressed = false
+            }
+        }, perform: {})
     }
 }

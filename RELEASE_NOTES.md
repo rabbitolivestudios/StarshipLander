@@ -1,10 +1,15 @@
 # Release Notes
 
-## Version 2.2.0 (Build 34)
-**Status:** Committed — pending TestFlight upload and testing
+## Version 2.2.0 (Build 35)
+**Status:** Uploading to TestFlight — bug fixes from Build 34 testing
 
 ### Overview
-Version 2.2.0 is a retention and monetization update. Daily Challenge gives players a new reason to open the app every day — 75 unique challenges rotating across all 10 planets with rich constraints (target platform, speed limits, tilt precision, fuel efficiency, time limits). Blue Star currency rewards consistency and skill. Interstitial ads every 3rd replay diversify revenue beyond banners. Global rank on the game-over screen surfaces competition after every landing.
+Version 2.2.0 is a retention and monetization update. Daily Challenge gives players a new reason to open the app every day — 75 unique challenges rotating across all 10 planets with rich constraints (target platform, speed limits, tilt precision, fuel efficiency, time limits). Blue Star currency rewards consistency and skill. Interstitial ads every 7th replay diversify revenue beyond banners. Global rank on the game-over screen surfaces competition after every landing.
+
+### Build 35 Fixes
+- Menu layout: footer icons (settings, help) no longer hidden behind banner ad
+- Interstitial ads: reduced frequency (every 7th vs 3rd), disabled video ads (text/image only)
+- Thrust button: multi-touch no longer causes stuck thrust
 
 ### App Store — What's New (Copy this)
 ```

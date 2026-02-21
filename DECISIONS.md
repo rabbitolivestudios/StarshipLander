@@ -478,9 +478,29 @@ This file records key technical and design decisions, including context, alterna
 ## [2026-02-21] Production Interstitial Ad Unit — AdMob Configuration
 
 **Context:** Interstitial ad code was implemented with Google test ID in DEBUG and placeholder in RELEASE.
-**Decision:** Created "Game Over Interstitial" ad unit in AdMob console. Production ID: `ca-app-pub-3801339388353505/8269147180`. Both ad types enabled (text/image/rich media + video). Frequency capping disabled (code handles frequency). eCPM floor: Google optimized, all prices.
-**Why:** Maximize fill rate for a new ad unit with no traffic history. Code-side frequency (every 3rd attempt) is sufficient — no need for AdMob-side capping.
-**Consequences:** No privacy impact — uses existing Google Mobile Ads SDK already declared. New ad units take up to 1 hour to start serving.
+**Decision:** Created "Game Over Interstitial" ad unit in AdMob console. Production ID: `ca-app-pub-3801339388353505/8269147180`. Video ads disabled (text/image/rich media only). Frequency capping disabled (code handles frequency). eCPM floor: Google optimized, all prices.
+**Why:** Maximize fill rate for a new ad unit with no traffic history. Video ads disabled because 15-30s interstitials were driving users away during TestFlight testing. Text/image ads are quick and dismissible.
+**Consequences:** No privacy impact — uses existing Google Mobile Ads SDK already declared. Lower eCPM than video but better UX. Video can be re-enabled later.
+
+---
+
+## [2026-02-21] Interstitial Frequency — Every 7th Attempt (was 3rd)
+
+**Context:** TestFlight testing of Build 34 showed interstitial ads every 3rd Retry/Next Level felt too aggressive for a game with short sessions (~10-30 second rounds).
+**Options considered:** (1) Every 5th, (2) Every 7th, (3) Every 10th.
+**Decision:** Every 7th attempt. Changed `frequency = 3` to `frequency = 7` in `InterstitialAdManager.swift`.
+**Why:** 7 attempts gives roughly one ad per 2-4 minutes of gameplay. Balanced between revenue and user retention. Too frequent = users drop the app. Too rare = insufficient revenue.
+**Consequences:** ~57% reduction in ad impressions vs frequency=3. Compensated by better retention and longer sessions.
+
+---
+
+## [2026-02-21] Multi-Touch Button Fix — onLongPressGesture Replacing DragGesture
+
+**Context:** `DragGesture(minimumDistance: 0)` on thrust and rotation buttons caused a multi-touch bug: pressing with one finger then tapping with a second finger fired `onEnded` for the second finger, killing the press state while the first finger was still down.
+**Options considered:** (1) UIKit touch handler via UIViewRepresentable, (2) Touch counter (increment on onChanged, decrement on onEnded), (3) `onLongPressGesture(minimumDuration: .infinity, pressing:, perform:)`.
+**Decision:** Option 3 — `onLongPressGesture` with `minimumDuration: .infinity`. The `pressing` callback is `true` on touch-down and `false` on touch-up for a single gesture instance. `minimumDuration: .infinity` means the long-press never "completes" — the button acts as a pure press-and-hold.
+**Why:** Pure SwiftUI solution (no UIKit bridging). Single touch lifecycle tracking. No state counters to manage. Clean and minimal code change.
+**Consequences:** Thrust and rotation buttons now correctly handle multi-touch. No visual or behavioral changes for normal single-finger usage.
 
 ---
 
