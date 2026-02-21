@@ -56,11 +56,11 @@
 - [x] Multi-touch thrust stuck fixed on ThrustButton and ControlButton
 - [x] Build number bumped to 35
 - [x] Build succeeds
-- [ ] Git commit and push
-- [ ] Archive + upload to TestFlight (Build 35)
+- [x] Git commit and push (`ca961cc`)
+- [x] Archive + upload to TestFlight (Build 35)
 
 ## Commits
-- (pending — will update after commit)
+- `ca961cc` — Fix TestFlight bugs: menu layout, ad frequency, thrust multi-touch (Build 35)
 
 ## Repo Housekeeping
 - [x] Working tree clean (only expected changes)

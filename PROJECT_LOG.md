@@ -716,10 +716,10 @@ Game Center resources were created via API but never included in an App Store ve
 - [x] Multi-touch thrust stuck fixed
 - [x] Build number bumped to 35
 - [x] Build succeeds
-- [ ] Git commit and push
-- [ ] Archive + upload to TestFlight (Build 35)
-- [ ] All documentation updated
-- [ ] Session summary created
+- [x] Git commit and push (`ca961cc`)
+- [x] Archive + upload to TestFlight (Build 35)
+- [x] All documentation updated (7-file sweep)
+- [x] Session summary created
 
 ---
 
