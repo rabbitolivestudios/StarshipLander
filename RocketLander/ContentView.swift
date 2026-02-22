@@ -85,17 +85,28 @@ struct MenuView: View {
     @State private var showingSettings = false
 
     var body: some View {
-        VStack(spacing: 0) {
         ScrollView {
         VStack(spacing: 16) {
-            // Version label top-right
+            // Top bar — version left, settings/help right
             HStack {
-                Spacer()
                 Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                     .font(.system(size: 10, design: .monospaced))
                     .foregroundColor(.gray.opacity(0.3))
+                Spacer()
+                HStack(spacing: 16) {
+                    Button(action: { showingHowToPlay = true }) {
+                        Image(systemName: "questionmark.circle")
+                            .font(.system(size: 18))
+                            .foregroundColor(.gray.opacity(0.5))
+                    }
+                    Button(action: { showingSettings = true }) {
+                        Image(systemName: "gearshape.fill")
+                            .font(.system(size: 18))
+                            .foregroundColor(.gray.opacity(0.5))
+                    }
+                }
             }
-            .padding(.horizontal, 4)
+            .padding(.horizontal, 8)
 
             // Title — chrome metallic effect
             VStack(spacing: 2) {
@@ -362,24 +373,10 @@ struct MenuView: View {
 
         }
         .padding(.horizontal)
-        .padding(.bottom, 16)
+        .padding(.bottom, 8)
         }
-        // Settings + How to Play pinned above ad
-        HStack(spacing: 24) {
-            Button(action: { showingSettings = true }) {
-                Image(systemName: "gearshape.fill")
-                    .font(.system(size: 20))
-                    .foregroundColor(.gray.opacity(0.5))
-            }
-
-            Button(action: { showingHowToPlay = true }) {
-                Image(systemName: "questionmark.circle")
-                    .font(.system(size: 20))
-                    .foregroundColor(.gray.opacity(0.5))
-            }
-        }
-        .padding(.vertical, 8)
-        BannerAdContainer()
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            BannerAdContainer()
         }
         .sheet(isPresented: $showingHowToPlay) {
             HowToPlayView(useAccelerometer: gameState.useAccelerometer)
