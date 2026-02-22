@@ -504,6 +504,16 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
+## [2026-02-21] Menu Layout — Icons to Top-Right + SafeAreaInset for Ad
+
+**Context:** Build 35's fix (moving footer outside ScrollView into VStack) didn't solve the banner ad overlap. The bottom area was too crowded: play buttons + footer + ad all competing for space in a `VStack(spacing: 0)`. Campaign button was also partially cut off.
+**Options considered:** (1) Add more padding/spacing between footer and ad, (2) Move gear/help icons to the top-right of the screen, (3) Use floating overlay icons, (4) Use `safeAreaInset` for the ad.
+**Decision:** Combination of options 2 + 4 — move gear/help icons to the top-right bar (sharing row with version label) and use `.safeAreaInset(edge: .bottom)` for the banner ad.
+**Why:** Moving icons to the top eliminates the footer entirely (~44px freed). `safeAreaInset` is the correct SwiftUI pattern for pinned bottom content — it makes SwiftUI automatically reserve space for the ad so no content can be hidden behind it. Top-right placement for settings/info icons is a standard iOS convention. GKAccessPoint is at top-left, so no conflict.
+**Consequences:** No footer at bottom. Icons are smaller (18pt vs 20pt) and more subtle. The menu can't have content hidden behind the ad. If content ever exceeds screen height, the ScrollView handles it gracefully with the ad inset.
+
+---
+
 ## [2026-02-05] Tilt Bands — SAFE/HARD/FAIL Matching Speed Band Philosophy
 **Context:** Tilt had a binary pass/fail gate at 0.05 rad (~2.9°), which was too strict and inconsistent with the 3-band system used for speed (SAFE/HARD/FAIL). Campaign ships spawn at 6.9° tilt, so players must correct before landing — a narrow 2.9° safe zone made this punishing.
 **Options considered:** (1) Raise the binary threshold to ~5°, (2) Add SAFE/HARD/FAIL tilt bands matching the speed band philosophy.

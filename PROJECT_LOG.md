@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-21, Session 60)
+## Current Status (2026-02-21, Session 61)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -30,10 +30,11 @@ This file documents the development history and decisions for the Starship Lande
 | 2.1.0 | 32 | **PUBLISHED** (approved 2026-02-06) — Game Center + Share Score Card. **Live on App Store.** |
 | 2.1.1 | 33 | **SUBMITTED FOR REVIEW** (2026-02-06) — Share card redesign + GC fix |
 | 2.2.0 | 34 | Build 34 on TestFlight — initial v2.2.0 upload |
-| 2.2.0 | 35 | **UPLOADING TO TESTFLIGHT** — bug fixes (menu layout, ad frequency, thrust multi-touch) |
+| 2.2.0 | 35 | On TestFlight — bug fixes (ad frequency, thrust multi-touch) |
+| 2.2.0 | 36 | **ON TESTFLIGHT** — menu layout redesign (icons to top-right, safeAreaInset for ad) |
 
 **NEXT STEPS:**
-1. **v2.2.0: Device testing of Build 35** — verify menu layout fix, interstitial cadence, thrust multi-touch, daily challenge flow, blue star rewards
+1. **v2.2.0: Device testing of Build 36** — verify menu layout (icons at top-right, ad at bottom), interstitial cadence, thrust multi-touch, daily challenge flow, blue star rewards
 2. **v2.2.0: Create `daily_challenge` leaderboard in ASC** — needed before App Store submission
 3. **v2.2.0: Submit for App Store review**
 4. Implement event-driven share triggers per growth plan
@@ -51,7 +52,7 @@ This file documents the development history and decisions for the Starship Lande
 - [done] Production interstitial ad unit ID (ca-app-pub-3801339388353505/8269147180)
 - [done] 75 templates with auto-computed difficulty (expanded from 20)
 - [done] Challenge failure UX (orange warning, sad trombone)
-- [done] Menu layout overlap fix (footer moved outside ScrollView)
+- [done] Menu layout redesign (icons moved to top-right, safeAreaInset for ad) — Build 36
 - [done] Multi-touch thrust stuck fix (onLongPressGesture replacing DragGesture)
 - [pending] Device testing of Build 35
 - [pending] `daily_challenge` leaderboard in ASC
@@ -723,4 +724,48 @@ Game Center resources were created via API but never included in an App Store ve
 
 ---
 
-*Last updated: 2026-02-21 (Session 60)*
+### Session 61 (2026-02-21) - Menu Layout Redesign + Build 36
+
+**Goal:** Fix gear/help icons hidden behind banner ad (Build 35 fix was insufficient). Redesign menu layout, deploy Build 36 to TestFlight.
+
+#### Changes Made:
+
+1. **Menu layout redesign** (`ContentView.swift`): Previous fix (Session 60, moving footer outside ScrollView) didn't solve the overlap — bottom area too crowded. New approach:
+   - Moved settings gear and help icons to top-right bar (sharing row with version label)
+   - Deleted the footer HStack entirely (~44px freed)
+   - Replaced `VStack(spacing: 0) { ScrollView; Footer; Ad }` with `ScrollView { ... }.safeAreaInset(edge: .bottom) { Ad }`
+   - `safeAreaInset` makes SwiftUI reserve 50pt for the ad automatically — no overlap possible
+
+2. **Build number bump** (`Info.plist`): 35 → 36.
+
+#### Files Modified:
+- `RocketLander/ContentView.swift` — menu layout restructured
+- `RocketLander/Info.plist` — Build 35 → 36
+
+#### Build Status:
+- Build succeeds
+- Archive + upload to TestFlight succeeded
+
+#### Key Decisions:
+- Icons at top-right (not bottom) — standard iOS pattern, avoids ad overlap entirely
+- `safeAreaInset` instead of VStack sibling — system-level space reservation
+- GKAccessPoint at top-left, icons at top-right — no conflict
+
+#### Commits:
+- `ebe53ab` — Redesign menu layout: move settings/help to top-right, safeAreaInset for ad (Build 36)
+
+#### Definition of Done:
+- [x] Menu icons moved to top-right
+- [x] Footer deleted
+- [x] safeAreaInset for banner ad
+- [x] Build succeeds
+- [x] Build number bumped to 36
+- [x] Git commit and push
+- [x] Archive + upload to TestFlight (Build 36)
+- [x] All documentation updated (7-file sweep)
+- [x] Session summary created
+- [ ] Device testing of Build 36
+
+---
+
+*Last updated: 2026-02-21 (Session 61)*

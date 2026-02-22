@@ -184,8 +184,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.2.0] - Build 35 (Phase: Retention + Monetization)
 
+### Fixed (Build 36 — Menu layout redesign)
+- **Menu Layout Redesign**: Settings gear and help icons moved from bottom footer to top-right bar (next to version label). Eliminated footer HStack entirely. Banner ad uses `.safeAreaInset(edge: .bottom)` so SwiftUI reserves space automatically — no more overlap. Campaign button fully visible.
+
 ### Fixed (Build 35 — TestFlight bug fixes)
-- **Menu Layout Overlap**: Footer toolbar (gear + help icons) was hidden behind banner ad and play buttons. Moved footer outside ScrollView, pinned between scroll content and banner ad.
+- ~~**Menu Layout Overlap**: Footer toolbar moved outside ScrollView~~ — superseded by Build 36 redesign above.
 - **Interstitial Ad Frequency**: Reduced from every 3rd to every 7th Retry/Next Level tap. Previous cadence was too aggressive for short game sessions.
 - **Interstitial Ad Duration**: Disabled video ad format in AdMob console — text/image/rich media only. Video ads (15-30s) were too long.
 - **Multi-Touch Thrust Stuck**: Pressing thrust with one finger then tapping with a second finger caused thrust to get stuck active. Replaced `DragGesture` with `onLongPressGesture(pressing:)` which correctly tracks a single touch lifecycle. Same fix applied to rotation buttons.

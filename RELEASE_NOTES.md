@@ -1,13 +1,16 @@
 # Release Notes
 
-## Version 2.2.0 (Build 35)
-**Status:** Uploading to TestFlight — bug fixes from Build 34 testing
+## Version 2.2.0 (Build 36)
+**Status:** On TestFlight — menu layout redesign from Build 35 testing
 
 ### Overview
 Version 2.2.0 is a retention and monetization update. Daily Challenge gives players a new reason to open the app every day — 75 unique challenges rotating across all 10 planets with rich constraints (target platform, speed limits, tilt precision, fuel efficiency, time limits). Blue Star currency rewards consistency and skill. Interstitial ads every 7th replay diversify revenue beyond banners. Global rank on the game-over screen surfaces competition after every landing.
 
+### Build 36 Fixes
+- Menu layout: settings and help icons moved to top-right bar (no longer hidden behind ad)
+- Banner ad uses safeAreaInset for proper space reservation — Campaign button fully visible
+
 ### Build 35 Fixes
-- Menu layout: footer icons (settings, help) no longer hidden behind banner ad
 - Interstitial ads: reduced frequency (every 7th vs 3rd), disabled video ads (text/image only)
 - Thrust button: multi-touch no longer causes stuck thrust
 
@@ -46,9 +49,9 @@ As always, thank you for your continued support.
 ```
 Starship Lander is a skill-based physics rocket landing game. Players control thrust and rotation using on-screen buttons and must land safely on a platform. No account, login, or in-app purchases are required.
 
-This build (v2.2.0, Build 34) adds a Daily Challenge feature, Blue Star currency, interstitial ads, and global rank display. The Daily Challenge presents a new challenge each day with specific objectives (land on a particular platform, maintain low tilt, finish within a time limit, etc.). Blue Stars are earned through daily challenge completion, streaks, and campaign milestones — they are displayed but have no spending mechanism yet.
+This build (v2.2.0, Build 36) adds a Daily Challenge feature, Blue Star currency, interstitial ads, and global rank display. The Daily Challenge presents a new challenge each day with specific objectives (land on a particular platform, maintain low tilt, finish within a time limit, etc.). Blue Stars are earned through daily challenge completion, streaks, and campaign milestones — they are displayed but have no spending mechanism yet.
 
-Interstitial ads appear every 3rd Retry/Next Level tap. They use the existing Google Mobile Ads SDK already declared in the app. No new SDKs were added. The app does not collect any new data.
+Interstitial ads appear every 7th Retry/Next Level tap (text/image only, no video). They use the existing Google Mobile Ads SDK already declared in the app. No new SDKs were added. The app does not collect any new data.
 
 Game Center authentication occurs automatically on launch. If the player is not signed in, all Game Center features are hidden and the game works normally with local scores only.
 
