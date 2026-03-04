@@ -103,7 +103,7 @@ StarshipLander/
 │   ├── GameScene+Sound.swift        # All sound methods
 │   ├── GameScene+Scoring.swift      # Score calculation, platform detection
 │   ├── BannerAdView.swift           # AdMob banner + ad config
-│   ├── InterstitialAdManager.swift  # Interstitial ads (every 3 attempts)
+│   ├── InterstitialAdManager.swift  # Interstitial ads (every 7 attempts)
 │   ├── Info.plist                   # App configuration
 │   ├── RocketLander.entitlements    # Game Center capability
 │   ├── Models/
