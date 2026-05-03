@@ -147,6 +147,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         hasStarted = false
         gameState.gameOver = false
         gameState.landed = false
+        gameState.shouldReset = false
         gameState.fuel = 100
         gameState.score = 0
         gameState.verticalVelocity = 0
@@ -326,6 +327,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             gameStartTime = currentTime
             rocket.physicsBody?.isDynamic = true
             applyCampaignReentryState()
+            GameCenterManager.shared.recordAttempt(mode: gameState.currentMode, levelId: gameState.currentLevelId)
         }
 
         guard hasStarted else { return }
@@ -343,6 +345,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             gameState.shouldReset = false
             removeAllChildren()
             removeAction(forKey: "heatShimmer")
+            removeAction(forKey: "heatParticles")
             removeAction(forKey: "volcanicEruption")
             removeAction(forKey: "windParticles")
             removeAction(forKey: "atmosphereHaze")
@@ -657,13 +660,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private func checkLanding(contactNode: SKNode?) {
         // Determine platform from contact node FIRST
         let landedPlatform = determineLandedPlatform(contactNode: contactNode) ?? .a
+        let platformCenterX = contactNode?.position.x ?? landedPlatform.xFraction * size.width
 
         // Check that both legs are on the platform (no partial landing)
         // Rocket legs span ~47 units (feet at ±23.5 from center)
         let legSpan: CGFloat = 47
         let rocketLeft = rocket.position.x - legSpan / 2
         let rocketRight = rocket.position.x + legSpan / 2
-        let platformCenterX = landedPlatform.xFraction * size.width
         let platformHalfWidth = landedPlatform.width / 2
         let platformLeft = platformCenterX - platformHalfWidth
         let platformRight = platformCenterX + platformHalfWidth
@@ -706,7 +709,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 rotation: rotation,
                 approachSpeed: approachSpeed,
                 platform: landedPlatform,
-                speedBand: result.speedBand
+                speedBand: result.speedBand,
+                platformCenterX: platformCenterX
             )
         } else {
             snapshotFinalStats(platform: nil)
@@ -726,7 +730,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    private func snapshotFinalStats(platform: LandingPlatform?) {
+    private func snapshotFinalStats(platform: LandingPlatform?, platformCenterX: CGFloat? = nil) {
         // Use pre-contact tracked values — these reflect the last update frame
         // before the collision callback, avoiding post-collision zeroed velocities
         gameState.finalTiltAngle = lastTrackedTilt  // signed (preserves direction)
@@ -734,15 +738,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameState.finalHorizontalSpeed = lastTrackedHorizontalSpeed
         gameState.finalFuel = gameState.fuel
         if let platform = platform {
-            let platformX = platform.xFraction * size.width
+            let platformX = platformCenterX ?? platform.xFraction * size.width
             gameState.finalDistanceFromCenter = abs(rocket.position.x - platformX)
         } else {
             gameState.finalDistanceFromCenter = nil
         }
     }
 
-    private func successfulLanding(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform, speedBand: SpeedBand) {
-        snapshotFinalStats(platform: platform)
+    private func successfulLanding(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform, speedBand: SpeedBand, platformCenterX: CGFloat? = nil) {
+        snapshotFinalStats(platform: platform, platformCenterX: platformCenterX)
 
         gameState.gameOver = true
         gameState.landed = true
@@ -767,7 +771,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             approachSpeed: approachSpeed,
             platform: platform,
             speedBand: speedBand,
-            elapsedTime: elapsed
+            elapsedTime: elapsed,
+            platformCenterX: platformCenterX
         )
 
         let message = LandingMessages.successMessage(platform: platform, score: totalScore, speedBand: speedBand)
@@ -783,6 +788,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // Game Center: submit score
             switch self.gameState.currentMode {
             case .campaign:
+                self.campaignState.recordCompletion(
+                    self.gameState.currentLevelId,
+                    stars: platform.stars,
+                    score: totalScore
+                )
+                self.gameState.campaignMilestoneRewards = BlueStarManager.shared.checkCampaignMilestones(
+                    totalCampaignStars: self.campaignState.totalStars
+                )
                 GameCenterManager.shared.submitCampaignScore(totalScore, levelId: self.gameState.currentLevelId, campaignState: self.campaignState)
             case .dailyChallenge:
                 // Evaluate challenge constraints
@@ -800,8 +813,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.playSuccessSound()
                     GameCenterManager.shared.submitDailyChallengeScore(totalScore)
                     let playerName = GameCenterManager.shared.localPlayerName
+                    self.gameState.dailyChallengeWasNewBest = {
+                        guard let best = DailyChallenge.localBestScore else { return true }
+                        return totalScore > best
+                    }()
                     DailyChallenge.recordScore(totalScore, success: true, playerName: playerName)
-                    BlueStarManager.shared.recordDailyChallengeCompletion()
+                    self.gameState.dailyRewardResult = BlueStarManager.shared.recordDailyChallengeCompletion()
                 } else {
                     self.playChallengeFailSound()
                 }

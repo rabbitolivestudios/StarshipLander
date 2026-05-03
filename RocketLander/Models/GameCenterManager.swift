@@ -349,9 +349,12 @@ class GameCenterManager: ObservableObject {
     // MARK: - Persistence
 
     func savePersistentState() {
+        let attemptsForUserDefaults = Dictionary(
+            uniqueKeysWithValues: attemptsByLevel.map { (String($0.key), $0.value) }
+        )
         let data: [String: Any] = [
             "safePlatformCLevels": Array(safePlatformCLevels),
-            "attemptsByLevel": attemptsByLevel
+            "attemptsByLevel": attemptsForUserDefaults
         ]
         UserDefaults.standard.set(data, forKey: persistenceKey)
     }

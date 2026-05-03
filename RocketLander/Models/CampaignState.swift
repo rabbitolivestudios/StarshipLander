@@ -4,6 +4,7 @@ class CampaignState: ObservableObject {
     @Published var unlockedLevels: Set<Int> = [1]
     @Published var starsByLevel: [Int: Int] = [:]
     @Published var scoresByLevel: [Int: [HighScoreEntry]] = [:]
+    @Published var personalBestScoresByLevel: [Int: Int] = [:]
 
     private let storageKey = "campaignState"
 
@@ -52,7 +53,7 @@ class CampaignState: ObservableObject {
     }
 
     func bestScore(for levelId: Int) -> Int {
-        return scoresByLevel[levelId]?.first?.score ?? 0
+        return max(personalBestScoresByLevel[levelId] ?? 0, scoresByLevel[levelId]?.first?.score ?? 0)
     }
 
     func isHighScore(for levelId: Int, score: Int) -> Bool {
@@ -63,21 +64,21 @@ class CampaignState: ObservableObject {
     }
 
     func completedLevel(_ levelId: Int, stars: Int, score: Int, name: String) {
+        recordCompletion(levelId, stars: stars, score: score)
+        addNamedScore(levelId: levelId, stars: stars, score: score, name: name)
+    }
+
+    func recordCompletion(_ levelId: Int, stars: Int, score: Int) {
         // Update stars (keep best)
         let currentBest = starsByLevel[levelId] ?? 0
         if stars > currentBest {
             starsByLevel[levelId] = stars
         }
 
-        // Add score entry with star metadata
-        let entry = HighScoreEntry(name: name, score: score, stars: stars)
-        var levelScores = scoresByLevel[levelId] ?? []
-        levelScores.append(entry)
-        levelScores.sort { $0.score > $1.score }
-        if levelScores.count > 3 {
-            levelScores = Array(levelScores.prefix(3))
+        // Track personal best even when the player skips the name entry sheet.
+        if score > (personalBestScoresByLevel[levelId] ?? 0) {
+            personalBestScoresByLevel[levelId] = score
         }
-        scoresByLevel[levelId] = levelScores
 
         // Unlock next level
         let nextLevel = levelId + 1
@@ -88,13 +89,28 @@ class CampaignState: ObservableObject {
         save()
     }
 
+    func addNamedScore(levelId: Int, stars: Int, score: Int, name: String) {
+        // Add score entry with star metadata
+        let entry = HighScoreEntry(name: name, score: score, stars: stars)
+        var levelScores = scoresByLevel[levelId] ?? []
+        levelScores.append(entry)
+        levelScores.sort { $0.score > $1.score }
+        if levelScores.count > 3 {
+            levelScores = Array(levelScores.prefix(3))
+        }
+        scoresByLevel[levelId] = levelScores
+
+        save()
+    }
+
     // MARK: - Persistence
 
     private func save() {
         let data = CampaignSaveData(
             unlockedLevels: Array(unlockedLevels),
             starsByLevel: starsByLevel,
-            scoresByLevel: scoresByLevel
+            scoresByLevel: scoresByLevel,
+            personalBestScoresByLevel: personalBestScoresByLevel
         )
         if let encoded = try? JSONEncoder().encode(data) {
             UserDefaults.standard.set(encoded, forKey: storageKey)
@@ -109,6 +125,7 @@ class CampaignState: ObservableObject {
         unlockedLevels = Set(decoded.unlockedLevels)
         starsByLevel = decoded.starsByLevel
         scoresByLevel = decoded.scoresByLevel
+        personalBestScoresByLevel = decoded.personalBestScoresByLevel ?? [:]
     }
 }
 
@@ -117,4 +134,5 @@ private struct CampaignSaveData: Codable {
     let unlockedLevels: [Int]
     let starsByLevel: [Int: Int]
     let scoresByLevel: [Int: [HighScoreEntry]]
+    let personalBestScoresByLevel: [Int: Int]?
 }

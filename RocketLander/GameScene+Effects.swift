@@ -364,7 +364,7 @@ extension GameScene {
 
     // MARK: - Heat Shimmer Effect (Mercury)
     func createHeatShimmer() {
-        guard gameState.currentMode == .campaign && gameState.currentLevelId == 7 else { return }
+        guard gameState.currentMode.usesLevelDefinition && gameState.currentLevelId == 7 else { return }
 
         // Visible heat shimmer — wobbles the rocket noticeably
         let shimmer = SKAction.sequence([
@@ -419,7 +419,7 @@ extension GameScene {
 
     // MARK: - Volcanic Eruptions (Io)
     func createVolcanicEruption() {
-        guard gameState.currentMode == .campaign && gameState.currentLevelId == 9 else { return }
+        guard gameState.currentMode.usesLevelDefinition && gameState.currentLevelId == 9 else { return }
 
         let erupt = SKAction.sequence([
             SKAction.wait(forDuration: Double.random(in: 2.0...5.0)),

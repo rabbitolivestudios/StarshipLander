@@ -194,7 +194,11 @@ struct ChallengeSpec {
 // All players worldwide get the same challenge each day (~2.5-month cycle).
 
 struct DailyChallenge {
-    private static let calendar = Calendar(identifier: .gregorian)
+    private static let calendar: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        return calendar
+    }()
 
     /// Day-of-year seed (1-366). Deterministic for any given date.
     static var dayOfYear: Int {
@@ -259,6 +263,7 @@ struct DailyChallenge {
     private static var todayKey: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)!
         return "daily_\(formatter.string(from: Date()))"
     }
 
@@ -286,6 +291,8 @@ struct DailyChallenge {
             if let name = playerName, !name.isEmpty {
                 UserDefaults.standard.set(name, forKey: "\(todayKey)_name")
             }
+        } else if score == current, let name = playerName, !name.isEmpty {
+            UserDefaults.standard.set(name, forKey: "\(todayKey)_name")
         }
         if success {
             UserDefaults.standard.set(true, forKey: "\(todayKey)_completed")

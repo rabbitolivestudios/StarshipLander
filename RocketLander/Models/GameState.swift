@@ -56,7 +56,10 @@ class GameState: ObservableObject {
     // Daily Challenge
     @Published var dailyChallengeTargetPlatform: LandingPlatform? = nil
     @Published var dailyChallengeSuccess: Bool = false
+    @Published var dailyChallengeWasNewBest: Bool = false
     @Published var elapsedTime: TimeInterval = 0
+    @Published var dailyRewardResult: DailyRewardResult? = nil
+    @Published var campaignMilestoneRewards: [CampaignMilestoneReward] = []
 
     // Settings
     @Published var useAccelerometer: Bool {
@@ -115,7 +118,10 @@ class GameState: ObservableObject {
         crashDiagnosticPrimary = ""
         crashDiagnosticSecondary = ""
         dailyChallengeSuccess = false
+        dailyChallengeWasNewBest = false
         elapsedTime = 0
+        dailyRewardResult = nil
+        campaignMilestoneRewards = []
         // Note: dailyChallengeTargetPlatform is NOT reset here — it persists
         // across retries, same as currentMode and currentLevelId.
     }

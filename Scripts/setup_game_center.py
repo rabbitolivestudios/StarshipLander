@@ -42,6 +42,7 @@ LEADERBOARDS = [
     {"ref": "campaign_9", "name": "Io"},
     {"ref": "campaign_10", "name": "Jupiter"},
     {"ref": "galaxy_rank", "name": "Galaxy Rank"},
+    {"ref": "daily_challenge", "name": "Daily Challenge"},
 ]
 
 ACHIEVEMENTS = [

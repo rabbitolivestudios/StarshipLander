@@ -1,10 +1,35 @@
 # Release Notes
 
-## Version 2.2.0 (Build 36)
-**Status:** On TestFlight — menu layout redesign from Build 35 testing
+## Version 2.2.0 (Build 37)
+**Status:** Approved and distributed by Apple on 2026-05-03. Live testing found a campaign-start crash in Build 37; Session 67 has a local hotfix pending Xcode/simulator verification and replacement build upload.
 
 ### Overview
 Version 2.2.0 is a retention and monetization update. Daily Challenge gives players a new reason to open the app every day — 75 unique challenges rotating across all 10 planets with rich constraints (target platform, speed limits, tilt precision, fuel efficiency, time limits). Blue Star currency rewards consistency and skill. Interstitial ads every 7th replay diversify revenue beyond banners. Global rank on the game-over screen surfaces competition after every landing.
+
+### Build 37 Fixes
+- Campaign stars, unlocks, and personal bests persist even if the high-score name sheet is skipped
+- Daily Challenge failed landings no longer save into Classic scores
+- Daily Challenge rotation now uses UTC day boundaries for worldwide consistency
+- Earth moving-platform landings use the live platform position for bounds and scoring
+- Default Starship art refreshed with a more recognizable game-styled stainless body, heat-shield strip, flaps, engines, and legs
+- `daily_challenge` added to the Game Center setup script for App Store Connect creation/release
+
+### Pending Hotfix
+- Campaign attempt tracking now saves Game Center attempt counts with string keys in `UserDefaults`. Build 37 can crash when starting a campaign run because the auto-start path saves a nested `[Int: Int]` dictionary, which is not a valid property-list dictionary.
+- New game scene setup now clears stale reset state so the first input does not immediately reset the scene or double-count campaign attempts.
+- Daily Challenge now runs Mercury heat shimmer and Io volcanic eruption effects just like Campaign mode.
+
+### Release Prep Status
+- Full simulator test suite passed: 94 tests, 0 failures
+- Simulator smoke screenshots captured for menu, Daily Challenge, and campaign gameplay
+- Archive succeeded: `build/RocketLander-Build37.xcarchive`
+- Local App Store IPA export succeeded: `build/export-build37-local/RocketLander.ipa`
+- Build 37 uploaded through Xcode Organizer and is VALID in App Store Connect
+- `daily_challenge` leaderboard created, localized, and released in App Store Connect
+- Free Apps and Paid Apps agreements verified active through January 7, 2027
+- v2.2.0 App Store version created, Build 37 attached, ASO copy/review notes updated
+- Five App Store screenshots uploaded to the iPhone 6.5/6.7 screenshot set
+- App Store review submission approved and distributed on 2026-05-03
 
 ### Build 36 Fixes
 - Menu layout: settings and help icons moved to top-right bar (no longer hidden behind ad)
@@ -49,7 +74,7 @@ As always, thank you for your continued support.
 ```
 Starship Lander is a skill-based physics rocket landing game. Players control thrust and rotation using on-screen buttons and must land safely on a platform. No account, login, or in-app purchases are required.
 
-This build (v2.2.0, Build 36) adds a Daily Challenge feature, Blue Star currency, interstitial ads, and global rank display. The Daily Challenge presents a new challenge each day with specific objectives (land on a particular platform, maintain low tilt, finish within a time limit, etc.). Blue Stars are earned through daily challenge completion, streaks, and campaign milestones — they are displayed but have no spending mechanism yet.
+This build (v2.2.0, Build 37) adds a Daily Challenge feature, Blue Star currency, interstitial ads, and global rank display. The Daily Challenge presents a new challenge each day with specific objectives (land on a particular platform, maintain low tilt, finish within a time limit, etc.). Blue Stars are earned through daily challenge completion, streaks, and campaign milestones — they are displayed but have no spending mechanism yet.
 
 Interstitial ads appear every 7th Retry/Next Level tap (text/image only, no video). They use the existing Google Mobile Ads SDK already declared in the app. No new SDKs were added. The app does not collect any new data.
 

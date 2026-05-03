@@ -16,7 +16,8 @@ enum ScoringHelper {
         rocketX: CGFloat,
         sceneWidth: CGFloat,
         platform: LandingPlatform,
-        speedBand: SpeedBand = .safe
+        speedBand: SpeedBand = .safe,
+        platformCenterX: CGFloat? = nil
     ) -> Int {
         let bands = LandingThresholds.bands(for: platform)
 
@@ -33,7 +34,7 @@ enum ScoringHelper {
         subtotal += horizontalScore
 
         // 3. PLATFORM CENTER (0-600 points)
-        let platformX = platform.xFraction * sceneWidth
+        let platformX = platformCenterX ?? platform.xFraction * sceneWidth
         let distanceFromCenter = abs(rocketX - platformX)
         let platformHalfWidth = platform.width / 2
         let centerRatio = min(1.0, distanceFromCenter / platformHalfWidth)
