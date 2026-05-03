@@ -168,7 +168,10 @@ class BlueStarManager: ObservableObject {
     private func dateString(daysAgo: Int) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        let date = Calendar(identifier: .gregorian).date(byAdding: .day, value: -daysAgo, to: Date()) ?? Date()
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)!
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        let date = calendar.date(byAdding: .day, value: -daysAgo, to: Date()) ?? Date()
         return formatter.string(from: date)
     }
 }

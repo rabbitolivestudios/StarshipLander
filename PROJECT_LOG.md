@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-02-21, Session 61)
+## Current Status (2026-05-03, Session 67)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -32,21 +32,22 @@ This file documents the development history and decisions for the Starship Lande
 | 2.2.0 | 34 | Build 34 on TestFlight — initial v2.2.0 upload |
 | 2.2.0 | 35 | On TestFlight — bug fixes (ad frequency, thrust multi-touch) |
 | 2.2.0 | 36 | **ON TESTFLIGHT** — menu layout redesign (icons to top-right, safeAreaInset for ad) |
+| 2.2.0 | 37 | **PUBLISHED / LIVE** — Approved and distributed by Apple on 2026-05-03. Live campaign startup crash reported; local hotfix pending Xcode verification/replacement build. |
 
 **NEXT STEPS:**
-1. **v2.2.0: Device testing of Build 36** — verify menu layout (icons at top-right, ad at bottom), interstitial cadence, thrust multi-touch, daily challenge flow, blue star rewards
-2. **v2.2.0: Create `daily_challenge` leaderboard in ASC** — needed before App Store submission
-3. **v2.2.0: Submit for App Store review**
-4. Implement event-driven share triggers per growth plan
-5. Create 5 high-converting App Store screenshots per growth plan
+1. **Commit/push the hotfix branch and run GitHub Actions iOS CI** — this machine no longer has Xcode installed.
+2. Test campaign startup on Earth, Venus, and at least one early unlocked level; smoke Classic and Daily Challenge through cloud/remote Mac or replacement TestFlight build.
+3. Upload replacement v2.2.0 build after explicit build/version approval.
+4. Verify replacement build on device/App Store/TestFlight.
+5. Resume growth/v2.3 work only after live crash is resolved.
 
-**v2.2.0 — Phase: Retention + Monetization (Build 35 with bug fixes):**
+**v2.2.0 — Phase: Retention + Monetization (Build 37 local release candidate):**
 - [done] Daily Challenge System (75 templates, 6 constraint types, auto-computed difficulty, deterministic cycling)
 - [done] Daily Challenge Briefing Screen (planet info, objectives, difficulty, GC top score, streak)
 - [done] Blue Star Currency (daily challenge +1, streak bonus +3, campaign milestones)
 - [done] Interstitial Ads (every 7th Retry/Next Level, never blocking, text/image only)
 - [done] Global Rank on game-over screen (per-leaderboard rank ~1s after score submission)
-- [done] Modernized Menu (sci-fi typography, footer pinned above ad, blue star count, streak display)
+- [done] Modernized Menu (sci-fi typography, top-right utility icons, safeAreaInset banner spacing, blue star count, streak display)
 - [done] How To Play expanded (Daily Challenge + Blue Stars sections)
 - [done] Elapsed time tracking (for time-limited daily challenges)
 - [done] Production interstitial ad unit ID (ca-app-pub-3801339388353505/8269147180)
@@ -54,11 +55,25 @@ This file documents the development history and decisions for the Starship Lande
 - [done] Challenge failure UX (orange warning, sad trombone)
 - [done] Menu layout redesign (icons moved to top-right, safeAreaInset for ad) — Build 36
 - [done] Multi-touch thrust stuck fix (onLongPressGesture replacing DragGesture)
-- [pending] Device testing of Build 35
-- [pending] `daily_challenge` leaderboard in ASC
+- [done] Local progression/reward fixes (campaign progress independent of score sheet, Daily Challenge score isolation, UTC daily dates, moving-platform live center scoring)
+- [done] Default Starship visual refresh (stylized stainless body, heat-shield strip, flaps, legs, engine detail; physics body unchanged)
+- [done] Simulator build/test verification of local fixes (94 tests, 0 failures on iPhone 17 Pro simulator / iOS 26.4)
+- [done] Simulator release smoke screenshots for menu, Daily Challenge, and campaign gameplay
+- [done] Build 37 archive, local App Store IPA export, Xcode Organizer upload, and ASC VALID processing
+- [done] `daily_challenge` leaderboard created and released in App Store Connect
+- [done] v2.2.0 App Store version created in ASC
+- [done] Build 37 attached to v2.2.0
+- [done] ASO metadata, review notes, and five App Store screenshots uploaded
+- [done] v2.2.0 submitted for App Store review on 2026-05-01 (later approved/distributed 2026-05-03)
+- [done] v2.2.0 Build 37 approved/distributed by Apple (2026-05-03)
+- [hotfix] Campaign startup crash fix: Game Center attempt tracking now saves string-keyed dictionaries to UserDefaults
+- [hotfix] Fresh scene setup clears stale `shouldReset` to avoid first-input reset/double attempt tracking
+- [hotfix] Daily Challenge Mercury/Io hazards now run under `usesLevelDefinition`
+- [blocked] Physical device install/test (iPhone 16 TBO offline on this machine)
 
 **BACKLOG (v2.3+):**
 - Blue star spending mechanism (earn-only for now)
+- Premium/unlockable realistic Starship skin based on generated concept art
 - iPad support
 - Localization
 - UI tests (XCUITest)
@@ -768,4 +783,242 @@ Game Center resources were created via API but never included in an App Store ve
 
 ---
 
-*Last updated: 2026-02-21 (Session 61)*
+### Session 63 (2026-04-29) - v2.2.0 Progression and Reward Bug Fixes
+
+**Goal:** Fix code-review findings before v2.2.0 submission: campaign progress persistence, attempt tracking, Daily Challenge score isolation, blue star reward display, worldwide daily date boundaries, and Earth moving-platform scoring.
+
+#### Changes Made:
+
+1. **Campaign progress decoupled from high-score sheet** (`CampaignState.swift`, `GameScene.swift`, `GameOverView.swift`):
+   - Added `personalBestScoresByLevel`
+   - Added `recordCompletion(...)` for stars, unlocks, personal bests
+   - Added `addNamedScore(...)` for optional named leaderboard entries
+   - Campaign progress and milestone rewards now record immediately on landing
+
+2. **Campaign attempt tracking fixed** (`GameScene.swift`):
+   - Normal auto-start path now calls `GameCenterManager.recordAttempt(...)`
+   - Restores first-attempt achievement accounting
+
+3. **Earth moving-platform scoring fixed** (`GameScene.swift`, `GameScene+Scoring.swift`):
+   - Partial landing bounds, final center distance, and center precision scoring now use the contacted platform node's live X position
+
+4. **Daily Challenge fixes** (`GameOverView.swift`, `DailyChallenge.swift`, `BlueStarManager.swift`, `GameState.swift`):
+   - Failed Daily Challenge landings no longer open the score sheet or save into Classic scores
+   - Successful new Daily Challenge bests still prompt for a name and update daily best name
+   - Actual daily reward result is stored on `GameState` for accurate game-over display
+   - Explicit `dailyChallengeWasNewBest` state prevents immediate score recording from suppressing the new-best name prompt
+   - Daily Challenge rotation/local keys and blue star streak dates use UTC day boundaries
+
+5. **Tests updated**:
+   - `CampaignStateTests`: anonymous completion unlock/progress, named scores separate from progress
+   - `GameStateTests`: reward/milestone transient state resets
+   - `ScoringTests`: live moving-platform center scoring
+
+6. **Documentation sweep**:
+   - Updated `STATUS.md`, `PROJECT_LOG.md`, `CHANGELOG.md`, `README.md`, `RELEASE_NOTES.md`, `DECISIONS.md`, and this session summary
+
+#### Files Modified:
+- `RocketLander/GameScene.swift`
+- `RocketLander/GameScene+Scoring.swift`
+- `RocketLander/Models/CampaignState.swift`
+- `RocketLander/Models/GameState.swift`
+- `RocketLander/Models/DailyChallenge.swift`
+- `RocketLander/Models/BlueStarManager.swift`
+- `RocketLander/Views/GameOverView.swift`
+- `RocketLanderTests/CampaignStateTests.swift`
+- `RocketLanderTests/GameStateTests.swift`
+- `RocketLanderTests/ScoringHelper.swift`
+- `RocketLanderTests/ScoringTests.swift`
+- `STATUS.md`
+- `PROJECT_LOG.md`
+- `CHANGELOG.md`
+- `README.md`
+- `RELEASE_NOTES.md`
+- `DECISIONS.md`
+- `Docs/chats/2026-04-29_session63_v220_progression_reward_fixes.md`
+
+#### Build Status:
+- Installed missing iOS 26.4 simulator runtime on this machine.
+- `xcodebuild test -project RocketLander.xcodeproj -scheme RocketLander -destination 'id=55C7603C-9E68-4657-8046-5EAA5733D34A'` passed: 94 tests, 0 failures.
+- Simulator smoke test passed on iPhone 17 Pro / iOS 26.4: launched app, dismissed ATT prompt, captured menu, entered Classic mode, and tapped THRUST.
+- Screenshots saved under `Screenshots/simulator-2026-04-29/`.
+
+#### Key Decisions:
+- Gameplay progress is recorded by gameplay events, not by optional UI sheets.
+- Daily Challenge worldwide consistency uses UTC day boundaries.
+- Moving-platform scoring uses the live contacted platform node position.
+
+#### Definition of Done:
+- [x] Campaign progress no longer depends on high-score save
+- [x] Campaign attempt tracking wired into auto-start
+- [x] Daily Challenge failed landings isolated from Classic scores
+- [x] Daily Challenge reward display uses actual reward result
+- [x] Daily Challenge and streak dates use UTC
+- [x] Earth moving-platform center logic uses live platform position
+- [x] Focused tests updated
+- [x] Build/test verification (94 simulator tests passed)
+- [x] Simulator launch/menu/classic smoke screenshots captured
+- [x] Documentation updated
+- [x] Session summary created
+
+---
+
+### Session 64 (2026-04-29) - Build 37 Release Prep, Simulator Smoke, and ASC Upload Blocker
+
+**Goal:** Execute next release steps: simulator/device test the game, prepare `daily_challenge` Game Center setup, archive/export the replacement v2.2.0 build, and upload it if Apple-side gates allow it.
+
+#### Changes Made:
+
+1. **Build number bumped to 37** (`RocketLander/Info.plist`):
+   - v2.2.0 replacement build prepared after progression/reward fixes and Starship art refresh
+
+2. **Game Center setup script updated** (`Scripts/setup_game_center.py`):
+   - Added `daily_challenge` to the leaderboard creation list
+   - `python3 -m py_compile Scripts/setup_game_center.py` passed
+
+3. **Simulator smoke test completed**:
+   - Verified main menu, Daily Challenge briefing, Daily Challenge gameplay, campaign/level select, and Moon campaign gameplay on iPhone 17 Pro simulator / iOS 26.4
+   - Screenshots saved under `Screenshots/simulator-2026-04-29-release-smoke/`
+
+4. **Release archive/export attempted**:
+   - Archive succeeded at `build/RocketLander-Build37.xcarchive`
+   - Local App Store IPA export succeeded at `build/export-build37-local/RocketLander.ipa`
+   - Upload export failed because App Store Connect reports required contracts are missing
+
+5. **ASC script execution attempted**:
+   - `Scripts/setup_game_center.py --create-releases` is blocked locally because `ASC_ISSUER_ID` is missing
+   - Local `.p8` API key files exist, but no issuer ID was found in local env or secrets
+
+#### Build Status:
+- `xcodebuild test -project RocketLander.xcodeproj -scheme RocketLander -destination 'id=55C7603C-9E68-4657-8046-5EAA5733D34A'` passed: 94 tests, 0 failures.
+- `xcodebuild -project RocketLander.xcodeproj -scheme RocketLander -archivePath build/RocketLander-Build37.xcarchive -allowProvisioningUpdates archive` succeeded.
+- Local IPA export succeeded to `build/export-build37-local/RocketLander.ipa`.
+- App Store Connect upload failed with: "You do not have required contracts to perform an operation."
+
+#### Blockers:
+- Apple account holder must clear required App Store Connect contracts/agreements before Build 37 can be uploaded.
+- `ASC_ISSUER_ID` must be supplied before the script can create/release the `daily_challenge` leaderboard.
+- Physical device was not available locally: `iPhone 16 TBO` showed as offline.
+
+#### Definition of Done:
+- [x] Build number bumped to 37
+- [x] `daily_challenge` added to ASC setup script
+- [x] Script syntax check passed
+- [x] Full simulator tests passed
+- [x] Simulator smoke screenshots captured
+- [x] Archive succeeded
+- [x] Local IPA export succeeded
+- [blocked] Upload to App Store Connect
+- [blocked] `daily_challenge` ASC creation/release
+- [x] Documentation updated
+
+---
+
+### Session 65 (2026-05-01) - App Store Connect API Recovery, Daily Challenge Release, and Upload Network Blocker
+
+**Goal:** Use browser-harness and App Store Connect to clear the remaining ASC setup blockers, create/release the `daily_challenge` leaderboard, and retry Build 37 upload through Xcode.
+
+#### Changes Made:
+
+1. **Browser-harness attached to Chrome/App Store Connect**:
+   - Installed browser-harness in `/private/tmp/browser-harness`
+   - Enabled Chrome remote debugging and attached to the existing App Store Connect browser session
+   - Verified Free Apps and Paid Apps agreements are active through January 7, 2027
+
+2. **App Store Connect API access restored**:
+   - Found issuer ID in App Store Connect integrations
+   - Created a new Team API key
+   - Stored the private key outside the repo under `~/.appstoreconnect/private_keys/` with chmod 600
+
+3. **Game Center resources released**:
+   - Ran `Scripts/setup_game_center.py --create-releases` with the new API credentials
+   - Created `daily_challenge` leaderboard with en-US localization
+   - Released 13/13 leaderboards and 10/10 achievements for the app version
+
+4. **Build 37 upload retried through Xcode and altool**:
+   - Xcode export/upload now passes the prior contracts gate and starts the App Store upload flow
+   - Both Xcode and altool repeatedly fail while uploading Apple analysis ZIPs to `northamerica-1.object-storage.apple.com`
+   - A Tailscale-off Xcode retry produced the same failure, so the next useful network test is a different upstream connection
+   - Error pattern: `Checksums do not match` plus `NSURLErrorDomain Code=-1005 "The network connection was lost."`
+
+#### Build Status:
+- Build 37 archive remains ready at `build/RocketLander-Build37.xcarchive`.
+- Local App Store IPA remains ready at `build/export-build37-local/RocketLander.ipa`.
+- App Store Connect API query did not show a completed Build 37 upload after the failed attempts.
+
+#### Blockers:
+- Build 37 upload is blocked by this machine/network's path to Apple object storage, not by ASC contracts or missing Game Center resources.
+- A Tailscale-off retry still failed; retry from a phone hotspot or different Wi-Fi.
+- Physical device was not available locally: `iPhone 16 TBO` showed as offline.
+
+#### Definition of Done:
+- [x] Browser-harness installed and attached to Chrome
+- [x] App Store Connect agreements verified active
+- [x] ASC issuer ID recovered
+- [x] New Team API key created and stored outside repo
+- [x] `daily_challenge` leaderboard created and localized
+- [x] Leaderboard/achievement releases created
+- [x] Xcode upload retried after contracts cleared
+- [x] altool upload retried with API key
+- [blocked] Build 37 upload to App Store Connect/TestFlight
+- [x] Documentation updated
+
+---
+
+### Session 67 (2026-05-03) - Live Campaign Crash Hotfix
+
+**Goal:** Diagnose and patch the campaign-mode crash reported immediately after v2.2.0 Build 37 was approved and distributed on the App Store.
+
+#### Changes Made:
+
+1. **Campaign attempt tracking persistence fixed** (`RocketLander/Models/GameCenterManager.swift`):
+   - Root cause identified in the campaign auto-start path: `recordAttempt(mode:levelId:)` writes achievement tracking to `UserDefaults`.
+   - Build 37 saved `attemptsByLevel` as a nested `[Int: Int]` dictionary, which is not property-list-safe because dictionary keys must be strings.
+   - `savePersistentState()` now converts attempt keys to strings before saving.
+
+2. **Regression coverage added** (`RocketLanderTests/GameStateTests.swift`):
+   - Added test coverage that campaign attempt tracking persists string-keyed data.
+   - Added reload coverage for existing string-keyed attempt tracking data.
+
+3. **Full-mode sweep follow-up fixes**:
+   - `GameScene.setupScene()` now clears stale `shouldReset` so fresh Classic/Campaign/Daily scenes do not reset on the first input frame.
+   - Reset cleanup now removes the `heatParticles` scene action in addition to `heatShimmer`.
+   - Mercury heat shimmer and Io volcanic eruption effects now guard on `currentMode.usesLevelDefinition`, so Daily Challenge gets the same planet hazards as Campaign.
+
+4. **Cloud build path added**:
+   - Added `.github/workflows/ios-ci.yml` for manual/push/PR GitHub Actions verification on a hosted macOS runner.
+   - Added `Scripts/ci_xcodebuild.sh`, a reusable script that selects an available iPhone simulator and runs `xcodebuild test`.
+   - Added `Docs/CLOUD_BUILD_RUNBOOK.md` with the no-local-Xcode workflow and release-build options.
+
+#### Sweep Results:
+- Checked Classic, Campaign, and Daily Challenge entry/reset paths.
+- Checked all direct `UserDefaults` writes for property-list safety.
+- Checked forced unwraps, forced casts, direct indexing, random ranges, and mode-specific hazard guards.
+- Checked obvious secret file patterns before release prep.
+
+#### Verification:
+- `git diff --check` passed.
+- Local Swift/Foundation smoke check confirmed the string-keyed payload is accepted by `UserDefaults`.
+- `python3 -m py_compile` passed for release helper scripts touched in the current working tree.
+- `Info.plist` and entitlements passed `plutil -lint`; asset catalog JSON passed `python3 -m json.tool`.
+- `bash -n Scripts/ci_xcodebuild.sh` passed.
+- Full `xcodebuild`/simulator verification could not run on this machine because the active developer directory is `/Library/Developer/CommandLineTools` and no usable Xcode/simctl is available.
+
+#### Definition of Done:
+- [x] Likely live crash path identified
+- [x] Property-list-safe persistence fix applied
+- [x] Other mode entry/reset paths swept
+- [x] Daily Challenge hazard parity bug fixed
+- [x] GitHub Actions cloud CI path added for no-local-Xcode verification
+- [x] Focused regression tests added
+- [x] Documentation updated
+- [blocked] Xcode build/test/simulator campaign verification on this machine
+
+#### Next Actions:
+- [ ] Run full `xcodebuild test` on a Mac with Xcode selected
+- [ ] Smoke campaign startup on Earth, Venus, and an early unlocked level
+- [ ] Prepare/upload replacement build after explicit approval
+
+---
+
+*Last updated: 2026-05-03 (Session 67)*

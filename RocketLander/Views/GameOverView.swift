@@ -159,8 +159,6 @@ struct GameOverView: View {
     @State private var scoreSaved = false
     @State private var showingHighScoreSheet = false
     @State private var crashMessage = crashMessages.randomElement()!
-    @State private var dailyRewardResult: DailyRewardResult?
-    @State private var milestoneRewards: [CampaignMilestoneReward] = []
 
     // Pool of crash headlines — randomized each game over
     private static let crashMessages = [
@@ -196,10 +194,7 @@ struct GameOverView: View {
         case .campaign:
             return campaignState.isHighScore(for: gameState.currentLevelId, score: gameState.score)
         case .dailyChallenge:
-            if let best = DailyChallenge.localBestScore {
-                return gameState.score > best
-            }
-            return true
+            return gameState.dailyChallengeSuccess && gameState.dailyChallengeWasNewBest
         case .classic:
             return highScoreManager.isHighScore(gameState.score)
         }
@@ -284,7 +279,7 @@ struct GameOverView: View {
             }
 
             // Blue star reward
-            if let reward = dailyRewardResult, reward.totalReward > 0 {
+            if let reward = gameState.dailyRewardResult, reward.totalReward > 0 {
                 HStack(spacing: 4) {
                     Image(systemName: "star.fill")
                         .font(.caption)
@@ -312,7 +307,7 @@ struct GameOverView: View {
     /// Blue star milestone display for campaign mode
     private var campaignMilestoneView: some View {
         VStack(spacing: 4) {
-            ForEach(Array(milestoneRewards.enumerated()), id: \.offset) { _, reward in
+            ForEach(Array(gameState.campaignMilestoneRewards.enumerated()), id: \.offset) { _, reward in
                 HStack(spacing: 4) {
                     Image(systemName: "star.fill")
                         .font(.caption)
@@ -371,7 +366,7 @@ struct GameOverView: View {
                 }
 
                 // Campaign milestone rewards
-                if !milestoneRewards.isEmpty {
+                if !gameState.campaignMilestoneRewards.isEmpty {
                     campaignMilestoneView
                 }
 
@@ -493,15 +488,6 @@ struct GameOverView: View {
             if isNewHighScore {
                 showingHighScoreSheet = true
             }
-            // Capture daily reward result (already recorded in GameScene)
-            if gameState.currentMode == .dailyChallenge && gameState.dailyChallengeSuccess {
-                // The reward was already recorded in GameScene; just capture for display
-                dailyRewardResult = DailyRewardResult(
-                    baseReward: BlueStarManager.dailyChallengeReward,
-                    streakBonus: blueStarManager.currentStreak > 0 && blueStarManager.currentStreak % BlueStarManager.streakBonusThreshold == 0 ? BlueStarManager.streakBonusReward : 0,
-                    newStreak: blueStarManager.currentStreak
-                )
-            }
         }
         .onChange(of: gameState.score) { _ in
             if isNewHighScore && !showingHighScoreSheet {
@@ -618,9 +604,15 @@ struct GameOverView: View {
     // MARK: - Actions
 
     private func shareScoreCard() {
-        let levelName = gameState.currentMode == .campaign
-            ? (LevelDefinition.levels.first { $0.id == gameState.currentLevelId }?.name ?? "Level \(gameState.currentLevelId)")
-            : "Classic"
+        let levelName: String
+        switch gameState.currentMode {
+        case .campaign:
+            levelName = LevelDefinition.levels.first { $0.id == gameState.currentLevelId }?.name ?? "Level \(gameState.currentLevelId)"
+        case .dailyChallenge:
+            levelName = DailyChallenge.level.name
+        case .classic:
+            levelName = "Classic"
+        }
 
         let crashCause: String
         if !gameState.landed {
@@ -666,17 +658,14 @@ struct GameOverView: View {
         guard !name.isEmpty else { return }
 
         if gameState.currentMode == .campaign {
-            campaignState.completedLevel(
-                gameState.currentLevelId,
+            campaignState.addNamedScore(
+                levelId: gameState.currentLevelId,
                 stars: gameState.starsEarned,
                 score: gameState.score,
                 name: name
             )
-            // Check campaign milestones for blue star rewards
-            let newMilestones = blueStarManager.checkCampaignMilestones(totalCampaignStars: campaignState.totalStars)
-            if !newMilestones.isEmpty {
-                milestoneRewards = newMilestones
-            }
+        } else if gameState.currentMode == .dailyChallenge {
+            DailyChallenge.recordScore(gameState.score, success: gameState.dailyChallengeSuccess, playerName: name)
         } else {
             highScoreManager.addScore(name: name, score: gameState.score, stars: gameState.starsEarned)
         }

@@ -37,6 +37,26 @@ final class CampaignStateTests: XCTestCase {
         XCTAssertTrue(state.unlockedLevels.contains(2), "Level 2 should be unlocked")
     }
 
+    func testRecordCompletionWithoutNamedScoreUnlocksAndPersistsProgress() {
+        let state = CampaignState()
+        state.recordCompletion(1, stars: 2, score: 4000)
+
+        XCTAssertTrue(state.unlockedLevels.contains(2), "Level 2 should unlock even when score sheet is skipped")
+        XCTAssertEqual(state.bestStars(for: 1), 2)
+        XCTAssertEqual(state.bestScore(for: 1), 4000)
+        XCTAssertEqual(state.scoresByLevel[1]?.first?.name, "Armstrong", "Named leaderboard should not be polluted by anonymous progress")
+    }
+
+    func testNamedScoreIsSeparateFromProgressRecording() {
+        let state = CampaignState()
+        state.recordCompletion(1, stars: 3, score: 7000)
+        state.addNamedScore(levelId: 1, stars: 3, score: 7000, name: "Pilot")
+
+        XCTAssertEqual(state.bestStars(for: 1), 3)
+        XCTAssertEqual(state.bestScore(for: 1), 7000)
+        XCTAssertEqual(state.scoresByLevel[1]?.first?.name, "Pilot")
+    }
+
     func testCompleteLastLevel() {
         let state = CampaignState()
         // Unlock all levels first

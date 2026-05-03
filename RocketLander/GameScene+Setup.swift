@@ -689,9 +689,12 @@ extension GameScene {
         let bodyColor = SKColor(red: 0.82, green: 0.83, blue: 0.85, alpha: 1.0)
         let bodyHighlight = SKColor(red: 0.88, green: 0.89, blue: 0.91, alpha: 1.0)
         let bodyStroke = SKColor(red: 0.6, green: 0.6, blue: 0.63, alpha: 1.0)
+        let bodyShadow = SKColor(red: 0.45, green: 0.47, blue: 0.52, alpha: 0.55)
         let flapColor = SKColor(red: 0.18, green: 0.18, blue: 0.2, alpha: 1.0)
+        let flapHighlight = SKColor(red: 0.34, green: 0.34, blue: 0.38, alpha: 0.9)
         let flapStroke = SKColor(red: 0.3, green: 0.3, blue: 0.33, alpha: 1.0)
         let darkMetal = SKColor(red: 0.15, green: 0.15, blue: 0.17, alpha: 1.0)
+        let heatShield = SKColor(red: 0.07, green: 0.075, blue: 0.085, alpha: 0.9)
 
         let bodyWidth: CGFloat = 26
         let bodyHeight: CGFloat = 70
@@ -712,7 +715,7 @@ extension GameScene {
         body.lineWidth = 1.5
         rocket.addChild(body)
 
-        // Body highlight strip (left side reflection)
+        // Curved stainless-steel reflections
         let highlightPath = CGMutablePath()
         highlightPath.move(to: CGPoint(x: -bodyWidth/2 + 3, y: -bodyHeight/2 + 8))
         highlightPath.addLine(to: CGPoint(x: -bodyWidth/2 + 3, y: bodyHeight/2 - 20))
@@ -724,8 +727,41 @@ extension GameScene {
         highlight.strokeColor = .clear
         rocket.addChild(highlight)
 
+        let shadowPath = CGMutablePath()
+        shadowPath.move(to: CGPoint(x: bodyWidth/2 - 5, y: -bodyHeight/2 + 7))
+        shadowPath.addLine(to: CGPoint(x: bodyWidth/2 - 2, y: bodyHeight/2 - 20))
+        shadowPath.addLine(to: CGPoint(x: bodyWidth/2, y: bodyHeight/2 - 18))
+        shadowPath.addLine(to: CGPoint(x: bodyWidth/2, y: -bodyHeight/2 + 6))
+        shadowPath.closeSubpath()
+        let shadow = SKShapeNode(path: shadowPath)
+        shadow.fillColor = bodyShadow
+        shadow.strokeColor = .clear
+        rocket.addChild(shadow)
+
+        // Heat shield tile strip, visible as the dark leeward side.
+        let tilePanel = SKShapeNode(rectOf: CGSize(width: 7, height: 45), cornerRadius: 1.5)
+        tilePanel.position = CGPoint(x: bodyWidth/2 - 4.5, y: -5)
+        tilePanel.fillColor = heatShield
+        tilePanel.strokeColor = SKColor.black.withAlphaComponent(0.35)
+        tilePanel.lineWidth = 0.4
+        rocket.addChild(tilePanel)
+
+        for yPos: CGFloat in stride(from: -23, through: 17, by: 8) {
+            let tileSeam = SKShapeNode(rectOf: CGSize(width: 6, height: 0.45))
+            tileSeam.position = CGPoint(x: bodyWidth/2 - 4.5, y: yPos)
+            tileSeam.fillColor = SKColor.white.withAlphaComponent(0.18)
+            tileSeam.strokeColor = .clear
+            rocket.addChild(tileSeam)
+        }
+
+        let noseSheen = SKShapeNode(ellipseOf: CGSize(width: 11, height: 6))
+        noseSheen.position = CGPoint(x: -3, y: bodyHeight/2 - 16)
+        noseSheen.fillColor = SKColor.white.withAlphaComponent(0.22)
+        noseSheen.strokeColor = .clear
+        rocket.addChild(noseSheen)
+
         // Panel seam lines (horizontal)
-        for yPos: CGFloat in [-15, 0, 15] {
+        for yPos: CGFloat in [-22, -8, 8, 22] {
             let seam = SKShapeNode(rectOf: CGSize(width: bodyWidth - 4, height: 0.5))
             seam.position = CGPoint(x: 0, y: yPos)
             seam.fillColor = bodyStroke.withAlphaComponent(0.5)
@@ -761,6 +797,13 @@ extension GameScene {
             flap.lineWidth = 1
             rocket.addChild(flap)
 
+            let flapBevel = SKShapeNode(path: flapPath)
+            flapBevel.fillColor = .clear
+            flapBevel.strokeColor = flapHighlight
+            flapBevel.lineWidth = 0.6
+            flapBevel.alpha = 0.75
+            rocket.addChild(flapBevel)
+
             // Flap hinge detail
             let hinge = SKShapeNode(rectOf: CGSize(width: 2, height: 12))
             hinge.position = CGPoint(x: flapInnerX, y: (flapBaseY + flapTopY) / 2)
@@ -790,6 +833,13 @@ extension GameScene {
             flap.lineWidth = 1
             rocket.addChild(flap)
 
+            let flapBevel = SKShapeNode(path: flapPath)
+            flapBevel.fillColor = .clear
+            flapBevel.strokeColor = flapHighlight
+            flapBevel.lineWidth = 0.6
+            flapBevel.alpha = 0.75
+            rocket.addChild(flapBevel)
+
             // Aft flap hinge
             let hinge = SKShapeNode(rectOf: CGSize(width: 2, height: 14))
             hinge.position = CGPoint(x: flapInnerX, y: (flapBaseY + flapTopY) / 2)
@@ -811,6 +861,12 @@ extension GameScene {
         engine.strokeColor = flapStroke
         engine.lineWidth = 1
         rocket.addChild(engine)
+
+        let skirtRim = SKShapeNode(rectOf: CGSize(width: bodyWidth + 9, height: 1.5), cornerRadius: 0.75)
+        skirtRim.position = CGPoint(x: 0, y: -bodyHeight/2 + 3)
+        skirtRim.fillColor = SKColor(red: 0.58, green: 0.59, blue: 0.62, alpha: 0.9)
+        skirtRim.strokeColor = .clear
+        rocket.addChild(skirtRim)
 
         // Engine nozzles (3 Raptor engines)
         for i in -1...1 {

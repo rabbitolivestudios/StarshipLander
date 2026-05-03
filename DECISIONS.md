@@ -4,6 +4,22 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
+## [2026-05-03] UserDefaults Dictionaries Use String Keys Only
+**Context:** v2.2.0 Build 37 was approved/distributed, then live testing found campaign gameplay could close/crash after selecting a planet and starting a run. The campaign auto-start path records Game Center achievement attempts and persists them to `UserDefaults`.
+**Decision:** Any dictionary saved directly to `UserDefaults` must be property-list-safe, including string keys for nested dictionaries. `GameCenterManager.savePersistentState()` converts `attemptsByLevel` from `[Int: Int]` to `[String: Int]` before saving; loading continues to accept string-keyed data.
+**Why:** Property-list dictionaries do not support numeric keys. Saving a nested `[Int: Int]` can raise a runtime exception even though the code compiles.
+**Consequences:** Game Center attempt tracking remains compatible with existing string-keyed payloads, and campaign startup no longer writes crash-prone `UserDefaults` data.
+
+---
+
+## [2026-05-03] Level-Based Modes Share Level Hazards
+**Context:** Daily Challenge uses `LevelDefinition` just like Campaign, but Mercury heat shimmer and Io volcanic eruption effects were guarded with `currentMode == .campaign`. That meant Daily Challenge could show the same planet/mechanic in briefing but omit some effects.
+**Decision:** Level hazard setup should use `gameState.currentMode.usesLevelDefinition` unless a mechanic is explicitly campaign-only.
+**Why:** Daily Challenge promises the same planets and hazards; branching on campaign only creates inconsistent gameplay and test coverage blind spots.
+**Consequences:** Mercury and Io effects now run in both Campaign and Daily Challenge. Future level-based modes inherit level mechanics by default.
+
+---
+
 ## [2026-01-07] Game Engine Choice
 **Context:** Needed a 2D physics engine for iOS rocket landing game.
 **Options considered:** (1) SpriteKit + SwiftUI, (2) Unity, (3) pure SwiftUI with custom physics.
@@ -435,13 +451,13 @@ This file records key technical and design decisions, including context, alterna
 
 ---
 
-## [2026-02-20] Interstitial Ads — Every 3 Attempts, Never Blocking
+## [2026-02-20] Interstitial Ads — Attempt-Gated, Never Blocking
 
 **Context:** Banner-only ad revenue is $0.49 total over 90 days. Need higher-value ad format without destroying gameplay experience.
 **Options considered:** (1) Rewarded video ads (opt-in for blue stars), (2) Interstitial ads on every game over, (3) Interstitial ads every N attempts on Retry/Next Level only.
-**Decision:** Option 3 — interstitial every 3rd Retry/Next Level tap. Menu button never triggers an ad. If ad fails to load, silently skip and proceed. Preload next ad after dismissal.
-**Why:** Every-game interstitials would be too aggressive for a game with short sessions. 3-attempt cadence means ~33% of replays see an ad. Tying to Retry/Next Level (not Menu) means players who stop playing aren't punished. Silent skip on failure ensures gameplay is never blocked by ad infrastructure.
-**Consequences:** Ad revenue should be significantly higher than banners alone. Users who play 3+ games per session see interstitials. Production ad unit ID still needs to be created in AdMob console.
+**Decision:** Option 3 — interstitials on Retry/Next Level taps only. Menu button never triggers an ad. If ad fails to load, silently skip and proceed. Preload next ad after dismissal. Initial frequency was every 3rd attempt; superseded by [2026-02-21] Interstitial Frequency — Every 7th Attempt.
+**Why:** Every-game interstitials would be too aggressive for a game with short sessions. Tying to Retry/Next Level (not Menu) means players who stop playing aren't punished. Silent skip on failure ensures gameplay is never blocked by ad infrastructure.
+**Consequences:** Ad revenue should be significantly higher than banners alone while preserving player flow. Production ad unit was later created and configured.
 
 ---
 
@@ -501,6 +517,36 @@ This file records key technical and design decisions, including context, alterna
 **Decision:** Option 3 — `onLongPressGesture` with `minimumDuration: .infinity`. The `pressing` callback is `true` on touch-down and `false` on touch-up for a single gesture instance. `minimumDuration: .infinity` means the long-press never "completes" — the button acts as a pure press-and-hold.
 **Why:** Pure SwiftUI solution (no UIKit bridging). Single touch lifecycle tracking. No state counters to manage. Clean and minimal code change.
 **Consequences:** Thrust and rotation buttons now correctly handle multi-touch. No visual or behavioral changes for normal single-finger usage.
+
+---
+
+## [2026-04-29] Progress and Reward Recording — Gameplay Events, Not Sheets
+
+**Context:** v2.2.0 code tied some persistent outcomes to UI sheets: campaign stars/unlocks were recorded when the high-score name sheet saved, and Daily Challenge reward display reconstructed reward values after the fact.
+**Options considered:** (1) Keep name entry as the persistence trigger, (2) Auto-fill anonymous named scores, (3) Record gameplay progress immediately and keep named leaderboards as optional metadata.
+**Decision:** Option 3 — successful campaign landings immediately record stars, unlocks, personal best scores, and milestone rewards. Name entry only updates the named top-3 board. Daily Challenge rewards are stored from the actual `BlueStarManager` result.
+**Why:** Progress must survive skipped sheets and non-high-score landings. Named leaderboards are presentation metadata; they should not control unlocks, Game Center aggregate scores, or currency.
+**Consequences:** `CampaignState` now has `personalBestScoresByLevel` alongside named `scoresByLevel`. Existing save data remains backward-compatible. Campaign milestone rewards and Daily Challenge rewards are stored on `GameState` for accurate game-over display.
+
+---
+
+## [2026-04-29] Daily Challenge Date Boundary — UTC Worldwide Day
+
+**Context:** The feature promised the same Daily Challenge worldwide, but the original calendar/date formatter used the device's local time zone.
+**Options considered:** (1) Keep local-day challenges, (2) Use UTC, (3) Use a server-provided daily seed.
+**Decision:** Use UTC day boundaries for Daily Challenge rotation, local daily keys, and blue star streak dates.
+**Why:** UTC is deterministic, serverless, and makes the “same worldwide” promise true without backend infrastructure.
+**Consequences:** Challenge rollover may occur at a different local time for players outside UTC, but every player shares the same active challenge at the same moment.
+
+---
+
+## [2026-04-29] Starship Art — Stylized Default, Realistic Concept as Future Skin
+
+**Context:** Generated realistic Starship concept art looked strong, but introducing it directly as the default would add bitmap asset complexity and clash with the current vector/SpriteKit arcade style.
+**Options considered:** (1) Use the generated bitmap as the default ship, (2) keep the existing simple rocket, (3) create a more Starship-like stylized default and reserve realistic art for a future premium/unlockable skin.
+**Decision:** Option 3 — refresh the default SpriteKit and SwiftUI rocket renderers in the current game aesthetic while preserving gameplay collision dimensions.
+**Why:** The default should feel more recognizable without creating new asset pipeline, licensing, or scaling risks. The realistic generated concept fits better as a future cosmetic skin/store candidate.
+**Consequences:** No physics body changes. Premium skins remain unimplemented; the generated realistic concept is documented as future content.
 
 ---
 

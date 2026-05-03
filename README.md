@@ -15,7 +15,7 @@ Guide your Starship through a controlled descent and land safely on one of three
 ### Features
 
 - **Realistic Physics**: SpriteKit-powered physics simulation
-- **Starship Design**: Authentic SpaceX Starship-inspired rocket with flaps and landing legs
+- **Starship Design**: Stylized SpaceX Starship-inspired rocket with stainless body shading, black heat-shield tiles, flaps, engines, and landing legs
 - **Three Landing Platforms**: Training Zone (1x), Precision Target (2x), Elite Landing (5x)
 - **Campaign Mode**: 10 levels across the solar system with unique gravity and mechanics
 - **Dual Control Modes**: Touch buttons or accelerometer (tilt to rotate)
@@ -31,7 +31,7 @@ Guide your Starship through a controlled descent and land safely on one of three
 - **High Score Leaderboard**: Track your top 3 landings
 - **Game Center Integration**: 13 leaderboards (classic + 10 campaign + galaxy_rank + daily_challenge), 10 achievements, Galaxy Rank aggregate
 - **Share Score Card**: Generate and share landing results as images via native share sheet
-- **Daily Challenge**: New challenge every day, same worldwide. 75 rotating templates with 6 constraint types across all 10 planets. Auto-computed difficulty (1-5★). Countdown timer for timed challenges with time bonus scoring. Pre-challenge briefing screen. See [Daily Challenge Catalog](#daily-challenge-catalog) for full list.
+- **Daily Challenge**: New challenge every UTC day, same worldwide. 75 rotating templates with 6 constraint types across all 10 planets. Auto-computed difficulty (1-5★). Countdown timer for timed challenges with time bonus scoring. Pre-challenge briefing screen. See [Daily Challenge Catalog](#daily-challenge-catalog) for full list.
 - **Blue Star Currency**: Earn through daily challenges (+1), streaks (+3 bonus at 5 days), and campaign milestones (10/20/30 stars)
 - **AdMob Integration**: Banner + interstitial ads with App Tracking Transparency support
 
@@ -103,7 +103,7 @@ StarshipLander/
 │   ├── GameScene+Sound.swift        # All sound methods
 │   ├── GameScene+Scoring.swift      # Score calculation, platform detection
 │   ├── BannerAdView.swift           # AdMob banner + ad config
-│   ├── InterstitialAdManager.swift  # Interstitial ads (every 3 attempts)
+│   ├── InterstitialAdManager.swift  # Interstitial ads (every 7 attempts)
 │   ├── Info.plist                   # App configuration
 │   ├── RocketLander.entitlements    # Game Center capability
 │   ├── Models/
@@ -258,7 +258,7 @@ python3 Scripts/generate_sounds.py
 
 ## Daily Challenge Catalog
 
-75 unique challenges rotating on a deterministic daily cycle (`dayOfYear % 75`). Every player worldwide gets the same challenge each day. Difficulty is auto-computed based on planet gravity/hazards, number of constraints, constraint tightness, platform requirement, and time pressure (planet-aware).
+75 unique challenges rotating on a deterministic UTC daily cycle (`dayOfYear % 75`). Every player worldwide gets the same challenge at the same moment. Difficulty is auto-computed based on planet gravity/hazards, number of constraints, constraint tightness, platform requirement, and time pressure (planet-aware).
 
 <details>
 <summary><strong>1★ Very Easy (7 challenges)</strong></summary>
@@ -416,7 +416,7 @@ python3 Scripts/generate_sounds.py
 
 ## App Store
 
-**Available on the App Store**: [Starship Lander](https://apps.apple.com/app/starship-lander/id6740857083)
+**Available on the App Store**: [Starship Lander](https://apps.apple.com/app/starship-lander/id6757563869)
 
 **Developer Website**: https://rabbitolivestudios.github.io
 
@@ -431,7 +431,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 | Version | Date | Description |
 |---------|------|-------------|
-| 2.2.0 | In Development | Daily Challenge, Blue Stars, interstitial ads, global rank on game-over |
+| 2.2.0 | Build 37 Local RC | Daily Challenge, Blue Stars, interstitial ads, global rank on game-over; `daily_challenge` released in ASC; upload blocked by Apple object-storage network failures |
 | 2.1.1 | 2026-02-06 | Share card redesign: crash sharing, compact colored stats, App Store link |
 | 2.1.0 | 2026-02-06 | **Live on App Store** — Game Center: 12 leaderboards, 10 achievements, Galaxy Rank, share card |
 | 2.0.3 | 2026-02-06 | Scoring rebalance, tilt bands, Europa cryogeysers, HUD-style Flight Data, randomized crash messages |

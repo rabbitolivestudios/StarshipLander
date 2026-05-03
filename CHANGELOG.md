@@ -5,6 +5,18 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — Campaign Crash Hotfix
+
+### Fixed
+- **Campaign startup crash**: Game Center campaign attempt tracking now persists `attemptsByLevel` with string keys before saving to `UserDefaults`. The live Build 37 campaign auto-start path could save a nested `[Int: Int]` dictionary, which is not property-list-safe and can terminate the app when the player begins a campaign run.
+- **Fresh-scene reset flag leak**: New game scenes now consume stale `shouldReset` state during setup. This prevents the first input after launching a new Classic/Campaign/Daily run from immediately resetting the scene, and avoids double-counting the first campaign attempt.
+- **Daily Challenge hazard parity**: Mercury heat shimmer and Io volcanic eruption effects now run in Daily Challenge as well as Campaign mode.
+- **Heat particle cleanup**: Reset now removes the `heatParticles` scene action alongside the main heat shimmer action, preventing Mercury visual effects from leaking into later retries/levels.
+
+### Added
+- Regression coverage for Game Center attempt tracking persistence and reload from string-keyed `UserDefaults` data.
+- GitHub Actions iOS CI workflow plus reusable `Scripts/ci_xcodebuild.sh` for cloud macOS build/test verification when local Xcode is unavailable.
+
 ## [2.1.1] — Build 33 (Phase: Community)
 
 ### Changed
@@ -182,7 +194,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [2.2.0] - Build 35 (Phase: Retention + Monetization)
+## [2.2.0] - Build 37 Submitted (Phase: Retention + Monetization)
+
+### Release Prep (Build 37 — App Store review submission complete)
+- Build number bumped to 37 for the replacement v2.2.0 upload.
+- `daily_challenge` added to `Scripts/setup_game_center.py` and created/released in App Store Connect with en-US localization.
+- Full simulator test suite passed: 94 tests, 0 failures on iPhone 17 Pro simulator / iOS 26.4.
+- Simulator release smoke screenshots captured for menu, Daily Challenge briefing/gameplay, and campaign gameplay.
+- Archive succeeded and local App Store IPA export succeeded at `build/export-build37-local/RocketLander.ipa`.
+- App Store Connect agreements are active and API access was restored with a new Team API key stored outside the repo.
+- Build 37 uploaded through Xcode Organizer and is VALID in App Store Connect.
+- v2.2.0 App Store version created; Build 37 attached.
+- ASO metadata, review notes, and five 1284x2778 App Store screenshots uploaded.
+- v2.2.0 review submission created through App Store Connect API and entered `WAITING_FOR_REVIEW` on 2026-05-01.
+
+### Fixed (Build 37 local)
+- **Campaign Progress Decoupled from High-Score Sheet**: Campaign stars, level unlocks, personal best scores, and blue star milestone rewards are now recorded immediately on successful campaign landing. Entering a name only affects the named top-3 leaderboard, so skipping the sheet no longer loses progress.
+- **Campaign Attempt Tracking**: Campaign attempts are now recorded from the normal auto-start path, restoring first-attempt achievement logic.
+- **Earth Moving Platform Scoring**: Partial-landing checks, final center distance, and center precision scoring now use the contacted platform node's live position instead of static platform fractions.
+- **Daily Challenge Score Isolation**: Failed Daily Challenge landings no longer open the high-score sheet or save into Classic scores. Successful new daily bests still prompt for a name and update the daily local best name.
+- **Blue Star Reward Display**: Game-over reward text now uses the actual reward result returned by `BlueStarManager`, preventing repeat same-day completions from displaying a reward that was not granted.
+- **Worldwide Daily Challenge Date**: Daily Challenge rotation, local best keys, and blue star streak dates now use UTC day boundaries so the same challenge is active worldwide.
+
+### Changed (Build 37 local)
+- **Default Starship Art Refresh**: Updated the menu and SpriteKit gameplay Starship renderers with a more recognizable, game-styled Starship silhouette: stainless body shading, black heat-shield tile strip, four dark flaps with bevels, engine skirt detail, three Raptor-style bells, landing legs, and a cleaner flame. Physics body dimensions are unchanged.
 
 ### Fixed (Build 36 — Menu layout redesign)
 - **Menu Layout Redesign**: Settings gear and help icons moved from bottom footer to top-right bar (next to version label). Eliminated footer HStack entirely. Banner ad uses `.safeAreaInset(edge: .bottom)` so SwiftUI reserves space automatically — no more overlap. Campaign button fully visible.
@@ -194,11 +229,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Multi-Touch Thrust Stuck**: Pressing thrust with one finger then tapping with a second finger caused thrust to get stuck active. Replaced `DragGesture` with `onLongPressGesture(pressing:)` which correctly tracks a single touch lifecycle. Same fix applied to rotation buttons.
 
 ### Added
-- **Daily Challenge System**: A new challenge every day, the same for all players worldwide. 75 rotating templates with rich constraint types:
+- **Daily Challenge System**: A new challenge every UTC day, the same for all players worldwide. 75 rotating templates with rich constraint types:
   - 6 constraint types: target platform, max tilt, max vertical speed, max horizontal speed, min fuel, time limit
   - Challenges combine multiple constraints and rotate across all 10 planets
   - Auto-computed difficulty (1-5 stars) based on planet gravity/hazards, constraint count/tightness, platform requirement, and time pressure (planet-aware scoring)
-  - Deterministic cycling via `dayOfYear % 75` — same challenge worldwide each day
+  - Deterministic cycling via UTC `dayOfYear % 75` — same challenge worldwide each day
   - Pre-challenge briefing screen (`DailyChallengeBriefingView`) with: objectives, planet info, difficulty stars, global today's best (from GC), local best, streak info, blue star reward preview
   - Per-constraint pass/fail breakdown on game-over screen with actual values
   - Countdown timer for timed challenges with time bonus scoring
@@ -212,7 +247,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Singleton with UserDefaults persistence, idempotent reward claiming
   - Displayed on menu (next to campaign stars) and game-over screens
 - **Interstitial Ads** (`InterstitialAdManager.swift`): Revenue diversification beyond banners
-  - Shows interstitial every 3rd Retry/Next Level tap
+  - Shows interstitial every 7th Retry/Next Level tap
   - Never blocks gameplay — silently skips on ad load failure
   - Test ID in DEBUG, production ID in RELEASE (`ca-app-pub-3801339388353505/8269147180`)
   - Uses existing `topViewController()` for presentation
@@ -586,7 +621,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Highlights                                    |
 |---------|------------|-----------------------------------------------|
-| 2.2.0   | Build 34   | Daily Challenge (75 templates), Blue Stars, interstitial ads, global rank, challenge failure UX |
+| 2.2.0   | Build 37 Submitted | Daily Challenge (75 templates), Blue Stars, interstitial ads, global rank, challenge failure UX; Build 37 submitted for App Store review |
 | 2.1.1   | 2026-02-06 | Share card redesign: crash sharing, compact colored stats, App Store link |
 | 2.1.0   | 2026-02-06 | Game Center: 12 leaderboards, 10 achievements, Galaxy Rank, share card |
 | 2.0.3   | 2026-02-01 | Campaign engagement: reentry state, tilt HUD, flight stats, crash diagnostics |

@@ -105,6 +105,35 @@ final class ScoringTests: XCTestCase {
         XCTAssertEqual(center - edge, 600, accuracy: 1)
     }
 
+    func testCenterPrecisionCanUseLivePlatformPosition() {
+        // Earth moves platforms at runtime, so scoring must use the contacted node's
+        // live X position rather than the static LandingPlatform.xFraction value.
+        let movedPlatformX = LandingPlatform.b.xFraction * sceneWidth + 35
+        let scoreAtLiveCenter = ScoringHelper.calculateScore(
+            verticalSpeed: 0,
+            horizontalSpeed: 0,
+            rotation: 0,
+            approachSpeed: 0,
+            fuel: 0,
+            rocketX: movedPlatformX,
+            sceneWidth: sceneWidth,
+            platform: .b,
+            platformCenterX: movedPlatformX
+        )
+        let scoreUsingStaticCenter = ScoringHelper.calculateScore(
+            verticalSpeed: 0,
+            horizontalSpeed: 0,
+            rotation: 0,
+            approachSpeed: 0,
+            fuel: 0,
+            rocketX: movedPlatformX,
+            sceneWidth: sceneWidth,
+            platform: .b
+        )
+
+        XCTAssertGreaterThan(scoreAtLiveCenter, scoreUsingStaticCenter)
+    }
+
     func testSubtotalMax() {
         // Perfect landing, fuel 0 (mult 1.0), platform A (mult 1.0)
         let result = score(fuel: 0, platform: .a)

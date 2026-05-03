@@ -1,0 +1,37 @@
+name: iOS CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "codex/**"
+
+jobs:
+  test:
+    name: Build and Test
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Show Xcode and simulator inventory
+        run: |
+          xcodebuild -version
+          xcode-select -p
+          xcrun simctl list runtimes
+          xcrun simctl list devices available
+
+      - name: Run xcodebuild tests
+        run: Scripts/ci_xcodebuild.sh
+
+      - name: Upload test result bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults
+          path: build/ci/TestResults.xcresult
+          if-no-files-found: ignore

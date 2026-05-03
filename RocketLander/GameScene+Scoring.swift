@@ -3,7 +3,7 @@ import SpriteKit
 // MARK: - Scoring Logic
 extension GameScene {
 
-    func calculateScore(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform, speedBand: SpeedBand, elapsedTime: TimeInterval = 0) -> Int {
+    func calculateScore(verticalSpeed: CGFloat, horizontalSpeed: CGFloat, rotation: CGFloat, approachSpeed: CGFloat, platform: LandingPlatform, speedBand: SpeedBand, elapsedTime: TimeInterval = 0, platformCenterX: CGFloat? = nil) -> Int {
         // === CONTINUOUS SCORING SYSTEM WITH FUEL + PLATFORM MULTIPLIER ===
         // Max possible: ~23,100 points (2100 base x 2.2 fuel x 5.0 platform) + up to 500 time bonus
 
@@ -24,7 +24,7 @@ extension GameScene {
         subtotal += horizontalScore
 
         // 3. PLATFORM CENTER (0-600 points) — use the specific platform's position
-        let platformX = platform.xFraction * size.width
+        let platformX = platformCenterX ?? platform.xFraction * size.width
         let distanceFromCenter = abs(rocket.position.x - platformX)
         let platformHalfWidth = platform.width / 2
         let centerRatio = min(1.0, distanceFromCenter / platformHalfWidth)
