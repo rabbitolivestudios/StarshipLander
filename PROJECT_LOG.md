@@ -15,7 +15,7 @@ This file documents the development history and decisions for the Starship Lande
 
 ---
 
-## Current Status (2026-05-03, Session 67)
+## Current Status (2026-05-03, Session 68)
 
 | Version | Build | Status |
 |---------|-------|--------|
@@ -33,13 +33,13 @@ This file documents the development history and decisions for the Starship Lande
 | 2.2.0 | 35 | On TestFlight — bug fixes (ad frequency, thrust multi-touch) |
 | 2.2.0 | 36 | **ON TESTFLIGHT** — menu layout redesign (icons to top-right, safeAreaInset for ad) |
 | 2.2.0 | 37 | **PUBLISHED / LIVE** — Approved and distributed by Apple on 2026-05-03. Live campaign startup crash reported; local hotfix pending Xcode verification/replacement build. |
+| 2.2.1 | 38 | **SUBMITTED FOR REVIEW** — Campaign startup crash hotfix; uploaded, metadata updated, Build 38 attached, review submission waiting. |
 
 **NEXT STEPS:**
-1. **Commit/push the hotfix branch and run GitHub Actions iOS CI** — this machine no longer has Xcode installed.
-2. Test campaign startup on Earth, Venus, and at least one early unlocked level; smoke Classic and Daily Challenge through cloud/remote Mac or replacement TestFlight build.
-3. Upload replacement v2.2.0 build after explicit build/version approval.
-4. Verify replacement build on device/App Store/TestFlight.
-5. Resume growth/v2.3 work only after live crash is resolved.
+1. Monitor v2.2.1 Build 38 App Store review status.
+2. Verify replacement build on device/App Store/TestFlight after approval/distribution.
+3. Confirm Campaign startup on Earth, Venus, and an early unlocked planet in the replacement build.
+4. Resume growth/v2.3 work only after live crash is resolved.
 
 **v2.2.0 — Phase: Retention + Monetization (Build 37 local release candidate):**
 - [done] Daily Challenge System (75 templates, 6 constraint types, auto-computed difficulty, deterministic cycling)
@@ -68,7 +68,10 @@ This file documents the development history and decisions for the Starship Lande
 - [done] v2.2.0 Build 37 approved/distributed by Apple (2026-05-03)
 - [hotfix] Campaign startup crash fix: Game Center attempt tracking now saves string-keyed dictionaries to UserDefaults
 - [hotfix] Fresh scene setup clears stale `shouldReset` to avoid first-input reset/double attempt tracking
+- [hotfix] v2.2.1 Build 38 approved as the replacement version/build
+- [hotfix] Local Xcode restored on SamsungSSD; local `xcodebuild test` passed with 96 tests, 0 failures
 - [hotfix] Daily Challenge Mercury/Io hazards now run under `usesLevelDefinition`
+- [hotfix] v2.2.1 Build 38 archived, uploaded through Xcode Organizer, processed as VALID, attached in App Store Connect, and submitted for review
 - [blocked] Physical device install/test (iPhone 16 TBO offline on this machine)
 
 **BACKLOG (v2.3+):**
@@ -1021,4 +1024,39 @@ Game Center resources were created via API but never included in an App Store ve
 
 ---
 
-*Last updated: 2026-05-03 (Session 67)*
+### Session 68 (2026-05-03) - v2.2.1 Build 38 Hotfix Release
+
+**Goal:** Bump the approved Campaign crash hotfix to v2.2.1 Build 38, verify with local SSD Xcode, archive/upload, and update the App Store Connect distribution page.
+
+#### Changes Made:
+
+1. **Version bump approved and applied**:
+   - `CFBundleShortVersionString`: 2.2.0 -> 2.2.1
+   - `CFBundleVersion`: 37 -> 38
+
+2. **Local Xcode restored on external SSD**:
+   - Installed Xcode 26.4.1 at `/Volumes/SamsungSSD/Developer/Xcode/Xcode-26.4.1.app`.
+   - Selected the SSD Xcode with `xcode-select`.
+   - Installed iOS 26.4.1 simulator runtime.
+
+3. **App Store Connect hotfix copy submitted**:
+   - Updated What's New for v2.2.1 to focus on the Campaign startup crash fix.
+   - Updated review notes with affected-build repro path and fix summary.
+   - Kept v2.2 Daily Challenge/Blue Star/global rank context in the distribution copy.
+   - Created the v2.2.1 App Store version, attached Build 38, and submitted it for review.
+
+#### Verification:
+- GitHub Actions iOS CI passed on the hotfix branch: 96 tests, 0 failures.
+- Local SSD Xcode `Scripts/ci_xcodebuild.sh` passed: 96 tests, 0 failures.
+- Release archive succeeded: `build/RocketLander-Build38.xcarchive`.
+- Xcode Organizer upload completed; App Store Connect reported Build 38 `VALID`.
+- App Store review submission state: `WAITING_FOR_REVIEW` at `2026-05-04T01:20:53Z`.
+
+#### Next Actions:
+- [ ] Monitor App Store review.
+- [ ] Verify replacement build on device/App Store/TestFlight after approval.
+- [ ] Confirm Campaign startup on Earth, Venus, and an early unlocked planet in the replacement build.
+
+---
+
+*Last updated: 2026-05-03 (Session 68)*

@@ -5,7 +5,7 @@ All notable changes to the Starship Lander project will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] — Campaign Crash Hotfix
+## [2.2.1] — Build 38 Hotfix
 
 ### Fixed
 - **Campaign startup crash**: Game Center campaign attempt tracking now persists `attemptsByLevel` with string keys before saving to `UserDefaults`. The live Build 37 campaign auto-start path could save a nested `[Int: Int]` dictionary, which is not property-list-safe and can terminate the app when the player begins a campaign run.
@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Regression coverage for Game Center attempt tracking persistence and reload from string-keyed `UserDefaults` data.
 - GitHub Actions iOS CI workflow plus reusable `Scripts/ci_xcodebuild.sh` for cloud macOS build/test verification when local Xcode is unavailable.
+- Local SSD Xcode workflow restored with Xcode 26.4.1 installed under `/Volumes/SamsungSSD/Developer/Xcode`.
+- v2.2.1 App Store Connect distribution copy, review notes, Build 38 attachment, and review submission record.
 
 ## [2.1.1] — Build 33 (Phase: Community)
 
@@ -621,7 +623,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Highlights                                    |
 |---------|------------|-----------------------------------------------|
-| 2.2.0   | Build 37 Submitted | Daily Challenge (75 templates), Blue Stars, interstitial ads, global rank, challenge failure UX; Build 37 submitted for App Store review |
+| 2.2.1   | Build 38 Submitted | Campaign startup crash fix; fresh-scene reset guard; Daily Challenge hazard parity |
+| 2.2.0   | Build 37 Published | Daily Challenge (75 templates), Blue Stars, interstitial ads, global rank, challenge failure UX; approved/distributed 2026-05-03 |
 | 2.1.1   | 2026-02-06 | Share card redesign: crash sharing, compact colored stats, App Store link |
 | 2.1.0   | 2026-02-06 | Game Center: 12 leaderboards, 10 achievements, Galaxy Rank, share card |
 | 2.0.3   | 2026-02-01 | Campaign engagement: reentry state, tilt HUD, flight stats, crash diagnostics |
