@@ -1,5 +1,51 @@
 # Release Notes
 
+## Version 2.2.1 (Build 38)
+**Status:** Submitted for App Store review. App Store Connect state `WAITING_FOR_REVIEW` at `2026-05-04T01:20:53Z`.
+
+### Overview
+Version 2.2.1 is an emergency stability hotfix for v2.2.0. It keeps the Daily Challenge, Blue Star, interstitial ad, refreshed Starship art, and global rank features from v2.2.0, while fixing the crash reported when starting Campaign gameplay after selecting a planet such as Earth or Venus.
+
+### Fixed
+- Campaign startup crash: campaign Game Center attempt tracking now saves property-list-safe string-keyed data into `UserDefaults`.
+- Fresh run reset handling: new Classic/Campaign/Daily scenes clear stale reset state during setup so the first input cannot immediately reset the scene or double-count a Campaign attempt.
+- Daily Challenge hazard parity: Mercury heat shimmer and Io volcanic eruption effects now run in Daily Challenge as well as Campaign.
+- Heat particle cleanup: reset removes the secondary `heatParticles` action alongside the main heat shimmer action.
+
+### Verification
+- GitHub Actions iOS CI passed for the hotfix branch: 96 tests, 0 failures.
+- Local SSD Xcode 26.4.1 test suite passed: 96 tests, 0 failures.
+- Release archive succeeded and Build 38 uploaded through Xcode Organizer.
+- App Store Connect processed Build 38 as `VALID`, attached it to v2.2.1, and accepted the review submission.
+
+### App Store — What's New (Copy this)
+```
+HOTFIX IN v2.2.1
+
+• Fixes a crash that could close the app when starting Campaign mode after selecting a planet
+• Improves fresh-run reset handling so a new run cannot immediately reset on first input
+• Restores Mercury heat shimmer and Io volcanic effects in Daily Challenge
+
+Also includes the v2.2 Daily Challenge update: 75 rotating challenges, Blue Star rewards, global rank display, refreshed Starship artwork, and improved campaign/daily scoring persistence.
+```
+
+### App Store — Review Team Notes (Copy this)
+```
+Starship Lander is a skill-based physics rocket landing game. Players control thrust and rotation using on-screen buttons and must land safely on a platform. No account, login, or in-app purchases are required.
+
+This v2.2.1 hotfix resolves a live v2.2.0 Campaign startup crash. Repro in the affected build: open Campaign, select a planet such as Earth or Venus, then start gameplay. The fix makes campaign Game Center attempt tracking persist with property-list-safe keys and also clears stale fresh-run reset state.
+
+Daily Challenge is available from the main menu. Blue Stars are earned in-game through Daily Challenge completions and campaign milestones; there is no in-app purchase in this build.
+
+Interstitial ads appear every 7th Retry/Next Level tap (text/image only, no video). They use the existing Google Mobile Ads SDK already declared in the app. No new SDKs were added. The app does not collect any new data.
+
+Game Center authentication occurs automatically on launch. If the player is not signed in, all Game Center features are hidden and the game works normally with local scores only.
+
+An App Tracking Transparency prompt appears on first launch before showing personalized ads.
+```
+
+---
+
 ## Version 2.2.0 (Build 37)
 **Status:** Approved and distributed by Apple on 2026-05-03. Live testing found a campaign-start crash in Build 37; Session 67 has a local hotfix pending Xcode/simulator verification and replacement build upload.
 

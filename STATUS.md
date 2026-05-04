@@ -2,7 +2,7 @@
 
 > **This file is the authoritative, compressed snapshot of the project.**
 > Chat logs are historical input. This file defines current truth.
-> Last reconciled: 2026-05-03 (Session 67)
+> Last reconciled: 2026-05-03 (Session 68)
 
 ---
 
@@ -14,8 +14,8 @@
 | Bundle ID | com.tboliveira.StarshipLander |
 | Platform | iOS (iPhone), iOS 15.0+ |
 | Tech | SwiftUI + SpriteKit + CoreMotion |
-| Current Version | **v2.2.0 (Build 37) live on App Store** (approved/distributed by Apple on 2026-05-03). |
-| Version Status | **v2.2.0 Build 37 is live but has a campaign-start crash.** Session 67 identified the likely root cause: campaign attempt tracking saved a nested `[Int: Int]` dictionary into `UserDefaults`, which can terminate the app because property-list dictionaries require string keys. A local hotfix converts attempt keys to strings before persistence, clears stale fresh-scene reset state, and restores Mercury/Io hazards in Daily Challenge. |
+| Current Version | **v2.2.1 (Build 38) submitted for App Store review** for the live v2.2.0 Build 37 Campaign startup crash. |
+| Version Status | **v2.2.1 Build 38 is waiting for App Store review.** Session 67 fixed the likely crash root cause: campaign attempt tracking saved a nested `[Int: Int]` dictionary into `UserDefaults`, which can terminate the app because property-list dictionaries require string keys. Session 68 restored local SSD Xcode verification, uploaded Build 38, updated App Store Connect hotfix metadata, attached the build, and submitted it for review. |
 | Last Published | v2.2.0 (Build 37) — on App Store (approved/distributed 2026-05-03) |
 | Developer | Thiago Borges de Oliveira / Rabbit Olive Studios |
 | Team ID | 6XK6BNVURL |
@@ -59,19 +59,18 @@ These are **not implemented**. Do not assume otherwise:
 
 ## Current Phase / Focus
 
-**Phase: Retention + Monetization (v2.2.0) — emergency campaign crash hotfix**
+**Phase: Retention + Monetization (v2.2.1) — emergency campaign crash hotfix**
 
-v2.2.0 adds three pillars: (1) Daily Challenge system with 75 templates, auto-computed difficulty, countdown timer, and blue star rewards for daily retention, (2) Interstitial ads every 7 attempts for monetization, (3) Global rank on game-over for competition visibility. Build 37 was approved/distributed by Apple on 2026-05-03, but live testing found the app closes when starting campaign gameplay on selected planets. Session 67 applied a local hotfix to make Game Center campaign attempt tracking persist with property-list-safe string keys in `UserDefaults`, then swept Classic/Campaign/Daily mode entry paths for adjacent release bugs.
+v2.2.0 adds three pillars: (1) Daily Challenge system with 75 templates, auto-computed difficulty, countdown timer, and blue star rewards for daily retention, (2) Interstitial ads every 7 attempts for monetization, (3) Global rank on game-over for competition visibility. Build 37 was approved/distributed by Apple on 2026-05-03, but live testing found the app closes when starting campaign gameplay on selected planets. v2.2.1 Build 38 is the emergency hotfix release for that live crash.
 
 ---
 
 ## Immediate Next Tasks (ordered)
 
-1. **Commit/push the hotfix branch and run GitHub Actions iOS CI** (`.github/workflows/ios-ci.yml`) because this machine no longer has Xcode installed.
-2. Test live campaign startup on multiple planets (Earth, Venus, at least one early unlocked level) plus Classic and Daily Challenge smoke checks using a cloud/remote Mac or TestFlight replacement build.
-3. Upload a replacement build for v2.2.0 after explicit build/version approval.
-4. Verify the replacement App Store/TestFlight build on device.
-5. Resume v2.3 planning only after the live crash is resolved.
+1. Monitor v2.2.1 Build 38 review status until approved/distributed.
+2. Verify the replacement App Store/TestFlight build on device as soon as Apple makes it available.
+3. Confirm Campaign startup on Earth, Venus, and an early unlocked planet in the replacement build.
+4. Resume v2.3 planning only after the live crash is resolved.
 
 ---
 
@@ -103,8 +102,9 @@ v2.2.0 adds three pillars: (1) Daily Challenge system with 75 templates, auto-co
 ## Known Risks / Watchouts
 
 - **v2.2.0 Build 37 is the current live version** — approved/distributed 2026-05-03, but campaign startup is crashing in the live build
+- **v2.2.1 Build 38 is submitted for review** — App Store Connect state `WAITING_FOR_REVIEW`, submitted 2026-05-04T01:20:53Z
 - **v2.1.1 submitted for review** — share card redesign + GC fix
-- **Session 67 local hotfix not simulator-verified on this machine** — Xcode was removed for disk space; use GitHub Actions CI or another cloud/remote Mac
+- **Local Xcode restored on SSD** — Xcode 26.4.1 is installed at `/Volumes/SamsungSSD/Developer/Xcode/Xcode-26.4.1.app`; local tests passed with 96 tests, 0 failures
 - **Apple object-storage instability** — seen during prior build upload attempts and one screenshot upload retry; final build and screenshots succeeded
 - **ASC API key refreshed locally** — new Team API key is stored under `~/.appstoreconnect/private_keys/` with chmod 600; do not commit it
 - **`daily_challenge` leaderboard exists in ASC** — created and released on 2026-05-01
